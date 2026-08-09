@@ -4,6 +4,8 @@ using Backend.Domain.Modules.Devices;
 using Backend.Domain.Modules.Identity;
 using Backend.Domain.Modules.Quotes;
 using Backend.Domain.Modules.Warranty;
+using Backend.Domain.Common.Exceptions;
+
 
 namespace Backend.Domain.Modules.Tickets;
 

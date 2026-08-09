@@ -2,6 +2,8 @@ using Backend.Domain.Common;
 using Backend.Domain.Modules.Devices;
 using Backend.Domain.Modules.Identity;
 using Backend.Domain.Modules.Tickets;
+using Backend.Domain.Common.Exceptions;
+
 
 namespace Backend.Domain.Modules.Customers;
 
