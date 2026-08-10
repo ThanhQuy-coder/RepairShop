@@ -19,5 +19,12 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.HasIndex(r => r.Name).IsUnique(); // Unique
 
         builder.Property(r => r.Description).HasMaxLength(255);
+
+        builder.HasData(
+            new Role(1, "Admin", "Quản trị viên"),
+            new Role(2, "Receptionist", "Nhân viên tiếp nhận"),
+            new Role(3, "Technician", "Kỹ thuật viên"),
+            new Role(4, "Customer", "Khách hàng")
+        );
     }
 }
