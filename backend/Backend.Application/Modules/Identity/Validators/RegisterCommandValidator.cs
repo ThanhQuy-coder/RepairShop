@@ -1,0 +1,27 @@
+using Backend.Application.Modules.Identity.Commands;
+using FluentValidation;
+
+namespace Backend.Application.Modules.Identity.Validators;
+
+public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+{
+    public RegisterCommandValidator()
+    {
+        RuleFor(x => x.FullName)
+            .NotEmpty().WithMessage("Họ tên không được để trống.")
+            .MaximumLength(100).WithMessage("Họ tên không vượt quá 100 ký tự.");
+
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email không được để trống.")
+            .EmailAddress().WithMessage("Email không đúng định dạng.")
+            .MaximumLength(150);
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Mật khẩu không được để trống.")
+            .MinimumLength(6).WithMessage("Mật khẩu phải có ít nhất 6 ký tự.");
+
+        RuleFor(x => x.Phone)
+            .MaximumLength(20).WithMessage("Số điện thoại không vượt quá 20 ký tự.")
+            .When(x => !string.IsNullOrEmpty(x.Phone));
+    }
+}
