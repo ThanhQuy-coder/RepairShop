@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Backend.Domain.Common;
 
 namespace Backend.Infrastructure;
 
@@ -60,7 +61,23 @@ public static class DependencyInjection
             };
         });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(AuthorizationPolicies.AdminOnly, policy =>
+                policy.RequireRole(Roles.Admin));
+
+            options.AddPolicy(AuthorizationPolicies.StaffOnly, policy =>
+                policy.RequireRole(Roles.Admin, Roles.Receptionist, Roles.Technician));
+
+            options.AddPolicy(AuthorizationPolicies.ReceptionistOrAdmin, policy =>
+                policy.RequireRole(Roles.Receptionist, Roles.Admin));
+
+            options.AddPolicy(AuthorizationPolicies.TechnicianOrAdmin, policy =>
+                policy.RequireRole(Roles.Technician, Roles.Admin));
+
+            options.AddPolicy(AuthorizationPolicies.InventoryViewers, policy =>
+                policy.RequireRole(Roles.Technician, Roles.Admin));
+        });
 
         return services;
     }
