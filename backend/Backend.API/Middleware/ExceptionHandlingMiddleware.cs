@@ -33,9 +33,17 @@ public class ExceptionHandlingMiddleware
     {
         var (statusCode, response) = MapException(exception);
 
-        // Chỉ log đầy đủ stack trace cho lỗi 500 thật sự — lỗi nghiệp vụ 400/401/404/409 là luồng bình thường
         if (statusCode == HttpStatusCode.InternalServerError)
+        {
+            // Chỉ log đầy đủ stack trace cho lỗi 500 thật sự — lỗi nghiệp vụ 400/401/404/409 là luồng bình thường
             _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
+        }
+        else
+        {
+            // Lỗi nghiệp vụ (validate sai, email trùng, sai mật khẩu...) — không phải bug, chỉ cảnh báo
+            _logger.LogWarning("Business exception: {ExceptionType} - {Message}",
+                exception.GetType().Name, exception.Message);
+        }
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
