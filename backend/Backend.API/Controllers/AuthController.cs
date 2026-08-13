@@ -1,3 +1,5 @@
+using Backend.Application.Modules.Identity.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Backend.Application.Modules.Identity.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginCommand command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> GetProfile()
+    {
+        var result = await _mediator.Send(new GetProfileQuery());
         return Ok(result);
     }
 }

@@ -14,7 +14,6 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
-        // Đăng ký Behavior dạng generic mở — áp dụng cho MỌI Command/Query, không cần khai từng cái
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
         return services;

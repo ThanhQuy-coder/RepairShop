@@ -27,6 +27,7 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString, npgsqlOptions =>
                 npgsqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
+        services.AddHttpContextAccessor();
 
         // Authentication
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
@@ -35,6 +36,9 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IDeviceRepository, DeviceRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
            ?? throw new InvalidOperationException("Cấu hình Jwt không tìm thấy trong appsettings.");

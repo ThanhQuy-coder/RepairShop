@@ -1,0 +1,15 @@
+using Backend.Application.Modules.Customers.Commands;
+using FluentValidation;
+
+namespace Backend.Application.Modules.Customers.Validators;
+
+public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+{
+    public CreateCustomerCommandValidator()
+    {
+        RuleFor(x => x.FullName).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.Phone).NotEmpty().MaximumLength(20);
+        RuleFor(x => x.Email).EmailAddress().When(x => !string.IsNullOrEmpty(x.Email));
+        RuleFor(x => x.Address).MaximumLength(255);
+    }
+}
