@@ -23,14 +23,18 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
+        // Kiểm tra request có Validator
         if (!_validators.Any())
             return await next();
 
+        // Đóng gói Request thành một Context chuẩn Fluent Validation
         var context = new ValidationContext<TRequest>(request);
 
+        // Cho tất cả kiểm tra cùng lúc
         var results = await Task.WhenAll(
             _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
+        // Gom lỗi lại thành một danh sách duy nhất
         var failures = results.SelectMany(r => r.Errors).Where(f => f is not null).ToList();
 
         if (failures.Count != 0)

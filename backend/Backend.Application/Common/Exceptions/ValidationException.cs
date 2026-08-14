@@ -3,7 +3,7 @@ using FluentValidation.Results;
 namespace Backend.Application.Common.Exceptions;
 
 /// <summary>
-/// Bọc lại lỗi FluentValidation thành dạng Dictionary&lt;field, messages[]&gt;
+/// Bọc lại lỗi FluentValidation thành dạng Dictionary <field, messages[]>
 /// để Exception Middleware dễ format ra "errors: []" chuẩn hóa.
 /// </summary>
 public class ValidationException : Exception

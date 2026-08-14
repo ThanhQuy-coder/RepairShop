@@ -17,6 +17,9 @@ public class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
+    /// <summary>
+    /// Cho phép HTTP Request đi tiếp vào API Controller, MediatR Pipeline, Handler
+    /// </summary>
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -29,6 +32,9 @@ public class ExceptionHandlingMiddleware
         }
     }
 
+    /// <summary>
+    /// Thực hiện xử lý lỗi được ném ra và gửi về controller
+    /// </summary>
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var (statusCode, response) = MapException(exception);
@@ -54,6 +60,9 @@ public class ExceptionHandlingMiddleware
         await context.Response.WriteAsync(json);
     }
 
+    /// <summary>
+    /// Sử dụng cú pháp Pattern Matching (switch) của C# để ánh xạ từng loại Exception ra HTTP Status Code và Thông báo lỗi (JSON) thích hợp
+    /// </summary>
     private static (HttpStatusCode StatusCode, ApiErrorResponse Response) MapException(Exception exception) =>
         exception switch
         {
