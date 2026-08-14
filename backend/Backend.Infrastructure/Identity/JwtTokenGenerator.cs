@@ -27,6 +27,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
+        // Tạo key secret và credentials từ key + mã hóa bằng HmacSha256
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

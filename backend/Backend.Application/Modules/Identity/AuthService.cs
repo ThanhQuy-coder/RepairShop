@@ -28,15 +28,19 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
+        // Kiểm tra Email tồn tại
         var existing = await _userRepository.GetByEmailAsync(request.Email);
         if (existing is not null)
             throw new EmailAlreadyExistsException(request.Email);
 
+        // Gán role mặc định khi đăng ký
         var customerRole = await _roleRepository.GetByNameAsync(DefaultSelfRegisterRole)
             ?? throw new InvalidOperationException("Role 'Customer' chưa được seed trong database.");
 
+        // Băm mật khẩu
         var passwordHash = _passwordHasher.Hash(request.Password);
 
+        // Thêm User vào DB, sinh Token
         var user = new User(request.FullName, request.Email, passwordHash, customerRole.Id, request.Phone);
 
         await _userRepository.AddAsync(user);
@@ -48,6 +52,7 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
+        // Kiểm tra mật khẩu, Active
         var user = await _userRepository.GetByEmailAsync(request.Email);
 
         if (user is null || !_passwordHasher.Verify(request.Password, user.PasswordHash))
@@ -56,6 +61,7 @@ public class AuthService : IAuthService
         if (!user.IsActive)
             throw new InvalidCredentialsException();
 
+        // Tạo role và lưu vào token
         var roleName = user.Role?.Name ?? DefaultSelfRegisterRole;
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName);
 
