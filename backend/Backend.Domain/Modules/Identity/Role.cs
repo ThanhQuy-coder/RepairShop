@@ -1,4 +1,4 @@
-namespace Backend.Domain.Modules.Identity;
+namespace RepairShop.Domain.Modules.Identity;
 
 public class Role
 {

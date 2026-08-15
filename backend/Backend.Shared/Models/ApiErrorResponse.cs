@@ -1,4 +1,4 @@
-namespace Backend.Shared.Models;
+namespace RepairShop.Shared.Models;
 
 public class ApiErrorResponse
 {

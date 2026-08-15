@@ -1,4 +1,4 @@
-namespace Backend.Domain.Common.Enums;
+namespace RepairShop.Domain.Common.Enums;
 
 public enum QuoteStatus
 {

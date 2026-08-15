@@ -1,7 +1,7 @@
-using Backend.Application.Modules.Customers.Commands;
+using RepairShop.Application.Modules.Customers.Commands;
 using FluentValidation;
 
-namespace Backend.Application.Modules.Customers.Validators;
+namespace RepairShop.Application.Modules.Customers.Validators;
 
 public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
 {

@@ -1,4 +1,4 @@
-namespace Backend.Application.Common.Exceptions;
+namespace RepairShop.Application.Common.Exceptions;
 
 public class InvalidCredentialsException : Exception
 {

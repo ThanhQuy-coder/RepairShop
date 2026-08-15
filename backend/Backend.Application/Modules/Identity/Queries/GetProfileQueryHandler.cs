@@ -1,8 +1,8 @@
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Identity.DTOs;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Identity.DTOs;
 using MediatR;
 
-namespace Backend.Application.Modules.Identity.Queries;
+namespace RepairShop.Application.Modules.Identity.Queries;
 
 public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, UserProfileResponse>
 {

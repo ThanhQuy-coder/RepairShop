@@ -1,10 +1,10 @@
-using Backend.Application.Modules.Identity.Queries;
+using RepairShop.Application.Modules.Identity.Queries;
 using Microsoft.AspNetCore.Authorization;
-using Backend.Application.Modules.Identity.Commands;
+using RepairShop.Application.Modules.Identity.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.API.Controllers;
+namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/auth")]

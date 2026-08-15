@@ -1,11 +1,11 @@
-using Backend.Application.Modules.Devices.Commands;
-using Backend.Application.Modules.Devices.Queries;
-using Backend.Infrastructure.Identity;
+using RepairShop.Application.Modules.Devices.Commands;
+using RepairShop.Application.Modules.Devices.Queries;
+using RepairShop.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.API.Controllers;
+namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/devices")]

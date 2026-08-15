@@ -1,8 +1,8 @@
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Devices.DTOs;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Devices.DTOs;
 using MediatR;
 
-namespace Backend.Application.Modules.Devices.Queries;
+namespace RepairShop.Application.Modules.Devices.Queries;
 
 public class GetDevicesByCustomerQueryHandler : IRequestHandler<GetDevicesByCustomerQuery, List<DeviceResponse>>
 {

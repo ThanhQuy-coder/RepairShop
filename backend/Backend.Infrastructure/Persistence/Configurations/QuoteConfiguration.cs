@@ -1,9 +1,9 @@
-using Backend.Domain.Common.Enums;
-using Backend.Domain.Modules.Quotes;
+using RepairShop.Domain.Common.Enums;
+using RepairShop.Domain.Modules.Quotes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class QuoteConfiguration : IEntityTypeConfiguration<Quote>
 {

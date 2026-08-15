@@ -1,7 +1,7 @@
-using Backend.Application.Modules.Identity.Commands;
+using RepairShop.Application.Modules.Identity.Commands;
 using FluentValidation;
 
-namespace Backend.Application.Modules.Identity.Validators;
+namespace RepairShop.Application.Modules.Identity.Validators;
 
 public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {

@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Tickets;
+using RepairShop.Domain.Modules.Tickets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
 {
@@ -61,7 +61,7 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
         // Composition: RepairTicket (1) -> Warranty (0..1)
         builder.HasOne(t => t.Warranty)
             .WithOne(w => w.RepairTicket)
-            .HasForeignKey<Backend.Domain.Modules.Warranty.Warranty>(w => w.RepairTicketId)
+            .HasForeignKey<RepairShop.Domain.Modules.Warranty.Warranty>(w => w.RepairTicketId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

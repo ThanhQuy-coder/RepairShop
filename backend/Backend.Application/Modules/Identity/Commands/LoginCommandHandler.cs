@@ -1,9 +1,9 @@
-using Backend.Application.Common.Exceptions;
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Identity.DTOs;
+using RepairShop.Application.Common.Exceptions;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Identity.DTOs;
 using MediatR;
 
-namespace Backend.Application.Modules.Identity.Commands;
+namespace RepairShop.Application.Modules.Identity.Commands;
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponse>
 {

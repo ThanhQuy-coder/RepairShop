@@ -1,6 +1,6 @@
-using Backend.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Identity;
 
-namespace Backend.Application.Common.Interfaces;
+namespace RepairShop.Application.Common.Interfaces;
 
 public interface IUserRepository
 {

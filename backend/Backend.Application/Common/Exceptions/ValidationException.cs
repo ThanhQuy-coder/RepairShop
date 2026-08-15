@@ -1,6 +1,6 @@
 using FluentValidation.Results;
 
-namespace Backend.Application.Common.Exceptions;
+namespace RepairShop.Application.Common.Exceptions;
 
 /// <summary>
 /// Bọc lại lỗi FluentValidation thành dạng Dictionary <field, messages[]>

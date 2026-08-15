@@ -1,8 +1,8 @@
-using Backend.Infrastructure.Identity;
+using RepairShop.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.API.Controllers;
+namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/users")]

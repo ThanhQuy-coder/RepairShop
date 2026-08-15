@@ -1,4 +1,4 @@
-namespace Backend.Domain.Common;
+namespace RepairShop.Domain.Common;
 
 /// <summary>
 /// Base entity cho toàn bộ Aggregate Root có Guid Id + Audit fields.

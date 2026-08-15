@@ -1,6 +1,6 @@
-using Backend.Domain.Modules.Devices;
+using RepairShop.Domain.Modules.Devices;
 
-namespace Backend.Application.Common.Interfaces;
+namespace RepairShop.Application.Common.Interfaces;
 
 public interface IDeviceRepository
 {

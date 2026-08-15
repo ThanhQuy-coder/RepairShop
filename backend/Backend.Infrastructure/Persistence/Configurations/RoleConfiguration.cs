@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {

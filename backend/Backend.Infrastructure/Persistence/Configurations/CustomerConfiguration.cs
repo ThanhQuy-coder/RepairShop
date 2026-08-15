@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Customers;
+using RepairShop.Domain.Modules.Customers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {

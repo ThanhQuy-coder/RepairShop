@@ -1,9 +1,9 @@
-using Backend.Application.Common.Exceptions;
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Identity.DTOs;
-using Backend.Domain.Modules.Identity;
+using RepairShop.Application.Common.Exceptions;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Identity.DTOs;
+using RepairShop.Domain.Modules.Identity;
 
-namespace Backend.Application.Modules.Identity;
+namespace RepairShop.Application.Modules.Identity;
 
 public class AuthService : IAuthService
 {

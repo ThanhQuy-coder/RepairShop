@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Warranty;
+using RepairShop.Domain.Modules.Warranty;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class WarrantyConfiguration : IEntityTypeConfiguration<Warranty>
 {

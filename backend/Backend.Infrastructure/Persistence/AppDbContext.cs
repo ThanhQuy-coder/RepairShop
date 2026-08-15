@@ -1,12 +1,12 @@
-using Backend.Domain.Modules.Customers;
-using Backend.Domain.Modules.Devices;
-using Backend.Domain.Modules.Identity;
-using Backend.Domain.Modules.Quotes;
-using Backend.Domain.Modules.Tickets;
-using Backend.Domain.Modules.Warranty;
+using RepairShop.Domain.Modules.Customers;
+using RepairShop.Domain.Modules.Devices;
+using RepairShop.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Quotes;
+using RepairShop.Domain.Modules.Tickets;
+using RepairShop.Domain.Modules.Warranty;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Infrastructure.Persistence;
+namespace RepairShop.Infrastructure.Persistence;
 
 public class AppDbContext : DbContext
 {

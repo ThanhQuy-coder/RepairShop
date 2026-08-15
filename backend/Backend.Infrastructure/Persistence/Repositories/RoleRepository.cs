@@ -1,8 +1,8 @@
-using Backend.Application.Common.Interfaces;
-using Backend.Domain.Modules.Identity;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Domain.Modules.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Infrastructure.Persistence.Repositories;
+namespace RepairShop.Infrastructure.Persistence.Repositories;
 
 public class RoleRepository : IRoleRepository
 {

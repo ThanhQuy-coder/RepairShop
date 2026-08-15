@@ -1,6 +1,6 @@
-using Backend.API.Middleware;
-using Backend.Application;
-using Backend.Infrastructure;
+using RepairShop.API.Middleware;
+using RepairShop.Application;
+using RepairShop.Infrastructure;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

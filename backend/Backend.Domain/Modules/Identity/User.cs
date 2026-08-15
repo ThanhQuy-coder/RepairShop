@@ -1,8 +1,8 @@
-using Backend.Domain.Common;
-using Backend.Domain.Modules.Customers;
-using Backend.Domain.Common.Exceptions;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Customers;
+using RepairShop.Domain.Common.Exceptions;
 
-namespace Backend.Domain.Modules.Identity;
+namespace RepairShop.Domain.Modules.Identity;
 
 public class User : BaseEntity
 {
@@ -33,7 +33,7 @@ public class User : BaseEntity
         Email = email;
         PasswordHash = passwordHash;
         RoleId = roleId;
-        Phone = phone; 
+        Phone = phone;
     }
 
     public void ChangePassword(string newPasswordHash)

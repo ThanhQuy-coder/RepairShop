@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Backend.Infrastructure.Persistence.Migrations
+namespace RepairShop.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

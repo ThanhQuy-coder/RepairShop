@@ -1,10 +1,10 @@
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Customers.DTOs;
-using Backend.Domain.Modules.Customers;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Customers.DTOs;
+using RepairShop.Domain.Modules.Customers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Backend.Application.Modules.Customers.Commands;
+namespace RepairShop.Application.Modules.Customers.Commands;
 
 public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, CustomerResponse>
 {

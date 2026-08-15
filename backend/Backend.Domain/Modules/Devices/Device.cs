@@ -1,11 +1,11 @@
-using Backend.Domain.Common;
-using Backend.Domain.Common.Enums;
-using Backend.Domain.Modules.Customers;
-using Backend.Domain.Modules.Tickets;
-using Backend.Domain.Common.Exceptions;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Common.Enums;
+using RepairShop.Domain.Modules.Customers;
+using RepairShop.Domain.Modules.Tickets;
+using RepairShop.Domain.Common.Exceptions;
 
 
-namespace Backend.Domain.Modules.Devices;
+namespace RepairShop.Domain.Modules.Devices;
 
 public class Device : BaseEntity
 {

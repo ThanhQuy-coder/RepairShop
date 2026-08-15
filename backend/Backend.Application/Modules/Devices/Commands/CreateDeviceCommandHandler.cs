@@ -1,9 +1,9 @@
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Devices.DTOs;
-using Backend.Domain.Common.Enums;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Devices.DTOs;
+using RepairShop.Domain.Common.Enums;
 using MediatR;
 
-namespace Backend.Application.Modules.Devices.Commands;
+namespace RepairShop.Application.Modules.Devices.Commands;
 
 public class CreateDeviceCommandHandler : IRequestHandler<CreateDeviceCommand, DeviceResponse>
 {
@@ -25,7 +25,7 @@ public class CreateDeviceCommandHandler : IRequestHandler<CreateDeviceCommand, D
         if (!Enum.TryParse<DeviceType>(request.DeviceType, true, out var deviceType))
             throw new ArgumentException($"DeviceType '{request.DeviceType}' không hợp lệ.");
 
-        var device = new Backend.Domain.Modules.Devices.Device(
+        var device = new RepairShop.Domain.Modules.Devices.Device(
             request.CustomerId, deviceType, request.Brand, request.Model, request.SerialNumber);
 
         await _deviceRepository.AddAsync(device);

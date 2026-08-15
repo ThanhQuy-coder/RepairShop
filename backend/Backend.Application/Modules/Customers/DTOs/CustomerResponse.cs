@@ -1,4 +1,4 @@
-namespace Backend.Application.Modules.Customers.DTOs;
+namespace RepairShop.Application.Modules.Customers.DTOs;
 
 public record CustomerResponse(Guid Id, string FullName, string Phone, string? Email, string? Address, DateTime CreatedAt);
 

@@ -1,12 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Backend.Application.Common.Interfaces;
-using Backend.Domain.Modules.Identity;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Domain.Modules.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Backend.Infrastructure.Identity;
+namespace RepairShop.Infrastructure.Identity;
 
 public class JwtTokenGenerator : IJwtTokenGenerator
 {

@@ -1,8 +1,8 @@
-using Backend.Domain.Common;
-using Backend.Domain.Modules.Tickets;
-using Backend.Domain.Common.Exceptions;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Tickets;
+using RepairShop.Domain.Common.Exceptions;
 
-namespace Backend.Domain.Modules.Warranty;
+namespace RepairShop.Domain.Modules.Warranty;
 
 public class Warranty : BaseEntity
 {
@@ -20,7 +20,7 @@ public class Warranty : BaseEntity
         if (endDate <= startDate)
             throw new DomainException(
                 "Ngày kết thúc bảo hành phải sau ngày bắt đầu.");
-                
+
         RepairTicketId = repairTicketId;
         StartDate = startDate;
         EndDate = endDate;

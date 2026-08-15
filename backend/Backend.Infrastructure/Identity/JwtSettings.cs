@@ -1,4 +1,4 @@
-namespace Backend.Infrastructure.Identity;
+namespace RepairShop.Infrastructure.Identity;
 
 public class JwtSettings
 {

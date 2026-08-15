@@ -1,6 +1,6 @@
-using Backend.Domain.Modules.Customers;
+using RepairShop.Domain.Modules.Customers;
 
-namespace Backend.Application.Common.Interfaces;
+namespace RepairShop.Application.Common.Interfaces;
 
 public interface ICustomerRepository
 {

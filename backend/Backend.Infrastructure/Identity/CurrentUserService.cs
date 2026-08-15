@@ -1,8 +1,8 @@
 using System.Security.Claims;
-using Backend.Application.Common.Interfaces;
+using RepairShop.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Backend.Infrastructure.Identity;
+namespace RepairShop.Infrastructure.Identity;
 
 public class CurrentUserService : ICurrentUserService
 {

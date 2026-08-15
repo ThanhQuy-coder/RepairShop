@@ -1,7 +1,7 @@
-using Backend.Application.Modules.Devices.Commands;
+using RepairShop.Application.Modules.Devices.Commands;
 using FluentValidation;
 
-namespace Backend.Application.Modules.Devices.Validators;
+namespace RepairShop.Application.Modules.Devices.Validators;
 
 public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceCommand>
 {

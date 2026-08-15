@@ -1,11 +1,11 @@
-using Backend.Application.Common.Exceptions;
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Identity.DTOs;
-using Backend.Domain.Common;
-using Backend.Domain.Modules.Identity;
+using RepairShop.Application.Common.Exceptions;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Identity.DTOs;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Identity;
 using MediatR;
 
-namespace Backend.Application.Modules.Identity.Commands;
+namespace RepairShop.Application.Modules.Identity.Commands;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthResponse>
 {

@@ -1,10 +1,10 @@
 using System.Net;
 using System.Text.Json;
-using Backend.Application.Common.Exceptions;
-using Backend.Domain.Common.Exceptions;
-using Backend.Shared.Models;
+using RepairShop.Application.Common.Exceptions;
+using RepairShop.Domain.Common.Exceptions;
+using RepairShop.Shared.Models;
 
-namespace Backend.API.Middleware;
+namespace RepairShop.API.Middleware;
 
 public class ExceptionHandlingMiddleware
 {
@@ -81,6 +81,14 @@ public class ExceptionHandlingMiddleware
             InvalidCredentialsException credEx => (
                 HttpStatusCode.Unauthorized,
                 new ApiErrorResponse { Message = credEx.Message }),
+
+            InvalidTicketTransitionException transitionEx => (
+                HttpStatusCode.Conflict,
+                new ApiErrorResponse { Message = transitionEx.Message }),
+
+            InvalidTicketOperationException operationEx => (
+                HttpStatusCode.Conflict,
+                new ApiErrorResponse { Message = operationEx.Message }),
 
             DomainException domainEx => (
                 HttpStatusCode.BadRequest,

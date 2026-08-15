@@ -1,6 +1,6 @@
-using Backend.Application.Modules.Identity.DTOs;
+using RepairShop.Application.Modules.Identity.DTOs;
 
-namespace Backend.Application.Modules.Identity;
+namespace RepairShop.Application.Modules.Identity;
 
 public interface IAuthService
 {

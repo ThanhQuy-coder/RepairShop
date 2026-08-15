@@ -1,4 +1,4 @@
-namespace Backend.Domain.Common;
+namespace RepairShop.Domain.Common;
 
 /// <summary>
 /// Hằng số tên Role — PHẢI khớp chính xác dữ liệu seed ở RoleConfiguration (Task 5/6).

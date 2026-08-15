@@ -1,4 +1,4 @@
-namespace Backend.Domain.Modules.Tickets;
+namespace RepairShop.Domain.Modules.Tickets;
 
 /// <summary>
 /// Dữ liệu mẫu: CHECKED_IN, ASSIGNED, DIAGNOSING, WAITING_APPROVAL, ON_HOLD,

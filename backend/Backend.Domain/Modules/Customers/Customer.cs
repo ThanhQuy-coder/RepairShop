@@ -1,11 +1,11 @@
-using Backend.Domain.Common;
-using Backend.Domain.Modules.Devices;
-using Backend.Domain.Modules.Identity;
-using Backend.Domain.Modules.Tickets;
-using Backend.Domain.Common.Exceptions;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Devices;
+using RepairShop.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Tickets;
+using RepairShop.Domain.Common.Exceptions;
 
 
-namespace Backend.Domain.Modules.Customers;
+namespace RepairShop.Domain.Modules.Customers;
 
 public class Customer : BaseEntity
 {

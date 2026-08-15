@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Tickets;
+using RepairShop.Domain.Modules.Tickets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class RepairStatusConfiguration : IEntityTypeConfiguration<RepairStatus>
 {

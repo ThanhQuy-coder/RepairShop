@@ -1,8 +1,8 @@
-using Backend.Domain.Modules.Devices;
+using RepairShop.Domain.Modules.Devices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Backend.Infrastructure.Persistence.Configurations;
+namespace RepairShop.Infrastructure.Persistence.Configurations;
 
 public class DeviceConfiguration : IEntityTypeConfiguration<Device>
 {

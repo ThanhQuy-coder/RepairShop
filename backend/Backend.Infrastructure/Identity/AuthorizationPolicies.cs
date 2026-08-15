@@ -1,6 +1,6 @@
-using Backend.Domain.Common;
+using RepairShop.Domain.Common;
 
-namespace Backend.Infrastructure.Identity;
+namespace RepairShop.Infrastructure.Identity;
 
 /// <summary>
 /// Tên các Policy dùng trong [Authorize(Policy = "...")].

@@ -1,6 +1,6 @@
-using Backend.Application.Common.Interfaces;
+using RepairShop.Application.Common.Interfaces;
 
-namespace Backend.Infrastructure.Identity;
+namespace RepairShop.Infrastructure.Identity;
 
 public class PasswordHasher : IPasswordHasher
 {

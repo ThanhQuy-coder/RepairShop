@@ -1,11 +1,11 @@
-using Backend.Domain.Common;
-using Backend.Domain.Common.Enums;
-using Backend.Domain.Modules.Identity;
-using Backend.Domain.Modules.Tickets;
-using Backend.Domain.Common.Exceptions;
+using RepairShop.Domain.Common;
+using RepairShop.Domain.Common.Enums;
+using RepairShop.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Tickets;
+using RepairShop.Domain.Common.Exceptions;
 
 
-namespace Backend.Domain.Modules.Quotes;
+namespace RepairShop.Domain.Modules.Quotes;
 
 public class Quote : BaseEntity
 {
@@ -53,7 +53,7 @@ public class Quote : BaseEntity
         if (string.IsNullOrWhiteSpace(reason))
             throw new DomainException(
                 "Lý do từ chối báo giá không được để trống.");
-                
+
         Status = QuoteStatus.Rejected;
         RejectReason = reason;
         RespondedAt = DateTime.UtcNow;

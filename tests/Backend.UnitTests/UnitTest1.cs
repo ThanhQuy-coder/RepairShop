@@ -1,4 +1,4 @@
-﻿namespace Backend.UnitTests;
+﻿namespace RepairShop.UnitTests;
 
 public class UnitTest1
 {

@@ -1,4 +1,4 @@
-﻿namespace Backend.IntegrationTests;
+﻿namespace RepairShop.IntegrationTests;
 
 public class UnitTest1
 {

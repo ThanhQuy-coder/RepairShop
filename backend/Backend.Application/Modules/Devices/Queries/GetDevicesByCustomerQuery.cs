@@ -1,6 +1,6 @@
-using Backend.Application.Modules.Devices.DTOs;
+using RepairShop.Application.Modules.Devices.DTOs;
 using MediatR;
 
-namespace Backend.Application.Modules.Devices.Queries;
+namespace RepairShop.Application.Modules.Devices.Queries;
 
 public record GetDevicesByCustomerQuery(Guid CustomerId) : IRequest<List<DeviceResponse>>;

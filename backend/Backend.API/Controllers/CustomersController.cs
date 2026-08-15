@@ -1,11 +1,11 @@
-using Backend.Application.Modules.Customers.Commands;
-using Backend.Application.Modules.Customers.Queries;
-using Backend.Infrastructure.Identity;
+using RepairShop.Application.Modules.Customers.Commands;
+using RepairShop.Application.Modules.Customers.Queries;
+using RepairShop.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.API.Controllers;
+namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/customers")]

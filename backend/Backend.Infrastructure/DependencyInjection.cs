@@ -1,17 +1,17 @@
 using System.Text;
-using Backend.Application.Common.Interfaces;
-using Backend.Application.Modules.Identity;
-using Backend.Infrastructure.Identity;
-using Backend.Infrastructure.Persistence;
-using Backend.Infrastructure.Persistence.Repositories;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Identity;
+using RepairShop.Infrastructure.Identity;
+using RepairShop.Infrastructure.Persistence;
+using RepairShop.Infrastructure.Persistence.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Backend.Domain.Common;
+using RepairShop.Domain.Common;
 
-namespace Backend.Infrastructure;
+namespace RepairShop.Infrastructure;
 
 public static class DependencyInjection
 {

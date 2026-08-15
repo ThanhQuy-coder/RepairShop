@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Backend.Application.Common.Behaviors;
+namespace RepairShop.Application.Common.Behaviors;
 
 /// <summary>
 /// Chạy TRƯỚC mọi Command/Query Handler. Tự động tìm tất cả IValidator&lt;TRequest&gt;
@@ -38,7 +38,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         var failures = results.SelectMany(r => r.Errors).Where(f => f is not null).ToList();
 
         if (failures.Count != 0)
-            throw new Backend.Application.Common.Exceptions.ValidationException(failures);
+            throw new RepairShop.Application.Common.Exceptions.ValidationException(failures);
 
         return await next();
     }

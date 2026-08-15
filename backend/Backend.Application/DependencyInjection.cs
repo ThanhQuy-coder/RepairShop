@@ -1,9 +1,9 @@
-using Backend.Application.Common.Behaviors;
+using RepairShop.Application.Common.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Backend.Application;
+namespace RepairShop.Application;
 
 public static class DependencyInjection
 {
