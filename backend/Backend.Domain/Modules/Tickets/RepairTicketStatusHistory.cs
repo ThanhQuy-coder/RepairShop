@@ -1,24 +1,27 @@
-using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Identity;
 
 namespace RepairShop.Domain.Modules.Tickets;
 
-public class RepairTicketStatusHistory : BaseEntity
+public class RepairTicketStatusHistory
 {
+    public Guid Id { get; private set; } = Guid.NewGuid();
     public Guid RepairTicketId { get; private set; }
-    public TicketStatus Status { get; private set; }
+    public int StatusId { get; private set; }
     public Guid ChangedByUserId { get; private set; }
     public string? Note { get; private set; }
-    public DateTime ChangedAt { get; private set; }
+    public DateTime ChangedAt { get; private set; } = DateTime.UtcNow;
 
-    private RepairTicketStatusHistory() { } // EF Core
+    public RepairStatus Status { get; private set; } = default!;
+    public User ChangedByUser { get; private set; } = default!;
 
-    internal RepairTicketStatusHistory(Guid repairTicketId, TicketStatus status, Guid changedByUserId, string? note)
+    private RepairTicketStatusHistory() { }
+
+    internal RepairTicketStatusHistory(Guid repairTicketId, RepairStatus status, Guid changedByUserId, string? note)
     {
-        Id = Guid.NewGuid();
         RepairTicketId = repairTicketId;
+        StatusId = status.Id;
         Status = status;
         ChangedByUserId = changedByUserId;
         Note = note;
-        ChangedAt = DateTime.UtcNow;
     }
 }
