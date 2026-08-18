@@ -3,9 +3,9 @@ using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Modules.Customers;
 using RepairShop.Domain.Modules.Devices;
 using RepairShop.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Inventory;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Tickets.Enums;
-using RepairShop.Domain.Modules.Warranty;
 
 namespace RepairShop.Domain.Modules.Tickets;
 
@@ -45,9 +45,11 @@ public class RepairTicket : BaseEntity
     private readonly List<RepairTicketStatusHistory> _statusHistories = new();
     public IReadOnlyCollection<RepairTicketStatusHistory> StatusHistories => _statusHistories.AsReadOnly();
 
+    private readonly List<TicketPart> _ticketParts = new();
+    public IReadOnlyCollection<TicketPart> TicketParts => _ticketParts.AsReadOnly();
+
     private RepairTicket() { } // for EF Core
 
-    /// <summary>Khởi tạo ticket ở bước tiếp nhận (Task 1 Tuần 1, bước 2-3). Trạng thái ban đầu luôn là CHECKED_IN.</summary>
     public RepairTicket(string ticketCode, Guid customerId, Guid deviceId, Guid receptionistId,
         string issueReported, RepairStatus checkedInStatus, decimal diagnosticDeposit = 0,
         Guid? parentTicketId = null)
@@ -89,20 +91,14 @@ public class RepairTicket : BaseEntity
 
     // ───────────────────────── Workflow: Assign → Diagnosis ─────────────────────────
 
-    /// <summary>FR-018: chỉ gán được kỹ thuật viên khi ticket vừa Check-in, chưa từng gán ai.</summary>
     public void AssignTechnician(Guid technicianId, RepairStatus assignedStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.CheckedIn, "gán kỹ thuật viên");
-        EnsureTargetStatusCode(assignedStatus, RepairStatusCodes.Assigned);
-
         TechnicianId = technicianId;
         ChangeStatus(assignedStatus, changedByUserId, note);
     }
 
     public void StartDiagnosis(RepairStatus diagnosingStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.Assigned, "bắt đầu chẩn đoán");
-        EnsureTargetStatusCode(diagnosingStatus, RepairStatusCodes.Diagnosing);
         EnsureTechnicianAssigned();
 
         ChangeStatus(diagnosingStatus, changedByUserId, note);
@@ -111,7 +107,8 @@ public class RepairTicket : BaseEntity
     /// <summary>FR-024: chỉ ghi được kết quả chẩn đoán khi đang ở bước Diagnosing.</summary>
     public void SubmitDiagnosis(string diagnosisResult)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.Diagnosing, "ghi nhận chẩn đoán");
+        if (Status.Code != RepairStatusCodes.Diagnosing)
+            throw new DomainException($"Chỉ ghi nhận chẩn đoán khi ticket ở trạng thái DIAGNOSING (hiện tại: '{Status.Code}').");
         if (string.IsNullOrWhiteSpace(diagnosisResult))
             throw new DomainException("Kết quả chẩn đoán không được để trống.");
 
@@ -128,18 +125,14 @@ public class RepairTicket : BaseEntity
 
     // ───────────────────────── Workflow: Quote ─────────────────────────
 
-    /// <summary>Chỉ chuyển sang chờ khách duyệt khi đã có kết quả chẩn đoán (đúng thứ tự nghiệp vụ Task 1 Tuần 1).</summary>
     public void SubmitQuote(RepairStatus waitingApprovalStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.Diagnosing, "gửi báo giá");
         if (string.IsNullOrWhiteSpace(DiagnosisResult))
             throw new DomainException("Phải có kết quả chẩn đoán trước khi gửi báo giá cho khách.");
-        EnsureTargetStatusCode(waitingApprovalStatus, RepairStatusCodes.WaitingApproval);
 
         ChangeStatus(waitingApprovalStatus, changedByUserId, note);
     }
 
-    /// <summary>Đăng ký Quote vào ticket — không tự chuyển trạng thái, gọi kèm SubmitQuote() ở Application layer.</summary>
     public void AttachQuote(Quote quote)
     {
         if (quote.RepairTicketId != Id)
@@ -147,21 +140,16 @@ public class RepairTicket : BaseEntity
         _quotes.Add(quote);
     }
 
-    /// <summary>FR-034: khách đồng ý → chuyển sang sửa (có thể là InRepair hoặc WaitingParts, do Application quyết định dựa trên tồn kho).</summary>
     public void ApproveQuote(RepairStatus nextStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.WaitingApproval, "duyệt báo giá");
         if (nextStatus.Code is not (RepairStatusCodes.InRepair or RepairStatusCodes.WaitingParts))
             throw new DomainException("Sau khi duyệt báo giá chỉ có thể chuyển sang IN_REPAIR hoặc WAITING_PARTS.");
 
         ChangeStatus(nextStatus, changedByUserId, note);
     }
 
-    /// <summary>FR-035: khách từ chối → đóng ticket.</summary>
     public void RejectQuote(RepairStatus closedStatus, Guid changedByUserId, string reason)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.WaitingApproval, "từ chối báo giá");
-        EnsureTargetStatusCode(closedStatus, RepairStatusCodes.ClosedRejected);
         if (string.IsNullOrWhiteSpace(reason))
             throw new DomainException("Phải nêu lý do khi từ chối báo giá.");
 
@@ -170,40 +158,29 @@ public class RepairTicket : BaseEntity
 
     // ───────────────────────── Workflow: Repair → QA ─────────────────────────
 
-    /// <summary>Dùng khi đủ linh kiện (từ WaitingParts) hoặc bỏ On-hold để tiếp tục sửa.</summary>
     public void StartRepair(RepairStatus inRepairStatus, Guid changedByUserId, string? note = null)
     {
         if (Status.Code is not (RepairStatusCodes.WaitingParts or RepairStatusCodes.OnHold))
             throw new DomainException($"Không thể bắt đầu sửa chữa từ trạng thái hiện tại '{Status.Code}'.");
-        EnsureTargetStatusCode(inRepairStatus, RepairStatusCodes.InRepair);
 
         ChangeStatus(inRepairStatus, changedByUserId, note);
     }
 
     public void StartQualityCheck(RepairStatus qaStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.InRepair, "chuyển sang kiểm thử QA");
-        EnsureTargetStatusCode(qaStatus, RepairStatusCodes.QaTesting);
-
         ChangeStatus(qaStatus, changedByUserId, note);
     }
 
-    /// <summary>BR-19: chỉ pass QA khi đã từng thực sự trải qua IN_REPAIR — kiểm tra lại tường minh, không chỉ dựa vào status hiện tại.</summary>
     public void PassQualityCheck(RepairStatus readyStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.QaTesting, "hoàn tất kiểm thử (đạt)");
         EnsureHasEverBeenInRepair();
-        EnsureTargetStatusCode(readyStatus, RepairStatusCodes.ReadyForPickup);
 
         ChangeStatus(readyStatus, changedByUserId, note);
         CompletedAt = DateTime.UtcNow;
     }
 
-    /// <summary>QA không đạt → quay lại sửa (Task 1 Tuần 1, bước 10: "Nếu QA fail → quay lại bước 7").</summary>
     public void FailQualityCheck(RepairStatus inRepairStatus, Guid changedByUserId, string note)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.QaTesting, "ghi nhận QA không đạt");
-        EnsureTargetStatusCode(inRepairStatus, RepairStatusCodes.InRepair);
         if (string.IsNullOrWhiteSpace(note))
             throw new DomainException("Phải ghi chú lý do khi QA không đạt.");
 
@@ -212,17 +189,13 @@ public class RepairTicket : BaseEntity
 
     // ───────────────────────── Delivery & Warranty ─────────────────────────
 
-    /// <summary>Bàn giao — chỉ thực hiện được khi đã "Completed" (ReadyForPickup).</summary>
     public void Deliver(RepairStatus deliveredStatus, Guid changedByUserId, string? note = null)
     {
-        EnsureCurrentStatusIs(RepairStatusCodes.ReadyForPickup, "bàn giao thiết bị");
-        EnsureTargetStatusCode(deliveredStatus, RepairStatusCodes.Delivered);
 
         ChangeStatus(deliveredStatus, changedByUserId, note);
         DeliveredAt = DateTime.UtcNow;
     }
 
-    /// <summary>BR-10: tối đa 1 Warranty, chỉ tạo sau khi đã Delivered.</summary>
     public Warranty.Warranty CreateWarranty(DateOnly startDate, DateOnly endDate, string? terms)
     {
         if (Status.Code != RepairStatusCodes.Delivered)
@@ -234,31 +207,34 @@ public class RepairTicket : BaseEntity
         return Warranty;
     }
 
+    // ───────────────────────── Inventory ─────────────────────────
+    public void UsePart(Part part, Inventory.Inventory inventory, int quantity, Guid changedByUserId)
+    {
+        if (Status.Code != RepairStatusCodes.InRepair)
+            throw new DomainException("Chỉ ghi nhận linh kiện sử dụng khi ticket đang ở trạng thái IN_REPAIR.");
+
+        if (inventory.PartId != part.Id)
+            throw new DomainException("Inventory truyền vào không khớp với Part.");
+
+        // BR-20 enforce tại đây — nếu không đủ tồn, KHÔNG tạo TicketPart, ném lỗi rõ ràng cho Application xử lý 409
+        if (!inventory.Deduct(quantity))
+            throw new InsufficientStockException(part.Name, quantity, inventory.QuantityOnHand);
+
+        var ticketPart = new TicketPart(Id, part.Id, quantity, part.UnitPrice);
+        _ticketParts.Add(ticketPart);
+        MarkUpdated();
+    }
+
     // ───────────────────────── Helper nội bộ ─────────────────────────
 
-    /// <summary>
-    /// "Cổng" duy nhất thay đổi StatusId — MỌI method public ở trên đều đi qua đây.
-    /// Tự động sinh RepairTicketStatusHistory (BR-05), không có đường nào set StatusId trực tiếp từ bên ngoài.
-    /// </summary>
     private void ChangeStatus(RepairStatus newStatus, Guid changedByUserId, string? note)
     {
+        RepairTicketStateMachine.EnsureCanTransition(Status.Code, newStatus.Code);
+
         StatusId = newStatus.Id;
         Status = newStatus;
         _statusHistories.Add(new RepairTicketStatusHistory(Id, newStatus, changedByUserId, note));
         MarkUpdated();
-    }
-
-    private void EnsureCurrentStatusIs(string requiredCode, string actionDescription)
-    {
-        if (Status.Code != requiredCode)
-            throw new DomainException(
-                $"Không thể {actionDescription} khi ticket đang ở trạng thái '{Status.Code}' (yêu cầu '{requiredCode}').");
-    }
-
-    private void EnsureTargetStatusCode(RepairStatus status, string expectedCode)
-    {
-        if (status.Code != expectedCode)
-            throw new DomainException($"Trạng thái đích phải là '{expectedCode}', nhận được '{status.Code}'.");
     }
 
     private void EnsureTechnicianAssigned()
@@ -267,7 +243,6 @@ public class RepairTicket : BaseEntity
             throw new DomainException("Ticket chưa được gán kỹ thuật viên.");
     }
 
-    /// <summary>BR-19 — enforce tường minh bằng lịch sử thật, không chỉ tin vào Status hiện tại.</summary>
     private void EnsureHasEverBeenInRepair()
     {
         if (!_statusHistories.Any(h => h.Status.Code == RepairStatusCodes.InRepair))
