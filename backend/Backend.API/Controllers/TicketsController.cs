@@ -1,5 +1,6 @@
-using RepairShop.Domain.Common;
+using RepairShop.Application.Modules.Tickets.Commands;
 using RepairShop.Infrastructure.Identity;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,22 +8,19 @@ namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/tickets")]
-[Authorize] // mặc định: chỉ cần đăng nhập, role cụ thể xét lại từng action bên dưới
 public class TicketsController : ControllerBase
 {
+    private readonly IMediator _mediator;
+
+    public TicketsController(IMediator mediator) => _mediator = mediator;
+
     [HttpPost]
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-015: Receptionist tạo ticket
-    public IActionResult CreateTicket() => Ok();
-
-    [HttpPatch("{id}/diagnosis")]
-    [Authorize(Roles = Roles.Technician)] // FR-024: chỉ Technician nhập chẩn đoán — dùng Roles attribute trực tiếp cũng được
-    public IActionResult SubmitDiagnosis(Guid id) => Ok();
-
-    [HttpGet("track/{ticketCode}")]
-    [AllowAnonymous] // FR-029: Customer tra cứu KHÔNG cần đăng nhập — override [Authorize] ở class
-    public IActionResult TrackByCode(string ticketCode) => Ok();
-
-    [HttpGet("{id}")]
-    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Admin/Receptionist/Technician đều xem được (Customer thì KHÔNG qua route này)
-    public IActionResult GetTicketDetail(Guid id) => Ok();
+    public async Task<IActionResult> Create(CreateTicketCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(Create), new { id = result.Id }, result);
+        // Lưu ý: chưa có GET /api/tickets/{id} thật (thuộc Task khác trong Tuần 4) nên tạm route lại chính action này —
+        // sẽ đổi thành nameof(GetById) khi task đó hoàn thành.
+    }
 }

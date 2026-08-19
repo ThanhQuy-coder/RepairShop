@@ -63,5 +63,23 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
             .WithOne(w => w.RepairTicket)
             .HasForeignKey<RepairShop.Domain.Modules.Warranty.Warranty>(w => w.RepairTicketId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Composition: RepairTicket (1) -> RepairTicketStatusHistory (N) — Cascade (history sống chết theo ticket, BR-05)
+        builder.HasMany(t => t.StatusHistories)
+            .WithOne()
+            .HasForeignKey(h => h.RepairTicketId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Composition: RepairTicket (1) -> TicketImage (N) — Cascade
+        builder.HasMany(t => t.Images)
+            .WithOne()
+            .HasForeignKey(i => i.RepairTicketId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Composition: RepairTicket (1) -> TicketPart (N) — Cascade (Task 4.2, dùng cho BR-20 sau này)
+        builder.HasMany(t => t.TicketParts)
+            .WithOne()
+            .HasForeignKey(p => p.RepairTicketId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

@@ -98,6 +98,10 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.NotFound,
                 new ApiErrorResponse { Message = notFoundEx.Message }),
 
+            DeviceOwnershipMismatchException ownershipEx => (
+                HttpStatusCode.Conflict, // 409 — đúng tinh thần lỗi "vi phạm ràng buộc quan hệ dữ liệu", không phải 400 (sai format) hay 403 (sai quyền)
+                new ApiErrorResponse { Message = ownershipEx.Message }),
+
             _ => (
                 HttpStatusCode.InternalServerError,
                 new ApiErrorResponse { Message = "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau." })

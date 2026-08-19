@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using RepairShop.Domain.Common;
+using RepairShop.Infrastructure.ExternalServices;
 
 namespace RepairShop.Infrastructure;
 
@@ -39,6 +40,9 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IDeviceRepository, DeviceRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IRepairTicketRepository, RepairTicketRepository>();
+        services.AddScoped<IRepairStatusRepository, RepairStatusRepository>();
+        services.AddScoped<ITicketCodeGenerator, TicketCodeGenerator>();
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
            ?? throw new InvalidOperationException("Cấu hình Jwt không tìm thấy trong appsettings.");
@@ -52,6 +56,7 @@ public static class DependencyInjection
         })
         .AddJwtBearer(options =>
         {
+            options.MapInboundClaims = false;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,

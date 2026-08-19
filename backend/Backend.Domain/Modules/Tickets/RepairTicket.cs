@@ -248,4 +248,18 @@ public class RepairTicket : BaseEntity
         if (!_statusHistories.Any(h => h.Status.Code == RepairStatusCodes.InRepair))
             throw new DomainException("Ticket phải từng ở trạng thái IN_REPAIR trước khi được đánh dấu QA đạt.");
     }
+
+    /// <summary>
+    /// Ghi bản ghi StatusHistory ĐẦU TIÊN khi ticket vừa khởi tạo — khác ChangeStatus() vì đây
+    /// không phải "chuyển" từ trạng thái nào cả, chỉ là xác nhận trạng thái CHECKED_IN ban đầu.
+    /// Gọi đúng 1 lần ngay sau constructor, ở Application layer (không thể gọi từ trong constructor
+    /// vì lúc đó Id có thể chưa được EF Core gán xong tuỳ chiến lược sinh khoá).
+    /// </summary>
+    public void RecordInitialStatusHistory(Guid receptionistId)
+    {
+        if (_statusHistories.Count > 0)
+            throw new DomainException("Ticket đã có lịch sử trạng thái, không thể ghi lại lịch sử khởi tạo.");
+
+        _statusHistories.Add(new RepairTicketStatusHistory(Id, Status, receptionistId, "Tiếp nhận thiết bị"));
+    }
 }
