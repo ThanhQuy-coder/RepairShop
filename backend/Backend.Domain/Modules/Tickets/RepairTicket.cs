@@ -101,9 +101,9 @@ public class RepairTicket : BaseEntity
 
         var beforeRepairAllowedStatuses = new[]
         {
-        RepairStatusCodes.CheckedIn, RepairStatusCodes.Assigned, RepairStatusCodes.Diagnosing,
-        RepairStatusCodes.WaitingApproval, RepairStatusCodes.OnHold, RepairStatusCodes.WaitingParts
-    };
+            RepairStatusCodes.CheckedIn, RepairStatusCodes.Assigned, RepairStatusCodes.Diagnosing,
+            RepairStatusCodes.WaitingApproval, RepairStatusCodes.OnHold, RepairStatusCodes.WaitingParts
+        };
 
         if (imageType == ImageType.BeforeRepair && !beforeRepairAllowedStatuses.Contains(Status.Code))
             throw new DomainException("Ảnh BEFORE_REPAIR chỉ được thêm trước khi bắt đầu sửa chữa.");

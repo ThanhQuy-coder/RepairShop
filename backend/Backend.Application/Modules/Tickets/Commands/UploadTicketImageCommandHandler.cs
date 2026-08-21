@@ -35,10 +35,13 @@ public class UploadTicketImageCommandHandler : IRequestHandler<UploadTicketImage
         // Upload lên Cloudinary TRƯỚC — nếu Domain reject (VD sai trạng thái) thì ảnh coi như "mồ côi" trên
         // Cloudinary (chấp nhận đánh đổi ở quy mô đồ án; hệ thống production thật sẽ cần cơ chế dọn rác/rollback).
         var uploadResult = await _fileStorageService.UploadImageAsync(
-            request.FileStream, request.FileName, folder: $"repairshop/tickets/{ticket.TicketCode}");
+            request.FileStream, request.FileName, folder: $"repair_shop/tickets/{ticket.TicketCode}");
 
         // Domain tự enforce: đúng loại ảnh + đúng trạng thái mới cho thêm (Task 4.5)
         ticket.AddImage(uploadResult.Url, request.ImageType, userId, request.Caption);
+
+        var newImage = ticket.Images.Last();
+        _ticketRepository.TrackNewImage(newImage);
 
         await _ticketRepository.SaveChangesAsync();
 

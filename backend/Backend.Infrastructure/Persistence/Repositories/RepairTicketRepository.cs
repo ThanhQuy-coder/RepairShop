@@ -10,6 +10,9 @@ public class RepairTicketRepository : IRepairTicketRepository
 
     public RepairTicketRepository(AppDbContext context) => _context = context;
 
+    public void TrackNewImage(TicketImage image) =>
+        _context.Entry(image).State = EntityState.Added;
+
     public Task<RepairTicket?> GetByIdAsync(Guid id) =>
         _context.RepairTickets
             .Include(t => t.Customer)
@@ -17,6 +20,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Status)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
             .Include(t => t.Images)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id);
 
     public Task<bool> TicketCodeExistsAsync(string ticketCode) =>

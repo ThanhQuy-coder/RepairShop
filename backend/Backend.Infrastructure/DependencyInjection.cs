@@ -25,11 +25,18 @@ public static class DependencyInjection
                 "Connection string 'DefaultConnection' không tìm thấy trong appsettings.json");
 
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionString, npgsqlOptions =>
-                npgsqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+            {
+                options.UseNpgsql(connectionString, npgsqlOptions =>
+                    npgsqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
 
-        services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
-        services.AddScoped<IFileStorageService, CloudinaryFileStorageService>();
+                options.EnableDetailedErrors();
+
+                options.EnableSensitiveDataLogging();
+
+                options.LogTo(
+                    Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
+            }
+        );
 
         services.AddHttpContextAccessor();
 
@@ -90,6 +97,9 @@ public static class DependencyInjection
             options.AddPolicy(AuthorizationPolicies.InventoryViewers, policy =>
                 policy.RequireRole(Roles.Technician, Roles.Admin));
         });
+
+        services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
+        services.AddScoped<IFileStorageService, CloudinaryFileStorageService>();
 
         return services;
     }
