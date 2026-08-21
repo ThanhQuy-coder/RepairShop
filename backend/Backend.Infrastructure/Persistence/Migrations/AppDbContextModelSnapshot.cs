@@ -487,6 +487,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ConditionNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -527,6 +531,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("ReceptionistId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("RiskWarning")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer");
@@ -603,6 +611,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Caption")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("ImageType")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -621,9 +633,14 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("now()");
 
+                    b.Property<Guid>("UploadedByUserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RepairTicketId");
+
+                    b.HasIndex("UploadedByUserId");
 
                     b.ToTable("TicketImages", (string)null);
                 });
@@ -831,6 +848,12 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .WithMany("Images")
                         .HasForeignKey("RepairTicketId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RepairShop.Domain.Modules.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UploadedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

@@ -68,6 +68,10 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             request.IssueDescription,
             checkedInStatus);
 
+        if (!string.IsNullOrWhiteSpace(request.ConditionNotes) || !string.IsNullOrWhiteSpace(request.RiskWarning))
+            ticket.RecordIntakeCondition(request.ConditionNotes, request.RiskWarning);
+
+
         if (!string.IsNullOrWhiteSpace(request.Notes))
             ticket.AddNote(request.Notes);
 
@@ -83,7 +87,10 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             ticket.TicketCode, customer.Id, device.Id);
 
         // 8. Trả Ticket
-        return new TicketResponse(ticket.Id, ticket.TicketCode, ticket.CustomerId, ticket.DeviceId,
-            ticket.Status.Code, ticket.IssueReported, ticket.Notes, ticket.ReceivedAt);
+        return new TicketResponse(ticket.Id,
+            ticket.TicketCode, ticket.CustomerId, ticket.DeviceId,
+            ticket.Status.Code, ticket.IssueReported,
+            ticket.Notes, ticket.ConditionNotes,
+            ticket.RiskWarning, ticket.ReceivedAt);
     }
 }

@@ -7,4 +7,6 @@ public record CreateTicketCommand(
     Guid CustomerId,
     Guid DeviceId,
     string IssueDescription,
-    string? Notes) : IRequest<TicketResponse>;
+    string? Notes,
+    string? ConditionNotes,
+    string? RiskWarning) : IRequest<TicketResponse>;

@@ -8,4 +8,6 @@ public record TicketResponse(
     string Status,
     string IssueReported,
     string? Notes,
+    string? ConditionNotes,
+    string? RiskWarning,
     DateTime ReceivedAt);

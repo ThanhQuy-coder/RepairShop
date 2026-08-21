@@ -9,11 +9,11 @@ using RepairShop.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace RepairShop.Infrastructure.Persistence.Migrations
+namespace Backend.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260819013618_AddRepairTicketWorkflow")]
-    partial class AddRepairTicketWorkflow
+    [Migration("20260821062210_AddIntakeConditionAndTicketImageMetadata")]
+    partial class AddIntakeConditionAndTicketImageMetadata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -400,6 +400,85 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("RepairStatuses", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "CHECKED_IN",
+                            Name = "Đã tiếp nhận",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "ASSIGNED",
+                            Name = "Đã phân công",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "DIAGNOSING",
+                            Name = "Đang chẩn đoán",
+                            SortOrder = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "WAITING_APPROVAL",
+                            Name = "Chờ khách hàng duyệt",
+                            SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Code = "ON_HOLD",
+                            Name = "Tạm dừng",
+                            SortOrder = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Code = "WAITING_PARTS",
+                            Name = "Chờ linh kiện",
+                            SortOrder = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Code = "IN_REPAIR",
+                            Name = "Đang sửa chữa",
+                            SortOrder = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Code = "QA_TESTING",
+                            Name = "Đang kiểm tra chất lượng",
+                            SortOrder = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Code = "READY_FOR_PICKUP",
+                            Name = "Sẵn sàng giao khách",
+                            SortOrder = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Code = "DELIVERED",
+                            Name = "Đã giao khách",
+                            SortOrder = 10
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Code = "CLOSED_REJECTED",
+                            Name = "Đã đóng - từ chối sửa",
+                            SortOrder = 11
+                        });
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Tickets.RepairTicket", b =>
@@ -410,6 +489,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ConditionNotes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -451,6 +534,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("ReceptionistId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("RiskWarning")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("integer");
@@ -527,6 +614,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Caption")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
                     b.Property<string>("ImageType")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -545,9 +636,14 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("now()");
 
+                    b.Property<Guid>("UploadedByUserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RepairTicketId");
+
+                    b.HasIndex("UploadedByUserId");
 
                     b.ToTable("TicketImages", (string)null);
                 });
@@ -755,6 +851,12 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .WithMany("Images")
                         .HasForeignKey("RepairTicketId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RepairShop.Domain.Modules.Identity.User", null)
+                        .WithMany()
+                        .HasForeignKey("UploadedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

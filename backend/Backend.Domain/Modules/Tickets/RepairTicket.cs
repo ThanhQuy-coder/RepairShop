@@ -48,6 +48,9 @@ public class RepairTicket : BaseEntity
     private readonly List<TicketPart> _ticketParts = new();
     public IReadOnlyCollection<TicketPart> TicketParts => _ticketParts.AsReadOnly();
 
+    public string? ConditionNotes { get; private set; }
+    public string? RiskWarning { get; private set; }
+
     private RepairTicket() { } // for EF Core
 
     public RepairTicket(string ticketCode, Guid customerId, Guid deviceId, Guid receptionistId,
@@ -81,12 +84,36 @@ public class RepairTicket : BaseEntity
     // ───────────────────────── Ghi nhận ảnh hiện trạng ─────────────────────────
 
     /// <summary>FR-017/FR-026: Receptionist chụp ảnh lúc nhận, Technician chụp ảnh sau sửa.</summary>
-    public void AddImage(string imageUrl, ImageType imageType)
+    /// <summary>
+    /// FR-017/FR-026. Ràng buộc theo loại ảnh:
+    /// - BEFORE_REPAIR: chỉ hợp lý trước khi bắt đầu sửa (từ CHECKED_IN đến trước IN_REPAIR).
+    /// - AFTER_REPAIR: chỉ hợp lý sau khi đã/đang sửa (từ IN_REPAIR trở đi).
+    /// - OTHER: không ràng buộc trạng thái, nhưng vẫn chặn ở 2 trạng thái kết thúc (đã đóng hồ sơ).
+    /// </summary>
+    public void AddImage(string imageUrl, ImageType imageType, Guid uploadedByUserId, string? caption = null)
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             throw new DomainException("URL ảnh không được để trống.");
 
-        _images.Add(new TicketImage(Id, imageUrl, imageType));
+        var terminalStatuses = new[] { RepairStatusCodes.Delivered, RepairStatusCodes.ClosedRejected };
+        if (terminalStatuses.Contains(Status.Code))
+            throw new DomainException("Không thể thêm ảnh khi ticket đã kết thúc (đã bàn giao hoặc đã đóng).");
+
+        var beforeRepairAllowedStatuses = new[]
+        {
+        RepairStatusCodes.CheckedIn, RepairStatusCodes.Assigned, RepairStatusCodes.Diagnosing,
+        RepairStatusCodes.WaitingApproval, RepairStatusCodes.OnHold, RepairStatusCodes.WaitingParts
+    };
+
+        if (imageType == ImageType.BeforeRepair && !beforeRepairAllowedStatuses.Contains(Status.Code))
+            throw new DomainException("Ảnh BEFORE_REPAIR chỉ được thêm trước khi bắt đầu sửa chữa.");
+
+        if (imageType == ImageType.AfterRepair &&
+            Status.Code is not (RepairStatusCodes.InRepair or RepairStatusCodes.QaTesting or RepairStatusCodes.ReadyForPickup))
+            throw new DomainException("Ảnh AFTER_REPAIR chỉ được thêm khi đang/đã sửa chữa xong.");
+
+        _images.Add(new TicketImage(Id, imageUrl, imageType, uploadedByUserId, caption));
+        MarkUpdated();
     }
 
     // ───────────────────────── Workflow: Assign → Diagnosis ─────────────────────────
@@ -261,5 +288,22 @@ public class RepairTicket : BaseEntity
             throw new DomainException("Ticket đã có lịch sử trạng thái, không thể ghi lại lịch sử khởi tạo.");
 
         _statusHistories.Add(new RepairTicketStatusHistory(Id, Status, receptionistId, "Tiếp nhận thiết bị"));
+    }
+
+    /// <summary>
+    /// Ghi nhận tình trạng máy lúc tiếp nhận (Task 1 Tuần 1, bước 2). Chỉ cho phép sửa khi ticket
+    /// còn ở CHECKED_IN — sau khi đã Assign kỹ thuật viên, thông tin này KHÔNG được sửa nữa
+    /// (đúng lý do gốc: "ghi chú vết trầy/móp có sẵn để tránh tranh chấp sau này" — nếu cho sửa tuỳ tiện
+    /// thì mất luôn giá trị làm bằng chứng).
+    /// </summary>
+    public void RecordIntakeCondition(string? conditionNotes, string? riskWarning)
+    {
+        if (Status.Code != RepairStatusCodes.CheckedIn)
+            throw new DomainException(
+                "Chỉ được ghi/sửa tình trạng tiếp nhận khi ticket còn ở trạng thái CHECKED_IN.");
+
+        ConditionNotes = conditionNotes;
+        RiskWarning = riskWarning;
+        MarkUpdated();
     }
 }

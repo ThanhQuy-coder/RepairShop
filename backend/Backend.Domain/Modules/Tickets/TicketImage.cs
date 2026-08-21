@@ -8,14 +8,19 @@ public class TicketImage
     public Guid RepairTicketId { get; private set; }
     public string ImageUrl { get; private set; } = default!;
     public ImageType ImageType { get; private set; }
+    public Guid UploadedByUserId { get; private set; }
+    public string? Caption { get; private set; }
     public DateTime UploadedAt { get; private set; } = DateTime.UtcNow;
 
     private TicketImage() { } // for EF Core
 
-    internal TicketImage(Guid repairTicketId, string imageUrl, ImageType imageType)
+    internal TicketImage(Guid repairTicketId, string imageUrl,
+        ImageType imageType, Guid uploadedByUserId, string? caption = null)
     {
         RepairTicketId = repairTicketId;
         ImageUrl = imageUrl;
         ImageType = imageType;
+        UploadedByUserId = uploadedByUserId;
+        Caption = caption;
     }
 }

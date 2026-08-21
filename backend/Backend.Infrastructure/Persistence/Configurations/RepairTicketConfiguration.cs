@@ -20,6 +20,9 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
         builder.Property(t => t.DiagnosticDeposit).HasColumnType("decimal(12,2)").HasDefaultValue(0);
         builder.Property(t => t.CreatedAt).HasDefaultValueSql("now()");
 
+        builder.Property(t => t.ConditionNotes).HasMaxLength(1000);
+        builder.Property(t => t.RiskWarning).HasMaxLength(500);
+
         // FK: RepairTicket -> Device / Customer đã cấu hình bên phía Device/Customer config (tránh khai 2 lần 2 chiều)
 
         // FK: RepairTicket -> User (Receptionist) — bắt buộc, restrict

@@ -3,6 +3,7 @@ using RepairShop.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepairShop.Domain.Modules.Tickets.Enums;
 
 namespace RepairShop.API.Controllers;
 
@@ -22,5 +23,37 @@ public class TicketsController : ControllerBase
         return CreatedAtAction(nameof(Create), new { id = result.Id }, result);
         // Lưu ý: chưa có GET /api/tickets/{id} thật (thuộc Task khác trong Tuần 4) nên tạm route lại chính action này —
         // sẽ đổi thành nameof(GetById) khi task đó hoàn thành.
+    }
+
+    [HttpPatch("{id:guid}/intake-condition")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> UpdateIntakeCondition(Guid id, UpdateConditionBody body)
+    {
+        await _mediator.Send(new UpdateIntakeConditionCommand(id, body.ConditionNotes, body.RiskWarning));
+        return NoContent();
+    }
+
+    public record UpdateConditionBody(string? ConditionNotes, string? RiskWarning);
+
+    [HttpPost("{id:guid}/images")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Domain tự phân biệt hợp lệ theo trạng thái, Controller chỉ chặn "phải là nhân viên"
+    [RequestSizeLimit(5 * 1024 * 1024)]
+    public async Task<IActionResult> UploadImage(Guid id, IFormFile file, [FromForm] ImageType imageType,
+    [FromForm] string? caption)
+    {
+        if (file is null || file.Length == 0)
+            return BadRequest(new { success = false, message = "File ảnh không được để trống." });
+
+        await using var stream = file.OpenReadStream();
+        var result = await _mediator.Send(new UploadTicketImageCommand(id, stream, file.FileName, imageType, caption));
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/images")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
+    public async Task<IActionResult> GetImages(Guid id)
+    {
+        var result = await _mediator.Send(new GetTicketImagesQuery(id));
+        return Ok(result);
     }
 }

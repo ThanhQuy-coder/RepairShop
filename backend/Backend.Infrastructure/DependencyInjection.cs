@@ -28,6 +28,9 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString, npgsqlOptions =>
                 npgsqlOptions.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
+        services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
+        services.AddScoped<IFileStorageService, CloudinaryFileStorageService>();
+
         services.AddHttpContextAccessor();
 
         // Authentication

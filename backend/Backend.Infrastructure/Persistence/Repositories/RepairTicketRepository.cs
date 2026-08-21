@@ -16,6 +16,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Device)
             .Include(t => t.Status)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
+            .Include(t => t.Images)
             .FirstOrDefaultAsync(t => t.Id == id);
 
     public Task<bool> TicketCodeExistsAsync(string ticketCode) =>
