@@ -10,4 +10,5 @@ public interface ICustomerRepository
     Task AddAsync(Customer customer);
     void Update(Customer customer);
     Task SaveChangesAsync();
+    Task<Customer?> GetByUserIdAsync(Guid userId);
 }

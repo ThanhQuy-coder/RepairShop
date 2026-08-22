@@ -2,6 +2,7 @@ using RepairShop.Domain.Common;
 using RepairShop.Domain.Common.Enums;
 using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Modules.Identity;
+using RepairShop.Domain.Modules.Quotes.Enums;
 using RepairShop.Domain.Modules.Tickets;
 
 namespace RepairShop.Domain.Modules.Quotes;
@@ -34,13 +35,12 @@ public class Quote : BaseEntity
         CreatedByUserId = createdByUserId;
     }
 
-    /// <summary>Thêm hạng mục — tự cộng dồn vào TotalAmount, chỉ cho phép khi Quote còn Pending.</summary>
-    public void AddItem(string description, int quantity, decimal unitPrice)
+    public void AddItem(QuoteItemType itemType, string description, int quantity, decimal unitPrice, Guid? partId = null)
     {
         if (Status != QuoteStatus.Pending)
             throw new DomainException("Không thể chỉnh sửa báo giá đã được khách phản hồi.");
 
-        var item = new QuoteItem(Id, description, quantity, unitPrice);
+        var item = new QuoteItem(Id, itemType, description, quantity, unitPrice, partId);
         _items.Add(item);
         TotalAmount = _items.Sum(i => i.Subtotal);
     }

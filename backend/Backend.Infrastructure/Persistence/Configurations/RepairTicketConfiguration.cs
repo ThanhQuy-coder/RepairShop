@@ -23,6 +23,10 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
         builder.Property(t => t.ConditionNotes).HasMaxLength(1000);
         builder.Property(t => t.RiskWarning).HasMaxLength(500);
 
+        builder.Property(t => t.RootCause).HasMaxLength(500);
+        builder.Property(t => t.RecommendedRepair).HasMaxLength(1000);
+        builder.Property(t => t.RequiredPartsNote).HasMaxLength(500);
+
         // FK: RepairTicket -> Device / Customer đã cấu hình bên phía Device/Customer config (tránh khai 2 lần 2 chiều)
 
         // FK: RepairTicket -> User (Receptionist) — bắt buộc, restrict

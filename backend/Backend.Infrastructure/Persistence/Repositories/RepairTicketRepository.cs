@@ -21,6 +21,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Customer)
             .Include(t => t.Device)
             .Include(t => t.Status)
+            .Include(t => t.Quotes).ThenInclude(q => q.Items)
             .Include(t => t.Technician)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
             .Include(t => t.Images)

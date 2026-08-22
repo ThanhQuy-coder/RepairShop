@@ -51,6 +51,10 @@ public class RepairTicket : BaseEntity
     public string? ConditionNotes { get; private set; }
     public string? RiskWarning { get; private set; }
 
+    public string? RootCause { get; private set; }
+    public string? RecommendedRepair { get; private set; }
+    public string? RequiredPartsNote { get; private set; }
+
     private RepairTicket() { } // for EF Core
 
     public RepairTicket(string ticketCode, Guid customerId, Guid deviceId, Guid receptionistId,
@@ -131,15 +135,24 @@ public class RepairTicket : BaseEntity
         ChangeStatus(diagnosingStatus, changedByUserId, note);
     }
 
-    /// <summary>FR-024: chỉ ghi được kết quả chẩn đoán khi đang ở bước Diagnosing.</summary>
-    public void SubmitDiagnosis(string diagnosisResult)
+    /// <summary>
+    /// Ghi đè lại SubmitDiagnosis() từ Task 4.1 — mở rộng đủ field mentor yêu cầu.
+    /// TechnicalNotes tái dùng field Notes/AddNote() đã có sẵn (Task 4.1) — không tạo field trùng lặp,
+    /// vì "ghi chú kỹ thuật trong quá trình xử lý" về bản chất là cùng khái niệm với Notes chung của ticket.
+    /// </summary>
+    public void SubmitDiagnosis(string diagnosisResult, string? rootCause, string? recommendedRepair,
+        string? requiredPartsNote)
     {
         if (Status.Code != RepairStatusCodes.Diagnosing)
-            throw new DomainException($"Chỉ ghi nhận chẩn đoán khi ticket ở trạng thái DIAGNOSING (hiện tại: '{Status.Code}').");
+            throw new DomainException(
+                $"Chỉ ghi nhận chẩn đoán khi ticket ở trạng thái DIAGNOSING (hiện tại: '{Status.Code}').");
         if (string.IsNullOrWhiteSpace(diagnosisResult))
             throw new DomainException("Kết quả chẩn đoán không được để trống.");
 
         DiagnosisResult = diagnosisResult;
+        RootCause = rootCause;
+        RecommendedRepair = recommendedRepair;
+        RequiredPartsNote = requiredPartsNote;
         MarkUpdated();
     }
 

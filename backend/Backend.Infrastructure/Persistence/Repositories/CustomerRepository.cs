@@ -41,4 +41,7 @@ public class CustomerRepository : ICustomerRepository
     public void Update(Customer customer) => _context.Customers.Update(customer);
 
     public Task SaveChangesAsync() => _context.SaveChangesAsync();
+
+    public Task<Customer?> GetByUserIdAsync(Guid userId) =>
+        _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
 }

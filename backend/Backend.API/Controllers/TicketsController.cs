@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepairShop.Domain.Modules.Tickets.Enums;
+using RepairShop.Domain.Common;
 
 namespace RepairShop.API.Controllers;
 
@@ -74,4 +75,42 @@ public class TicketsController : ControllerBase
         var result = await _mediator.Send(new GetTicketByIdQuery(id));
         return Ok(result);
     }
+
+    [HttpPatch("{id:guid}/start-diagnosis")]
+    [Authorize(Roles = Roles.Technician)] // chỉ Technician thực hiện chẩn đoán (FR-024)
+    public async Task<IActionResult> StartDiagnosis(Guid id)
+    {
+        var result = await _mediator.Send(new StartDiagnosisCommand(id));
+        return Ok(result);
+    }
+
+    public record SubmitDiagnosisBody(string DiagnosisResult, string? RootCause,
+        string? RecommendedRepair, string? RequiredPartsNote, string? TechnicalNote);
+
+    [HttpPatch("{id:guid}/diagnosis")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> SubmitDiagnosis(Guid id, SubmitDiagnosisBody body)
+    {
+        var result = await _mediator.Send(new SubmitDiagnosisCommand(id, body.DiagnosisResult,
+            body.RootCause, body.RecommendedRepair, body.RequiredPartsNote, body.TechnicalNote));
+        return Ok(result);
+    }
+
+    [HttpPost("{id:guid}/quotes")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-030
+    public async Task<IActionResult> CreateQuote(Guid id, CreateQuoteBody body)
+    {
+        var result = await _mediator.Send(new CreateQuoteCommand(id, body.Description, body.Items));
+        return CreatedAtAction(nameof(GetQuotes), new { id }, result);
+    }
+
+    [HttpGet("{id:guid}/quotes")]
+    [Authorize] // Receptionist/Admin/Technician/Customer (ticket của mình) — ownership check để dành khi làm GET tổng quát
+    public async Task<IActionResult> GetQuotes(Guid id)
+    {
+        var result = await _mediator.Send(new GetTicketQuotesQuery(id));
+        return Ok(result);
+    }
+
+    public record CreateQuoteBody(string Description, List<QuoteItemInput> Items);
 }
