@@ -56,4 +56,22 @@ public class TicketsController : ControllerBase
         var result = await _mediator.Send(new GetTicketImagesQuery(id));
         return Ok(result);
     }
+    public record AssignTechnicianBody(Guid TechnicianId, string? Note);
+
+    [HttpPatch("{id:guid}/assign-technician")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-018: Receptionist/Admin gán kỹ thuật viên
+    public async Task<IActionResult> AssignTechnician(Guid id, AssignTechnicianBody body)
+    {
+        var result = await _mediator.Send(new AssignTechnicianCommand(id, body.TechnicianId, body.Note));
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Role check: phải là nhân viên nội bộ (Task 7)
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        // Ownership check (khác role check) nằm TRONG Handler, không phải ở đây
+        var result = await _mediator.Send(new GetTicketByIdQuery(id));
+        return Ok(result);
+    }
 }

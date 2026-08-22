@@ -94,13 +94,15 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.BadRequest,
                 new ApiErrorResponse { Message = domainEx.Message }),
 
-            KeyNotFoundException notFoundEx => (
+            NotFoundException notFoundEx => (
                 HttpStatusCode.NotFound,
                 new ApiErrorResponse { Message = notFoundEx.Message }),
 
             DeviceOwnershipMismatchException ownershipEx => (
                 HttpStatusCode.Conflict, // 409 — đúng tinh thần lỗi "vi phạm ràng buộc quan hệ dữ liệu", không phải 400 (sai format) hay 403 (sai quyền)
                 new ApiErrorResponse { Message = ownershipEx.Message }),
+
+            ForbiddenException forbiddenEx => (HttpStatusCode.Forbidden, new ApiErrorResponse { Message = forbiddenEx.Message }),
 
             _ => (
                 HttpStatusCode.InternalServerError,
