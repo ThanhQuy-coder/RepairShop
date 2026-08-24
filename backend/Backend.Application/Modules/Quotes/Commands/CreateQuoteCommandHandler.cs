@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Quotes;
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Quotes.Enums;
@@ -58,12 +59,6 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         _logger.LogInformation("Tạo Quote {QuoteId} cho Ticket {TicketCode}, tổng tiền {TotalAmount}",
             quote.Id, ticket.TicketCode, quote.TotalAmount);
 
-        return MapToResponse(quote);
+        return QuoteMapper.ToResponse(quote);
     }
-
-    private static QuoteResponse MapToResponse(Quote quote) => new(
-        quote.Id, quote.RepairTicketId, quote.Description, quote.TotalAmount, quote.Status.ToString(),
-        quote.Items.Select(i => new QuoteItemResponse(i.Id, i.ItemType.ToString(), i.Description,
-            i.Quantity, i.UnitPrice, i.Subtotal)).ToList(),
-        quote.CreatedAt);
 }
