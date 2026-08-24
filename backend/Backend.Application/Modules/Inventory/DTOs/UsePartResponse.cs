@@ -1,0 +1,1 @@
+public record UsePartResponse(Guid TicketPartId, string PartName, int Quantity, decimal UnitPriceAtUse, decimal Subtotal);

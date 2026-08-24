@@ -10,6 +10,7 @@ public interface IRepairTicketRepository
 
     void TrackNewImage(TicketImage image);
     void TrackNewStatusHistory(RepairTicketStatusHistory history);
-    
+    void TrackNewTicketPart(TicketPart ticketPart);
+
     Task SaveChangesAsync();
 }

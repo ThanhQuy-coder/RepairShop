@@ -55,6 +55,8 @@ public class RepairTicket : BaseEntity
     public string? RecommendedRepair { get; private set; }
     public string? RequiredPartsNote { get; private set; }
 
+    public string? CompletionNotes { get; private set; }
+
     private RepairTicket() { } // for EF Core
 
     public RepairTicket(string ticketCode, Guid customerId, Guid deviceId, Guid receptionistId,
@@ -317,6 +319,18 @@ public class RepairTicket : BaseEntity
 
         ConditionNotes = conditionNotes;
         RiskWarning = riskWarning;
+        MarkUpdated();
+    }
+
+    /// <summary>Technician tổng kết công việc đã làm — bắt buộc phải có trước khi chuyển sang QA (xem StartQualityCheck bên dưới).</summary>
+    public void RecordCompletionNotes(string completionNotes)
+    {
+        if (Status.Code != RepairStatusCodes.InRepair)
+            throw new DomainException("Chỉ ghi nhận ghi chú hoàn tất khi ticket đang ở trạng thái IN_REPAIR.");
+        if (string.IsNullOrWhiteSpace(completionNotes))
+            throw new DomainException("Ghi chú hoàn tất không được để trống.");
+
+        CompletionNotes = completionNotes;
         MarkUpdated();
     }
 }

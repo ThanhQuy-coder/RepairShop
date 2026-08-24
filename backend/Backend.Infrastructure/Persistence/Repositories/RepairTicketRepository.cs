@@ -34,4 +34,7 @@ public class RepairTicketRepository : IRepairTicketRepository
     public async Task AddAsync(RepairTicket ticket) => await _context.RepairTickets.AddAsync(ticket);
 
     public Task SaveChangesAsync() => _context.SaveChangesAsync();
+
+    public void TrackNewTicketPart(TicketPart ticketPart) =>
+        _context.Entry(ticketPart).State = EntityState.Added;
 }

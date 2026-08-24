@@ -63,8 +63,9 @@ public class ExceptionHandlingMiddleware
     /// <summary>
     /// Sử dụng cú pháp Pattern Matching (switch) của C# để ánh xạ từng loại Exception ra HTTP Status Code và Thông báo lỗi (JSON) thích hợp
     /// </summary>
-    private static (HttpStatusCode StatusCode, ApiErrorResponse Response) MapException(Exception exception) =>
-        exception switch
+    private static (HttpStatusCode StatusCode, ApiErrorResponse Response) MapException(Exception exception)
+    {
+        return exception switch
         {
             ValidationException validationEx => (
                 HttpStatusCode.BadRequest,
@@ -90,6 +91,8 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.Conflict,
                 new ApiErrorResponse { Message = operationEx.Message }),
 
+            InsufficientStockException stockEx => (HttpStatusCode.Conflict, new ApiErrorResponse { Message = stockEx.Message }),
+
             DomainException domainEx => (
                 HttpStatusCode.BadRequest,
                 new ApiErrorResponse { Message = domainEx.Message }),
@@ -108,4 +111,5 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.InternalServerError,
                 new ApiErrorResponse { Message = "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau." })
         };
+    }
 }

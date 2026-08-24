@@ -113,4 +113,34 @@ public class TicketsController : ControllerBase
     }
 
     public record CreateQuoteBody(string Description, List<QuoteItemInput> Items);
+
+    public record RepairNoteBody(string Note);
+
+    [HttpPost("{id:guid}/repair-notes")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> AddRepairNote(Guid id, RepairNoteBody body)
+    {
+        await _mediator.Send(new AddRepairNoteCommand(id, body.Note));
+        return NoContent();
+    }
+
+    public record UsePartBody(Guid PartId, int Quantity);
+
+    [HttpPost("{id:guid}/parts")]
+    [Authorize(Roles = Roles.Technician)] // FR-043
+    public async Task<IActionResult> UsePart(Guid id, UsePartBody body)
+    {
+        var result = await _mediator.Send(new UsePartCommand(id, body.PartId, body.Quantity));
+        return Ok(result);
+    }
+
+    public record CompletionNotesBody(string CompletionNotes);
+
+    [HttpPatch("{id:guid}/completion-notes")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> RecordCompletionNotes(Guid id, CompletionNotesBody body)
+    {
+        await _mediator.Send(new RecordCompletionNotesCommand(id, body.CompletionNotes));
+        return NoContent();
+    }
 }
