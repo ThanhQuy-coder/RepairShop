@@ -66,9 +66,7 @@ public class AssignTechnicianCommandHandler : IRequestHandler<AssignTechnicianCo
         _logger.LogInformation("Gán Technician {TechnicianId} cho Ticket {TicketCode}",
             technician.Id, ticket.TicketCode);
 
-        return new TicketResponse(ticket.Id, ticket.TicketCode, ticket.CustomerId, ticket.DeviceId,
-            ticket.Status.Code, ticket.IssueReported, ticket.Notes, ticket.ConditionNotes, ticket.RiskWarning,
-            ticket.ReceivedAt);
+        return TicketMapper.ToResponse(ticket);
 
         // 5. "Technician có quyền thao tác Ticket sau khi được assign" — đây là hệ quả của việc gán
         //    TechnicianId vào ticket; việc ENFORCE quyền đó xảy ra ở các API TIẾP THEO (StartDiagnosis,

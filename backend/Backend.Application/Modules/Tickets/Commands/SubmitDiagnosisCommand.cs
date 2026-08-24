@@ -1,6 +1,7 @@
 using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Tickets;
 using RepairShop.Application.Modules.Tickets.DTOs;
 
 public record SubmitDiagnosisCommand(
@@ -38,7 +39,6 @@ public class SubmitDiagnosisCommandHandler : IRequestHandler<SubmitDiagnosisComm
 
         await _ticketRepository.SaveChangesAsync();
 
-        return new TicketResponse(ticket.Id, ticket.TicketCode, ticket.CustomerId, ticket.DeviceId, 
-            ticket.Status.Code, ticket.IssueReported, ticket.Notes, ticket.ConditionNotes, ticket.RiskWarning, ticket.ReceivedAt);
+        return TicketMapper.ToResponse(ticket);
     }
 }

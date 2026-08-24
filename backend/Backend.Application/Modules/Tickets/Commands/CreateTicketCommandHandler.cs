@@ -87,10 +87,6 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             ticket.TicketCode, customer.Id, device.Id);
 
         // 8. Trả Ticket
-        return new TicketResponse(ticket.Id,
-            ticket.TicketCode, ticket.CustomerId, ticket.DeviceId,
-            ticket.Status.Code, ticket.IssueReported,
-            ticket.Notes, ticket.ConditionNotes,
-            ticket.RiskWarning, ticket.ReceivedAt);
+        return TicketMapper.ToResponse(ticket);
     }
 }

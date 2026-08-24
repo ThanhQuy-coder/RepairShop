@@ -1,20 +1,18 @@
 using MediatR;
+using RepairShop.Application.Common.Authorization;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Tickets;
 using RepairShop.Application.Modules.Tickets.DTOs;
 using RepairShop.Domain.Common;
 
-namespace RepairShop.Application.Modules.Tickets.Commands;
-
-public record StartDiagnosisCommand(Guid TicketId) : IRequest<TicketResponse>;
-
-public class StartDiagnosisCommandHandler : IRequestHandler<StartDiagnosisCommand, TicketResponse>
+public class StartQualityCheckCommandHandler : IRequestHandler<StartQualityCheckCommand, TicketResponse>
 {
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
 
-    public StartDiagnosisCommandHandler(IRepairTicketRepository ticketRepository,
+    public StartQualityCheckCommandHandler(IRepairTicketRepository ticketRepository,
         IRepairStatusRepository statusRepository, ICurrentUserService currentUser)
     {
         _ticketRepository = ticketRepository;
@@ -22,21 +20,20 @@ public class StartDiagnosisCommandHandler : IRequestHandler<StartDiagnosisComman
         _currentUser = currentUser;
     }
 
-    public async Task<TicketResponse> Handle(StartDiagnosisCommand request, CancellationToken cancellationToken)
+    public async Task<TicketResponse> Handle(StartQualityCheckCommand request, CancellationToken cancellationToken)
     {
         var ticket = await _ticketRepository.GetByIdAsync(request.TicketId)
             ?? throw new NotFoundException("Phiếu sửa chữa", request.TicketId);
 
-        RepairShop.Application.Common.Authorization.TicketAccessGuard.EnsureCanAccess(ticket, _currentUser);
+        TicketAccessGuard.EnsureCanAccess(ticket, _currentUser);
 
-        var diagnosingStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.Diagnosing);
+        var qaStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.QaTesting);
         var userId = _currentUser.UserId!.Value;
 
-        ticket.StartDiagnosis(diagnosingStatus, userId); // Task 4.2 — tự enforce transition ASSIGNED→DIAGNOSING
+        // Domain tự chặn nếu chưa có CompletionNotes (Task 4.10) hoặc sai trạng thái (Task 4.2)
+        ticket.StartQualityCheck(qaStatus, userId);
 
-        // Ticket đã tracked Unchanged (load qua GetByIdAsync) → StatusHistory mới cần Track tường minh
         _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
-
         await _ticketRepository.SaveChangesAsync();
 
         return TicketMapper.ToResponse(ticket);

@@ -143,4 +143,33 @@ public class TicketsController : ControllerBase
         await _mediator.Send(new RecordCompletionNotesCommand(id, body.CompletionNotes));
         return NoContent();
     }
+
+    [HttpPatch("{id:guid}/start-qa")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> StartQualityCheck(Guid id)
+    {
+        var result = await _mediator.Send(new StartQualityCheckCommand(id));
+        return Ok(result);
+    }
+
+    public record PassQaBody(string FunctionalCheckNotes, string CosmeticCheckNotes, string OriginalIssueResolvedNotes);
+
+    [HttpPatch("{id:guid}/qa-pass")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> PassQualityCheck(Guid id, PassQaBody body)
+    {
+        var result = await _mediator.Send(new PassQualityCheckCommand(id,
+            body.FunctionalCheckNotes, body.CosmeticCheckNotes, body.OriginalIssueResolvedNotes));
+        return Ok(result);
+    }
+
+    public record FailQaBody(string FailureReason);
+
+    [HttpPatch("{id:guid}/qa-fail")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> FailQualityCheck(Guid id, FailQaBody body)
+    {
+        var result = await _mediator.Send(new FailQualityCheckCommand(id, body.FailureReason));
+        return Ok(result);
+    }
 }
