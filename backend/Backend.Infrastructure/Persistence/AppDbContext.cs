@@ -6,6 +6,7 @@ using RepairShop.Domain.Modules.Tickets;
 using RepairShop.Domain.Modules.Warranty;
 using RepairShop.Domain.Modules.Inventory;
 using Microsoft.EntityFrameworkCore;
+using RepairShop.Domain.Modules.Billing;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -27,6 +28,7 @@ public class AppDbContext : DbContext
     public DbSet<Part> Parts => Set<Part>();
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<QuoteItem> QuoteItems => Set<QuoteItem>();
+    public DbSet<Invoice> Invoices => Set<Invoice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

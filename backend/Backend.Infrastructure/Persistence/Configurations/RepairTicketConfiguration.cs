@@ -1,6 +1,7 @@
 using RepairShop.Domain.Modules.Tickets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using RepairShop.Domain.Modules.Billing;
 
 namespace RepairShop.Infrastructure.Persistence.Configurations;
 
@@ -87,6 +88,11 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
         builder.HasMany(t => t.TicketParts)
             .WithOne()
             .HasForeignKey(p => p.RepairTicketId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(t => t.Invoice)
+            .WithOne()
+            .HasForeignKey<Invoice>(i => i.RepairTicketId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

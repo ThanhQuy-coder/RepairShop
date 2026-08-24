@@ -1,0 +1,1 @@
+public record InvoiceResponse(Guid Id, Guid TicketId, decimal TotalAmount, string PaymentMethod, DateTime? PaidAt, DateTime CreatedAt);

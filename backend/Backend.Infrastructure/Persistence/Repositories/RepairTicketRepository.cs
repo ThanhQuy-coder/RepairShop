@@ -1,6 +1,8 @@
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Domain.Modules.Tickets;
 using Microsoft.EntityFrameworkCore;
+using RepairShop.Domain.Modules.Billing;
+using RepairShop.Domain.Modules.Warranty;
 
 namespace RepairShop.Infrastructure.Persistence.Repositories;
 
@@ -24,7 +26,10 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Quotes).ThenInclude(q => q.Items)
             .Include(t => t.Technician)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
+            .Include(t => t.StatusHistories).ThenInclude(h => h.ChangedByUser)
             .Include(t => t.Images)
+            .Include(t => t.Invoice)
+            .Include(t => t.Warranty)
             .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -37,4 +42,10 @@ public class RepairTicketRepository : IRepairTicketRepository
 
     public void TrackNewTicketPart(TicketPart ticketPart) =>
         _context.Entry(ticketPart).State = EntityState.Added;
+
+    public void TrackNewInvoice(Invoice invoice) =>
+        _context.Entry(invoice).State = EntityState.Added;
+
+    public void TrackNewWarranty(Warranty warranty)
+        => _context.Entry(warranty).State = EntityState.Added;
 }

@@ -172,4 +172,50 @@ public class TicketsController : ControllerBase
         var result = await _mediator.Send(new FailQualityCheckCommand(id, body.FailureReason));
         return Ok(result);
     }
+
+    public record CreateInvoiceBody(string PaymentMethod);
+
+    [HttpPost("{id:guid}/invoice")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> CreateInvoice(Guid id, CreateInvoiceBody body)
+    {
+        var result = await _mediator.Send(new CreateInvoiceCommand(id, body.PaymentMethod));
+        return Ok(result);
+    }
+
+    public record DeliverBody(string? DeliveryNote);
+
+    [HttpPatch("{id:guid}/deliver")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> Deliver(Guid id, DeliverBody body)
+    {
+        var result = await _mediator.Send(new DeliverTicketCommand(id, body.DeliveryNote));
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/status-history")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
+    public async Task<IActionResult> GetStatusHistory(Guid id)
+    {
+        var result = await _mediator.Send(new GetTicketStatusHistoryQuery(id));
+        return Ok(result);
+    }
+
+    public record CreateWarrantyBody(int WarrantyMonths, string? Terms);
+
+    [HttpPost("{id:guid}/warranty")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-036
+    public async Task<IActionResult> CreateWarranty(Guid id, CreateWarrantyBody body)
+    {
+        var result = await _mediator.Send(new CreateWarrantyCommand(id, body.WarrantyMonths, body.Terms));
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}/warranty")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Customer (ticket của mình) để dành khi làm ownership Quote-tương tự
+    public async Task<IActionResult> GetWarranty(Guid id)
+    {
+        var result = await _mediator.Send(new GetWarrantyByTicketQuery(id));
+        return Ok(result);
+    }
 }

@@ -1,5 +1,7 @@
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Common.Exceptions;
+using RepairShop.Domain.Modules.Billing;
+using RepairShop.Domain.Modules.Billing.Enums;
 using RepairShop.Domain.Modules.Customers;
 using RepairShop.Domain.Modules.Devices;
 using RepairShop.Domain.Modules.Identity;
@@ -56,6 +58,8 @@ public class RepairTicket : BaseEntity
     public string? RequiredPartsNote { get; private set; }
 
     public string? CompletionNotes { get; private set; }
+
+    public Invoice? Invoice { get; private set; }
 
     private RepairTicket() { } // for EF Core
 
@@ -231,21 +235,35 @@ public class RepairTicket : BaseEntity
 
     // ───────────────────────── Delivery & Warranty ─────────────────────────
 
+    /// <summary>
+    /// Deliver() (đã có từ Task 4.1/4.2) — bổ sung gate: KHÔNG cho bàn giao nếu chưa thanh toán.
+    /// Đây là business rule hợp lý dù Tuần 4 chỉ mock payment: mock không có nghĩa là bỏ qua ràng buộc
+    /// nghiệp vụ "phải thu tiền trước khi trả máy", chỉ là không tích hợp cổng thanh toán thật.
+    /// </summary>
     public void Deliver(RepairStatus deliveredStatus, Guid changedByUserId, string? note = null)
     {
+        if (Invoice is null)
+            throw new DomainException("Phải xuất hóa đơn trước khi bàn giao thiết bị.");
+        if (Invoice.PaidAt is null)
+            throw new DomainException("Hóa đơn chưa được thanh toán, không thể bàn giao thiết bị.");
 
-        ChangeStatus(deliveredStatus, changedByUserId, note);
+        ChangeStatus(deliveredStatus, changedByUserId, note); // enforce transition READY_FOR_PICKUP -> DELIVERED
         DeliveredAt = DateTime.UtcNow;
     }
 
-    public Warranty.Warranty CreateWarranty(DateOnly startDate, DateOnly endDate, string? terms)
+    /// <summary>
+    /// BR-10 (tối đa 1 Warranty) + Business Rule quan trọng của Task 4.14:
+    /// "Warranty không nên tồn tại trước khi Ticket hoàn tất/bàn giao" — enforce cứng bằng điều kiện
+    /// Status.Code == DELIVERED. Đây KHÔNG phải kiểm tra tùy chọn, mà là điều kiện BẮT BUỘC đầu tiên.
+    /// </summary>
+    public Warranty.Warranty CreateWarranty(string warrantyCode, DateOnly startDate, DateOnly endDate, string? terms)
     {
         if (Status.Code != RepairStatusCodes.Delivered)
-            throw new DomainException("Chỉ tạo bảo hành sau khi thiết bị đã được bàn giao.");
+            throw new DomainException("Chỉ tạo thông tin bảo hành sau khi thiết bị đã được bàn giao (DELIVERED).");
         if (Warranty is not null)
             throw new DomainException("Ticket này đã có thông tin bảo hành.");
 
-        Warranty = new Warranty.Warranty(Id, startDate, endDate, terms);
+        Warranty = new Warranty.Warranty(warrantyCode, Id, startDate, endDate, terms);
         return Warranty;
     }
 
@@ -332,5 +350,18 @@ public class RepairTicket : BaseEntity
 
         CompletionNotes = completionNotes;
         MarkUpdated();
+    }
+
+    /// <summary>Chỉ phát lệnh xuất hóa đơn khi ticket đã READY_FOR_PICKUP (BR-09: tối đa 1 Invoice).</summary>
+    public Invoice CreateInvoice(PaymentMethod paymentMethod, decimal totalAmount,
+        Guid createdByUserId, Guid? quoteId = null)
+    {
+        if (Status.Code != RepairStatusCodes.ReadyForPickup)
+            throw new DomainException("Chỉ xuất hóa đơn khi thiết bị đã sẵn sàng bàn giao (READY_FOR_PICKUP).");
+        if (Invoice is not null)
+            throw new DomainException("Ticket này đã có hóa đơn.");
+
+        Invoice = new Invoice(Id, quoteId, totalAmount, paymentMethod, createdByUserId);
+        return Invoice;
     }
 }
