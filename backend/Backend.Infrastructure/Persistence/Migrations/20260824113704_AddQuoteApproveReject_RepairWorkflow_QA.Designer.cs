@@ -9,7 +9,7 @@ using RepairShop.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace Backend.Infrastructure.Persistence.Migrations
+namespace RepairShop.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20260824113704_AddQuoteApproveReject_RepairWorkflow_QA")]

@@ -1,16 +1,20 @@
 using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Domain.Modules.Warranty;
 
 public class CreateWarrantyCommandHandler : IRequestHandler<CreateWarrantyCommand, WarrantyResponse>
 {
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IWarrantyCodeGenerator _codeGenerator;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CreateWarrantyCommandHandler(IRepairTicketRepository ticketRepository, IWarrantyCodeGenerator codeGenerator)
+    public CreateWarrantyCommandHandler(IRepairTicketRepository ticketRepository,
+        IWarrantyCodeGenerator codeGenerator, IUnitOfWork unitOfWork)
     {
         _ticketRepository = ticketRepository;
         _codeGenerator = codeGenerator;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<WarrantyResponse> Handle(CreateWarrantyCommand request, CancellationToken cancellationToken)
@@ -22,13 +26,16 @@ public class CreateWarrantyCommandHandler : IRequestHandler<CreateWarrantyComman
         var startDate = DateOnly.FromDateTime(DateTime.UtcNow);
         var endDate = startDate.AddMonths(request.WarrantyMonths);
 
-        // Domain tự enforce: chỉ tạo được khi ticket đã DELIVERED, chưa từng có Warranty (Bước 2)
-        var warranty = ticket.CreateWarranty(code, startDate, endDate, request.Terms);
-        _ticketRepository.TrackNewWarranty(warranty);
+        Warranty? warranty = null;
 
-        await _ticketRepository.SaveChangesAsync();
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            warranty = ticket.CreateWarranty(code, startDate, endDate, request.Terms); // enforce DELIVERED (Task 4.14)
+            _ticketRepository.TrackNewWarranty(warranty);
+            await _ticketRepository.SaveChangesAsync();
+        }, cancellationToken);
 
-        return new WarrantyResponse(warranty.WarrantyCode, ticket.Id, warranty.StartDate, warranty.EndDate,
+        return new WarrantyResponse(warranty!.WarrantyCode, ticket.Id, warranty.StartDate, warranty.EndDate,
             warranty.Terms, warranty.Status.ToString(), warranty.IsExpired());
     }
 }

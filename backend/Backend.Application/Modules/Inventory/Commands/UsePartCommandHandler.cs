@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RepairShop.Application.Common.Authorization;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Domain.Modules.Tickets;
 
 public class UsePartCommandHandler : IRequestHandler<UsePartCommand, UsePartResponse>
 {
@@ -10,17 +11,19 @@ public class UsePartCommandHandler : IRequestHandler<UsePartCommand, UsePartResp
     private readonly IPartRepository _partRepository;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UsePartCommandHandler> _logger;
 
     public UsePartCommandHandler(IRepairTicketRepository ticketRepository, IPartRepository partRepository,
         IInventoryRepository inventoryRepository, ICurrentUserService currentUser,
-        ILogger<UsePartCommandHandler> logger)
+        ILogger<UsePartCommandHandler> logger, IUnitOfWork unitOfWork)
     {
         _ticketRepository = ticketRepository;
         _partRepository = partRepository;
         _inventoryRepository = inventoryRepository;
         _currentUser = currentUser;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<UsePartResponse> Handle(UsePartCommand request, CancellationToken cancellationToken)
@@ -37,23 +40,25 @@ public class UsePartCommandHandler : IRequestHandler<UsePartCommand, UsePartResp
             ?? throw new NotFoundException("Tồn kho của linh kiện", part.Id);
 
         var userId = _currentUser.UserId!.Value;
+        TicketPart? newTicketPart = null;
 
-        // BR-20 enforce thật ở đây: RepairTicket.UsePart() -> Inventory.Deduct() -> false nếu thiếu
-        // -> ném InsufficientStockException (409), Application KHÔNG tự kiểm tra tồn kho tay lần nữa,
-        // tránh trùng logic — Domain là nơi DUY NHẤT quyết định "đủ hay không".
-        ticket.UsePart(part, inventory, request.Quantity, userId);
+        // Bọc "trừ Inventory + tạo TicketPart" trong 1 transaction: nếu Deduct() thành công nhưng
+        // SaveChanges thất bại giữa chừng, KHÔNG được để tồn kho đã trừ mà TicketPart lại chưa tồn tại
+        // (mất dấu vết linh kiện đã xuất, không đối soát được).
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            ticket.UsePart(part, inventory, request.Quantity, userId); // BR-20 enforce ở đây
 
-        var newTicketPart = ticket.TicketParts.Last();
-        _ticketRepository.TrackNewTicketPart(newTicketPart); // ticket đã tracked Unchanged -> track tường minh
-        // inventory là aggregate ĐỘC LẬP, được load trực tiếp qua IInventoryRepository (không qua navigation
-        // của ticket) -> EF Core tự phát hiện Modified bình thường, KHÔNG cần TrackNewX cho inventory.
+            newTicketPart = ticket.TicketParts.Last();
+            _ticketRepository.TrackNewTicketPart(newTicketPart);
 
-        await _ticketRepository.SaveChangesAsync();
+            await _ticketRepository.SaveChangesAsync();
+        }, cancellationToken);
 
         _logger.LogInformation("Ghi nhận sử dụng {Quantity}x {PartName} cho Ticket {TicketCode}",
             request.Quantity, part.Name, ticket.TicketCode);
 
-        return new UsePartResponse(newTicketPart.Id, part.Name, newTicketPart.Quantity,
+        return new UsePartResponse(newTicketPart!.Id, part.Name, newTicketPart.Quantity,
             newTicketPart.UnitPriceAtUse, newTicketPart.Subtotal);
     }
 }

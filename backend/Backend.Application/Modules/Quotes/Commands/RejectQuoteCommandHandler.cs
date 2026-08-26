@@ -13,11 +13,12 @@ public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, Quo
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<RejectQuoteCommandHandler> _logger;
 
     public RejectQuoteCommandHandler(IQuoteRepository quoteRepository, ICustomerRepository customerRepository,
         IRepairTicketRepository ticketRepository, IRepairStatusRepository statusRepository,
-        ICurrentUserService currentUser, ILogger<RejectQuoteCommandHandler> logger)
+        ICurrentUserService currentUser, ILogger<RejectQuoteCommandHandler> logger, IUnitOfWork unitOfWork)
     {
         _quoteRepository = quoteRepository;
         _customerRepository = customerRepository;
@@ -25,6 +26,7 @@ public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, Quo
         _statusRepository = statusRepository;
         _currentUser = currentUser;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<QuoteResponse> Handle(RejectQuoteCommand request, CancellationToken cancellationToken)
@@ -42,15 +44,18 @@ public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, Quo
         // -> KHÔNG có đường nào khác ngoài CLOSED_REJECTED. RejectQuote() trong RepairTicketStateMachine
         //    (Task 4.2) chỉ cho WAITING_APPROVAL -> CLOSED_REJECTED, không có lựa chọn thứ 2 -> đúng
         //    tinh thần "theo state machine đã chốt", không phải nhánh tự do CANCELLED/CLOSED tùy chọn.
-        quote.Reject(request.RejectReason);
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            quote.Reject(request.RejectReason);
 
-        var closedStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.ClosedRejected);
-        ticket.RejectQuote(closedStatus, userId, request.RejectReason);
+            var closedStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.ClosedRejected);
+            ticket.RejectQuote(closedStatus, userId, request.RejectReason);
 
-        _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
+            _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
 
-        await _quoteRepository.SaveChangesAsync();
-
+            await _quoteRepository.SaveChangesAsync();
+        }, cancellationToken);
+        
         _logger.LogInformation("Quote {QuoteId} bị từ chối, Ticket {TicketCode} chuyển CLOSED_REJECTED",
             quote.Id, ticket.TicketCode);
 

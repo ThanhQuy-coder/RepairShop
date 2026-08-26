@@ -1,6 +1,7 @@
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Customers;
 using RepairShop.Domain.Modules.Tickets;
 
 namespace RepairShop.Application.Common.Authorization;
@@ -14,13 +15,23 @@ namespace RepairShop.Application.Common.Authorization;
 /// </summary>
 public static class TicketAccessGuard
 {
+    /// <summary>Dùng cho Technician (Task 4.6) — chỉ thao tác được ticket đã assign cho mình.</summary>
     public static void EnsureCanAccess(RepairTicket ticket, ICurrentUserService currentUser)
     {
-        if (currentUser.Role != Roles.Technician)
-            return; // Admin/Receptionist không bị giới hạn ownership
+        if (currentUser.Role == Roles.Technician && ticket.TechnicianId != currentUser.UserId)
+            throw new ForbiddenException("Bạn chỉ được thao tác trên phiếu sửa chữa đã được phân công cho mình.");
 
-        if (ticket.TechnicianId != currentUser.UserId)
-            throw new ForbiddenException(
-                "Bạn chỉ được thao tác trên phiếu sửa chữa đã được phân công cho mình.");
+        if (currentUser.Role == Roles.Customer)
+            throw new ForbiddenException("Khách hàng không có quyền thao tác nghiệp vụ trên phiếu sửa chữa.");
+    }
+
+    /// <summary>
+    /// Dùng cho Customer xem ticket của CHÍNH MÌNH (GET /tickets/{id}, GET quotes/warranty theo ticket...).
+    /// customer = null nghĩa là user hiện tại chưa có hồ sơ Customer liên kết -> chắc chắn không sở hữu gì.
+    /// </summary>
+    public static void EnsureCustomerOwnsTicket(RepairTicket ticket, Customer? customer)
+    {
+        if (customer is null || ticket.CustomerId != customer.Id)
+            throw new ForbiddenException("Bạn không có quyền truy cập phiếu sửa chữa này.");
     }
 }

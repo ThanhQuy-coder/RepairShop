@@ -15,6 +15,7 @@ public interface IRepairTicketRepository
     void TrackNewTicketPart(TicketPart ticketPart);
     void TrackNewInvoice(Invoice invoice);
     void TrackNewWarranty(Warranty warranty);
+    Task<RepairTicket?> GetByTicketCodeForTrackingAsync(string ticketCode);
 
     Task SaveChangesAsync();
 }

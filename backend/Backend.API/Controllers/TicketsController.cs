@@ -68,7 +68,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Role check: phải là nhân viên nội bộ (Task 7)
+    [Authorize] // Role check: phải là nhân viên nội bộ (Task 7)
     public async Task<IActionResult> GetById(Guid id)
     {
         // Ownership check (khác role check) nằm TRONG Handler, không phải ở đây
@@ -212,7 +212,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/warranty")]
-    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Customer (ticket của mình) để dành khi làm ownership Quote-tương tự
+    [Authorize]
     public async Task<IActionResult> GetWarranty(Guid id)
     {
         var result = await _mediator.Send(new GetWarrantyByTicketQuery(id));

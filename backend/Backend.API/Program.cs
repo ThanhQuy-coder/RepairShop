@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi;
 using RepairShop.API.Middleware;
 using RepairShop.Application;
@@ -44,6 +45,17 @@ try
             });
     });
 
+    builder.Services.AddRateLimiter(options =>
+    {
+        options.AddFixedWindowLimiter("PublicTrackingPolicy", opt =>
+        {
+            opt.PermitLimit = 20;             // tối đa 20 request
+            opt.Window = TimeSpan.FromMinutes(1);
+            opt.QueueLimit = 0;               // vượt quá -> từ chối ngay, không xếp hàng
+        });
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    });
+
     var app = builder.Build();
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -63,6 +75,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.UseRateLimiter();
 
     app.Run();
 }

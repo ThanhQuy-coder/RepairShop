@@ -11,16 +11,19 @@ public class DeliverTicketCommandHandler : IRequestHandler<DeliverTicketCommand,
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<DeliverTicketCommandHandler> _logger;
 
     public DeliverTicketCommandHandler(IRepairTicketRepository ticketRepository,
         IRepairStatusRepository statusRepository, ICurrentUserService currentUser,
-        ILogger<DeliverTicketCommandHandler> logger)
+        ILogger<DeliverTicketCommandHandler> logger,
+        IUnitOfWork unitOfWork)
     {
         _ticketRepository = ticketRepository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
         _logger = logger;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<TicketResponse> Handle(DeliverTicketCommand request, CancellationToken cancellationToken)
@@ -31,14 +34,14 @@ public class DeliverTicketCommandHandler : IRequestHandler<DeliverTicketCommand,
         var deliveredStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.Delivered);
         var userId = _currentUser.UserId!.Value;
 
-        // Domain tự chặn: chưa có Invoice hoặc chưa PaidAt -> DomainException (đã enforce ở Bước 2)
-        ticket.Deliver(deliveredStatus, userId, request.DeliveryNote);
-
-        _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
-        await _ticketRepository.SaveChangesAsync();
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            ticket.Deliver(deliveredStatus, userId, request.DeliveryNote); // enforce đã thanh toán (Task 4.12)
+            _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
+            await _ticketRepository.SaveChangesAsync();
+        }, cancellationToken);
 
         _logger.LogInformation("Ticket {TicketCode} đã bàn giao cho khách", ticket.TicketCode);
-
         return TicketMapper.ToResponse(ticket);
     }
 }

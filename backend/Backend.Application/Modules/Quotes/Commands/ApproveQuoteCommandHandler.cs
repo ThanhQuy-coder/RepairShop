@@ -14,17 +14,19 @@ public class ApproveQuoteCommandHandler : IRequestHandler<ApproveQuoteCommand, Q
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<ApproveQuoteCommandHandler> _logger;
 
     public ApproveQuoteCommandHandler(IQuoteRepository quoteRepository, ICustomerRepository customerRepository,
         IRepairTicketRepository ticketRepository, IRepairStatusRepository statusRepository,
-        ICurrentUserService currentUser, ILogger<ApproveQuoteCommandHandler> logger)
+        ICurrentUserService currentUser, IUnitOfWork unitOfWork, ILogger<ApproveQuoteCommandHandler> logger)
     {
         _quoteRepository = quoteRepository;
         _customerRepository = customerRepository;
         _ticketRepository = ticketRepository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
+        _unitOfWork = unitOfWork;
         _logger = logger;
     }
 
@@ -39,17 +41,20 @@ public class ApproveQuoteCommandHandler : IRequestHandler<ApproveQuoteCommand, Q
         var userId = _currentUser.UserId!.Value;
         var ticket = quote.RepairTicket;
 
-        // Rule mentor: "Nếu Quote = APPROVED thì mới cho phép tiếp tục sửa"
-        // -> Approve() chỉ đổi status Quote, KHÔNG tự quyết định ticket đi đâu.
-        // Ticket chuyển IN_REPAIR là hệ quả TƯỜNG MINH ngay sau đó, không giấu logic bên trong Quote.
-        quote.Approve();
+        // Bọc TOÀN BỘ 3 thao tác (Approve Quote + Update Ticket Status + tạo Status History) trong
+        // 1 transaction — đúng ví dụ mentor: nếu bước tạo Status History fail (VD lỗi DB tạm thời),
+        // toàn bộ rollback, KHÔNG để xảy ra Quote=APPROVED nhưng Ticket vẫn WAITING_APPROVAL.
+        await _unitOfWork.ExecuteInTransactionAsync(async () =>
+        {
+            quote.Approve();
 
-        var inRepairStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.InRepair);
-        ticket.ApproveQuote(inRepairStatus, userId);
+            var inRepairStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.InRepair);
+            ticket.ApproveQuote(inRepairStatus, userId);
 
-        _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
+            _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
 
-        await _quoteRepository.SaveChangesAsync();
+            await _quoteRepository.SaveChangesAsync();
+        }, cancellationToken);
 
         _logger.LogInformation("Quote {QuoteId} được duyệt, Ticket {TicketCode} chuyển IN_REPAIR",
             quote.Id, ticket.TicketCode);

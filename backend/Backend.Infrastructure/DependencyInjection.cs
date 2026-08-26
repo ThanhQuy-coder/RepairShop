@@ -58,6 +58,7 @@ public static class DependencyInjection
         services.AddScoped<IInventoryRepository, InventoryRepository>();
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IWarrantyCodeGenerator, WarrantyCodeGenerator>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
            ?? throw new InvalidOperationException("Cấu hình Jwt không tìm thấy trong appsettings.");

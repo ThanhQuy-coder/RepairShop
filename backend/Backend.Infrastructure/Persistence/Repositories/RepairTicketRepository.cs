@@ -48,4 +48,15 @@ public class RepairTicketRepository : IRepairTicketRepository
 
     public void TrackNewWarranty(Warranty warranty)
         => _context.Entry(warranty).State = EntityState.Added;
+
+    public Task<RepairTicket?> GetByTicketCodeForTrackingAsync(string ticketCode) =>
+        _context.RepairTickets
+            .Include(t => t.Device)
+            .Include(t => t.Status)
+            .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
+            .AsSplitQuery()
+            // Chủ động KHÔNG Include Customer, Receptionist, Technician, Images, Notes...
+            // -> không phải "che dữ liệu sau khi lấy", mà TỪ ĐẦU không kéo dữ liệu nhạy cảm vào bộ nhớ.
+            .AsNoTracking() // read-only, public, không cần EF theo dõi thay đổi -> tối ưu + rõ ý đồ "chỉ đọc"
+            .FirstOrDefaultAsync(t => t.TicketCode == ticketCode);
 }
