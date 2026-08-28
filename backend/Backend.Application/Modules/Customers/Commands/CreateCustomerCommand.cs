@@ -3,5 +3,6 @@ using MediatR;
 
 namespace RepairShop.Application.Modules.Customers.Commands;
 
-public record CreateCustomerCommand(string FullName, string Phone, string? Email, string? Address)
+public record CreateCustomerCommand(string FullName, string Phone, 
+    string? Email, string? Address, Guid? UserId)
     : IRequest<CustomerResponse>;

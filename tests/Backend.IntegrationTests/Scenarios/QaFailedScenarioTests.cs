@@ -22,8 +22,8 @@ public class QaFailedScenarioTests
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
-        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, customer.UserId);
-
+        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(
+            client, technician.Token, technician.UserId, customer.UserId); // truyền thêm customer.UserId
         client.AuthorizeAs(customer.Token);
         await client.PatchAsync($"/api/quotes/{quoteId}/approve", null); // -> IN_REPAIR
 
@@ -45,7 +45,8 @@ public class QaFailedScenarioTests
         // PASS lần 2 — BR-19 vẫn thoả vì ticket ĐÃ TỪNG ở IN_REPAIR (nhiều lần), không quan trọng lần thứ mấy
         var passRes = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         {
-            functionalCheckNotes = "Hiển thị bình thường", cosmeticCheckNotes = "Không còn ám vàng",
+            functionalCheckNotes = "Hiển thị bình thường",
+            cosmeticCheckNotes = "Không còn ám vàng",
             originalIssueResolvedNotes = "Đã khắc phục hoàn toàn"
         });
         passRes.StatusCode.Should().Be(HttpStatusCode.OK);

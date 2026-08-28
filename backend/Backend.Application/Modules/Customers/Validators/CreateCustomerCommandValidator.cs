@@ -11,5 +11,6 @@ public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCo
         RuleFor(x => x.Phone).NotEmpty().MaximumLength(20);
         RuleFor(x => x.Email).EmailAddress().When(x => !string.IsNullOrEmpty(x.Email));
         RuleFor(x => x.Address).MaximumLength(255);
+        RuleFor(x => x.UserId).NotEmpty().When(x => x.UserId is not null);
     }
 }

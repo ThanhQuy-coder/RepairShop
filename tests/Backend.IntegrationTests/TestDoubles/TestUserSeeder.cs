@@ -4,6 +4,7 @@ using RepairShop.Domain.Modules.Identity;
 using RepairShop.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RepairShop.Domain.Modules.Customers;
 
 namespace RepairShop.IntegrationTests.TestDoubles;
 
@@ -33,7 +34,7 @@ public static class TestUserSeeder
 
         if (roleName == Roles.Customer)
         {
-            var customer = new Domain.Modules.Customers.Customer(
+            var customer = new Customer(
                 user.FullName, $"09{Random.Shared.Next(10000000, 99999999)}", email, null, user.Id);
             db.Customers.Add(customer);
             await db.SaveChangesAsync();

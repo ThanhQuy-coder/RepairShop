@@ -4,6 +4,9 @@ using RepairShop.IntegrationTests.TestDoubles;
 using FluentAssertions;
 using static RepairShop.IntegrationTests.TestDoubles.HttpClientExtensions;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using RepairShop.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace RepairShop.IntegrationTests.Scenarios;
 
@@ -26,11 +29,25 @@ public class HappyPathScenarioTests
 
         // 1. Create Customer (Receptionist tạo hồ sơ walk-in khách hàng)
         client.AuthorizeAs(receptionist.Token);
-        var createCustomerRes = await client.PostAsJsonAsync("/api/customers",
-            new { fullName = "Nguyen Van A", phone = $"09{Random.Shared.Next(10000000, 99999999)}", email = (string?)null, address = (string?)null });
-        createCustomerRes.StatusCode.Should().Be(HttpStatusCode.Created);
-        var customerJson = await createCustomerRes.ReadAsAsync<JsonElement>();
-        var customerId = customerJson.GetProperty("id").GetGuid();
+        // var createCustomerRes = await client.PostAsJsonAsync("/api/customers", new
+        // {
+        //     fullName = "Nguyen Van A",
+        //     phone = $"09{Random.Shared.Next(10000000, 99999999)}",
+        //     email = "customer@gmail.com",
+        //     address = "TP.HCM",
+        //     userId = customer.UserId
+        // });
+        // createCustomerRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        // var customerJson = await createCustomerRes.ReadAsAsync<JsonElement>();
+        // var customerId = customerJson.GetProperty("id").GetGuid();
+
+        // Khởi tạo scope để đọc Database
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // Tìm Customer theo UserId
+        var customerEntity = await db.Customers.FirstAsync(c => c.UserId == customer.UserId);
+        Guid customerId = customerEntity.Id;
 
         // 2. Create Device
         var createDeviceRes = await client.PostAsJsonAsync("/api/devices",

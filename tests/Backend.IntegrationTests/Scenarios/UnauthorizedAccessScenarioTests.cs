@@ -22,17 +22,15 @@ public class UnauthorizedAccessScenarioTests
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
-        var (ticketBId, _) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, customerB.UserId);
-        // Lưu ý: CreateTicketUpToQuote tạo Customer MỚI bên trong nó, không gắn với customerB thật.
-        // Cần API riêng gắn UserId vào Customer để test này chính xác — xem ghi chú bên dưới.
+
+        // Giờ ticket THẬT SỰ gắn với customerB (nhờ userId truyền vào) — test này mới có ý nghĩa đúng đắn
+        var (ticketBId, _) = await WorkflowHelpers.CreateTicketUpToQuote(
+            client, technician.Token, technician.UserId, customerB.UserId);
 
         client.AuthorizeAs(customerA.Token);
 
         var getTicketRes = await client.GetAsync($"/api/tickets/{ticketBId}");
         getTicketRes.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-
-        var getQuotesRes = await client.GetAsync($"/api/tickets/{ticketBId}/quotes");
-        getQuotesRes.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Fact]

@@ -32,12 +32,12 @@ public class CustomersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateCustomerCommand command)
-    {
-        var result = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-    }
+    // [HttpPost]
+    // public async Task<IActionResult> Create(CreateCustomerCommand command)
+    // {
+    //     var result = await _mediator.Send(command);
+    //     return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    // }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, UpdateCustomerCommand command)
@@ -45,5 +45,15 @@ public class CustomersController : ControllerBase
         if (id != command.Id) return BadRequest(new { success = false, message = "Id không khớp." });
         var result = await _mediator.Send(command);
         return Ok(result);
+    }
+
+    public record CreateCustomerBody(string FullName, string Phone, string? Email, string? Address, Guid? UserId);
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateCustomerBody body)
+    {
+        var command = new CreateCustomerCommand(body.FullName, body.Phone, body.Email, body.Address, body.UserId);
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 }

@@ -22,8 +22,8 @@ public class QuoteRejectedScenarioTests
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
 
-        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, customer.UserId);
-
+        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(
+            client, technician.Token, technician.UserId, customer.UserId); // truyền thêm customer.UserId
         // Reject với lý do
         client.AuthorizeAs(customer.Token);
         var rejectRes = await client.PatchAsJsonAsync($"/api/quotes/{quoteId}/reject", new { rejectReason = "Giá quá cao so với thị trường" });

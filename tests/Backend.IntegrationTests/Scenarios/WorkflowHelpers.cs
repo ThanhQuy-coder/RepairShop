@@ -8,10 +8,17 @@ internal static class WorkflowHelpers
 {
     /// <summary>Dựng sẵn 1 ticket tới bước "đã có Quote WAITING_APPROVAL" — dùng chung cho Scenario B/C/E.</summary>
     public static async Task<(Guid TicketId, Guid QuoteId)> CreateTicketUpToQuote(
-        HttpClient client, string technicianToken, Guid technicianUserId)
+        HttpClient client, string technicianToken, Guid technicianUserId,
+        Guid? customerUserId = null)
     {
-        var custRes = await client.PostAsJsonAsync("/api/customers",
-            new { fullName = "Khach Test", phone = $"09{Random.Shared.Next(10000000, 99999999)}", email = (string?)null, address = (string?)null });
+        var custRes = await client.PostAsJsonAsync("/api/customers", new
+        {
+            fullName = "Khach Test",
+            phone = $"09{Random.Shared.Next(10000000, 99999999)}",
+            email = (string?)null,
+            address = (string?)null,
+            userId = customerUserId // mới
+        });
         var customerId = (await custRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
         var devRes = await client.PostAsJsonAsync("/api/devices",
