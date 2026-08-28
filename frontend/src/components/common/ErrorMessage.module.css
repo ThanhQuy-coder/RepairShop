@@ -1,0 +1,17 @@
+.wrapper {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-danger);
+}
+
+.message {
+  font-weight: 500;
+  font-size: var(--font-size-base);
+}
+.list {
+  margin-top: var(--spacing-xs);
+  padding-left: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+}

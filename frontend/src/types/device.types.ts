@@ -1,4 +1,4 @@
-export type DeviceType = "Phone" | "Laptop" | "Electronics";
+export type DeviceType = 'Phone' | 'Laptop' | 'Electronics';
 
 export interface Device {
   id: string;

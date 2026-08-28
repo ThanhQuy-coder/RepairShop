@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  justify-content: center;
+  padding: var(--spacing-md) 0;
+}
+.info {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}

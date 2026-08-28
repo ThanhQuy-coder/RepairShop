@@ -1,16 +1,16 @@
 // Khớp RepairStatusCodes (Backend.Domain/Common, Tuần 4)
 export type TicketStatus =
-  | "CHECKED_IN"
-  | "ASSIGNED"
-  | "DIAGNOSING"
-  | "WAITING_APPROVAL"
-  | "ON_HOLD"
-  | "WAITING_PARTS"
-  | "IN_REPAIR"
-  | "QA_TESTING"
-  | "READY_FOR_PICKUP"
-  | "DELIVERED"
-  | "CLOSED_REJECTED";
+  | 'CHECKED_IN'
+  | 'ASSIGNED'
+  | 'DIAGNOSING'
+  | 'WAITING_APPROVAL'
+  | 'ON_HOLD'
+  | 'WAITING_PARTS'
+  | 'IN_REPAIR'
+  | 'QA_TESTING'
+  | 'READY_FOR_PICKUP'
+  | 'DELIVERED'
+  | 'CLOSED_REJECTED';
 
 export interface Ticket {
   id: string;
