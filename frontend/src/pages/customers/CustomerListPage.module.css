@@ -1,0 +1,11 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.searchBar {
+  max-width: 360px;
+  margin-bottom: var(--spacing-md);
+}

@@ -5,23 +5,45 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Interceptor: tự động gắn JWT vào mọi request (đọc từ authStore ở Task sau, tạm đọc localStorage)
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-// Interceptor: bắt lỗi 401 (token hết hạn) -> tự động logout, tránh app "treo" ở trạng thái sai
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('accessToken');
-      window.location.href = '/login';
+    const status = error.response?.status;
+
+    switch (status) {
+      case 401:
+        // Token hết hạn / không hợp lệ -> logout ngay, không chờ page tự xử lý
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('role');
+        localStorage.removeItem('email');
+        if (!window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login';
+        }
+        break;
+
+      case 403:
+        // Có token hợp lệ nhưng không đủ quyền -> Forbidden Page (khác 401)
+        if (!window.location.pathname.startsWith('/unauthorized')) {
+          window.location.href = '/unauthorized';
+        }
+        break;
+
+      case 404:
+      case 500:
+      default:
+        // KHÔNG tự điều hướng — để page tự quyết định hiển thị (VD: "không tìm thấy",
+        // hoặc "Đã xảy ra lỗi hệ thống") qua extractApiError() + <ErrorMessage />.
+        // Điều hướng cứng ở đây sẽ phá luồng của những nơi CHỦ ĐỘNG kỳ vọng 404
+        // (VD: kiểm tra trùng SĐT khách hàng) — đẩy quyết định UI về đúng nơi có ngữ cảnh.
+        break;
     }
+
     return Promise.reject(error);
   }
 );

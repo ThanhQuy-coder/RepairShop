@@ -13,6 +13,8 @@ import TrackTicketPage from '../pages/track/TrackTicketPage';
 import UnauthorizedPage from '../pages/errors/UnauthorizedPage';
 import NotFoundPage from '../pages/errors/NotFoundPage';
 import PlaceholderPage from '../pages/PlaceholderPage';
+import CustomerListPage from '../pages/customers/CustomerListPage';
+import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
 
 export default function AppRoutes() {
   return (
@@ -46,6 +48,9 @@ export default function AppRoutes() {
             <Route path="tickets" element={<PlaceholderPage title="Danh sách phiếu sửa chữa" />} />
             <Route path="tickets/create" element={<PlaceholderPage title="Tạo phiếu sửa chữa" />} />
             <Route path="tickets/:id/quote" element={<PlaceholderPage title="Báo giá" />} />
+
+            <Route path="customers" element={<CustomerListPage />} />
+            <Route path="customers/:id" element={<CustomerDetailPage />} />
           </Route>
         </Route>
 

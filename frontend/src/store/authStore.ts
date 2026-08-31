@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserRole } from '../types/auth.types';
+import type { UserRole } from '../types/auth.types';
 
 interface AuthUser {
   email: string;
