@@ -8,4 +8,6 @@ public interface IUserRepository
     Task AddAsync(User user);
     Task<User?> GetByIdAsync(Guid id);
     Task SaveChangesAsync();
+    Task<(List<User> Items, int Total)> SearchAsync(string? roleName, 
+        bool? isActive, int page, int pageSize);
 }

@@ -3,6 +3,7 @@ using RepairShop.Domain.Modules.Tickets;
 using Microsoft.EntityFrameworkCore;
 using RepairShop.Domain.Modules.Billing;
 using RepairShop.Domain.Modules.Warranty;
+using RepairShop.Domain.Common;
 
 namespace RepairShop.Infrastructure.Persistence.Repositories;
 
@@ -59,4 +60,42 @@ public class RepairTicketRepository : IRepairTicketRepository
             // -> không phải "che dữ liệu sau khi lấy", mà TỪ ĐẦU không kéo dữ liệu nhạy cảm vào bộ nhớ.
             .AsNoTracking() // read-only, public, không cần EF theo dõi thay đổi -> tối ưu + rõ ý đồ "chỉ đọc"
             .FirstOrDefaultAsync(t => t.TicketCode == ticketCode);
+
+    public async Task<(List<RepairTicket> Items, int Total)> SearchAsync(
+        string? statusCode, Guid? technicianId, Guid? customerId, 
+        Guid? currentUserId, string? currentUserRole,
+        int page, int pageSize)
+    {
+        var query = _context.RepairTickets
+            .Include(t => t.Customer)
+            .Include(t => t.Device)
+            .Include(t => t.Technician)
+            .Include(t => t.Status)
+            .AsQueryable();
+
+        // Ownership ở tầng query: Technician CHỈ thấy ticket của mình trong danh sách — khớp đúng nguyên tắc
+        // TicketAccessGuard (Task 4.6/4.16, Tuần 4), áp dụng ngay từ bước lọc, không phải lọc sau khi trả về.
+        if (currentUserRole == Roles.Technician && currentUserId is not null)
+            query = query.Where(t => t.TechnicianId == currentUserId);
+
+        if (!string.IsNullOrWhiteSpace(statusCode))
+            query = query.Where(t => t.Status.Code == statusCode);
+
+        if (technicianId is not null)
+            query = query.Where(t => t.TechnicianId == technicianId);
+
+        if (customerId is not null)
+            query = query.Where(t => t.CustomerId == customerId);
+
+        var total = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(t => t.ReceivedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .AsSplitQuery()
+            .ToListAsync();
+
+        return (items, total);
+    }
 }

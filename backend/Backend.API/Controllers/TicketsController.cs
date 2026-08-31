@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RepairShop.Domain.Modules.Tickets.Enums;
 using RepairShop.Domain.Common;
+using RepairShop.Application.Modules.Tickets.Queries;
 
 namespace RepairShop.API.Controllers;
 
@@ -216,6 +217,16 @@ public class TicketsController : ControllerBase
     public async Task<IActionResult> GetWarranty(Guid id)
     {
         var result = await _mediator.Send(new GetWarrantyByTicketQuery(id));
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Authorize] // Admin/Receptionist thấy tất cả, Technician tự động chỉ thấy ticket của mình (lọc ở Repository)
+    public async Task<IActionResult> GetTickets(
+    [FromQuery] string? status, [FromQuery] Guid? technicianId, [FromQuery] Guid? customerId,
+    [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        var result = await _mediator.Send(new GetTicketsQuery(status, technicianId, customerId, page, pageSize));
         return Ok(result);
     }
 }

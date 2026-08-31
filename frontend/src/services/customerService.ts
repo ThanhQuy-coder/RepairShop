@@ -1,6 +1,10 @@
 import apiClient from './apiClient';
 import type { PagedResponse } from '../types/common.types';
-import type { Customer, CreateCustomerRequest, UpdateCustomerRequest } from '../types/customer.types';
+import type {
+  Customer,
+  CreateCustomerRequest,
+  UpdateCustomerRequest,
+} from '../types/customer.types';
 
 export const customerService = {
   list: (params: { search?: string; page?: number; pageSize?: number }) =>

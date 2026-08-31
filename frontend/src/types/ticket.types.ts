@@ -52,3 +52,21 @@ export interface PublicTicketTracking {
   statusHistory: { status: string; statusLabel: string; changedAt: string }[];
   estimatedCompletion: string | null;
 }
+
+export interface TicketListItem {
+  id: string;
+  ticketCode: string;
+  customerName: string;
+  deviceLabel: string;
+  technicianName: string | null;
+  status: TicketStatus;
+  receivedAt: string;
+}
+
+export interface TicketListFilters {
+  status?: string;
+  technicianId?: string;
+  customerId?: string;
+  page?: number;
+  pageSize?: number;
+}

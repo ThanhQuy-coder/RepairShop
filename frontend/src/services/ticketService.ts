@@ -1,10 +1,12 @@
 import apiClient from './apiClient';
 import type {
-    Ticket,
-    CreateTicketRequest,
-    StatusHistoryItem,
-    PublicTicketTracking,
+  Ticket,
+  CreateTicketRequest,
+  StatusHistoryItem,
+  PublicTicketTracking,
 } from '../types/ticket.types';
+import type { PagedResponse } from '../types/common.types';
+import type { TicketListItem, TicketListFilters } from '../types/ticket.types';
 
 export const ticketService = {
   getById: (id: string) => apiClient.get<Ticket>(`/tickets/${id}`).then((res) => res.data),
@@ -37,5 +39,10 @@ export const ticketService = {
   trackByCode: (ticketCode: string) =>
     apiClient
       .get<PublicTicketTracking>(`/public/tickets/${ticketCode}/tracking`)
+      .then((res) => res.data),
+
+  list: (filters: TicketListFilters) =>
+    apiClient
+      .get<PagedResponse<TicketListItem>>('/tickets', { params: filters })
       .then((res) => res.data),
 };

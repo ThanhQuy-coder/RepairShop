@@ -17,5 +17,10 @@ public interface IRepairTicketRepository
     void TrackNewWarranty(Warranty warranty);
     Task<RepairTicket?> GetByTicketCodeForTrackingAsync(string ticketCode);
 
+    Task<(List<RepairTicket> Items, int Total)> SearchAsync(
+        string? statusCode, Guid? technicianId, Guid? customerId, 
+        Guid? currentUserId, string? currentUserRole,
+        int page, int pageSize);
+
     Task SaveChangesAsync();
 }

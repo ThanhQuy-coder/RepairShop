@@ -10,17 +10,25 @@ export default function PublicLayout() {
   return (
     <div className={styles.container}>
       <header className={styles.navbar}>
-        <Link to="/" className={styles.logo}>RepairShop</Link>
+        <Link to="/" className={styles.logo}>
+          RepairShop
+        </Link>
         <nav className={styles.nav}>
           {PUBLIC_NAV.map((item) => (
-            <Link key={item.path} to={item.path} className={styles.navLink}>{item.label}</Link>
+            <Link key={item.path} to={item.path} className={styles.navLink}>
+              {item.label}
+            </Link>
           ))}
         </nav>
         <div>
           {isAuthenticated ? (
-            <Link to="/redirect"><Button size="sm">Vào hệ thống</Button></Link>
+            <Link to="/redirect">
+              <Button size="sm">Vào hệ thống</Button>
+            </Link>
           ) : (
-            <Link to="/login"><Button size="sm">Đăng nhập</Button></Link>
+            <Link to="/login">
+              <Button size="sm">Đăng nhập</Button>
+            </Link>
           )}
         </div>
       </header>

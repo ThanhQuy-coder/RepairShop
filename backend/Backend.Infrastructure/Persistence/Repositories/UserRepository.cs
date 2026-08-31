@@ -19,4 +19,22 @@ public class UserRepository : IUserRepository
 
     public Task<User?> GetByIdAsync(Guid id) =>
         _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == id);
+
+    public async Task<(List<User> Items, int Total)> SearchAsync(string? roleName,
+        bool? isActive, int page, int pageSize)
+    {
+        var query = _context.Users.Include(u => u.Role).AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(roleName))
+            query = query.Where(u => u.Role.Name == roleName);
+
+        if (isActive is not null)
+            query = query.Where(u => u.IsActive == isActive);
+
+        var total = await query.CountAsync();
+        var items = await query.OrderBy(u => u.FullName).Skip((page - 1) * pageSize)
+            .Take(pageSize).ToListAsync();
+
+        return (items, total);
+    }
 }

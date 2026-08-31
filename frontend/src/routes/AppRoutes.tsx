@@ -18,6 +18,7 @@ import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
 import DevicesPage from '../pages/devices/DevicesPage';
 import DeviceDetailPage from '../pages/devices/DeviceDetailPage';
 import CreateTicketPage from '../pages/tickets/CreateTicketPage';
+import TicketListPage from '../components/ticket/TicketListPage';
 
 export default function AppRoutes() {
   return (
@@ -45,7 +46,7 @@ export default function AppRoutes() {
             <Route path="customers/:id" element={<PlaceholderPage title="Chi tiết khách hàng" />} />
             <Route path="devices" element={<DevicesPage />} />
             <Route path="devices/:id" element={<DeviceDetailPage />} />
-            <Route path="tickets" element={<PlaceholderPage title="Danh sách phiếu sửa chữa" />} />
+            <Route path="tickets" element={<TicketListPage />} />{' '}
             <Route path="tickets/create" element={<CreateTicketPage />} />{' '}
             <Route path="tickets/:id/quote" element={<PlaceholderPage title="Báo giá" />} />
             <Route path="customers" element={<CustomerListPage />} />
@@ -66,10 +67,7 @@ export default function AppRoutes() {
         {/* ===== Staff: riêng Technician ===== */}
         <Route element={<RoleGuard allowedRoles={['Technician']} />}>
           <Route element={<StaffLayout />}>
-            <Route
-              path="technician/tickets"
-              element={<PlaceholderPage title="Ticket được phân công" />}
-            />
+            <Route path="technician/tickets" element={<TicketListPage />} />
           </Route>
         </Route>
 
