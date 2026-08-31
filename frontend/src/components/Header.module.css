@@ -1,0 +1,24 @@
+.header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.userArea {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+.userInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.userInfo em {
+  color: var(--color-primary);
+  font-style: normal;
+  font-weight: 500;
+}

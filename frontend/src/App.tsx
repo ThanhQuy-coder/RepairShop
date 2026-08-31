@@ -1,26 +1,14 @@
-import { useEffect, useState } from 'react';
-import apiClient from './services/apiClient';
+import { useEffect } from 'react';
+import { useAuthStore } from './store/authStore';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-  const [status, setStatus] = useState('Đang kiểm tra kết nối Backend...');
-
+  const hydrate = useAuthStore((s) => s.hydrate);
   useEffect(() => {
-    apiClient
-      .get('/customers') // gọi 1 endpoint yêu cầu auth để test — kỳ vọng 401 nếu Backend chạy đúng
-      .catch((err) => {
-        if (err.response) {
-          setStatus(
-            `==> Kết nối Backend thành công (HTTP ${err.response.status} — đúng vì chưa đăng nhập)`
-          );
-        } else {
-          setStatus(
-            '!!==> Không kết nối được Backend — kiểm tra lại VITE_API_BASE_URL và Backend có đang chạy không.'
-          );
-        }
-      });
-  }, []);
+    hydrate();
+  }, [hydrate]);
 
-  return <div style={{ padding: 24 }}>{status}</div>;
+  return <Outlet />;
 }
 
 export default App;
