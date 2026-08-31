@@ -32,6 +32,7 @@ export interface CreateTicketRequest {
   notes?: string;
   conditionNotes?: string;
   riskWarning?: string;
+  diagnosticDeposit?: number;
 }
 
 export interface StatusHistoryItem {

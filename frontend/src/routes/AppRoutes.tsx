@@ -15,6 +15,9 @@ import NotFoundPage from '../pages/errors/NotFoundPage';
 import PlaceholderPage from '../pages/PlaceholderPage';
 import CustomerListPage from '../pages/customers/CustomerListPage';
 import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
+import DevicesPage from '../pages/devices/DevicesPage';
+import DeviceDetailPage from '../pages/devices/DeviceDetailPage';
+import CreateTicketPage from '../pages/tickets/CreateTicketPage';
 
 export default function AppRoutes() {
   return (
@@ -38,17 +41,13 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin']} />}>
           <Route element={<StaffLayout />}>
             <Route path="staff/dashboard" element={<PlaceholderPage title="Staff Dashboard" />} />
-
             <Route path="customers" element={<PlaceholderPage title="Danh sách khách hàng" />} />
             <Route path="customers/:id" element={<PlaceholderPage title="Chi tiết khách hàng" />} />
-
-            <Route path="devices" element={<PlaceholderPage title="Danh sách thiết bị" />} />
-            <Route path="devices/:id" element={<PlaceholderPage title="Chi tiết thiết bị" />} />
-
+            <Route path="devices" element={<DevicesPage />} />
+            <Route path="devices/:id" element={<DeviceDetailPage />} />
             <Route path="tickets" element={<PlaceholderPage title="Danh sách phiếu sửa chữa" />} />
-            <Route path="tickets/create" element={<PlaceholderPage title="Tạo phiếu sửa chữa" />} />
+            <Route path="tickets/create" element={<CreateTicketPage />} />{' '}
             <Route path="tickets/:id/quote" element={<PlaceholderPage title="Báo giá" />} />
-
             <Route path="customers" element={<CustomerListPage />} />
             <Route path="customers/:id" element={<CustomerDetailPage />} />
           </Route>

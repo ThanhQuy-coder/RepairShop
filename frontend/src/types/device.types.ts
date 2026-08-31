@@ -17,3 +17,10 @@ export interface CreateDeviceRequest {
   model: string;
   serialNumber?: string;
 }
+
+export interface DeviceRepairHistoryItem {
+  ticketCode: string;
+  issueReported: string;
+  status: string;
+  createdAt: string;
+}

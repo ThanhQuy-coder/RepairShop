@@ -1,0 +1,45 @@
+.successBox {
+  text-align: center;
+  padding: var(--spacing-lg) 0;
+}
+
+.checkIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-success);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-md);
+}
+
+.ticketCode {
+  font-size: 24px;
+  font-weight: 700;
+  margin: var(--spacing-md) 0 var(--spacing-sm);
+}
+
+.actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin-top: var(--spacing-lg);
+}
+
+/* Ẩn khi xem trên màn hình, chỉ hiện khi Ctrl+P / window.print() */
+.printOnly {
+  display: none;
+}
+
+@media print {
+  .successBox {
+    display: none;
+  }
+  .printOnly {
+    display: block;
+    padding: var(--spacing-lg);
+  }
+}

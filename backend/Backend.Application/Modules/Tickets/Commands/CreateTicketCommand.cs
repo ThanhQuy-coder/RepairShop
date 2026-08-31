@@ -9,4 +9,5 @@ public record CreateTicketCommand(
     string IssueDescription,
     string? Notes,
     string? ConditionNotes,
-    string? RiskWarning) : IRequest<TicketResponse>;
+    string? RiskWarning,
+    decimal DiagnosticDeposit = 0) : IRequest<TicketResponse>;

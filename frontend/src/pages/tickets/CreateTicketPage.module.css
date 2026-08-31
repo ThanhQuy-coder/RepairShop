@@ -1,0 +1,34 @@
+.wrapper {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.stepper {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stepItem {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+.stepActive {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.stepContent {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--spacing-lg);
+}

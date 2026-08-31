@@ -66,7 +66,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             device.Id,
             receptionistId,
             request.IssueDescription,
-            checkedInStatus);
+            checkedInStatus, request.DiagnosticDeposit);
 
         if (!string.IsNullOrWhiteSpace(request.ConditionNotes) || !string.IsNullOrWhiteSpace(request.RiskWarning))
             ticket.RecordIntakeCondition(request.ConditionNotes, request.RiskWarning);
