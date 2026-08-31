@@ -11,6 +11,14 @@ public class PartRepository : IPartRepository
     {
         return _context.Parts.FirstOrDefaultAsync(p => p.Id == id);
     }
+
+    public async Task<List<Part>> ListAsync(string? search)
+    {
+        var query = _context.Parts.AsQueryable();
+        if (!string.IsNullOrWhiteSpace(search))
+            query = query.Where(p => p.Name.Contains(search) || p.Sku.Contains(search));
+        return await query.OrderBy(p => p.Name).Take(50).ToListAsync();
+    }
 }
 
 public class InventoryRepository : IInventoryRepository

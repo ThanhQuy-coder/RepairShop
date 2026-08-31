@@ -1,0 +1,105 @@
+.branchBanner {
+  background: #fef3c7;
+  color: #92400e;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.stepMarkerCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border);
+}
+.markerDone {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+.markerCurrent {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.connector {
+  width: 2px;
+  flex: 1;
+  min-height: 24px;
+  background: var(--color-border);
+}
+.connectorDone {
+  background: var(--color-success);
+}
+
+.stepLabel {
+  padding: 2px 0 var(--spacing-md);
+  font-size: var(--font-size-base);
+}
+.stepLabelCurrent {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.stepLabelPending {
+  color: var(--color-text-muted);
+}
+
+.historyDetails {
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+.historyDetails summary {
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.historyList {
+  list-style: none;
+  margin-top: var(--spacing-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+.historyList li {
+  padding: var(--spacing-sm);
+  background: var(--color-bg-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.historyTransition {
+  font-weight: 600;
+  display: block;
+}
+.historyMeta {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+.historyNote {
+  margin-top: 4px;
+  color: var(--color-text);
+}

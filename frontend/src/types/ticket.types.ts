@@ -70,3 +70,29 @@ export interface TicketListFilters {
   page?: number;
   pageSize?: number;
 }
+
+export interface TicketDetail extends Ticket {
+  customerName?: string;
+  deviceLabel?: string;
+  technicianName?: string | null;
+  diagnosisResult?: string;
+  rootCause?: string;
+  recommendedRepair?: string;
+  requiredPartsNote?: string;
+  completionNotes?: string;
+}
+
+export interface TicketImage {
+  id: string;
+  imageUrl: string;
+  imageType: 'BeforeRepair' | 'AfterRepair' | 'Other';
+  uploadedAt: string;
+}
+
+export interface TicketPartUsed {
+  ticketPartId: string;
+  partName: string;
+  quantity: number;
+  unitPriceAtUse: number;
+  subtotal: number;
+}

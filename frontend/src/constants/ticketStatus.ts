@@ -29,3 +29,14 @@ export const TICKET_STATUS_BADGE_VARIANT: Record<
   DELIVERED: 'success',
   CLOSED_REJECTED: 'danger',
 };
+
+export const MAIN_TIMELINE_SEQUENCE = [
+  'CHECKED_IN',
+  'ASSIGNED',
+  'DIAGNOSING',
+  'WAITING_APPROVAL',
+  'IN_REPAIR',
+  'QA_TESTING',
+  'READY_FOR_PICKUP',
+  'DELIVERED',
+];

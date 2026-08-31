@@ -19,6 +19,8 @@ import DevicesPage from '../pages/devices/DevicesPage';
 import DeviceDetailPage from '../pages/devices/DeviceDetailPage';
 import CreateTicketPage from '../pages/tickets/CreateTicketPage';
 import TicketListPage from '../components/ticket/TicketListPage';
+import TicketDetailPage from '../pages/tickets/TicketDetailPage';
+import TechnicianDashboardPage from '../pages/tickets/TechnicianDashboardPage';
 
 export default function AppRoutes() {
   return (
@@ -57,17 +59,14 @@ export default function AppRoutes() {
         {/* ===== Staff: cả Receptionist, Admin, Technician đều xem chi tiết ticket được ===== */}
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin', 'Technician']} />}>
           <Route element={<StaffLayout />}>
-            <Route
-              path="tickets/:id"
-              element={<PlaceholderPage title="Chi tiết phiếu sửa chữa" />}
-            />
+            <Route path="tickets/:id" element={<TicketDetailPage />} />
           </Route>
         </Route>
 
         {/* ===== Staff: riêng Technician ===== */}
         <Route element={<RoleGuard allowedRoles={['Technician']} />}>
           <Route element={<StaffLayout />}>
-            <Route path="technician/tickets" element={<TicketListPage />} />
+            <Route path="technician/tickets" element={<TechnicianDashboardPage />} />
           </Route>
         </Route>
 
