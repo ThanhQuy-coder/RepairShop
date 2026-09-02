@@ -62,7 +62,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .FirstOrDefaultAsync(t => t.TicketCode == ticketCode);
 
     public async Task<(List<RepairTicket> Items, int Total)> SearchAsync(
-        string? statusCode, Guid? technicianId, Guid? customerId, 
+        string? statusCode, Guid? technicianId, Guid? customerId,
         Guid? currentUserId, string? currentUserRole,
         int page, int pageSize)
     {
@@ -77,6 +77,9 @@ public class RepairTicketRepository : IRepairTicketRepository
         // TicketAccessGuard (Task 4.6/4.16, Tuần 4), áp dụng ngay từ bước lọc, không phải lọc sau khi trả về.
         if (currentUserRole == Roles.Technician && currentUserId is not null)
             query = query.Where(t => t.TechnicianId == currentUserId);
+
+        if (currentUserRole == Roles.Customer && currentUserId is not null)
+            query = query.Where(t => t.Customer.UserId == currentUserId);
 
         if (!string.IsNullOrWhiteSpace(statusCode))
             query = query.Where(t => t.Status.Code == statusCode);

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { useAuthStore } from './store/authStore';
 import { Outlet } from 'react-router-dom';
+import { useAuthStore } from './store/authStore';
+import { ToastContainer } from './components/common';
 
 function App() {
   const hydrate = useAuthStore((s) => s.hydrate);
@@ -8,7 +9,12 @@ function App() {
     hydrate();
   }, [hydrate]);
 
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <ToastContainer />
+    </>
+  );
 }
 
 export default App;

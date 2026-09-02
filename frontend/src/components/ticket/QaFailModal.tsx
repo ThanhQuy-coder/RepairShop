@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, ErrorMessage } from '../common';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export default function QaFailModal({ isOpen, ticketId, onClose, onDone }: Props
   const [reason, setReason] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const handleSubmit = async () => {
     if (!reason.trim()) {
@@ -25,6 +27,7 @@ export default function QaFailModal({ isOpen, ticketId, onClose, onDone }: Props
     try {
       await ticketService.startQualityCheck(ticketId).catch(() => null); // đã ở QA_TESTING thì bỏ qua lỗi này
       await ticketService.failQualityCheck(ticketId, reason);
+      showSuccess('Đã ghi nhận QA không đạt, ticket quay lại sửa chữa.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

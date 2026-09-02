@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, Input, ErrorMessage } from '../common';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -15,12 +16,14 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
   const [terms, setTerms] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const handleSubmit = async () => {
     setIsSaving(true);
     setErrorMessage(null);
     try {
       await ticketService.createWarranty(ticketId, months, terms || undefined);
+      showSuccess('Đã tạo thông tin bảo hành.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

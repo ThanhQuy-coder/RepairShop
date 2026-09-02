@@ -15,3 +15,7 @@
   padding-left: var(--spacing-lg);
   font-size: var(--font-size-sm);
 }
+
+.retryButton {
+  margin-top: var(--spacing-sm);
+}

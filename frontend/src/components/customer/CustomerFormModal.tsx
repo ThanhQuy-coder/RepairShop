@@ -3,6 +3,7 @@ import { Modal, Button, Input, ErrorMessage } from '../common';
 import type { Customer } from '../../types/customer.types';
 import { customerService } from '../../services/customerService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface CustomerFormModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function CustomerFormModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     if (isOpen) {
@@ -53,6 +55,9 @@ export default function CustomerFormModal({
         : await customerService.create(payload);
 
       onSaved(result);
+      showSuccess(
+        editingCustomer ? 'Đã cập nhật thông tin khách hàng.' : 'Đã tạo khách hàng mới thành công.'
+      );
       onClose();
     } catch (err) {
       const apiError = extractApiError(err);

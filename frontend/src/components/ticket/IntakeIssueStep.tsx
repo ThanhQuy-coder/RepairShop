@@ -6,6 +6,7 @@ import type { Customer } from '../../types/customer.types';
 import type { Device } from '../../types/device.types';
 import type { Ticket } from '../../types/ticket.types';
 import styles from './IntakeStep.module.css';
+import { useToast } from '../../hooks/useToast';
 
 interface IntakeIssueStepProps {
   customer: Customer;
@@ -27,6 +28,7 @@ export default function IntakeIssueStep({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,6 +49,7 @@ export default function IntakeIssueStep({
         riskWarning: riskWarning || undefined,
         diagnosticDeposit: diagnosticDeposit ? Number(diagnosticDeposit) : undefined,
       });
+      showSuccess(`Đã tạo phiếu ${ticket.ticketCode} thành công.`);
       onCreated(ticket);
     } catch (err) {
       const apiError = extractApiError(err);

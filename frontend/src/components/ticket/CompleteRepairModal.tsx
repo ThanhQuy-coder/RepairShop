@@ -4,6 +4,7 @@ import { ticketService } from '../../services/ticketService';
 import { partService } from '../../services/partService';
 import { extractApiError } from '../../utils/apiError';
 import type { Part } from '../../types/inventory.types';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     if (isOpen) partService.list().then(setParts);
@@ -60,6 +62,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
       }
 
       await ticketService.recordCompletionNotes(ticketId, completionNotes);
+      showSuccess('Đã hoàn tất sửa chữa, chuyển sang bước kiểm thử.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

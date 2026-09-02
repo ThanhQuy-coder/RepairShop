@@ -46,10 +46,10 @@ export interface StatusHistoryItem {
 
 export interface PublicTicketTracking {
   ticketCode: string;
-  deviceLabel: string;
-  status: string;
-  statusLabel: string;
-  statusHistory: { status: string; statusLabel: string; changedAt: string }[];
+  deviceLabel: string; // Backend trả "deviceLabel", không phải "device"
+  status: string; // code kỹ thuật
+  statusLabel: string; // nhãn tiếng Việt hiện sẵn — dùng trực tiếp, không cần map lại ở Frontend
+  statusHistory: PublicStatusHistoryItem[];
   estimatedCompletion: string | null;
 }
 
@@ -95,4 +95,10 @@ export interface TicketPartUsed {
   quantity: number;
   unitPriceAtUse: number;
   subtotal: number;
+}
+
+export interface PublicStatusHistoryItem {
+  status: string; // code kỹ thuật, VD: "IN_REPAIR"
+  statusLabel: string; // nhãn tiếng Việt, VD: "Đang sửa chữa"
+  changedAt: string;
 }

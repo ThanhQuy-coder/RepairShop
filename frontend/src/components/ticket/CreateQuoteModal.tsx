@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, Input, Select, ErrorMessage } from '../common';
 import { quoteService } from '../../services/quoteService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface QuoteItemForm {
   itemType: 'Service' | 'Part';
@@ -29,6 +30,7 @@ export default function CreateQuoteModal({
   ]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const updateItem = (index: number, patch: Partial<QuoteItemForm>) =>
     setItems((prev) => prev.map((it, i) => (i === index ? { ...it, ...patch } : it)));
@@ -47,6 +49,8 @@ export default function CreateQuoteModal({
     setIsSaving(true);
     try {
       await quoteService.create(ticketId, { description, items });
+
+      showSuccess('Đã tạo báo giá, chờ khách hàng xác nhận.');
       onCreated();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

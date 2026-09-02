@@ -6,6 +6,8 @@ import type { TicketListItem } from '../../types/ticket.types';
 import { Badge, Loading, ErrorMessage, EmptyState } from '../../components/common';
 import { TICKET_STATUS_LABELS, TICKET_STATUS_BADGE_VARIANT } from '../../constants/ticketStatus';
 import styles from './TechnicianDashboardPage.module.css';
+import { useTicketSummary } from '../../hooks/useTicketSummary';
+import SummaryCard from '../../components/dashboard/SummaryCard';
 
 // Backend đã tự lọc "chỉ ticket của Technician đang đăng nhập" ở tầng Repository (Task 5.10) —
 // Frontend chỉ cần gọi list() bình thường, KHÔNG cần truyền technicianId thủ công.
@@ -13,6 +15,7 @@ const GROUPS = ['ASSIGNED', 'DIAGNOSING', 'WAITING_PARTS', 'IN_REPAIR', 'QA_TEST
 
 export default function TechnicianDashboardPage() {
   const navigate = useNavigate();
+  const { summary } = useTicketSummary();
   const [tickets, setTickets] = useState<TicketListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -31,6 +34,24 @@ export default function TechnicianDashboardPage() {
   return (
     <div>
       <h2 style={{ marginBottom: 16 }}>Ticket của tôi</h2>
+
+      {summary && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+            gap: 12,
+            marginBottom: 24,
+          }}
+        >
+          <SummaryCard icon="📋" label="Tổng số" value={summary.total} isEmphasized />
+          {summary.groups
+            .filter((g) => g.count > 0 || g.key !== 'closed')
+            .map((g) => (
+              <SummaryCard key={g.key} icon={g.icon} label={g.label} value={g.count} />
+            ))}
+        </div>
+      )}
 
       {GROUPS.map((statusCode) => {
         const items = tickets.filter((t) => t.status === statusCode);

@@ -1,0 +1,67 @@
+.branchBanner {
+  background: #fef3c7;
+  color: #92400e;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+.markerCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+}
+.markerDone {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+.markerCurrent {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.connector {
+  width: 2px;
+  flex: 1;
+  min-height: 26px;
+  background: var(--color-border);
+}
+.connectorDone {
+  background: var(--color-success);
+}
+
+.label {
+  padding: 4px 0 var(--spacing-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+}
+.labelCurrent {
+  font-weight: 700;
+  color: var(--color-primary);
+}

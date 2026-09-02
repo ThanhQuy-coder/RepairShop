@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, ErrorMessage } from '../common';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export default function SubmitDiagnosisModal({ isOpen, ticketId, onClose, onDone
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const field = (key: keyof typeof form, label: string) => (
     <div style={{ marginBottom: 12 }}>
@@ -49,6 +51,7 @@ export default function SubmitDiagnosisModal({ isOpen, ticketId, onClose, onDone
     setErrorMessage(null);
     try {
       await ticketService.submitDiagnosis(ticketId, form);
+      showSuccess('Đã ghi nhận kết quả chẩn đoán.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

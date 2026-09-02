@@ -143,7 +143,7 @@ export default function TicketListPage() {
         )}
       </div>
 
-      {errorMessage && <ErrorMessage message={errorMessage} />}
+      {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchTickets} />}
 
       <Table
         columns={columns}

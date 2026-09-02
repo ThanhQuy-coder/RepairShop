@@ -105,7 +105,7 @@ export default function CustomerListPage() {
         />
       </div>
 
-      {errorMessage && <ErrorMessage message={errorMessage} />}
+      {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchCustomers} />}
 
       <Table
         columns={columns}

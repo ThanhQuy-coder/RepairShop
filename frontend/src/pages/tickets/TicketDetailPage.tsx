@@ -17,6 +17,8 @@ import TicketImageGallery from '../../components/ticket/TicketImageGallery';
 import TicketQuoteSection from '../../components/ticket/TicketQuoteSection';
 import TicketActions from '../../components/ticket/TicketActions';
 import styles from './TicketDetailPage.module.css';
+import QuoteCard from '../../components/quote/QuoteCard';
+import QuoteApprovalForm from '../../components/quote/QuoteApprovalForm';
 
 export default function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -66,9 +68,11 @@ export default function TicketDetailPage() {
   }, [loadAll]);
 
   if (isLoading) return <Loading />;
-  if (errorMessage || !ticket)
-    return <ErrorMessage message={errorMessage ?? 'Không tìm thấy phiếu sửa chữa.'} />;
-
+  if (errorMessage || !ticket) {
+    return (
+      <ErrorMessage message={errorMessage ?? 'Không tìm thấy phiếu sửa chữa.'} onRetry={loadAll} />
+    );
+  }
   const canCreateQuote = role === 'Receptionist' || role === 'Admin';
 
   return (
@@ -164,13 +168,33 @@ export default function TicketDetailPage() {
           {/* Quote */}
           <section className={styles.section}>
             <h3>Báo giá</h3>
-            <TicketQuoteSection
-              ticketId={ticket.id}
-              ticketStatus={ticket.status}
-              quotes={quotes}
-              canCreateQuote={canCreateQuote}
-              onQuoteCreated={loadAll}
-            />
+
+            {role === 'Customer' ? (
+              // Customer: chỉ xem quote đang PENDING (cần phản hồi) — quote đã Approved/Rejected thì chỉ xem, không có action
+              quotes.length === 0 ? (
+                <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
+                  Chưa có báo giá nào.
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {quotes.map((q) => (
+                    <QuoteCard key={q.id} quote={q}>
+                      {q.status === 'Pending' && (
+                        <QuoteApprovalForm quoteId={q.id} onDecided={loadAll} />
+                      )}
+                    </QuoteCard>
+                  ))}
+                </div>
+              )
+            ) : (
+              <TicketQuoteSection
+                ticketId={ticket.id}
+                ticketStatus={ticket.status}
+                quotes={quotes}
+                canCreateQuote={canCreateQuote}
+                onQuoteCreated={loadAll}
+              />
+            )}
           </section>
         </div>
 

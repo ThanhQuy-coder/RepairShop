@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal, Button, ErrorMessage } from '../common';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -19,6 +20,7 @@ export default function QaPassModal({ isOpen, ticketId, onClose, onDone }: Props
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [started, setStarted] = useState(false);
+  const { showSuccess } = useToast();
 
   const handleStartThenSubmit = async () => {
     if (Object.values(form).some((v) => !v.trim())) {
@@ -33,6 +35,7 @@ export default function QaPassModal({ isOpen, ticketId, onClose, onDone }: Props
         setStarted(true);
       }
       await ticketService.passQualityCheck(ticketId, form);
+      showSuccess('QA đạt — thiết bị sẵn sàng bàn giao.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

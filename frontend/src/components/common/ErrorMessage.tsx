@@ -1,11 +1,13 @@
+import { Button } from './index';
 import styles from './ErrorMessage.module.css';
 
 interface ErrorMessageProps {
   message: string;
-  errors?: string[]; // khớp ApiErrorResponse.errors[] (Task 8, Tuần 3)
+  errors?: string[];
+  onRetry?: () => void; // mới — nếu truyền vào, hiện nút "Thử lại"
 }
 
-export default function ErrorMessage({ message, errors }: ErrorMessageProps) {
+export default function ErrorMessage({ message, errors, onRetry }: ErrorMessageProps) {
   return (
     <div className={styles.wrapper}>
       <p className={styles.message}>{message}</p>
@@ -15,6 +17,11 @@ export default function ErrorMessage({ message, errors }: ErrorMessageProps) {
             <li key={i}>{err}</li>
           ))}
         </ul>
+      )}
+      {onRetry && (
+        <Button variant="secondary" size="sm" onClick={onRetry} className={styles.retryButton}>
+          Thử lại
+        </Button>
       )}
     </div>
   );

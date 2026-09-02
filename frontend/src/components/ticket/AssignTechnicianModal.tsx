@@ -4,6 +4,7 @@ import { userService } from '../../services/userService';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
 import type { UserListItem } from '../../types/user.types';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function AssignTechnicianModal({ isOpen, ticketId, onClose, onDon
   const [technicianId, setTechnicianId] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     if (isOpen)
@@ -34,6 +36,7 @@ export default function AssignTechnicianModal({ isOpen, ticketId, onClose, onDon
     setErrorMessage(null);
     try {
       await ticketService.assignTechnician(ticketId, technicianId);
+      showSuccess('Đã phân công kỹ thuật viên.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

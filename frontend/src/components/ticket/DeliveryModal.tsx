@@ -4,6 +4,7 @@ import { ticketService } from '../../services/ticketService';
 import { invoiceService } from '../../services/invoiceService';
 import { extractApiError } from '../../utils/apiError';
 import type { Quote } from '../../types/quote.types';
+import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function DeliveryModal({ isOpen, ticketId, approvedQuote, onClose
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'Transfer'>('Cash');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   const handleSubmit = async () => {
     setIsSaving(true);
@@ -27,6 +29,8 @@ export default function DeliveryModal({ isOpen, ticketId, approvedQuote, onClose
       const invoiceId = (invoiceRes.data as { id: string }).id;
       await invoiceService.pay(invoiceId);
       await ticketService.deliver(ticketId);
+
+      showSuccess('Đã bàn giao thiết bị thành công.');
       onDone();
     } catch (err) {
       setErrorMessage(extractApiError(err).message);

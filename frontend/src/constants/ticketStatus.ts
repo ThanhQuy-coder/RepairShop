@@ -40,3 +40,43 @@ export const MAIN_TIMELINE_SEQUENCE = [
   'READY_FOR_PICKUP',
   'DELIVERED',
 ];
+
+export const STATUS_ICON: Record<string, string> = {
+  CHECKED_IN: '📥',
+  ASSIGNED: '👤',
+  DIAGNOSING: '🔍',
+  WAITING_APPROVAL: '📝',
+  ON_HOLD: '⏸️',
+  WAITING_PARTS: '📦',
+  IN_REPAIR: '🔧',
+  QA_TESTING: '🧪',
+  READY_FOR_PICKUP: '✅',
+  DELIVERED: '🎉',
+  CLOSED_REJECTED: '❌',
+};
+
+// Gom 11 status thành 5 nhóm cho Dashboard tổng quan — khác với MAIN_TIMELINE_SEQUENCE (dùng cho
+// Timeline hiển thị TỪNG bước tuần tự của 1 ticket). Ở đây cần độ "cô đọng" hơn để nhìn tổng quan
+// toàn bộ cửa hàng đang có bao nhiêu việc ở mỗi giai đoạn.
+export const DASHBOARD_STATUS_GROUPS: {
+  key: string;
+  label: string;
+  statuses: string[];
+  icon: string;
+}[] = [
+  {
+    key: 'pending',
+    label: 'Đang chờ xử lý',
+    icon: '⏳',
+    statuses: ['CHECKED_IN', 'ASSIGNED', 'DIAGNOSING', 'WAITING_APPROVAL', 'ON_HOLD'],
+  },
+  {
+    key: 'inRepair',
+    label: 'Đang sửa chữa',
+    icon: '🔧',
+    statuses: ['WAITING_PARTS', 'IN_REPAIR', 'QA_TESTING'],
+  },
+  { key: 'readyForPickup', label: 'Sẵn sàng bàn giao', icon: '✅', statuses: ['READY_FOR_PICKUP'] },
+  { key: 'completed', label: 'Đã hoàn thành', icon: '🎉', statuses: ['DELIVERED'] },
+  { key: 'closed', label: 'Đã đóng (từ chối)', icon: '❌', statuses: ['CLOSED_REJECTED'] },
+];

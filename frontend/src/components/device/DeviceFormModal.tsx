@@ -3,6 +3,7 @@ import { Modal, Button, Input, Select, ErrorMessage } from '../common';
 import { deviceService } from '../../services/deviceService';
 import { extractApiError } from '../../utils/apiError';
 import type { Device, DeviceType } from '../../types/device.types';
+import { useToast } from '../../hooks/useToast';
 
 const DEVICE_TYPE_OPTIONS = [
   { value: 'Phone', label: 'Điện thoại' },
@@ -34,6 +35,7 @@ export default function DeviceFormModal({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const { showSuccess } = useToast();
 
   useEffect(() => {
     if (isOpen) {
@@ -69,6 +71,7 @@ export default function DeviceFormModal({
           });
 
       onSaved(result);
+      showSuccess(editingDevice ? 'Đã cập nhật thiết bị.' : 'Đã thêm thiết bị mới.');
       onClose();
     } catch (err) {
       const apiError = extractApiError(err);

@@ -18,9 +18,12 @@ import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
 import DevicesPage from '../pages/devices/DevicesPage';
 import DeviceDetailPage from '../pages/devices/DeviceDetailPage';
 import CreateTicketPage from '../pages/tickets/CreateTicketPage';
-import TicketListPage from '../components/ticket/TicketListPage';
+import TicketListPage from '../pages/tickets/TicketListPage';
 import TicketDetailPage from '../pages/tickets/TicketDetailPage';
 import TechnicianDashboardPage from '../pages/tickets/TechnicianDashboardPage';
+import MyTicketsPage from '../pages/customers/MyTicketsPage';
+import StaffDashboardPage from '../pages/dashboard/StaffDashboardPage';
+import AdminDashboardPage from '../pages/dashboard/AdminDashboardPage';
 
 export default function AppRoutes() {
   return (
@@ -31,6 +34,7 @@ export default function AppRoutes() {
           <Route index element={<PlaceholderPage title="Trang chủ" />} />
           <Route path="services" element={<PlaceholderPage title="Dịch vụ" />} />
           <Route path="articles" element={<PlaceholderPage title="Bài viết" />} />
+          <Route path="track" element={<TrackTicketPage />} />
           <Route path="track/:ticketCode" element={<TrackTicketPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
@@ -43,7 +47,7 @@ export default function AppRoutes() {
         {/* ===== Staff: Receptionist + Admin — nghiệp vụ Customer/Device/Ticket/Quote ===== */}
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin']} />}>
           <Route element={<StaffLayout />}>
-            <Route path="staff/dashboard" element={<PlaceholderPage title="Staff Dashboard" />} />
+            <Route path="staff/dashboard" element={<StaffDashboardPage />} />{' '}
             <Route path="customers" element={<PlaceholderPage title="Danh sách khách hàng" />} />
             <Route path="customers/:id" element={<PlaceholderPage title="Chi tiết khách hàng" />} />
             <Route path="devices" element={<DevicesPage />} />
@@ -73,7 +77,7 @@ export default function AppRoutes() {
         {/* ===== Admin ===== */}
         <Route element={<RoleGuard allowedRoles={['Admin']} />}>
           <Route element={<AdminLayout />}>
-            <Route path="admin/dashboard" element={<PlaceholderPage title="Admin Dashboard" />} />
+            <Route path="admin/dashboard" element={<AdminDashboardPage />} />{' '}
             <Route path="admin/users" element={<PlaceholderPage title="Quản lý người dùng" />} />
           </Route>
         </Route>
@@ -85,7 +89,7 @@ export default function AppRoutes() {
               path="customer/home"
               element={<PlaceholderPage title="Trang chủ khách hàng" />}
             />
-            <Route path="customer/my-tickets" element={<PlaceholderPage title="Phiếu của tôi" />} />
+            <Route path="customer/my-tickets" element={<MyTicketsPage />} />{' '}
             <Route path="customer/warranty" element={<PlaceholderPage title="Bảo hành" />} />
             <Route path="customer/profile" element={<PlaceholderPage title="Hồ sơ" />} />
           </Route>
