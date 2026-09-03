@@ -1,4 +1,5 @@
 using RepairShop.Domain.Common.Exceptions;
+using RepairShop.Domain.Modules.Inventory;
 
 namespace RepairShop.Domain.Modules.Tickets;
 
@@ -9,6 +10,7 @@ public class TicketPart
     public Guid PartId { get; private set; }
     public int Quantity { get; private set; }
     public decimal UnitPriceAtUse { get; private set; } // snapshot giá — đúng ghi chú Data Dictionary Tuần 2
+    public Part? Part { get; private set; }
 
     public decimal Subtotal => Quantity * UnitPriceAtUse;
 

@@ -21,7 +21,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .MinimumLength(6).WithMessage("Mật khẩu phải có ít nhất 6 ký tự.");
 
         RuleFor(x => x.Phone)
-            .MaximumLength(20).WithMessage("Số điện thoại không vượt quá 20 ký tự.")
-            .When(x => !string.IsNullOrEmpty(x.Phone));
+            .NotEmpty().WithMessage("Số điện thoại không được để trống.")
+            .MaximumLength(20).WithMessage("Số điện thoại không vượt quá 20 ký tự.");
     }
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../store/authStore';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -19,9 +20,7 @@ apiClient.interceptors.response.use(
     switch (status) {
       case 401:
         // Token hết hạn / không hợp lệ -> logout ngay, không chờ page tự xử lý
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('role');
-        localStorage.removeItem('email');
+        useAuthStore.getState().logout();
         if (!window.location.pathname.startsWith('/login')) {
           window.location.href = '/login';
         }

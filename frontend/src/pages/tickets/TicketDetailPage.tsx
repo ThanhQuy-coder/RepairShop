@@ -43,6 +43,29 @@ export default function TicketDetailPage() {
       const ticketData = await ticketService.getById(id);
       setTicket(ticketData as TicketDetail);
 
+      if (role === 'Customer') {
+        const quotesData = await quoteService.getByTicketId(id);
+        setCustomer({
+          id: ticketData.customerId,
+          fullName: ticketData.customerName ?? '',
+          phone: ticketData.customerPhone ?? '',
+          createdAt: '',
+        });
+        setDevice({
+          id: ticketData.deviceId,
+          customerId: ticketData.customerId,
+          deviceType: (ticketData.deviceType ?? 'Phone') as Device['deviceType'],
+          brand: ticketData.deviceBrand ?? '',
+          model: ticketData.deviceModel ?? '',
+          serialNumber: ticketData.deviceSerialNumber,
+          createdAt: '',
+        });
+        setImages(ticketData.images ?? []);
+        setQuotes(quotesData);
+        setStatusHistory([]);
+        return;
+      }
+
       const [customerData, deviceData, imagesData, quotesData, historyData] = await Promise.all([
         customerService.getById(ticketData.customerId),
         deviceService.getById(ticketData.deviceId),
@@ -61,7 +84,7 @@ export default function TicketDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id, role]);
 
   useEffect(() => {
     loadAll();
@@ -163,6 +186,29 @@ export default function TicketDetailPage() {
           <section className={styles.section}>
             <h3>Hình ảnh</h3>
             <TicketImageGallery images={images} />
+          </section>
+
+          <section className={styles.section}>
+            <h3>Linh kiện đã sử dụng</h3>
+            {ticket.usedParts?.length ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {ticket.usedParts.map((part) => (
+                  <div
+                    key={part.ticketPartId}
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <span>
+                      {part.partName} × {part.quantity}
+                    </span>
+                    <span>{part.subtotal.toLocaleString('vi-VN')}đ</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
+                Chưa sử dụng linh kiện.
+              </p>
+            )}
           </section>
 
           {/* Quote */}

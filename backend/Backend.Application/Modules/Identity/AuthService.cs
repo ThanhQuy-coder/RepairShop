@@ -11,6 +11,7 @@ public class AuthService : IAuthService
     private readonly IRoleRepository _roleRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ICustomerRepository _customerRepository;
 
     private const string DefaultSelfRegisterRole = "Customer";
 
@@ -18,12 +19,14 @@ public class AuthService : IAuthService
         IUserRepository userRepository,
         IRoleRepository roleRepository,
         IPasswordHasher passwordHasher,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        ICustomerRepository customerRepository)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _customerRepository = customerRepository;
     }
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -44,6 +47,7 @@ public class AuthService : IAuthService
         var user = new User(request.FullName, request.Email, passwordHash, customerRole.Id, request.Phone);
 
         await _userRepository.AddAsync(user);
+        await LinkCustomerByPhoneAsync(user, request.Phone);
         await _userRepository.SaveChangesAsync();
 
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name);
@@ -66,5 +70,20 @@ public class AuthService : IAuthService
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName);
 
         return new AuthResponse(accessToken, 3600, roleName, user.Email);
+    }
+
+    private async Task LinkCustomerByPhoneAsync(User user, string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone)) return;
+
+        var customer = await _customerRepository.GetByPhoneAsync(phone);
+        if (customer is null) return;
+
+        if (customer.UserId is not null)
+            throw new InvalidOperationException(
+                "Số điện thoại này đã được liên kết với một tài khoản Customer khác.");
+
+        customer.LinkUser(user.Id);
+        _customerRepository.Update(customer);
     }
 }

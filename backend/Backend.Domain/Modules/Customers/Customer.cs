@@ -41,4 +41,13 @@ public class Customer : BaseEntity
         Address = address;
         MarkUpdated();
     }
+
+    public void LinkUser(Guid userId)
+    {
+        if (UserId is not null && UserId != userId)
+            throw new DomainException("Hồ sơ khách hàng đã liên kết với tài khoản khác.");
+
+        UserId = userId;
+        MarkUpdated();
+    }
 }

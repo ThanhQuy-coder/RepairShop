@@ -12,7 +12,7 @@ import type { PagedResponse } from '../types/common.types';
 import type { TicketListItem, TicketListFilters } from '../types/ticket.types';
 
 export const ticketService = {
-  getById: (id: string) => apiClient.get<Ticket>(`/tickets/${id}`).then((res) => res.data),
+  getById: (id: string) => apiClient.get<TicketDetail>(`/tickets/${id}`).then((res) => res.data),
 
   // Lưu ý: Backend chưa có endpoint "GET /customers/{id}/tickets" (bị bỏ qua có chủ đích ở Task 10
   // Tuần 3 vì mentor yêu cầu "chưa làm RepairTicket"). Gọi tạm để dành, xem ghi chú cuối bài.

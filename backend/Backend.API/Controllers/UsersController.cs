@@ -8,7 +8,7 @@ namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[Authorize(Policy = AuthorizationPolicies.AdminOnly)] // áp cho TOÀN BỘ controller
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -16,6 +16,7 @@ public class UsersController : ControllerBase
     public UsersController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> GetUsers([FromQuery] string? role,
     [FromQuery] bool? isActive,
     [FromQuery] int page = 1,
@@ -26,8 +27,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
     public IActionResult CreateUser() => Ok();
 
     [HttpPatch("{id}/status")]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
     public IActionResult ToggleStatus(Guid id) => Ok();
 }

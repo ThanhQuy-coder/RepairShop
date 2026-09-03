@@ -10,6 +10,7 @@ public class QuoteRepository : IQuoteRepository
     public Task<Quote?> GetByIdAsync(Guid id) =>
         _context.Quotes
             .Include(q => q.RepairTicket)
+                .ThenInclude(t => t.Status)
             .Include(q => q.Items)
             .AsSplitQuery()
             .FirstOrDefaultAsync(q => q.Id == id);

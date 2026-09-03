@@ -75,6 +75,14 @@ export interface TicketDetail extends Ticket {
   customerName?: string;
   deviceLabel?: string;
   technicianName?: string | null;
+  customerPhone?: string;
+  deviceType?: string;
+  deviceBrand?: string;
+  deviceModel?: string;
+  deviceSerialNumber?: string;
+  images?: TicketImage[];
+  usedParts?: TicketPartUsed[];
+  invoice?: TicketInvoice;
   diagnosisResult?: string;
   rootCause?: string;
   recommendedRepair?: string;
@@ -95,6 +103,14 @@ export interface TicketPartUsed {
   quantity: number;
   unitPriceAtUse: number;
   subtotal: number;
+}
+
+export interface TicketInvoice {
+  id: string;
+  totalAmount: number;
+  paymentMethod: 'Cash' | 'Transfer';
+  paidAt: string | null;
+  createdAt: string;
 }
 
 export interface PublicStatusHistoryItem {

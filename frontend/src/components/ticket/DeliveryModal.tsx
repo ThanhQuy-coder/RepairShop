@@ -4,17 +4,26 @@ import { ticketService } from '../../services/ticketService';
 import { invoiceService } from '../../services/invoiceService';
 import { extractApiError } from '../../utils/apiError';
 import type { Quote } from '../../types/quote.types';
+import type { TicketInvoice } from '../../types/ticket.types';
 import { useToast } from '../../hooks/useToast';
 
 interface Props {
   isOpen: boolean;
   ticketId: string;
   approvedQuote?: Quote;
+  existingInvoice?: TicketInvoice;
   onClose: () => void;
   onDone: () => void;
 }
 
-export default function DeliveryModal({ isOpen, ticketId, approvedQuote, onClose, onDone }: Props) {
+export default function DeliveryModal({
+  isOpen,
+  ticketId,
+  approvedQuote,
+  existingInvoice,
+  onClose,
+  onDone,
+}: Props) {
   const [paymentMethod, setPaymentMethod] = useState<'Cash' | 'Transfer'>('Cash');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -25,9 +34,10 @@ export default function DeliveryModal({ isOpen, ticketId, approvedQuote, onClose
     setErrorMessage(null);
     try {
       // Payment = Mock/Manual (Task 4.12, Tuần 4) — xuất Invoice, đánh dấu đã thanh toán ngay tại quầy, rồi Deliver
-      const invoiceRes = await ticketService.createInvoice(ticketId, paymentMethod);
-      const invoiceId = (invoiceRes.data as { id: string }).id;
-      await invoiceService.pay(invoiceId);
+      const invoiceId = existingInvoice
+        ? existingInvoice.id
+        : ((await ticketService.createInvoice(ticketId, paymentMethod)).data as { id: string }).id;
+      if (!existingInvoice?.paidAt) await invoiceService.pay(invoiceId);
       await ticketService.deliver(ticketId);
 
       showSuccess('Đã bàn giao thiết bị thành công.');

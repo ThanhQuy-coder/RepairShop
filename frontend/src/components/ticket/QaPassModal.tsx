@@ -19,7 +19,6 @@ export default function QaPassModal({ isOpen, ticketId, onClose, onDone }: Props
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [started, setStarted] = useState(false);
   const { showSuccess } = useToast();
 
   const handleStartThenSubmit = async () => {
@@ -30,10 +29,6 @@ export default function QaPassModal({ isOpen, ticketId, onClose, onDone }: Props
     setIsSaving(true);
     setErrorMessage(null);
     try {
-      if (!started) {
-        await ticketService.startQualityCheck(ticketId);
-        setStarted(true);
-      }
       await ticketService.passQualityCheck(ticketId, form);
       showSuccess('QA đạt — thiết bị sẵn sàng bàn giao.');
       onDone();

@@ -13,14 +13,17 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
     private readonly IRoleRepository _roleRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ICustomerRepository _customerRepository;
 
     public RegisterCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository,
-        IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator)
+        IPasswordHasher passwordHasher, IJwtTokenGenerator jwtTokenGenerator,
+        ICustomerRepository customerRepository)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _passwordHasher = passwordHasher;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _customerRepository = customerRepository;
     }
 
     public async Task<AuthResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -38,6 +41,21 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
         var user = new User(request.FullName, request.Email, passwordHash, customerRole.Id, request.Phone);
 
         await _userRepository.AddAsync(user);
+
+        if (!string.IsNullOrWhiteSpace(request.Phone))
+        {
+            var customer = await _customerRepository.GetByPhoneAsync(request.Phone);
+            if (customer is not null)
+            {
+                if (customer.UserId is not null)
+                    throw new InvalidOperationException(
+                        "Số điện thoại này đã được liên kết với một tài khoản Customer khác.");
+
+                customer.LinkUser(user.Id);
+                _customerRepository.Update(customer);
+            }
+        }
+
         await _userRepository.SaveChangesAsync();
 
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name);

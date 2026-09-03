@@ -62,6 +62,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
       }
 
       await ticketService.recordCompletionNotes(ticketId, completionNotes);
+      await ticketService.startQualityCheck(ticketId);
       showSuccess('Đã hoàn tất sửa chữa, chuyển sang bước kiểm thử.');
       onDone();
     } catch (err) {

@@ -22,10 +22,10 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   ],
   Receptionist: [
     { label: 'Dashboard', path: '/staff/dashboard' },
-    { label: 'Khách hàng', path: '/staff/customers' },
-    { label: 'Thiết bị', path: '/staff/devices' },
-    { label: 'Phiếu sửa chữa', path: '/staff/tickets' },
-    { label: 'Báo giá', path: '/staff/quotes' },
+    { label: 'Khách hàng', path: '/customers' },
+    { label: 'Thiết bị', path: '/devices' },
+    { label: 'Phiếu sửa chữa', path: '/tickets' },
+    { label: 'Báo giá', path: '/tickets' },
   ],
   Technician: [
     { label: 'Dashboard', path: '/staff/dashboard' },

@@ -10,8 +10,4 @@ public class InvoiceRepository : IInvoiceRepository
     public Task<Invoice?> GetByIdAsync(Guid id) => _context.Invoices.FirstOrDefaultAsync(i => i.Id == id);
     public Task SaveChangesAsync() => _context.SaveChangesAsync();
 
-    Task<Invoice?> IInvoiceRepository.GetByIdAsync(Guid id)
-    {
-        throw new NotImplementedException();
-    }
 }

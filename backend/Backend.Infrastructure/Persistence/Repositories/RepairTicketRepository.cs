@@ -26,12 +26,25 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Status)
             .Include(t => t.Quotes).ThenInclude(q => q.Items)
             .Include(t => t.Technician)
+            .Include(t => t.TicketParts).ThenInclude(tp => tp.Part)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
             .Include(t => t.StatusHistories).ThenInclude(h => h.ChangedByUser)
             .Include(t => t.Images)
             .Include(t => t.Invoice)
             .Include(t => t.Warranty)
             .AsSplitQuery()
+            .FirstOrDefaultAsync(t => t.Id == id);
+
+    public Task<RepairTicket?> GetByIdForQueryAsync(Guid id) =>
+        _context.RepairTickets
+            .Include(t => t.Customer)
+            .Include(t => t.Device)
+            .Include(t => t.Status)
+            .Include(t => t.Technician)
+            .Include(t => t.TicketParts).ThenInclude(tp => tp.Part)
+            .Include(t => t.Images)
+            .Include(t => t.Invoice)
+            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == id);
 
     public Task<bool> TicketCodeExistsAsync(string ticketCode) =>

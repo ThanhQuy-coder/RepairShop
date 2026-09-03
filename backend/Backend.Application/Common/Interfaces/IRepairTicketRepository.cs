@@ -7,6 +7,7 @@ namespace RepairShop.Application.Common.Interfaces;
 public interface IRepairTicketRepository
 {
     Task<RepairTicket?> GetByIdAsync(Guid id);
+    Task<RepairTicket?> GetByIdForQueryAsync(Guid id);
     Task<bool> TicketCodeExistsAsync(string ticketCode);
     Task AddAsync(RepairTicket ticket);
 
@@ -18,7 +19,7 @@ public interface IRepairTicketRepository
     Task<RepairTicket?> GetByTicketCodeForTrackingAsync(string ticketCode);
 
     Task<(List<RepairTicket> Items, int Total)> SearchAsync(
-        string? statusCode, Guid? technicianId, Guid? customerId, 
+        string? statusCode, Guid? technicianId, Guid? customerId,
         Guid? currentUserId, string? currentUserRole,
         int page, int pageSize);
 

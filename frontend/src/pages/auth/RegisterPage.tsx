@@ -22,6 +22,8 @@ export default function RegisterPage() {
     if (!form.fullName.trim()) errors.fullName = 'Vui lòng nhập họ tên.';
     if (!isValidEmail(form.email)) errors.email = 'Email không đúng định dạng.';
     if (form.password.length < 6) errors.password = 'Mật khẩu phải có ít nhất 6 ký tự.';
+    if (!form.phone.trim())
+      errors.phone = 'Vui lòng nhập số điện thoại để liên kết hồ sơ khách hàng.';
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -77,9 +79,11 @@ export default function RegisterPage() {
 
         <Input
           label="Số điện thoại"
+          required
           name="phone"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          errorMessage={fieldErrors.phone}
         />
 
         <Input

@@ -201,6 +201,7 @@ export default function TicketActions({ ticket, quotes, onUpdated }: TicketActio
         isOpen={openModal === 'deliver'}
         ticketId={ticket.id}
         approvedQuote={quotes.find((q) => q.status === 'Approved')}
+        existingInvoice={ticket.invoice}
         onClose={() => setOpenModal(null)}
         onDone={() => {
           setOpenModal(null);

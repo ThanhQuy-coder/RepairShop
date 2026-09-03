@@ -22,7 +22,7 @@ public class GetTicketByIdQueryHandler : IRequestHandler<GetTicketByIdQuery, Tic
 
     public async Task<TicketResponse> Handle(GetTicketByIdQuery request, CancellationToken cancellationToken)
     {
-        var ticket = await _ticketRepository.GetByIdAsync(request.TicketId)
+        var ticket = await _ticketRepository.GetByIdForQueryAsync(request.TicketId)
             ?? throw new RepairShop.Application.Common.Exceptions.NotFoundException("Phiếu sửa chữa", request.TicketId);
 
         // Phân nhánh ownership theo role của người gọi:
@@ -35,9 +35,6 @@ public class GetTicketByIdQueryHandler : IRequestHandler<GetTicketByIdQuery, Tic
         {
             TicketAccessGuard.EnsureCanAccess(ticket, _currentUser); // Technician B xem Ticket của A -> 403
         }
-
-        // Đây chính là chỗ enforce "Technician chỉ xem/thao tác ticket của mình" — Admin/Receptionist bỏ qua
-        TicketAccessGuard.EnsureCanAccess(ticket, _currentUser);
 
         return TicketMapper.ToResponse(ticket);
     }

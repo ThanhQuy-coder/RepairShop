@@ -13,6 +13,9 @@ public class UserRepository : IUserRepository
     public Task<User?> GetByEmailAsync(string email) =>
         _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
 
+    public Task<User?> GetByPhoneAsync(string phone) =>
+        _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Phone == phone);
+
     public async Task AddAsync(User user) => await _context.Users.AddAsync(user);
 
     public Task SaveChangesAsync() => _context.SaveChangesAsync();

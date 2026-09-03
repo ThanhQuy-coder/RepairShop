@@ -22,7 +22,7 @@ export default function PublicLayout() {
         </nav>
         <div>
           {isAuthenticated ? (
-            <Link to="/redirect">
+            <Link to="/dashboard">
               <Button size="sm">Vào hệ thống</Button>
             </Link>
           ) : (

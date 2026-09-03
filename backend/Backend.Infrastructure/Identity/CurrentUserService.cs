@@ -27,5 +27,7 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
     public string? Role =>
-        _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role);
+        _httpContextAccessor.HttpContext?.User.FindFirstValue("role")
+        ?? _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Role)
+        ?? _httpContextAccessor.HttpContext?.User.FindFirstValue("http://schemas.microsoft.com/ws/2008/06/identity/claims/role");
 }

@@ -13,6 +13,7 @@ namespace RepairShop.Domain.Modules.Tickets;
 
 public class RepairTicket : BaseEntity
 {
+    private const int MaxImagesPerTicket = 5;
     public string TicketCode { get; private set; } = default!;
     public Guid CustomerId { get; private set; }
     public Guid DeviceId { get; private set; }
@@ -104,6 +105,9 @@ public class RepairTicket : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(imageUrl))
             throw new DomainException("URL ảnh không được để trống.");
+
+        if (_images.Count >= MaxImagesPerTicket)
+            throw new DomainException($"Mỗi phiếu sửa chữa chỉ được lưu tối đa {MaxImagesPerTicket} ảnh.");
 
         var terminalStatuses = new[] { RepairStatusCodes.Delivered, RepairStatusCodes.ClosedRejected };
         if (terminalStatuses.Contains(Status.Code))

@@ -40,14 +40,33 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
                 throw new InvalidOperationException($"Tài khoản '{user.Email}' đã liên kết với 1 hồ sơ khách hàng khác.");
         }
 
-        var customer = new Customer(request.FullName, request.Phone, 
-            request.Email, request.Address, request.UserId);
+        Guid? linkedUserId = request.UserId;
+        if (linkedUserId is null)
+        {
+            var userWithSamePhone = await _userRepository.GetByPhoneAsync(request.Phone);
+            if (userWithSamePhone is not null)
+            {
+                if (userWithSamePhone.Role?.Name != Roles.Customer)
+                    throw new InvalidOperationException(
+                        $"Số điện thoại '{request.Phone}' đang thuộc tài khoản không phải Customer.");
+
+                var alreadyLinked = await _customerRepository.GetByUserIdAsync(userWithSamePhone.Id);
+                if (alreadyLinked is not null)
+                    throw new InvalidOperationException(
+                        $"Tài khoản '{userWithSamePhone.Email}' đã liên kết với 1 hồ sơ khách hàng khác.");
+
+                linkedUserId = userWithSamePhone.Id;
+            }
+        }
+
+        var customer = new Customer(request.FullName, request.Phone,
+            request.Email, request.Address, linkedUserId);
 
         await _customerRepository.AddAsync(customer);
         await _customerRepository.SaveChangesAsync();
 
         _logger.LogInformation("Tạo mới Customer {CustomerId} - {Phone}, liên kết UserId: {UserId}",
-            customer.Id, customer.Phone, request.UserId);
+            customer.Id, customer.Phone, linkedUserId);
 
         return new CustomerResponse(customer.Id, customer.FullName, customer.Phone, customer.Email,
             customer.Address, customer.CreatedAt);

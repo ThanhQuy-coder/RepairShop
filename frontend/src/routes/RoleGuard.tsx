@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import Loading from '../components/common/Loading';
 import type { UserRole } from '../types/auth.types';
 
 interface RoleGuardProps {
@@ -7,7 +8,9 @@ interface RoleGuardProps {
 }
 
 export default function RoleGuard({ allowedRoles }: RoleGuardProps) {
-  const { role, isAuthenticated } = useAuth();
+  const { role, isAuthenticated, isHydrated } = useAuth();
+
+  if (!isHydrated) return <Loading />;
 
   // Chưa đăng nhập -> về /login (tương đương 401)
   if (!isAuthenticated) return <Navigate to="/login" replace />;

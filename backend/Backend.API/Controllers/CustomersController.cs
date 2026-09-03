@@ -9,7 +9,7 @@ namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/customers")]
-[Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+[Authorize]
 public class CustomersController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -17,6 +17,7 @@ public class CustomersController : ControllerBase
     public CustomersController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> GetCustomers([FromQuery] string? search, [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20)
     {
@@ -40,6 +41,7 @@ public class CustomersController : ControllerBase
     // }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> Update(Guid id, UpdateCustomerCommand command)
     {
         if (id != command.Id) return BadRequest(new { success = false, message = "Id không khớp." });
@@ -50,6 +52,7 @@ public class CustomersController : ControllerBase
     public record CreateCustomerBody(string FullName, string Phone, string? Email, string? Address, Guid? UserId);
 
     [HttpPost]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> Create(CreateCustomerBody body)
     {
         var command = new CreateCustomerCommand(body.FullName, body.Phone, body.Email, body.Address, body.UserId);

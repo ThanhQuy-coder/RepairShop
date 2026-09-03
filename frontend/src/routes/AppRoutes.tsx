@@ -5,6 +5,7 @@ import StaffLayout from '../layouts/StaffLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import CustomerLayout from '../layouts/CustomerLayout';
 import RoleGuard from './RoleGuard';
+import TicketDetailRoute from './TicketDetailRoute';
 import DashboardRedirect from '../pages/dashboard/DashboardRedirect';
 
 import LoginPage from '../pages/auth/LoginPage';
@@ -60,9 +61,11 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* ===== Staff: cả Receptionist, Admin, Technician đều xem chi tiết ticket được ===== */}
-        <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin', 'Technician']} />}>
-          <Route element={<StaffLayout />}>
+        {/* ===== Staff + Customer: xem chi tiết ticket với layout tương ứng ===== */}
+        <Route
+          element={<RoleGuard allowedRoles={['Receptionist', 'Admin', 'Technician', 'Customer']} />}
+        >
+          <Route element={<TicketDetailRoute />}>
             <Route path="tickets/:id" element={<TicketDetailPage />} />
           </Route>
         </Route>
