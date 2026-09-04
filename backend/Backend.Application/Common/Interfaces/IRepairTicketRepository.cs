@@ -8,6 +8,8 @@ public interface IRepairTicketRepository
 {
     Task<RepairTicket?> GetByIdAsync(Guid id);
     Task<RepairTicket?> GetByIdForQueryAsync(Guid id);
+    Task<List<RepairTicket>> GetByCustomerForHistoryAsync(Guid customerId);
+    Task<List<RepairTicket>> GetByDeviceForHistoryAsync(Guid deviceId);
     Task<bool> TicketCodeExistsAsync(string ticketCode);
     Task AddAsync(RepairTicket ticket);
 

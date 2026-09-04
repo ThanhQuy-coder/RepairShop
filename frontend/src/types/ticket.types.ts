@@ -61,6 +61,7 @@ export interface TicketListItem {
   technicianName: string | null;
   status: TicketStatus;
   receivedAt: string;
+  issueReported?: string;
 }
 
 export interface TicketListFilters {

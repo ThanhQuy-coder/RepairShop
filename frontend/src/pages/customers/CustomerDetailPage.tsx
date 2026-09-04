@@ -6,7 +6,7 @@ import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
 import type { Customer } from '../../types/customer.types';
 import type { Device } from '../../types/device.types';
-import type { Ticket } from '../../types/ticket.types';
+import type { TicketListItem } from '../../types/ticket.types';
 import { Button, Loading, ErrorMessage, EmptyState, Badge } from '../../components/common';
 import { TICKET_STATUS_LABELS, TICKET_STATUS_BADGE_VARIANT } from '../../constants/ticketStatus';
 import CustomerFormModal from '../../components/customer/CustomerFormModal';
@@ -18,7 +18,7 @@ export default function CustomerDetailPage() {
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [devices, setDevices] = useState<Device[]>([]);
-  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [tickets, setTickets] = useState<TicketListItem[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -38,14 +38,8 @@ export default function CustomerDetailPage() {
         setCustomer(customerData);
         setDevices(deviceData);
 
-        // Repair History: gọi riêng, KHÔNG chặn cả trang nếu lỗi — endpoint này hiện chưa
-        // được Backend hỗ trợ đầy đủ (xem ghi chú cuối bài), nên xử lý mềm dẻo hơn 2 phần trên.
-        try {
-          const ticketData = await ticketService.getByCustomerId(id);
-          setTickets(ticketData);
-        } catch {
-          setTickets([]);
-        }
+        const ticketData = await ticketService.getByCustomerId(id);
+        setTickets(ticketData);
       } catch (err) {
         setErrorMessage(extractApiError(err).message);
       } finally {

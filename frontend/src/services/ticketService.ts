@@ -17,7 +17,7 @@ export const ticketService = {
   // Lưu ý: Backend chưa có endpoint "GET /customers/{id}/tickets" (bị bỏ qua có chủ đích ở Task 10
   // Tuần 3 vì mentor yêu cầu "chưa làm RepairTicket"). Gọi tạm để dành, xem ghi chú cuối bài.
   getByCustomerId: (customerId: string) =>
-    apiClient.get<Ticket[]>(`/customers/${customerId}/tickets`).then((res) => res.data),
+    apiClient.get<TicketListItem[]>(`/customers/${customerId}/tickets`).then((res) => res.data),
 
   create: (payload: CreateTicketRequest) =>
     apiClient.post<Ticket>('/tickets', payload).then((res) => res.data),

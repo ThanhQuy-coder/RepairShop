@@ -9,6 +9,7 @@ public record TicketListItemResponse(
     string DeviceLabel,
     string? TechnicianName,
     string Status,
-    DateTime ReceivedAt);
+    DateTime ReceivedAt,
+    string? IssueReported = null);
 
 public record TicketListResponse(List<TicketListItemResponse> Items, int Total);

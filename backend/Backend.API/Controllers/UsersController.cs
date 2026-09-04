@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using RepairShop.Application.Modules.Users.Queries;
+using RepairShop.Application.Modules.Users.Commands;
 
 namespace RepairShop.API.Controllers;
 
@@ -28,9 +29,19 @@ public class UsersController : ControllerBase
 
     [HttpPost]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
-    public IActionResult CreateUser() => Ok();
+    public async Task<IActionResult> CreateUser(CreateUserCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return CreatedAtAction(nameof(GetUsers), result);
+    }
 
-    [HttpPatch("{id}/status")]
+    [HttpPatch("{id:guid}/status")]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
-    public IActionResult ToggleStatus(Guid id) => Ok();
+    public async Task<IActionResult> ToggleStatus(Guid id, [FromBody] SetUserStatusBody body)
+    {
+        var result = await _mediator.Send(new SetUserStatusCommand(id, body.IsActive));
+        return Ok(result);
+    }
+
+    public record SetUserStatusBody(bool IsActive);
 }

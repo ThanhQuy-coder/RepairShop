@@ -47,6 +47,21 @@ public class RepairTicketRepository : IRepairTicketRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == id);
 
+    public Task<List<RepairTicket>> GetByCustomerForHistoryAsync(Guid customerId) =>
+        GetHistoryQuery().Where(t => t.CustomerId == customerId).ToListAsync();
+
+    public Task<List<RepairTicket>> GetByDeviceForHistoryAsync(Guid deviceId) =>
+        GetHistoryQuery().Where(t => t.DeviceId == deviceId).ToListAsync();
+
+    private IQueryable<RepairTicket> GetHistoryQuery() =>
+        _context.RepairTickets
+            .Include(t => t.Customer)
+            .Include(t => t.Device)
+            .Include(t => t.Technician)
+            .Include(t => t.Status)
+            .AsNoTracking()
+            .OrderByDescending(t => t.ReceivedAt);
+
     public Task<bool> TicketCodeExistsAsync(string ticketCode) =>
         _context.RepairTickets.AnyAsync(t => t.TicketCode == ticketCode);
 

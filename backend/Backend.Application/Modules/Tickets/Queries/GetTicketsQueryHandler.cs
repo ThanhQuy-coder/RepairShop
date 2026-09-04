@@ -24,7 +24,7 @@ public class GetTicketsQueryHandler : IRequestHandler<GetTicketsQuery, TicketLis
 
         var mapped = items.Select(t => new TicketListItemResponse(
             t.Id, t.TicketCode, t.Customer.FullName, $"{t.Device.Brand} {t.Device.Model}",
-            t.Technician?.FullName, t.Status.Code, t.ReceivedAt)).ToList();
+            t.Technician?.FullName, t.Status.Code, t.ReceivedAt, t.IssueReported)).ToList();
 
         return new TicketListResponse(mapped, total);
     }

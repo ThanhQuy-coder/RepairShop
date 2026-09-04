@@ -31,6 +31,14 @@ public class DevicesController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id:guid}/repair-history")]
+    [Authorize]
+    public async Task<IActionResult> GetRepairHistory(Guid id)
+    {
+        var result = await _mediator.Send(new GetDeviceRepairHistoryQuery(id));
+        return Ok(new { items = result });
+    }
+
     [HttpPost]
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-011
     public async Task<IActionResult> Create(CreateDeviceCommand command)

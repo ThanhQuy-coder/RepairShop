@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
-import type { Device, CreateDeviceRequest, DeviceRepairHistoryItem } from '../types/device.types';
+import type { Device, CreateDeviceRequest } from '../types/device.types';
+import type { TicketListItem } from '../types/ticket.types';
 
 export const deviceService = {
   getById: (id: string) => apiClient.get<Device>(`/devices/${id}`).then((res) => res.data),
@@ -9,7 +10,7 @@ export const deviceService = {
 
   getRepairHistory: (id: string) =>
     apiClient
-      .get<{ items: DeviceRepairHistoryItem[] }>(`/devices/${id}/repair-history`)
+      .get<{ items: TicketListItem[] }>(`/devices/${id}/repair-history`)
       .then((res) => res.data.items),
 
   create: (payload: CreateDeviceRequest) =>

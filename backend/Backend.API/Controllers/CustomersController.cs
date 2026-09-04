@@ -33,6 +33,14 @@ public class CustomersController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id:guid}/tickets")]
+    [Authorize]
+    public async Task<IActionResult> GetTickets(Guid id)
+    {
+        var result = await _mediator.Send(new GetCustomerTicketsQuery(id));
+        return Ok(result);
+    }
+
     // [HttpPost]
     // public async Task<IActionResult> Create(CreateCustomerCommand command)
     // {

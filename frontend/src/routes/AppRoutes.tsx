@@ -25,6 +25,7 @@ import TechnicianDashboardPage from '../pages/tickets/TechnicianDashboardPage';
 import MyTicketsPage from '../pages/customers/MyTicketsPage';
 import StaffDashboardPage from '../pages/dashboard/StaffDashboardPage';
 import AdminDashboardPage from '../pages/dashboard/AdminDashboardPage';
+import UsersPage from '../pages/admin/UsersPage';
 
 export default function AppRoutes() {
   return (
@@ -49,13 +50,10 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin']} />}>
           <Route element={<StaffLayout />}>
             <Route path="staff/dashboard" element={<StaffDashboardPage />} />{' '}
-            <Route path="customers" element={<PlaceholderPage title="Danh sách khách hàng" />} />
-            <Route path="customers/:id" element={<PlaceholderPage title="Chi tiết khách hàng" />} />
             <Route path="devices" element={<DevicesPage />} />
             <Route path="devices/:id" element={<DeviceDetailPage />} />
             <Route path="tickets" element={<TicketListPage />} />{' '}
             <Route path="tickets/create" element={<CreateTicketPage />} />{' '}
-            <Route path="tickets/:id/quote" element={<PlaceholderPage title="Báo giá" />} />
             <Route path="customers" element={<CustomerListPage />} />
             <Route path="customers/:id" element={<CustomerDetailPage />} />
           </Route>
@@ -81,7 +79,7 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRoles={['Admin']} />}>
           <Route element={<AdminLayout />}>
             <Route path="admin/dashboard" element={<AdminDashboardPage />} />{' '}
-            <Route path="admin/users" element={<PlaceholderPage title="Quản lý người dùng" />} />
+            <Route path="admin/users" element={<UsersPage />} />
           </Route>
         </Route>
 

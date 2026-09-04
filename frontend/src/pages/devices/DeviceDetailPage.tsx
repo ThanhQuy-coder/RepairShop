@@ -3,7 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { deviceService } from '../../services/deviceService';
 import { customerService } from '../../services/customerService';
 import { extractApiError } from '../../utils/apiError';
-import type { Device, DeviceRepairHistoryItem } from '../../types/device.types';
+import type { Device } from '../../types/device.types';
+import type { TicketListItem } from '../../types/ticket.types';
 import type { Customer } from '../../types/customer.types';
 import { Button, Loading, ErrorMessage, EmptyState, Badge } from '../../components/common';
 import { TICKET_STATUS_LABELS, TICKET_STATUS_BADGE_VARIANT } from '../../constants/ticketStatus';
@@ -16,7 +17,7 @@ export default function DeviceDetailPage() {
 
   const [device, setDevice] = useState<Device | null>(null);
   const [customer, setCustomer] = useState<Customer | null>(null);
-  const [history, setHistory] = useState<DeviceRepairHistoryItem[]>([]);
+  const [history, setHistory] = useState<TicketListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -34,12 +35,8 @@ export default function DeviceDetailPage() {
         const customerData = await customerService.getById(deviceData.customerId);
         setCustomer(customerData);
 
-        try {
-          const historyData = await deviceService.getRepairHistory(id);
-          setHistory(historyData);
-        } catch {
-          setHistory([]); // endpoint có trong API Spec Tuần 2 nhưng chưa chắc đã implement — xử lý mềm dẻo
-        }
+        const historyData = await deviceService.getRepairHistory(id);
+        setHistory(historyData);
       } catch (err) {
         setErrorMessage(extractApiError(err).message);
       } finally {
@@ -106,7 +103,7 @@ export default function DeviceDetailPage() {
             {history.map((h) => (
               <div key={h.ticketCode} className={styles.ticketRow}>
                 <span className={styles.ticketCode}>{h.ticketCode}</span>
-                <span>{h.issueReported}</span>
+                <span>{h.deviceLabel}</span>
                 <Badge variant={TICKET_STATUS_BADGE_VARIANT[h.status]}>
                   {TICKET_STATUS_LABELS[h.status] ?? h.status}
                 </Badge>
