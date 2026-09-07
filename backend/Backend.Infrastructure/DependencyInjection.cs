@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using RepairShop.Domain.Common;
 using RepairShop.Infrastructure.ExternalServices;
+using RepairShop.Infrastructure.AI;
 
 namespace RepairShop.Infrastructure;
 
@@ -60,6 +61,7 @@ public static class DependencyInjection
         services.AddScoped<IWarrantyCodeGenerator, WarrantyCodeGenerator>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
            ?? throw new InvalidOperationException("Cấu hình Jwt không tìm thấy trong appsettings.");
         var jwtSecret = configuration["Jwt:Secret"]
@@ -103,10 +105,30 @@ public static class DependencyInjection
 
             options.AddPolicy(AuthorizationPolicies.InventoryViewers, policy =>
                 policy.RequireRole(Roles.Technician, Roles.Admin));
+
+            options.AddPolicy(AuthorizationPolicies.CustomerOrReceptionist, policy =>
+                policy.RequireRole(Roles.Customer, Roles.Receptionist));
         });
 
         services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
         services.AddScoped<IFileStorageService, CloudinaryFileStorageService>();
+
+        services.Configure<AIServiceSettings>(configuration.GetSection(AIServiceSettings.SectionName));
+        services.AddScoped<IServiceCatalogQueryService, ServiceCatalogQueryService>();
+
+        var aiSettings = configuration.GetSection(AIServiceSettings.SectionName).Get<AIServiceSettings>()
+            ?? throw new InvalidOperationException("Cấu hình AIService chưa được thiết lập trong appsettings.");
+        var internalApiKey = configuration["AIService:InternalApiKey"]
+            ?? throw new InvalidOperationException("AIService:InternalApiKey chưa được cấu hình (dùng User Secrets).");
+
+        services.AddHttpClient<IAIService, AIServiceClient>(client =>
+        {
+            client.BaseAddress = new Uri(aiSettings.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(aiSettings.TimeoutSeconds);
+            client.DefaultRequestHeaders.Add("X-Internal-Api-Key", internalApiKey);
+        });
+
+        services.AddSingleton<IAICircuitBreaker, AICircuitBreaker>();
 
         return services;
     }

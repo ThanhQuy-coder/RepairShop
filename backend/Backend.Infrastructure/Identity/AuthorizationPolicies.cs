@@ -13,4 +13,5 @@ public static class AuthorizationPolicies
     public const string ReceptionistOrAdmin = "ReceptionistOrAdmin";
     public const string TechnicianOrAdmin = "TechnicianOrAdmin";
     public const string InventoryViewers = "InventoryViewers"; // FR-045: Technician + Admin xem tồn kho
+    public const string CustomerOrReceptionist = "CustomerOrReceptionist";
 }
