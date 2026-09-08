@@ -87,12 +87,45 @@ def test_symptom_lexicon_prioritizes_relevant_services_over_unrelated_ones():
 
     result = retrieve_candidates(device, "Pin tụt nhanh, máy nóng khi sạc", context)
 
-    top_ids = [s.service_id for s in result.candidate_services[:2]]
-    assert "svc-1" in top_ids  # Thay pin
-    assert "svc-2" in top_ids  # Vệ sinh main
-    # Thay màn hình / Thay camera không liên quan triệu chứng -> phải xếp SAU
-    assert result.candidate_services.index(
-        next(s for s in result.candidate_services if s.service_id == "svc-1")
-    ) < result.candidate_services.index(
-        next(s for s in result.candidate_services if s.service_id == "svc-3")
+    candidate_ids = [s.service_id for s in result.candidate_services]
+
+    # Hành vi ĐÚNG của retrieval: khi có candidate ghi điểm dương, loại HẲN candidate
+    # điểm 0 ra khỏi danh sách — không chỉ xếp hạng thấp. Đây là chủ đích của dòng
+    # "or ranked_services" fallback: chỉ giữ nguyên toàn bộ danh sách khi KHÔNG candidate
+    # nào liên quan, còn khi đã có candidate liên quan thì loại bỏ nhiễu hoàn toàn.
+    assert "svc-1" in candidate_ids
+    assert "svc-2" in candidate_ids
+    assert "svc-3" not in candidate_ids  # Thay màn hình — không liên quan, bị loại hẳn
+    assert "svc-4" not in candidate_ids  # Thay camera — không liên quan, bị loại hẳn
+
+
+def test_fallback_keeps_all_services_when_none_match_symptom():
+    """Khi KHÔNG candidate nào ghi điểm liên quan (mô tả quá mơ hồ), giữ nguyên toàn bộ
+    danh sách để LLM vẫn có gì đó tham khảo — đây là lý do fallback 'or ranked_services' tồn tại.
+    """
+    context = AdvisoryContext(
+        availableServices=[
+            AvailableService(
+                serviceId="svc-3",
+                name="Thay màn hình",
+                deviceType="phone",
+                basePrice=900000,
+            ),
+            AvailableService(
+                serviceId="svc-4",
+                name="Thay camera",
+                deviceType="phone",
+                basePrice=600000,
+            ),
+        ],
+        availableParts=[],
     )
+    device = DeviceInfo(deviceType=DeviceType.PHONE, brand="iPhone", model="13")
+
+    result = retrieve_candidates(
+        device, "Thiết bị bị hư", context
+    )  # mô tả không khớp lexicon nào
+
+    assert (
+        len(result.candidate_services) == 2
+    )  # giữ nguyên toàn bộ vì không có gì để loại

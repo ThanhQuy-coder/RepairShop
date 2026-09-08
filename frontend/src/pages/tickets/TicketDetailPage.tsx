@@ -19,6 +19,7 @@ import TicketActions from '../../components/ticket/TicketActions';
 import styles from './TicketDetailPage.module.css';
 import QuoteCard from '../../components/quote/QuoteCard';
 import QuoteApprovalForm from '../../components/quote/QuoteApprovalForm';
+import AIAdvisoryPanel from '../../components/ai/AIAdvisoryPanel';
 
 export default function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -182,6 +183,18 @@ export default function TicketDetailPage() {
             </div>
           </section>
 
+          {role === 'Customer' && (
+            <section className={styles.section}>
+              <h3>Tư vấn AI tham khảo</h3>
+              <AIAdvisoryPanel
+                deviceType={device?.deviceType ?? 'Phone'}
+                brand={device?.brand ?? ''}
+                model={device?.model ?? ''}
+                initialIssueDescription={ticket.issueReported}
+              />
+            </section>
+          )}
+
           {/* Images */}
           <section className={styles.section}>
             <h3>Hình ảnh</h3>
@@ -242,6 +255,19 @@ export default function TicketDetailPage() {
               />
             )}
           </section>
+
+          {(role === 'Receptionist' || role === 'Admin') &&
+            ['CHECKED_IN', 'ASSIGNED', 'DIAGNOSING'].includes(ticket.status) && (
+              <section className={styles.section}>
+                <h3>Tư vấn AI</h3>
+                <AIAdvisoryPanel
+                  deviceType={device?.deviceType ?? 'Phone'}
+                  brand={device?.brand ?? ''}
+                  model={device?.model ?? ''}
+                  initialIssueDescription={ticket.issueReported}
+                />
+              </section>
+            )}
         </div>
 
         <div className={styles.sideCol}>

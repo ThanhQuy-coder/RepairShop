@@ -7,6 +7,7 @@ import type { Device } from '../../types/device.types';
 import type { Ticket } from '../../types/ticket.types';
 import styles from './IntakeStep.module.css';
 import { useToast } from '../../hooks/useToast';
+import AIAdvisoryPanel from '../ai/AIAdvisoryPanel';
 
 interface IntakeIssueStepProps {
   customer: Customer;
@@ -80,6 +81,15 @@ export default function IntakeIssueStep({
           placeholder="VD: Máy nóng, pin tụt nhanh, thỉnh thoảng tự tắt nguồn..."
         />
       </div>
+
+      {issueReported.trim().length > 5 && (
+        <AIAdvisoryPanel
+          deviceType={device.deviceType}
+          brand={device.brand}
+          model={device.model}
+          initialIssueDescription={issueReported}
+        />
+      )}
 
       <div className={styles.field}>
         <label className={styles.label}>Tình trạng ban đầu (vết trầy/móp có sẵn)</label>
