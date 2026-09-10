@@ -14,6 +14,8 @@ import {
 } from '../../components/common';
 import PartFormModal from '../../components/inventory/PartFormModal';
 import StockTransactionModal from '../../components/inventory/StockTransactionModal';
+import { inventoryService } from '../../services/inventoryService';
+import SummaryCard from '../../components/dashboard/SummaryCard';
 
 const PAGE_SIZE = 15;
 
@@ -29,20 +31,32 @@ export default function PartsListPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPart, setEditingPart] = useState<Part | null>(null);
   const [stockPart, setStockPart] = useState<Part | null>(null);
+  const [summary, setSummary] = useState<{
+    totalParts: number;
+    lowStockCount: number;
+    outOfStockCount: number;
+  } | null>(null);
+  const [stockFilter, setStockFilter] = useState<'All' | 'LowStock' | 'OutOfStock'>('All');
 
   const fetchParts = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const res = await partService.list({ search: debouncedSearch, page, pageSize: PAGE_SIZE });
-      setParts(res.items);
-      setTotal(res.total);
+      if (stockFilter === 'All') {
+        const res = await partService.list({ search: debouncedSearch, page, pageSize: PAGE_SIZE });
+        setParts(res.items);
+        setTotal(res.total);
+      } else {
+        const res = await inventoryService.getLowStockParts(stockFilter);
+        setParts(res);
+        setTotal(res.length);
+      }
     } catch (err) {
       setErrorMessage(extractApiError(err).message);
     } finally {
       setIsLoading(false);
     }
-  }, [debouncedSearch, page]);
+  }, [debouncedSearch, page, stockFilter]);
 
   useEffect(() => {
     fetchParts();
@@ -102,6 +116,10 @@ export default function PartsListPage() {
     },
   ];
 
+  useEffect(() => {
+    inventoryService.getDashboard().then(setSummary);
+  }, [parts]);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -125,6 +143,45 @@ export default function PartsListPage() {
       </div>
 
       {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchParts} />}
+
+      {summary && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 12,
+            marginBottom: 24,
+          }}
+        >
+          <SummaryCard icon="📦" label="Tổng linh kiện" value={summary.totalParts} isEmphasized />
+          <SummaryCard icon="⚠️" label="Sắp hết hàng" value={summary.lowStockCount} />
+          <SummaryCard icon="❌" label="Hết hàng" value={summary.outOfStockCount} />
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+        <Button
+          variant={stockFilter === 'All' ? 'primary' : 'secondary'}
+          size="sm"
+          onClick={() => setStockFilter('All')}
+        >
+          Tất cả
+        </Button>
+        <Button
+          variant={stockFilter === 'LowStock' ? 'primary' : 'secondary'}
+          size="sm"
+          onClick={() => setStockFilter('LowStock')}
+        >
+          Sắp hết
+        </Button>
+        <Button
+          variant={stockFilter === 'OutOfStock' ? 'primary' : 'secondary'}
+          size="sm"
+          onClick={() => setStockFilter('OutOfStock')}
+        >
+          Hết hàng
+        </Button>
+      </div>
 
       <Table
         columns={columns}

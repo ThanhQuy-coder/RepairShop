@@ -43,3 +43,9 @@ export interface InventoryItem {
   minStockThreshold: number;
   isLowStock: boolean;
 }
+
+export interface InventoryDashboardSummary {
+  totalParts: number;
+  lowStockCount: number;
+  outOfStockCount: number;
+}

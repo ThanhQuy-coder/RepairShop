@@ -42,4 +42,23 @@ public class InventoryController : ControllerBase
         var result = await _mediator.Send(new GetInventoryTransactionsQuery(partId, type, fromDate, toDate, page, pageSize));
         return Ok(result);
     }
+
+    [HttpGet("dashboard")]
+    [Authorize(Policy = AuthorizationPolicies.InventoryViewers)]
+    public async Task<IActionResult> GetDashboard()
+    {
+        var result = await _mediator.Send(new GetInventoryDashboardQuery());
+        return Ok(result);
+    }
+
+    [HttpGet("low-stock")]
+    [Authorize(Policy = AuthorizationPolicies.InventoryViewers)]
+    public async Task<IActionResult> GetLowStock([FromQuery] string filter = "All")
+    {
+        var stockFilter = Enum.TryParse<StockFilter>(filter, true, out var f)
+            ? f : StockFilter.All;
+
+        var result = await _mediator.Send(new GetLowStockPartsQuery(stockFilter));
+        return Ok(result);
+    }
 }

@@ -1,6 +1,6 @@
 import apiClient from './apiClient';
 import type { PagedResponse } from '../types/common.types';
-import type { InventoryItem, InventoryTransactionItem } from '../types/inventory.types';
+import type { InventoryDashboardSummary, InventoryItem, InventoryTransactionItem, Part } from '../types/inventory.types';
 
 export const inventoryService = {
   getInventory: () => apiClient.get<InventoryItem[]>('/inventory').then((res) => res.data),
@@ -22,4 +22,10 @@ export const inventoryService = {
     apiClient
       .get<PagedResponse<InventoryTransactionItem>>('/inventory/transactions', { params })
       .then((res) => res.data),
+
+  getDashboard: () =>
+    apiClient.get<InventoryDashboardSummary>('/inventory/dashboard').then((res) => res.data),
+
+  getLowStockParts: (filter: 'All' | 'LowStock' | 'OutOfStock') =>
+    apiClient.get<Part[]>('/inventory/low-stock', { params: { filter } }).then((res) => res.data),
 };
