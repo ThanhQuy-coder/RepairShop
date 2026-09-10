@@ -11,5 +11,11 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
         builder.HasIndex(i => i.PartId).IsUnique(); // BR-14: 1-1 với Part
         builder.HasOne<Part>().WithOne().HasForeignKey<Inventory>(i => i.PartId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(i => i.Transactions)
+            .WithOne()
+            .HasForeignKey(t => t.PartId)
+            .HasPrincipalKey(i => i.PartId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

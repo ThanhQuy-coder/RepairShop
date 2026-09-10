@@ -29,6 +29,7 @@ public class AppDbContext : DbContext
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<QuoteItem> QuoteItems => Set<QuoteItem>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

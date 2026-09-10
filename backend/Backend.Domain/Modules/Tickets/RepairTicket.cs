@@ -280,8 +280,10 @@ public class RepairTicket : BaseEntity
         if (inventory.PartId != part.Id)
             throw new DomainException("Inventory truyền vào không khớp với Part.");
 
-        // BR-20 enforce tại đây — nếu không đủ tồn, KHÔNG tạo TicketPart, ném lỗi rõ ràng cho Application xử lý 409
-        if (!inventory.Deduct(quantity))
+        // Thay Deduct() trần bằng RecordAutoExport() — giờ MỌI lần dùng linh kiện cho ticket đều
+        // tự động tạo InventoryTransaction (Task 7.3), không chỉ trừ số âm thầm như trước.
+        var transaction = inventory.RecordAutoExport(quantity, Id, changedByUserId);
+        if (transaction is null)
             throw new InsufficientStockException(part.Name, quantity, inventory.QuantityOnHand);
 
         var ticketPart = new TicketPart(Id, part.Id, quantity, part.UnitPrice);

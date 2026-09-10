@@ -26,6 +26,8 @@ import MyTicketsPage from '../pages/customers/MyTicketsPage';
 import StaffDashboardPage from '../pages/dashboard/StaffDashboardPage';
 import AdminDashboardPage from '../pages/dashboard/AdminDashboardPage';
 import UsersPage from '../pages/admin/UsersPage';
+import PartsListPage from '../pages/inventory/PartsListPage';
+import InventoryTransactionsPage from '../pages/inventory/InventoryTransactionsPage';
 
 export default function AppRoutes() {
   return (
@@ -80,6 +82,8 @@ export default function AppRoutes() {
           <Route element={<AdminLayout />}>
             <Route path="admin/dashboard" element={<AdminDashboardPage />} />{' '}
             <Route path="admin/users" element={<UsersPage />} />
+            <Route path="admin/inventory" element={<PartsListPage />} />
+            <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
           </Route>
         </Route>
 
