@@ -7,4 +7,9 @@ public interface IReportsQueryService
     Task<RepairSummary> GetRepairSummaryAsync();
     Task<RevenueSummary> GetRevenueSummaryAsync();
     Task<List<TechnicianSummaryItem>> GetTechnicianSummaryAsync();
+
+    Task<RevenueReportResponse> GetRevenueReportAsync(DateTime? fromDate,
+        DateTime? toDate, RevenueGroupBy groupBy);
+
+    Task<List<TechnicianSummaryItem>> GetTechnicianPerformanceAsync(DateTime? fromDate, DateTime? toDate);
 }

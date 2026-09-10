@@ -20,4 +20,22 @@ public class ReportsController : ControllerBase
         var result = await _mediator.Send(new GetDashboardSummaryQuery());
         return Ok(result);
     }
+
+    [HttpGet("revenue")]
+    public async Task<IActionResult> GetRevenue(
+    [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate, [FromQuery] string groupBy = "day")
+    {
+        var parsedGroupBy = groupBy.Equals("month", StringComparison.OrdinalIgnoreCase)
+            ? RevenueGroupBy.Month : RevenueGroupBy.Day;
+
+        var result = await _mediator.Send(new GetRevenueReportQuery(fromDate, toDate, parsedGroupBy));
+        return Ok(result);
+    }
+
+    [HttpGet("technician-performance")]
+    public async Task<IActionResult> GetTechnicianPerformance([FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+    {
+        var result = await _mediator.Send(new GetTechnicianPerformanceQuery(fromDate, toDate));
+        return Ok(result);
+    }
 }

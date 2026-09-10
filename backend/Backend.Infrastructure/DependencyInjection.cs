@@ -61,6 +61,7 @@ public static class DependencyInjection
         services.AddScoped<IWarrantyCodeGenerator, WarrantyCodeGenerator>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IReportsQueryService, ReportsQueryService>();
+        services.AddScoped<IWarrantyRepository, WarrantyRepository>();
 
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()

@@ -28,6 +28,9 @@ import AdminDashboardPage from '../pages/dashboard/AdminDashboardPage';
 import UsersPage from '../pages/admin/UsersPage';
 import PartsListPage from '../pages/inventory/PartsListPage';
 import InventoryTransactionsPage from '../pages/inventory/InventoryTransactionsPage';
+import RevenueReportPage from '../pages/reports/RevenueReportPage';
+import TechnicianPerformancePage from '../pages/reports/TechnicianPerformancePage';
+import MyWarrantyPage from '../pages/customers/MyWarrantyPage';
 
 export default function AppRoutes() {
   return (
@@ -84,6 +87,8 @@ export default function AppRoutes() {
             <Route path="admin/users" element={<UsersPage />} />
             <Route path="admin/inventory" element={<PartsListPage />} />
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
+            <Route path="admin/reports/revenue" element={<RevenueReportPage />} />
+            <Route path="admin/reports/technicians" element={<TechnicianPerformancePage />} />
           </Route>
         </Route>
 
@@ -97,6 +102,7 @@ export default function AppRoutes() {
             <Route path="customer/my-tickets" element={<MyTicketsPage />} />{' '}
             <Route path="customer/warranty" element={<PlaceholderPage title="Bảo hành" />} />
             <Route path="customer/profile" element={<PlaceholderPage title="Hồ sơ" />} />
+            <Route path="customer/warranty" element={<MyWarrantyPage />} />
           </Route>
         </Route>
 

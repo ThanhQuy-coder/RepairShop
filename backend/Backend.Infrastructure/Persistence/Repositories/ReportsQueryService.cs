@@ -80,4 +80,65 @@ public class ReportsQueryService : IReportsQueryService
 
         return result.OrderByDescending(t => t.Completed).ToList();
     }
+
+    public async Task<RevenueReportResponse> GetRevenueReportAsync(DateTime? fromDate, DateTime? toDate, RevenueGroupBy groupBy)
+    {
+        var from = fromDate ?? DateTime.UtcNow.AddDays(-30); // mặc định 30 ngày gần nhất nếu không chỉ định
+        var to = toDate ?? DateTime.UtcNow;
+
+        // Invoice trong khoảng thời gian (lọc theo CreatedAt, không phải PaidAt — để thấy đủ cả
+        // hóa đơn chưa thanh toán phát sinh trong kỳ, phục vụ đúng checklist "Total invoice/Paid/Unpaid")
+        var invoicesInRange = await _context.Invoices
+            .Where(i => i.CreatedAt >= from && i.CreatedAt <= to)
+            .ToListAsync();
+
+        var totalInvoices = invoicesInRange.Count;
+        var paidInvoices = invoicesInRange.Where(i => i.PaidAt != null).ToList();
+        var unpaidInvoices = totalInvoices - paidInvoices.Count;
+
+        // Revenue = CHỈ tính Invoice đã PaidAt != null (đúng lưu ý Task 7.7: "Invoice chưa thanh toán -> chưa tính revenue")
+        var totalRevenue = paidInvoices.Sum(i => i.TotalAmount);
+
+        var grouped = groupBy == RevenueGroupBy.Day
+            ? paidInvoices.GroupBy(i => i.PaidAt!.Value.Date.ToString("yyyy-MM-dd"))
+            : paidInvoices.GroupBy(i => new DateTime(i.PaidAt!.Value.Year, i.PaidAt!.Value.Month, 1).ToString("yyyy-MM"));
+
+        var items = grouped
+            .Select(g => new RevenuePeriodItem(g.Key, g.Sum(i => i.TotalAmount), g.Count()))
+            .OrderBy(i => i.Period)
+            .ToList();
+
+        return new RevenueReportResponse(items, totalRevenue, totalInvoices, paidInvoices.Count, unpaidInvoices);
+    }
+
+    public async Task<List<TechnicianSummaryItem>> GetTechnicianPerformanceAsync(DateTime? fromDate, DateTime? toDate)
+    {
+        var technicians = await _context.Users
+            .Where(u => u.Role.Name == Roles.Technician && u.IsActive)
+            .ToListAsync();
+
+        var result = new List<TechnicianSummaryItem>();
+
+        foreach (var tech in technicians)
+        {
+            var deliveredQuery = _context.RepairTickets
+                .Where(t => t.TechnicianId == tech.Id && t.Status.Code == RepairStatusCodes.Delivered && t.DeliveredAt != null);
+
+            if (fromDate is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt >= fromDate);
+            if (toDate is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt <= toDate);
+
+            var delivered = await deliveredQuery.Select(t => new { t.ReceivedAt, t.DeliveredAt }).ToListAsync();
+
+            var inProgress = await _context.RepairTickets
+                .CountAsync(t => t.TechnicianId == tech.Id && InRepairCodes.Contains(t.Status.Code));
+
+            double? avgHours = delivered.Count > 0
+                ? delivered.Average(t => (t.DeliveredAt!.Value - t.ReceivedAt).TotalHours)
+                : null;
+
+            result.Add(new TechnicianSummaryItem(tech.FullName, delivered.Count, inProgress, avgHours));
+        }
+
+        return result.OrderByDescending(t => t.Completed).ToList();
+    }
 }

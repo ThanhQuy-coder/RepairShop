@@ -8,6 +8,7 @@ using RepairShop.Domain.Modules.Identity;
 using RepairShop.Domain.Modules.Inventory;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Tickets.Enums;
+using RepairShop.Domain.Modules.Warranty.Enums;
 
 namespace RepairShop.Domain.Modules.Tickets;
 
@@ -369,5 +370,28 @@ public class RepairTicket : BaseEntity
 
         Invoice = new Invoice(Id, quoteId, totalAmount, paymentMethod, createdByUserId);
         return Invoice;
+    }
+
+    /// <summary>
+    /// FR-038/BR-12: Khách quay lại trong hạn bảo hành -> tạo ticket sửa chữa MỚI, liên kết
+    /// ParentTicketId về ticket gốc, KHÔNG tính phí (theo mô tả Task 1 Tuần 1) hoặc tính phí
+    /// tùy loại lỗi (quyết định thu phí do Receptionist tự đánh giá lúc tiếp nhận — ngoài phạm vi Domain).
+    /// Được gọi từ Application, không phải static factory vì cần dữ liệu ticket GỐC đã tồn tại
+    /// để lấy CustomerId/DeviceId — do đó "tạo ticket claim" thực chất diễn ra ở Application layer,
+    /// method này CHỈ enforce điều kiện "warranty còn hiệu lực mới cho tạo claim".
+    /// </summary>
+    public void EnsureCanCreateWarrantyClaim()
+    {
+        if (Status.Code != RepairStatusCodes.Delivered)
+            throw new DomainException("Chỉ tạo yêu cầu bảo hành cho ticket đã bàn giao.");
+
+        if (Warranty is null)
+            throw new DomainException("Ticket này không có thông tin bảo hành.");
+
+        if (Warranty.Status == WarrantyStatus.Voided)
+            throw new DomainException("Bảo hành của ticket này đã bị hủy.");
+
+        if (Warranty.IsExpired())
+            throw new DomainException("Bảo hành đã hết hạn, không thể tạo yêu cầu bảo hành.");
     }
 }

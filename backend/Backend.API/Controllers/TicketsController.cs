@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RepairShop.Domain.Modules.Tickets.Enums;
 using RepairShop.Domain.Common;
 using RepairShop.Application.Modules.Tickets.Queries;
+using RepairShop.Application.Modules.Warranty.Commands;
 
 namespace RepairShop.API.Controllers;
 
@@ -228,5 +229,15 @@ public class TicketsController : ControllerBase
     {
         var result = await _mediator.Send(new GetTicketsQuery(status, technicianId, customerId, page, pageSize));
         return Ok(result);
+    }
+
+    public record WarrantyClaimBody(string IssueReported);
+
+    [HttpPost("{id:guid}/warranty-claim")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // Receptionist tạo hộ khi khách quay lại
+    public async Task<IActionResult> CreateWarrantyClaim(Guid id, WarrantyClaimBody body)
+    {
+        var result = await _mediator.Send(new CreateWarrantyClaimCommand(id, body.IssueReported));
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 }

@@ -7,3 +7,14 @@ export interface Warranty {
   status: 'Active' | 'Voided';
   isExpired: boolean;
 }
+
+export interface MyWarrantyItem {
+  warrantyCode: string;
+  ticketId: string;
+  ticketCode: string;
+  deviceLabel: string;
+  startDate: string;
+  endDate: string;
+  status: 'Active' | 'Voided';
+  isExpired: boolean;
+}

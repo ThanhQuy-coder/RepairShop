@@ -28,3 +28,12 @@ export interface DashboardSummary {
   technicians: TechnicianSummaryItem[];
   inventory: InventorySummary;
 }
+
+export interface RevenuePeriodItem { period: string; totalRevenue: number; ticketCount: number }
+export interface RevenueReport {
+  items: RevenuePeriodItem[];
+  totalRevenue: number;
+  totalInvoices: number;
+  paidInvoices: number;
+  unpaidInvoices: number;
+}
