@@ -31,6 +31,9 @@ import InventoryTransactionsPage from '../pages/inventory/InventoryTransactionsP
 import RevenueReportPage from '../pages/reports/RevenueReportPage';
 import TechnicianPerformancePage from '../pages/reports/TechnicianPerformancePage';
 import MyWarrantyPage from '../pages/customers/MyWarrantyPage';
+import ServicesPage from '../pages/website/ServicesPage';
+import ArticlesPage from '../pages/website/ArticlesPage';
+import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
 
 export default function AppRoutes() {
   return (
@@ -39,8 +42,8 @@ export default function AppRoutes() {
         {/* ===== Public — không cần đăng nhập ===== */}
         <Route element={<PublicLayout />}>
           <Route index element={<PlaceholderPage title="Trang chủ" />} />
-          <Route path="services" element={<PlaceholderPage title="Dịch vụ" />} />
-          <Route path="articles" element={<PlaceholderPage title="Bài viết" />} />
+          <Route path="services" element={<ServicesPage />} />
+          <Route path="articles" element={<ArticlesPage />} />
           <Route path="track" element={<TrackTicketPage />} />
           <Route path="track/:ticketCode" element={<TrackTicketPage />} />
           <Route path="login" element={<LoginPage />} />
@@ -89,6 +92,7 @@ export default function AppRoutes() {
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
             <Route path="admin/reports/revenue" element={<RevenueReportPage />} />
             <Route path="admin/reports/technicians" element={<TechnicianPerformancePage />} />
+            <Route path="admin/reviews" element={<ReviewsAdminPage />} />
           </Route>
         </Route>
 
@@ -100,7 +104,6 @@ export default function AppRoutes() {
               element={<PlaceholderPage title="Trang chủ khách hàng" />}
             />
             <Route path="customer/my-tickets" element={<MyTicketsPage />} />{' '}
-            <Route path="customer/warranty" element={<PlaceholderPage title="Bảo hành" />} />
             <Route path="customer/profile" element={<PlaceholderPage title="Hồ sơ" />} />
             <Route path="customer/warranty" element={<MyWarrantyPage />} />
           </Route>

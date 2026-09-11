@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RepairShop.Domain.Modules.Billing;
 using RepairShop.Domain.Modules.Warranty;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Reviews;
 
 namespace RepairShop.Infrastructure.Persistence.Repositories;
 
@@ -32,6 +33,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Images)
             .Include(t => t.Invoice)
             .Include(t => t.Warranty)
+            .Include(t => t.Review)
             .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id);
 
@@ -129,4 +131,7 @@ public class RepairTicketRepository : IRepairTicketRepository
 
         return (items, total);
     }
+
+    public void TrackNewReview(Review review)
+        => _context.Entry(review).State = EntityState.Added;
 }

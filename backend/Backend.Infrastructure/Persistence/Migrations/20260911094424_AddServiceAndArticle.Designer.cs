@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RepairShop.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using RepairShop.Infrastructure.Persistence;
 namespace RepairShop.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260911094424_AddServiceAndArticle")]
+    partial class AddServiceAndArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -596,52 +599,6 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.ToTable("QuoteItems", (string)null);
                 });
 
-            modelBuilder.Entity("RepairShop.Domain.Modules.Reviews.Review", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Comment")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsVisible")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("RepairTicketId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RepairTicketId")
-                        .IsUnique();
-
-                    b.ToTable("Reviews", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Review_Rating", "\"Rating\" >= 1 AND \"Rating\" <= 5");
-                        });
-                });
-
             modelBuilder.Entity("RepairShop.Domain.Modules.Tickets.RepairStatus", b =>
                 {
                     b.Property<int>("Id")
@@ -1136,15 +1093,6 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepairShop.Domain.Modules.Reviews.Review", b =>
-                {
-                    b.HasOne("RepairShop.Domain.Modules.Tickets.RepairTicket", null)
-                        .WithOne("Review")
-                        .HasForeignKey("RepairShop.Domain.Modules.Reviews.Review", "RepairTicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("RepairShop.Domain.Modules.Tickets.RepairTicket", b =>
                 {
                     b.HasOne("RepairShop.Domain.Modules.Customers.Customer", "Customer")
@@ -1296,8 +1244,6 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Navigation("Invoice");
 
                     b.Navigation("Quotes");
-
-                    b.Navigation("Review");
 
                     b.Navigation("StatusHistories");
 

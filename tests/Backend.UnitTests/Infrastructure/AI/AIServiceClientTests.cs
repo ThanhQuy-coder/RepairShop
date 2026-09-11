@@ -39,7 +39,7 @@ public class AIServiceClientTests
         var partRepoMock = new Mock<IPartRepository>();
         partRepoMock
             .Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((Guid id) => new Part("Pin iPhone 13", "SKU-001", 350000)); // trả về Part "tồn tại" cho mọi Guid hợp lệ
+            .ReturnsAsync((Guid id) => new Part("Pin iPhone 13", "SKU-001", 200000m, 350000m, null, null)); // trả về Part "tồn tại" cho mọi Guid hợp lệ
 
         return new AIServiceClient(
             httpClient,
@@ -102,7 +102,8 @@ public class AIServiceClientTests
             suggestedServices = new[] { new { serviceId = "svc-1", serviceName = "Thay pin", confidence = "HIGH" } },
             suggestedParts = Array.Empty<object>(),
             priceRange = new { min = 300000, max = 500000 },
-            reason = "test", disclaimer = "test",
+            reason = "test",
+            disclaimer = "test",
         };
         var httpResponse = new HttpResponseMessage(HttpStatusCode.OK) { Content = JsonContent.Create(fakeBody) };
 

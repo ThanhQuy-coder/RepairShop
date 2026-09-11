@@ -1,4 +1,5 @@
 using RepairShop.Domain.Modules.Billing;
+using RepairShop.Domain.Modules.Reviews;
 using RepairShop.Domain.Modules.Tickets;
 using RepairShop.Domain.Modules.Warranty;
 
@@ -26,4 +27,6 @@ public interface IRepairTicketRepository
         int page, int pageSize);
 
     Task SaveChangesAsync();
+
+    void TrackNewReview(Review review);
 }

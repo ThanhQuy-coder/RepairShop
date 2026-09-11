@@ -94,5 +94,10 @@ public class RepairTicketConfiguration : IEntityTypeConfiguration<RepairTicket>
             .WithOne()
             .HasForeignKey<Invoice>(i => i.RepairTicketId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(t => t.Review)
+            .WithOne()
+            .HasForeignKey<Domain.Modules.Reviews.Review>(r => r.RepairTicketId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

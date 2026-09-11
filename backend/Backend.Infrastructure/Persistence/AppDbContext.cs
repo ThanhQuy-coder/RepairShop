@@ -7,6 +7,8 @@ using RepairShop.Domain.Modules.Warranty;
 using RepairShop.Domain.Modules.Inventory;
 using Microsoft.EntityFrameworkCore;
 using RepairShop.Domain.Modules.Billing;
+using RepairShop.Domain.Modules.Content;
+using RepairShop.Domain.Modules.Reviews;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -30,6 +32,9 @@ public class AppDbContext : DbContext
     public DbSet<QuoteItem> QuoteItems => Set<QuoteItem>();
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<InventoryTransaction> InventoryTransactions => Set<InventoryTransaction>();
+    public DbSet<Service> Services => Set<Service>();
+    public DbSet<Article> Articles => Set<Article>();
+    public DbSet<Review> Reviews => Set<Review>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

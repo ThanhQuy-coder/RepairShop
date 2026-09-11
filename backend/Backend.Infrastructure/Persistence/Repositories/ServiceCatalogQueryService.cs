@@ -16,21 +16,19 @@ public class ServiceCatalogQueryService : IServiceCatalogQueryService
 
     public ServiceCatalogQueryService(AppDbContext context) => _context = context;
 
-    public Task<List<CatalogServiceItem>> GetAvailableServicesAsync(string deviceType)
+    public async Task<List<CatalogServiceItem>> GetAvailableServicesAsync(string deviceType)
     {
-        // QUAN TRỌNG: entity Service (bảng dịch vụ + giá công khai) thuộc module Content,
-        // theo đúng kế hoạch 8 tuần (Tuan_1.md, Task 1) chỉ được xây ở TUẦN 7 — hiện CHƯA TỒN TẠI
-        // trong Domain. Trả về danh sách RỖNG có chủ đích ở đây, KHÔNG bịa dữ liệu Service giả
-        // để "cho đủ demo" — đúng nguyên tắc Task 6.1 "không tự tạo dữ liệu không tồn tại".
-        //
-        // Hệ quả: context.availableServices luôn rỗng cho tới khi Service entity ra đời ở Tuần 7.
-        // AI Service (FastAPI) đã tự xử lý đúng case này qua retrieval (Task 6.6): nếu
-        // candidateServices rỗng nhưng candidateParts vẫn có dữ liệu, AI vẫn trả SUCCESS với
-        // suggestedServices=[] và suggestedParts có giá trị — không coi là lỗi.
-        //
-        // TODO(Tuần 7): sau khi có Service entity thật, implement như GetAvailablePartsAsync
-        // bên dưới — query theo deviceType, map sang CatalogServiceItem.
-        return Task.FromResult(new List<CatalogServiceItem>());
+        // Task 7.11: Service entity giờ đã tồn tại — thay thế đoạn "trả rỗng có chủ đích" (Task 6.15)
+        // bằng query THẬT. Đây chính là điểm mentor lưu ý trước Tuần 6: AI Advisory sẽ tự động
+        // có dữ liệu Service đầy đủ ngay khi module Content hoàn thiện, không cần sửa gì ở AI Service.
+        var services = await _context.Services
+            .Where(s => s.IsActive && (s.DeviceType == null || s.DeviceType == deviceType))
+            .AsNoTracking()
+            .Take(100)
+            .ToListAsync();
+
+        return services.Select(s => new CatalogServiceItem(
+            s.Id.ToString(), s.Name, s.DeviceType ?? deviceType, s.BasePrice ?? 0)).ToList();
     }
 
     public async Task<List<CatalogPartItem>> GetAvailablePartsAsync()

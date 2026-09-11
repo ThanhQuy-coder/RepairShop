@@ -20,6 +20,7 @@ import styles from './TicketDetailPage.module.css';
 import QuoteCard from '../../components/quote/QuoteCard';
 import QuoteApprovalForm from '../../components/quote/QuoteApprovalForm';
 import AIAdvisoryPanel from '../../components/ai/AIAdvisoryPanel';
+import CreateReviewModal from '../../components/review/CreateReviewModal';
 
 export default function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -32,6 +33,7 @@ export default function TicketDetailPage() {
   const [images, setImages] = useState<TicketImage[]>([]);
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [statusHistory, setStatusHistory] = useState<StatusHistoryItem[]>([]);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -277,11 +279,27 @@ export default function TicketDetailPage() {
             <TicketTimeline currentStatus={ticket.status} statusHistory={statusHistory} />
           </section>
 
-          {/* Actions */}
           <section className={styles.section}>
             <h3>Hành động</h3>
+
             <TicketActions ticket={ticket} quotes={quotes} onUpdated={loadAll} />
+
+            {role === 'Customer' && ticket.status === 'DELIVERED' && (
+              <Button onClick={() => setIsReviewModalOpen(true)}>Đánh giá</Button>
+            )}
           </section>
+
+          {role === 'Customer' && ticket.status === 'DELIVERED' && (
+            <CreateReviewModal
+              isOpen={isReviewModalOpen}
+              ticketId={ticket.id}
+              onClose={() => setIsReviewModalOpen(false)}
+              onDone={() => {
+                setIsReviewModalOpen(false);
+                loadAll();
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

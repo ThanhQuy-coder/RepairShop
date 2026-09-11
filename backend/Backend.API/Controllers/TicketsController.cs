@@ -7,6 +7,7 @@ using RepairShop.Domain.Modules.Tickets.Enums;
 using RepairShop.Domain.Common;
 using RepairShop.Application.Modules.Tickets.Queries;
 using RepairShop.Application.Modules.Warranty.Commands;
+using RepairShop.Application.Modules.Reviews.Commands;
 
 namespace RepairShop.API.Controllers;
 
@@ -239,5 +240,15 @@ public class TicketsController : ControllerBase
     {
         var result = await _mediator.Send(new CreateWarrantyClaimCommand(id, body.IssueReported));
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
+
+    public record CreateReviewBody(int Rating, string? Comment);
+
+    [HttpPost("{id:guid}/review")]
+    [Authorize(Roles = Roles.Customer)]
+    public async Task<IActionResult> CreateReview(Guid id, CreateReviewBody body)
+    {
+        var result = await _mediator.Send(new CreateReviewCommand(id, body.Rating, body.Comment));
+        return CreatedAtAction(nameof(GetById), new { id }, result);
     }
 }

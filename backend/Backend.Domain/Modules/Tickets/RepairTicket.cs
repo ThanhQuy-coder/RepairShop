@@ -394,4 +394,19 @@ public class RepairTicket : BaseEntity
         if (Warranty.IsExpired())
             throw new DomainException("Bảo hành đã hết hạn, không thể tạo yêu cầu bảo hành.");
     }
+    
+    public Reviews.Review? Review { get; private set; }
+
+    /// <summary>BR-11: Ticket tối đa 1 Review, chỉ cho phép đánh giá sau khi DELIVERED.</summary>
+    public Reviews.Review CreateReview(int rating, string? comment)
+    {
+        if (Status.Code != RepairStatusCodes.Delivered)
+            throw new DomainException("Chỉ đánh giá được sau khi thiết bị đã được bàn giao.");
+
+        if (Review is not null)
+            throw new DomainException("Ticket này đã được đánh giá trước đó.");
+
+        Review = new Reviews.Review(Id, CustomerId, rating, comment);
+        return Review;
+    }
 }

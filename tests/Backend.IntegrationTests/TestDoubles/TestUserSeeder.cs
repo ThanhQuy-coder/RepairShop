@@ -49,7 +49,17 @@ public static class TestUserSeeder
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        var part = new Domain.Modules.Inventory.Part("Pin iPhone 13", $"SKU-{Guid.NewGuid():N}"[..12], 350000);
+        var part = new Domain.Modules.Inventory.Part(
+            "Pin iPhone 13",
+            $"SKU-{Guid.NewGuid():N}"[..12],
+            250000m,
+            350000m,
+            "Linh kiện điện thoại",
+            "Phone",
+            "cái",
+            5
+        );
+
         db.Parts.Add(part);
 
         var inventory = new Domain.Modules.Inventory.Inventory(part.Id);
