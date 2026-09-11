@@ -20,12 +20,15 @@ public class GetDashboardSummaryQueryHandler : IRequestHandler<GetDashboardSumma
         var repair = await _reportsQueryService.GetRepairSummaryAsync();
         var revenue = await _reportsQueryService.GetRevenueSummaryAsync();
         var technicians = await _reportsQueryService.GetTechnicianSummaryAsync();
+        var statusBreakdown = await _reportsQueryService.GetStatusBreakdownAsync();
+        var totalCustomers = await _reportsQueryService.GetTotalCustomersAsync();
 
-        // Tái dùng Query đã có ở Task 7.5 thay vì viết lại logic Inventory summary lần nữa
         var inventoryDashboard = await _mediator.Send(new GetInventoryDashboardQuery(), cancellationToken);
         var inventory = new InventorySummary(
-            inventoryDashboard.TotalParts, inventoryDashboard.LowStockCount, inventoryDashboard.OutOfStockCount);
+            inventoryDashboard.TotalParts, inventoryDashboard.LowStockCount, 
+            inventoryDashboard.OutOfStockCount);
 
-        return new DashboardSummaryResponse(repair, revenue, technicians, inventory);
+        return new DashboardSummaryResponse(repair, revenue, technicians, 
+            inventory, statusBreakdown, totalCustomers);
     }
 }

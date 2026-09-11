@@ -28,7 +28,11 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
   const { showSuccess } = useToast();
 
   useEffect(() => {
-    if (isOpen) partService.list().then(setParts);
+    if (isOpen) {
+      partService.list({}).then((response) => {
+        setParts(response.items);
+      });
+    }
   }, [isOpen]);
 
   const handleAddPart = async () => {
@@ -91,7 +95,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
       <h4 style={{ marginBottom: 8 }}>Linh kiện đã sử dụng</h4>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
         <Select
           placeholder="-- Chọn linh kiện --"
           value={selectedPartId}

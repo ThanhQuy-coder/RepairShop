@@ -7,10 +7,18 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-}
+  min-width: 0;
+} /* min-width: 0 tránh flex item tràn ngang */
 
 .content {
   flex: 1;
   padding: var(--spacing-lg);
   background: var(--color-bg-subtle);
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: var(--spacing-md);
+    padding-top: 60px;
+  } /* chừa chỗ cho nút hamburger */
 }

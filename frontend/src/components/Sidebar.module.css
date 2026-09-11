@@ -7,11 +7,29 @@
   flex-direction: column;
 }
 
-.brand {
+.brandRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brand {
   font-weight: 700;
   font-size: var(--font-size-lg);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.closeButton {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.hamburger {
+  display: none;
 }
 
 .nav {
@@ -29,12 +47,58 @@
   font-size: var(--font-size-base);
   transition: background-color 0.15s ease;
 }
-
 .navItem:hover {
   background: var(--color-bg-subtle);
 }
-
 .active {
   background: var(--color-primary);
   color: white;
+}
+
+.overlay {
+  display: none;
+}
+
+/* Responsive: dưới 768px (tablet/mobile theo NFR-019) — Sidebar chuyển thành drawer trượt vào */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+    position: fixed;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    z-index: 1100;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1200;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+    box-shadow: var(--shadow-md);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .closeButton {
+    display: block;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1150;
+  }
 }

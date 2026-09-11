@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
+
 import { contentService } from '../../services/contentService';
 import type { ArticleListItem } from '../../types/content.types';
-import { Loading, EmptyState } from '../../components/common';
+
+import { EmptyState, Loading, Pagination } from '../../components/common';
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<ArticleListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+
+  const pageSize = 10;
 
   useEffect(() => {
     contentService
@@ -14,11 +19,22 @@ export default function ArticlesPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  const total = articles.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
   if (isLoading) return <Loading />;
 
   if (articles.length === 0) {
     return <EmptyState message="Chưa có bài viết nào." />;
   }
+
+  const paginatedArticles = articles.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: 24 }}>
@@ -31,7 +47,7 @@ export default function ArticlesPage() {
           gap: 16,
         }}
       >
-        {articles.map((article) => (
+        {paginatedArticles.map((article) => (
           <article
             key={article.id}
             style={{
@@ -62,6 +78,8 @@ export default function ArticlesPage() {
           </article>
         ))}
       </div>
+
+      <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
     </div>
   );
 }

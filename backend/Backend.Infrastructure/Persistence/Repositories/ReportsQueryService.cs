@@ -141,4 +141,36 @@ public class ReportsQueryService : IReportsQueryService
 
         return result.OrderByDescending(t => t.Completed).ToList();
     }
+
+    private static readonly Dictionary<string, string> StatusLabels = new()
+    {
+        [RepairStatusCodes.CheckedIn] = "Đã tiếp nhận",
+        [RepairStatusCodes.Assigned] = "Đã phân công",
+        [RepairStatusCodes.Diagnosing] = "Đang chẩn đoán",
+        [RepairStatusCodes.WaitingApproval] = "Chờ xác nhận",
+        [RepairStatusCodes.OnHold] = "Tạm hoãn",
+        [RepairStatusCodes.WaitingParts] = "Chờ linh kiện",
+        [RepairStatusCodes.InRepair] = "Đang sửa chữa",
+        [RepairStatusCodes.QaTesting] = "Đang kiểm thử",
+        [RepairStatusCodes.ReadyForPickup] = "Sẵn sàng bàn giao",
+        [RepairStatusCodes.Delivered] = "Đã hoàn thành",
+        [RepairStatusCodes.ClosedRejected] = "Đã đóng",
+    };
+
+    public async Task<List<StatusBreakdownItem>> GetStatusBreakdownAsync()
+    {
+        // GROUP BY thật ở tầng SQL — đúng nguyên tắc "Frontend chỉ aggregate dữ liệu từ Backend"
+        // (Task 7.13), không kéo hết ticket về đếm tay như giải pháp tạm Task 5.15 đã bỏ.
+        var grouped = await _context.RepairTickets
+            .GroupBy(t => t.Status.Code)
+            .Select(g => new { StatusCode = g.Key, Count = g.Count() })
+            .ToListAsync();
+
+        return grouped
+            .Select(g => new StatusBreakdownItem(g.StatusCode, StatusLabels.GetValueOrDefault(g.StatusCode, g.StatusCode), g.Count))
+            .OrderByDescending(s => s.Count)
+            .ToList();
+    }
+
+    public Task<int> GetTotalCustomersAsync() => _context.Customers.CountAsync();
 }

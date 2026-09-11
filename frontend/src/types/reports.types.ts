@@ -29,11 +29,30 @@ export interface DashboardSummary {
   inventory: InventorySummary;
 }
 
-export interface RevenuePeriodItem { period: string; totalRevenue: number; ticketCount: number }
+export interface RevenuePeriodItem {
+  period: string;
+  totalRevenue: number;
+  ticketCount: number;
+}
 export interface RevenueReport {
   items: RevenuePeriodItem[];
   totalRevenue: number;
   totalInvoices: number;
   paidInvoices: number;
   unpaidInvoices: number;
+}
+
+export interface StatusBreakdownItem {
+  statusCode: string;
+  statusLabel: string;
+  count: number;
+}
+
+export interface DashboardSummary {
+  repair: RepairSummary;
+  revenue: RevenueSummary;
+  technicians: TechnicianSummaryItem[];
+  inventory: InventorySummary;
+  statusBreakdown: StatusBreakdownItem[];
+  totalCustomers: number;
 }

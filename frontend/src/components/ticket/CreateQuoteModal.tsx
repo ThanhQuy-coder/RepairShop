@@ -83,7 +83,16 @@ export default function CreateQuoteModal({
       />
 
       {items.map((item, i) => (
-        <div key={i} style={{ display: 'flex', gap: 8, marginTop: 12, alignItems: 'flex-end' }}>
+        <div
+          key={i}
+          style={{
+            display: 'flex',
+            gap: 8,
+            marginTop: 12,
+            alignItems: 'flex-end',
+            flexWrap: 'wrap',
+          }}
+        >
           <Select
             options={[
               { value: 'Service', label: 'Dịch vụ' },

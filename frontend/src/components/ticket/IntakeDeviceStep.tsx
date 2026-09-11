@@ -92,7 +92,7 @@ export default function IntakeDeviceStep({ customer, onBack, onNext }: IntakeDev
           )}
 
           {mode === 'existing' && existingDevices.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flexWrap: 'wrap' }}>
               {existingDevices.map((d) => (
                 <div key={d.id} className={styles.deviceOption} onClick={() => onNext(d)}>
                   <strong>
