@@ -125,8 +125,7 @@ public class FullEndToEndScenarioTests
         reviewRes.StatusCode.Should().Be(HttpStatusCode.Created);
 
         // Xác nhận Public Tracking hiển thị đúng trạng thái cuối
-        var ticketCode = (await (await _factory.CreateClient().GetAsync($"/api/tickets/{ticketId}")).ReadAsAsync<JsonElement>());
-        // (dùng client đã có quyền để lấy ticketCode)
+        // Dùng client đã có quyền để lấy ticketCode.
         client.AuthorizeAs(receptionist.Token);
         var ticketDetail = await (await client.GetAsync($"/api/tickets/{ticketId}")).ReadAsAsync<JsonElement>();
         var code = ticketDetail.GetProperty("ticketCode").GetString()!;

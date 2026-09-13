@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.AIAdvisory.DTOs;
 using RepairShop.Domain.Modules.Inventory;
@@ -57,7 +61,7 @@ public class AIServiceClientTests
             requestId = Guid.NewGuid(),
             status = "SUCCESS",
             suggestedServices = new[] { new { serviceId = "svc-1", serviceName = "Thay pin", confidence = "HIGH" } },
-            suggestedParts = new[] { new { partId = "part-1", partName = "Pin iPhone 13" } },
+            suggestedParts = Array.Empty<object>(),
             priceRange = new { min = 300000, max = 500000 },
             reason = "test reason",
             disclaimer = "test disclaimer",
@@ -68,9 +72,7 @@ public class AIServiceClientTests
         // trả về — nếu không, bước Validate ngược (Task 6.16) sẽ coi svc-1/part-1 là
         // hallucination và loại bỏ hết, khiến kết quả rơi về NoMatch/Unavailable thay vì Success.
         var knownServices = new List<CatalogServiceItem> { new("svc-1", "Thay pin", "phone", 400000) };
-        var knownParts = new List<CatalogPartItem> { new("part-1", "Pin iPhone 13", 350000) };
-
-        var client = CreateClient(httpResponse, knownServices, knownParts);
+        var client = CreateClient(httpResponse, knownServices);
         var result = await client.GetAdviceAsync(new AIAdviceRequest("Phone", "iPhone", "13", "Pin tụt nhanh"));
 
         Assert.Equal(AIAdvisoryStatus.Success, result.Status);

@@ -17,6 +17,7 @@ public class UsePartStockScenarioTests
     {
         var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recep");
         var technician = await TestUserSeeder.SeedUserAsync(_factory.Services, "Technician", "tech");
+        var customer = await TestUserSeeder.SeedUserAsync(_factory.Services, "Customer", "cust");
         var admin = await TestUserSeeder.SeedUserAsync(_factory.Services, "Admin", "admin");
 
         var client = _factory.CreateClient();
@@ -39,14 +40,14 @@ public class UsePartStockScenarioTests
         await client.PostAsJsonAsync("/api/inventory/transactions", new { partId, type = "Import", quantity = 2 });
 
         client.AuthorizeAs(receptionist.Token);
-        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId);
+        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId, customer.UserId, customer.CustomerId);
 
-        client.AuthorizeAs(technician.Token); // giả định là chủ ticket trong helper
-        // ... approve quote flow qua customer trong thực tế; ở đây rút gọn: giả lập trực tiếp trạng thái IN_REPAIR
-        // (nếu WorkflowHelpers không hỗ trợ, dùng luồng đầy đủ như HappyPathScenarioTests)
+        client.AuthorizeAs(customer.Token);
+        (await client.PatchAsync($"/api/quotes/{quoteId}/approve", null)).StatusCode.Should().Be(HttpStatusCode.OK);
+        client.AuthorizeAs(technician.Token);
 
         var useRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/parts", new { partId, quantity = 1 });
-        useRes.StatusCode.Should().Be(HttpStatusCode.OK);
+        useRes.StatusCode.Should().Be(HttpStatusCode.OK, await useRes.Content.ReadAsStringAsync());
 
         var inventoryRes = await client.GetAsync("/api/inventory");
         var inventory = (await inventoryRes.ReadAsAsync<JsonElement>()).EnumerateArray()
@@ -60,6 +61,7 @@ public class UsePartStockScenarioTests
         var admin = await TestUserSeeder.SeedUserAsync(_factory.Services, "Admin", "admin");
         var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recep");
         var technician = await TestUserSeeder.SeedUserAsync(_factory.Services, "Technician", "tech");
+        var customer = await TestUserSeeder.SeedUserAsync(_factory.Services, "Customer", "cust");
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(admin.Token);
@@ -79,7 +81,9 @@ public class UsePartStockScenarioTests
         // KHÔNG nhập kho — tồn = 0
 
         client.AuthorizeAs(receptionist.Token);
-        var (ticketId, _) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId);
+        var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId, customer.UserId, customer.CustomerId);
+        client.AuthorizeAs(customer.Token);
+        (await client.PatchAsync($"/api/quotes/{quoteId}/approve", null)).StatusCode.Should().Be(HttpStatusCode.OK);
 
         client.AuthorizeAs(technician.Token);
         var useRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/parts", new { partId, quantity = 1 });

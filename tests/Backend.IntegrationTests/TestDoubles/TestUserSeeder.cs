@@ -15,7 +15,7 @@ namespace RepairShop.IntegrationTests.TestDoubles;
 /// </summary>
 public static class TestUserSeeder
 {
-    public record SeededUser(Guid UserId, string Email, string Token);
+    public record SeededUser(Guid UserId, string Email, string Token, Guid? CustomerId = null);
 
     public static async Task<SeededUser> SeedUserAsync(
         IServiceProvider services, string roleName, string emailPrefix)
@@ -32,16 +32,18 @@ public static class TestUserSeeder
         db.Users.Add(user);
         await db.SaveChangesAsync();
 
+        Guid? customerId = null;
         if (roleName == Roles.Customer)
         {
             var customer = new Customer(
                 user.FullName, $"09{Random.Shared.Next(10000000, 99999999)}", email, null, user.Id);
             db.Customers.Add(customer);
             await db.SaveChangesAsync();
+            customerId = customer.Id;
         }
 
         var token = jwtGenerator.GenerateAccessToken(user, roleName);
-        return new SeededUser(user.Id, email, token);
+        return new SeededUser(user.Id, email, token, customerId);
     }
 
     public static async Task<Guid> SeedPartWithStockAsync(IServiceProvider services, int quantity)

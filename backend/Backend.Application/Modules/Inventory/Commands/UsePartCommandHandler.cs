@@ -49,8 +49,9 @@ public class UsePartCommandHandler : IRequestHandler<UsePartCommand, UsePartResp
         {
             ticket.UsePart(part, inventory, request.Quantity, userId); // BR-20 enforce ở đây
 
-            newTicketPart = ticket.TicketParts.Last();
+            newTicketPart = ticket.TicketParts.Last(tp => tp.PartId == part.Id);
             _ticketRepository.TrackNewTicketPart(newTicketPart);
+            _inventoryRepository.TrackNewTransaction(inventory.Transactions.Last());
 
             await _ticketRepository.SaveChangesAsync();
         }, cancellationToken);

@@ -13,7 +13,9 @@ public static class HttpClientExtensions
 
     public static async Task<T> ReadAsAsync<T>(this HttpResponseMessage response)
     {
-        var result = await response.Content.ReadFromJsonAsync<T>(JsonOptions);
-        return result ?? throw new InvalidOperationException("Response body rỗng hoặc parse JSON thất bại.");
+        var content = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<T>(content, JsonOptions);
+        return result ?? throw new InvalidOperationException(
+            $"HTTP {(int)response.StatusCode} ({response.StatusCode}) returned an empty JSON body: {content}");
     }
 }

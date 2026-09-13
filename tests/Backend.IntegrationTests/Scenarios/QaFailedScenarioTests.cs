@@ -23,7 +23,7 @@ public class QaFailedScenarioTests
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
         var (ticketId, quoteId) = await WorkflowHelpers.CreateTicketUpToQuote(
-            client, technician.Token, technician.UserId, customer.UserId); // truyền thêm customer.UserId
+            client, technician.Token, technician.UserId, customer.UserId, customer.CustomerId);
         client.AuthorizeAs(customer.Token);
         await client.PatchAsync($"/api/quotes/{quoteId}/approve", null); // -> IN_REPAIR
 

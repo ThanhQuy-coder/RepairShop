@@ -25,7 +25,7 @@ public class UnauthorizedAccessScenarioTests
 
         // Giờ ticket THẬT SỰ gắn với customerB (nhờ userId truyền vào) — test này mới có ý nghĩa đúng đắn
         var (ticketBId, _) = await WorkflowHelpers.CreateTicketUpToQuote(
-            client, technician.Token, technician.UserId, customerB.UserId);
+            client, technician.Token, technician.UserId, customerB.UserId, customerB.CustomerId);
 
         client.AuthorizeAs(customerA.Token);
 

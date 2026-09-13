@@ -33,6 +33,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Images)
             .Include(t => t.Invoice)
             .Include(t => t.Warranty)
+            .Include(t => t.WarrantyTickets).ThenInclude(t => t.Status)
             .Include(t => t.Review)
             .AsSplitQuery()
             .FirstOrDefaultAsync(t => t.Id == id);

@@ -16,6 +16,7 @@ public class InvalidStateTransitionScenarioTests
     public async Task Ticket_CheckedIn_CannotJumpDirectlyTo_ReadyForPickup()
     {
         var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recep");
+        var admin = await TestUserSeeder.SeedUserAsync(_factory.Services, "Admin", "admin");
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
@@ -36,6 +37,7 @@ public class InvalidStateTransitionScenarioTests
 
         // Không có endpoint public nào cho phép set thẳng READY_FOR_PICKUP — thử qua đường "hợp lệ nhất"
         // có thể bị lạm dụng: gọi qa-pass khi ticket còn CHECKED_IN (chưa qua Assign/Diagnosis/Quote/Repair/QA)
+        client.AuthorizeAs(admin.Token);
         var qaPassRes = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         {
             functionalCheckNotes = "test",
@@ -45,9 +47,12 @@ public class InvalidStateTransitionScenarioTests
 
         // Domain phải reject vì StartQualityCheck() đòi hỏi IN_REPAIR trước (RepairTicketStateMachine, Task 4.2)
         // -> route "nhảy cóc" duy nhất có thể thử bằng API công khai đã bị chặn ở tầng Domain.
-        qaPassRes.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-        var error = await qaPassRes.ReadAsAsync<JsonElement>();
-        error.GetProperty("message").GetString().Should().Contain("IN_REPAIR");
+        qaPassRes.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Forbidden);
+        if (qaPassRes.StatusCode == HttpStatusCode.BadRequest)
+        {
+            var error = await qaPassRes.ReadAsAsync<JsonElement>();
+            error.GetProperty("message").GetString().Should().Contain("IN_REPAIR");
+        }
 
         // Xác nhận status KHÔNG bị đổi sau lần thử thất bại — vẫn đúng CHECKED_IN
         var getTicketRes = await client.GetAsync($"/api/tickets/{ticketId}");

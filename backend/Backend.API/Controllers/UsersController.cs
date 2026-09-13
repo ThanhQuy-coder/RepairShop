@@ -17,7 +17,7 @@ public class UsersController : ControllerBase
     public UsersController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
     public async Task<IActionResult> GetUsers([FromQuery] string? role,
     [FromQuery] bool? isActive,
     [FromQuery] int page = 1,

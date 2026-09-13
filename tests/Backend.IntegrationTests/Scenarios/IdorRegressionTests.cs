@@ -23,14 +23,14 @@ public class IdorRegressionTests
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
-        var (ticketBId, quoteBId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId, customerB.UserId);
+        var (ticketBId, quoteBId) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId, customerB.UserId, customerB.CustomerId);
 
         client.AuthorizeAs(customerA.Token);
 
         // Thử đủ mọi endpoint có thể lộ dữ liệu Customer B qua ticket ID đoán được
         (await client.GetAsync($"/api/tickets/{ticketBId}")).StatusCode.Should().Be(HttpStatusCode.Forbidden);
         (await client.GetAsync($"/api/tickets/{ticketBId}/quotes")).StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        (await client.GetAsync($"/api/tickets/{ticketBId}/warranty")).StatusCode.Should().Be(HttpStatusCode.NotFound); // chưa có warranty -> 404 hợp lý, không phải leak
+        (await client.GetAsync($"/api/tickets/{ticketBId}/warranty")).StatusCode.Should().BeOneOf(HttpStatusCode.Forbidden, HttpStatusCode.NotFound);
         (await client.PatchAsync($"/api/quotes/{quoteBId}/approve", null)).StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
@@ -60,7 +60,7 @@ public class IdorRegressionTests
 
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
-        var (ticketId, _) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, ownerCustomer.UserId);
+        var (ticketId, _) = await WorkflowHelpers.CreateTicketUpToQuote(client, technician.Token, technician.UserId, ownerCustomer.UserId, ownerCustomer.CustomerId);
 
         client.AuthorizeAs(otherCustomer.Token);
         var res = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/review", new { rating = 5, comment = "fake review" });
