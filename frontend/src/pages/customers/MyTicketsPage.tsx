@@ -29,21 +29,44 @@ export default function MyTicketsPage() {
   if (tickets.length === 0) return <EmptyState message="Bạn chưa có phiếu sửa chữa nào." />;
 
   return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>Phiếu sửa chữa của tôi</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <span className={styles.eyebrow}>THEO DÕI SỬA CHỮA</span>
+        <h1 className={styles.title}>Phiếu sửa chữa của tôi</h1>
+        <p className={styles.subtitle}>
+          Chi tiết quy trình tiếp nhận, kiểm tra kỹ thuật, báo giá và tiến độ hoàn thiện thiết bị của bạn.
+        </p>
+      </div>
+
       <div className={styles.list}>
         {tickets.map((t) => (
           <div key={t.id} className={styles.card} onClick={() => navigate(`/tickets/${t.id}`)}>
-            <div>
-              <strong>{t.ticketCode}</strong>
-              <p className={styles.device}>{t.deviceLabel}</p>
+            <div className={styles.cardMain}>
+              <div className={styles.deviceIcon}>📱</div>
+              <div>
+                <div className={styles.ticketCodeRow}>
+                  <strong className={styles.ticketCode}>{t.ticketCode}</strong>
+                  <span className={styles.ticketDate}>
+                    {new Date(t.receivedAt).toLocaleDateString('vi-VN')}
+                  </span>
+                </div>
+                <p className={styles.device}>{t.deviceLabel}</p>
+                {t.issueReported && (
+                  <p className={styles.issuePreview}>{t.issueReported}</p>
+                )}
+              </div>
             </div>
-            <Badge variant={TICKET_STATUS_BADGE_VARIANT[t.status]}>
-              {TICKET_STATUS_LABELS[t.status]}
-            </Badge>
+
+            <div className={styles.cardMeta}>
+              <Badge variant={TICKET_STATUS_BADGE_VARIANT[t.status]}>
+                {TICKET_STATUS_LABELS[t.status]}
+              </Badge>
+              <span className={styles.actionCue}>Xem chi tiết →</span>
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
 }
+

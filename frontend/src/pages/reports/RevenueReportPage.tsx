@@ -5,6 +5,8 @@ import type { RevenueReport } from '../../types/reports.types';
 import { Loading, ErrorMessage, Select, Table, type TableColumn } from '../../components/common';
 import SummaryCard from '../../components/dashboard/SummaryCard';
 
+import styles from './Reports.module.css';
+
 export default function RevenueReportPage() {
   const [fromDate, setFromDate] = useState(() =>
     new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10)
@@ -29,46 +31,57 @@ export default function RevenueReportPage() {
   useEffect(fetchReport, [fromDate, toDate, groupBy]);
 
   const columns: TableColumn<{ period: string; totalRevenue: number; ticketCount: number }>[] = [
-    { key: 'period', header: 'Kỳ', render: (r) => r.period },
-    { key: 'ticketCount', header: 'Số hóa đơn', render: (r) => r.ticketCount },
+    { key: 'period', header: 'Kỳ thời gian', render: (r) => <strong>{r.period}</strong> },
+    { key: 'ticketCount', header: 'Số hóa đơn hoàn tất', render: (r) => r.ticketCount },
     {
       key: 'totalRevenue',
-      header: 'Doanh thu',
-      render: (r) => `${r.totalRevenue.toLocaleString('vi-VN')}đ`,
+      header: 'Tổng doanh thu',
+      render: (r) => (
+        <strong style={{ color: 'var(--color-primary, #185a4e)' }}>
+          {r.totalRevenue.toLocaleString('vi-VN')}đ
+        </strong>
+      ),
     },
   ];
 
   return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>Báo cáo doanh thu</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <span className={styles.eyebrow}>BÁO CÁO TÀI CHÍNH</span>
+        <h1 className={styles.title}>Báo cáo doanh thu dịch vụ</h1>
+        <p className={styles.subtitle}>Phân tích nguồn thu theo mốc thời gian, số lượng hóa đơn và trạng thái thanh toán.</p>
+      </div>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'flex-end' }}>
-        <div>
-          <label style={{ fontSize: 13, display: 'block', marginBottom: 4 }}>Từ ngày</label>
+      <div className={styles.filterCard}>
+        <div className={styles.dateField}>
+          <label className={styles.dateLabel}>Từ ngày</label>
           <input
             type="date"
+            className={styles.dateInput}
             value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            style={{ padding: 8, border: '1px solid var(--color-border)', borderRadius: 4 }}
           />
         </div>
-        <div>
-          <label style={{ fontSize: 13, display: 'block', marginBottom: 4 }}>Đến ngày</label>
+        <div className={styles.dateField}>
+          <label className={styles.dateLabel}>Đến ngày</label>
           <input
             type="date"
+            className={styles.dateInput}
             value={toDate}
             onChange={(e) => setToDate(e.target.value)}
-            style={{ padding: 8, border: '1px solid var(--color-border)', borderRadius: 4 }}
           />
         </div>
-        <Select
-          options={[
-            { value: 'day', label: 'Theo ngày' },
-            { value: 'month', label: 'Theo tháng' },
-          ]}
-          value={groupBy}
-          onChange={(e) => setGroupBy(e.target.value as 'day' | 'month')}
-        />
+        <div style={{ minWidth: 160 }}>
+          <Select
+            label="Nhóm theo"
+            options={[
+              { value: 'day', label: 'Theo từng ngày' },
+              { value: 'month', label: 'Theo từng tháng' },
+            ]}
+            value={groupBy}
+            onChange={(e) => setGroupBy(e.target.value as 'day' | 'month')}
+          />
+        </div>
       </div>
 
       {isLoading && <Loading />}
@@ -76,14 +89,7 @@ export default function RevenueReportPage() {
 
       {report && (
         <>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 12,
-              marginBottom: 24,
-            }}
-          >
+          <div className={styles.summaryGrid}>
             <SummaryCard
               icon="💰"
               label="Tổng doanh thu"
@@ -91,7 +97,7 @@ export default function RevenueReportPage() {
               isEmphasized
             />
             <SummaryCard icon="🧾" label="Tổng hóa đơn" value={report.totalInvoices} />
-            <SummaryCard icon="✅" label="Đã thanh toán" value={report.paidInvoices} />
+            <SummaryCard icon="✅" label="Đã thu tiền" value={report.paidInvoices} />
             <SummaryCard icon="⏳" label="Chưa thanh toán" value={report.unpaidInvoices} />
           </div>
 
@@ -106,3 +112,4 @@ export default function RevenueReportPage() {
     </div>
   );
 }
+

@@ -1,32 +1,41 @@
 .successBox {
   text-align: center;
-  padding: var(--spacing-lg) 0;
+  padding: 32px 16px;
 }
 
 .checkIcon {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: var(--color-success);
-  color: white;
-  font-size: 28px;
+  background: var(--color-success-subtle, #f0fdf4);
+  border: 2px solid var(--color-success, #16a34a);
+  color: var(--color-success, #16a34a);
+  font-size: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto var(--spacing-md);
+  margin: 0 auto 20px;
+  box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.1);
 }
 
 .ticketCode {
-  font-size: 24px;
-  font-weight: 700;
-  margin: var(--spacing-md) 0 var(--spacing-sm);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--color-primary, #185a4e);
+  margin: 16px 0 8px;
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--color-primary-subtle, #eef6f4);
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  border-radius: var(--radius-md, 10px);
 }
 
 .actions {
   display: flex;
-  gap: var(--spacing-sm);
+  gap: 12px;
   justify-content: center;
-  margin-top: var(--spacing-lg);
+  margin-top: 32px;
 }
 
 /* Ẩn khi xem trên màn hình, chỉ hiện khi Ctrl+P / window.print() */
@@ -43,3 +52,4 @@
     padding: var(--spacing-lg);
   }
 }
+

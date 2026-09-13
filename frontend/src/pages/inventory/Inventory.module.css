@@ -1,0 +1,119 @@
+.container {
+  max-width: 1280px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-primary, #185a4e);
+  margin-bottom: 4px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: var(--font-size-base, 14px);
+  color: var(--color-text-muted, #64748b);
+  margin-top: 4px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.controlCard {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-xs);
+}
+
+.searchBar {
+  min-width: 280px;
+  max-width: 400px;
+  flex: 1;
+}
+
+.filterChips {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--color-bg-subtle, #f8fafc);
+  border-color: #cbd5e1;
+}
+
+.chipActive {
+  background: var(--color-primary, #185a4e);
+  border-color: var(--color-primary, #185a4e);
+  color: #ffffff;
+  box-shadow: var(--shadow-xs);
+}
+
+.chipActive:hover {
+  background: var(--color-primary-hover, #13483e);
+}
+
+.skuTag {
+  font-family: monospace;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xs, 4px);
+  color: var(--color-text-secondary, #475569);
+}
+
+.stockQty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.actionBtns {
+  display: flex;
+  gap: 6px;
+}

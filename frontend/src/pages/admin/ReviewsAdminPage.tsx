@@ -10,6 +10,8 @@ import type { ReviewListItem } from '../../types/review.types';
 import { extractApiError } from '../../utils/apiError';
 import { useToast } from '../../hooks/useToast';
 
+import styles from './ReviewsAdminPage.module.css';
+
 export default function ReviewsAdminPage() {
   const { showSuccess } = useToast();
 
@@ -77,15 +79,22 @@ export default function ReviewsAdminPage() {
     {
       key: 'customerName',
       header: 'Khách hàng',
-      width: '18%',
-      render: (review) => review.customerName,
+      width: '20%',
+      render: (review) => (
+        <div className={styles.customerCell}>
+          <div className={styles.customerAvatar}>
+            {review.customerName ? review.customerName[0].toUpperCase() : 'C'}
+          </div>
+          <strong>{review.customerName}</strong>
+        </div>
+      ),
     },
     {
       key: 'rating',
       header: 'Đánh giá',
-      width: '15%',
+      width: '16%',
       render: (review) => (
-        <span title={`${review.rating}/5`}>
+        <span className={styles.starRating} title={`${review.rating}/5`}>
           {'★'.repeat(review.rating)}
           {'☆'.repeat(5 - review.rating)}
         </span>
@@ -93,20 +102,24 @@ export default function ReviewsAdminPage() {
     },
     {
       key: 'comment',
-      header: 'Nội dung',
-      width: '30%',
-      render: (review) => review.comment || 'Không có nhận xét',
+      header: 'Nội dung nhận xét',
+      width: '32%',
+      render: (review) => (
+        <span className={styles.commentText}>
+          {review.comment || <em>Không có nhận xét</em>}
+        </span>
+      ),
     },
     {
       key: 'createdAt',
-      header: 'Ngày tạo',
-      width: '17%',
+      header: 'Ngày gửi',
+      width: '16%',
       render: (review) => new Date(review.createdAt).toLocaleDateString('vi-VN'),
     },
     {
       key: 'isVisible',
-      header: 'Trạng thái',
-      width: '20%',
+      header: 'Thao tác',
+      width: '16%',
       render: (review) =>
         review.isVisible ? (
           <Button
@@ -117,7 +130,7 @@ export default function ReviewsAdminPage() {
               setConfirmHideId(review.id);
             }}
           >
-            Ẩn
+            Ẩn đánh giá
           </Button>
         ) : (
           <Button
@@ -128,15 +141,19 @@ export default function ReviewsAdminPage() {
               handleShow(review.id);
             }}
           >
-            Hiện
+            Hiển thị
           </Button>
         ),
     },
   ];
 
   return (
-    <div>
-      <h1>Quản lý đánh giá</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <span className={styles.eyebrow}>ĐÁNH GIÁ & Ý KIẾN</span>
+        <h1 className={styles.title}>Quản lý đánh giá khách hàng</h1>
+        <p className={styles.subtitle}>Kiểm duyệt, theo dõi độ hài lòng và ẩn/hiện nhận xét của khách hàng trên hệ thống.</p>
+      </div>
 
       {errorMessage && <ErrorMessage message={errorMessage} />}
 
@@ -145,7 +162,7 @@ export default function ReviewsAdminPage() {
         data={paginatedReviews}
         keyExtractor={(review) => review.id}
         isLoading={isLoading}
-        emptyMessage="Chưa có đánh giá nào"
+        emptyMessage="Chưa có đánh giá nào từ khách hàng."
       />
 
       <Pagination page={page} pageSize={pageSize} total={total} onPageChange={setPage} />
@@ -161,3 +178,4 @@ export default function ReviewsAdminPage() {
     </div>
   );
 }
+

@@ -54,27 +54,49 @@ export default function DevicesPage() {
   ];
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Thiết bị</h2>
-        {customer && <Button onClick={() => setIsFormOpen(true)}>+ Thêm thiết bị</Button>}
+        <div>
+          <span className={styles.eyebrow}>QUẢN LÝ THIẾT BỊ</span>
+          <h1 className={styles.title}>Danh mục thiết bị</h1>
+          <p className={styles.subtitle}>Quản lý thông tin điện thoại, máy tính, tablet theo từng khách hàng.</p>
+        </div>
+        {customer && (
+          <Button size="md" onClick={() => setIsFormOpen(true)}>
+            + Thêm thiết bị
+          </Button>
+        )}
       </div>
 
       {!customerId ? (
         <div className={styles.pickerBox}>
-          <p>Chọn khách hàng để xem/quản lý thiết bị của họ:</p>
-          <CustomerPicker onSelect={(c) => setSearchParams({ customerId: c.id })} />
+          <div className={styles.pickerIcon}>🔍</div>
+          <h3>Chọn khách hàng để quản lý thiết bị</h3>
+          <p>Tìm kiếm theo tên hoặc số điện thoại để xem danh sách máy móc của khách:</p>
+          <div className={styles.pickerInputWrap}>
+            <CustomerPicker onSelect={(c) => setSearchParams({ customerId: c.id })} />
+          </div>
         </div>
       ) : (
         <>
           {customer && (
-            <p className={styles.customerInfo}>
-              Khách hàng: <strong>{customer.fullName}</strong> ({customer.phone}) —{' '}
-              <button className={styles.changeLink} onClick={() => setSearchParams({})}>
+            <div className={styles.customerCard}>
+              <div>
+                <span className={styles.customerLabel}>Khách hàng đang chọn</span>
+                <p className={styles.customerName}>
+                  <strong>{customer.fullName}</strong> — {customer.phone}
+                </p>
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setSearchParams({})}
+              >
                 Đổi khách hàng
-              </button>
-            </p>
+              </Button>
+            </div>
           )}
+
 
           {errorMessage && <ErrorMessage message={errorMessage} />}
 

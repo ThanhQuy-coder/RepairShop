@@ -32,19 +32,20 @@ export default function TechnicianDashboardPage() {
   if (errorMessage) return <ErrorMessage message={errorMessage} />;
 
   return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>Ticket của tôi</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.eyebrow}>BÀN LÀM VIỆC KỸ THUẬT</span>
+          <h1 className={styles.title}>Phiếu sửa chữa được phân công</h1>
+          <p className={styles.subtitle}>
+            Theo dõi tiến trình kiểm tra, chẩn đoán, thay thế linh kiện và kiểm định chất lượng QA.
+          </p>
+        </div>
+      </div>
 
       {summary && (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-            gap: 12,
-            marginBottom: 24,
-          }}
-        >
-          <SummaryCard icon="📋" label="Tổng số" value={summary.total} isEmphasized />
+        <div className={styles.summaryGrid}>
+          <SummaryCard icon="📋" label="Tổng số việc" value={summary.total} isEmphasized />
           {summary.groups
             .filter((g) => g.count > 0 || g.key !== 'closed')
             .map((g) => (
@@ -53,39 +54,54 @@ export default function TechnicianDashboardPage() {
         </div>
       )}
 
-      {GROUPS.map((statusCode) => {
-        const items = tickets.filter((t) => t.status === statusCode);
-        return (
-          <section key={statusCode} className={styles.group}>
-            <div className={styles.groupHeader}>
-              <Badge variant={TICKET_STATUS_BADGE_VARIANT[statusCode]}>
-                {TICKET_STATUS_LABELS[statusCode]}
-              </Badge>
-              <span className={styles.count}>({items.length})</span>
-            </div>
-
-            {items.length === 0 ? (
-              <p className={styles.emptyText}>Không có ticket nào.</p>
-            ) : (
-              <div className={styles.cardGrid}>
-                {items.map((t) => (
-                  <div
-                    key={t.id}
-                    className={styles.card}
-                    onClick={() => navigate(`/tickets/${t.id}`)}
-                  >
-                    <strong>{t.ticketCode}</strong>
-                    <span>{t.customerName}</span>
-                    <span className={styles.deviceText}>{t.deviceLabel}</span>
-                  </div>
-                ))}
+      <div className={styles.groupContainer}>
+        {GROUPS.map((statusCode) => {
+          const items = tickets.filter((t) => t.status === statusCode);
+          return (
+            <section key={statusCode} className={styles.group}>
+              <div className={styles.groupHeader}>
+                <div className={styles.groupTitleWrap}>
+                  <Badge variant={TICKET_STATUS_BADGE_VARIANT[statusCode]}>
+                    {TICKET_STATUS_LABELS[statusCode]}
+                  </Badge>
+                  <span className={styles.countPill}>{items.length}</span>
+                </div>
               </div>
-            )}
-          </section>
-        );
-      })}
+
+              {items.length === 0 ? (
+                <div className={styles.emptyGroupBox}>
+                  <span>Không có phiếu trong trạng thái này</span>
+                </div>
+              ) : (
+                <div className={styles.cardGrid}>
+                  {items.map((t) => (
+                    <div
+                      key={t.id}
+                      className={styles.card}
+                      onClick={() => navigate(`/tickets/${t.id}`)}
+                    >
+                      <div className={styles.cardHeader}>
+                        <strong className={styles.ticketCode}>{t.ticketCode}</strong>
+                        <span className={styles.openCue}>Chi tiết →</span>
+                      </div>
+                      <div className={styles.customerLine}>
+                        <span className={styles.customerIcon}>👤</span>
+                        <span className={styles.customerName}>{t.customerName}</span>
+                      </div>
+                      <div className={styles.deviceLine}>
+                        <span className={styles.deviceBadge}>{t.deviceLabel}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
 
       {tickets.length === 0 && <EmptyState message="Bạn chưa được phân công ticket nào." />}
     </div>
   );
 }
+

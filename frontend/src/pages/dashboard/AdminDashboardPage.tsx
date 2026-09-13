@@ -32,37 +32,44 @@ export default function AdminDashboardPage() {
     );
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Tổng quan quản trị</h2>
+        <div>
+          <span className={styles.eyebrow}>TRUNG TÂM ĐIỀU HÀNH</span>
+          <h1 className={styles.title}>Tổng quan quản trị</h1>
+          <p className={styles.subtitle}>
+            Báo cáo tổng hợp vận hành, doanh thu, tồn kho linh kiện và hiệu suất kỹ thuật viên.
+          </p>
+        </div>
         <div className={styles.shortcutRow}>
           <Button variant="secondary" size="sm" onClick={() => navigate('/admin/reports/revenue')}>
-            Báo cáo doanh thu
+            📊 Báo cáo doanh thu
           </Button>
           <Button
             variant="secondary"
             size="sm"
             onClick={() => navigate('/admin/reports/technicians')}
           >
-            Hiệu suất KTV
+            ⚡ Hiệu suất KTV
           </Button>
           <Button variant="secondary" size="sm" onClick={() => navigate('/admin/inventory')}>
-            Kho linh kiện
+            📦 Kho linh kiện
           </Button>
         </div>
       </div>
 
-      {/* KPI cards hàng ngang — đúng ví dụ mentor: Tickets / Revenue / Customers */}
+      {/* KPI cards hàng ngang */}
       <div className={styles.kpiRow}>
         <SummaryCard
           icon="📋"
-          label="Phiếu sửa chữa"
+          label="Tổng số phiếu sửa chữa"
           value={summary.repair.totalTickets}
           isEmphasized
         />
-        <SummaryCard icon="💰" label="Doanh thu tháng này" value={summary.revenue.thisMonth} />
-        <SummaryCard icon="👥" label="Khách hàng" value={summary.totalCustomers} />
+        <SummaryCard icon="💰" label="Doanh thu tháng này (đ)" value={summary.revenue.thisMonth} />
+        <SummaryCard icon="👥" label="Tổng khách hàng" value={summary.totalCustomers} />
       </div>
+
 
       {/* Repair Status — bảng phân bố trạng thái, đúng ví dụ mentor vẽ */}
       <section className={styles.section}>

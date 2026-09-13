@@ -144,46 +144,47 @@ export default function TicketDetailPage() {
             <div className={styles.infoGrid}>
               <div className={styles.infoFull}>
                 <span className={styles.infoLabel}>Mô tả lỗi khách khai báo</span>
-                <p>{ticket.issueReported}</p>
+                <p className={styles.issueText}>{ticket.issueReported}</p>
               </div>
               {ticket.conditionNotes && (
                 <div className={styles.infoFull}>
                   <span className={styles.infoLabel}>Tình trạng ban đầu</span>
-                  <p>{ticket.conditionNotes}</p>
+                  <p className={styles.infoValueText}>{ticket.conditionNotes}</p>
                 </div>
               )}
               {ticket.riskWarning && (
-                <div className={styles.infoFull}>
-                  <span className={styles.infoLabel}>Cảnh báo rủi ro</span>
+                <div className={`${styles.infoFull} ${styles.riskBox}`}>
+                  <span className={styles.riskLabel}>⚠️ Cảnh báo rủi ro</span>
                   <p>{ticket.riskWarning}</p>
                 </div>
               )}
               {ticket.diagnosisResult && (
-                <div className={styles.infoFull}>
-                  <span className={styles.infoLabel}>Kết quả chẩn đoán</span>
+                <div className={`${styles.infoFull} ${styles.resultBox}`}>
+                  <span className={styles.resultLabel}>🔍 Kết quả chẩn đoán</span>
                   <p>{ticket.diagnosisResult}</p>
                 </div>
               )}
               {ticket.rootCause && (
                 <div className={styles.infoFull}>
                   <span className={styles.infoLabel}>Nguyên nhân</span>
-                  <p>{ticket.rootCause}</p>
+                  <p className={styles.infoValueText}>{ticket.rootCause}</p>
                 </div>
               )}
               {ticket.completionNotes && (
-                <div className={styles.infoFull}>
-                  <span className={styles.infoLabel}>Ghi chú hoàn tất</span>
+                <div className={`${styles.infoFull} ${styles.successBox}`}>
+                  <span className={styles.successLabel}>✓ Ghi chú hoàn tất</span>
                   <p>{ticket.completionNotes}</p>
                 </div>
               )}
               {ticket.notes && (
                 <div className={styles.infoFull}>
                   <span className={styles.infoLabel}>Ghi chú kỹ thuật</span>
-                  <p style={{ whiteSpace: 'pre-line' }}>{ticket.notes}</p>
+                  <p className={styles.notesText}>{ticket.notes}</p>
                 </div>
               )}
             </div>
           </section>
+
 
           {role === 'Customer' && (
             <section className={styles.section}>

@@ -38,56 +38,59 @@
   display: flex;
   gap: 14px;
   align-items: center;
-  padding: 18px 20px;
+  padding: 16px 20px;
   background: #ffffff;
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-lg, 14px);
   margin-bottom: 20px;
-  flex-wrap: wrap;
   box-shadow: var(--shadow-xs);
+  flex-wrap: wrap;
 }
 
 .filterCard > * {
-  min-width: 220px;
+  min-width: 200px;
 }
 
-.customerFilter {
-  position: relative;
-  min-width: 240px;
-}
-
-.selectedCustomer {
+.userCell {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-sm, 8px);
-  padding: 8px 14px;
-  border: 1px solid var(--color-primary-border, #9ec5bc);
-  border-radius: var(--radius-sm, 6px);
-  background: var(--color-primary-subtle, #eef6f4);
-  font-size: var(--font-size-base, 14px);
-  font-weight: 600;
-  color: var(--color-primary, #185a4e);
-  height: 40px;
+  gap: 12px;
 }
 
-.selectedCustomer button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: var(--color-text-muted, #64748b);
+.userAvatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--color-primary-subtle, #eef6f4);
+  color: var(--color-primary, #185a4e);
+  font-weight: 700;
+  font-size: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  transition: all 0.15s ease;
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  flex-shrink: 0;
 }
 
-.selectedCustomer button:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: var(--color-danger, #dc2626);
+.userName {
+  font-weight: 600;
+  color: var(--color-text, #1e293b);
 }
 
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+}

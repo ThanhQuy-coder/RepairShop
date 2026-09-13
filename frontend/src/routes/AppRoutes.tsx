@@ -34,6 +34,7 @@ import MyWarrantyPage from '../pages/customers/MyWarrantyPage';
 import ServicesPage from '../pages/website/ServicesPage';
 import ArticlesPage from '../pages/website/ArticlesPage';
 import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
+import QuotesPage from '../pages/quotes/QuotesPage';
 
 export default function AppRoutes() {
   return (
@@ -88,6 +89,15 @@ export default function AppRoutes() {
           <Route element={<AdminLayout />}>
             <Route path="admin/dashboard" element={<AdminDashboardPage />} />{' '}
             <Route path="admin/users" element={<UsersPage />} />
+            <Route path="admin/customers" element={<CustomerListPage />} />
+            <Route path="admin/customers/:id" element={<CustomerDetailPage />} />
+            <Route path="admin/devices" element={<DevicesPage />} />
+            <Route path="admin/devices/:id" element={<DeviceDetailPage />} />
+            <Route path="admin/tickets" element={<TicketListPage />} />
+            <Route path="admin/tickets/create" element={<CreateTicketPage />} />
+            <Route path="admin/quotes" element={<QuotesPage />} />
+            <Route path="admin/services" element={<ServicesPage />} />
+            <Route path="admin/articles" element={<ArticlesPage />} />
             <Route path="admin/inventory" element={<PartsListPage />} />
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
             <Route path="admin/reports/revenue" element={<RevenueReportPage />} />

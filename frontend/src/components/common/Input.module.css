@@ -1,34 +1,55 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 6px;
   width: 100%;
 }
 
 .label {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
-  color: var(--color-text);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text, #1e293b);
 }
 
 .input {
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-base);
+  min-height: 40px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-base, 14px);
+  color: var(--color-text, #1e293b);
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+select.input {
+  cursor: pointer;
+}
+
+
+.input::placeholder {
+  color: #94a3b8;
 }
 
 .input:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.15);
 }
 
 .inputError {
-  border-color: var(--color-danger);
+  border-color: var(--color-danger, #dc2626);
+}
+
+.inputError:focus {
+  border-color: var(--color-danger, #dc2626);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .errorText {
-  font-size: var(--font-size-sm);
-  color: var(--color-danger);
+  font-size: var(--font-size-xs, 12px);
+  color: var(--color-danger, #dc2626);
+  font-weight: 500;
 }
+

@@ -1,55 +1,188 @@
 .wrapper {
-  max-width: 1100px;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
 .headerCard {
-  margin-bottom: var(--spacing-md);
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 20px 28px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+
 .headerMain {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  margin: var(--spacing-sm) 0 4px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
+
+.headerMain h2 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-primary, #185a4e);
+  letter-spacing: -0.01em;
+}
+
 .headerMeta {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: var(--font-size-sm, 13px);
+  color: var(--color-text-muted, #64748b);
+  font-weight: 500;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: var(--spacing-lg);
+  grid-template-columns: 1.7fr 1fr;
+  gap: 24px;
+  align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .grid {
     grid-template-columns: 1fr;
   }
 }
 
-.section {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
+.mainCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
+
+.sideCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 80px;
+}
+
+.section {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 24px;
+  box-shadow: var(--shadow-xs);
+}
+
 .section h3 {
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-lg);
+  margin-bottom: 18px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
+  gap: 16px;
 }
+
 .infoFull {
   grid-column: 1 / -1;
 }
+
 .infoLabel {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted, #64748b);
+  display: block;
+  margin-bottom: 4px;
 }
+
+.issueText {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text, #1e293b);
+  line-height: 1.5;
+}
+
+.infoValueText {
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
+}
+
+.riskBox {
+  padding: 14px 18px;
+  background: var(--color-warning-subtle, #fffbeb);
+  border: 1px solid var(--color-warning-border, #fde68a);
+  border-radius: var(--radius-md, 10px);
+}
+
+.riskLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-warning-hover, #b45309);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.riskBox p {
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.resultBox {
+  padding: 14px 18px;
+  background: var(--color-info-subtle, #f0f9ff);
+  border: 1px solid var(--color-info-border, #bae6fd);
+  border-radius: var(--radius-md, 10px);
+}
+
+.resultLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-info-hover, #0369a1);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.resultBox p {
+  color: #075985;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.successBox {
+  padding: 14px 18px;
+  background: var(--color-success-subtle, #f0fdf4);
+  border: 1px solid var(--color-success-border, #bbf7d0);
+  border-radius: var(--radius-md, 10px);
+}
+
+.successLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-success-hover, #15803d);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.successBox p {
+  color: #166534;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.notesText {
+  white-space: pre-line;
+  font-size: 14px;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.5;
+  background: var(--color-bg-subtle, #f8fafc);
+  padding: 12px 16px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--color-border-subtle, #f1f5f9);
+}
+

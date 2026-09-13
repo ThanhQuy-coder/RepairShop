@@ -2,20 +2,25 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: #f8f7f2;
 }
 
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-xl);
-  border-bottom: 1px solid var(--color-border);
+  padding: 20px max(24px, calc((100vw - 1180px) / 2));
+  border-bottom: 1px solid #d9dfd9;
+  background: rgba(248, 247, 242, 0.94);
+  position: relative;
+  z-index: 1;
 }
 
 .logo {
+  font-family: 'Segoe UI', Arial, sans-serif;
   font-weight: 700;
-  font-size: var(--font-size-lg);
-  color: var(--color-primary);
+  font-size: 21px;
+  color: #23453f;
   text-decoration: none;
 }
 
@@ -42,5 +47,23 @@
   text-align: center;
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid #d9dfd9;
+  background: #23453f;
+  color: #cfdbbd;
+}
+@media (max-width: 650px) {
+  .navbar {
+    padding: 16px 18px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .navLink {
+    font-size: 13px;
+  }
 }

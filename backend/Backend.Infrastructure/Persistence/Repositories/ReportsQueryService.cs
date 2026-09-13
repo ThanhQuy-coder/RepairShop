@@ -83,8 +83,8 @@ public class ReportsQueryService : IReportsQueryService
 
     public async Task<RevenueReportResponse> GetRevenueReportAsync(DateTime? fromDate, DateTime? toDate, RevenueGroupBy groupBy)
     {
-        var from = fromDate ?? DateTime.UtcNow.AddDays(-30); // mặc định 30 ngày gần nhất nếu không chỉ định
-        var to = toDate ?? DateTime.UtcNow;
+        var from = ToUtc(fromDate) ?? DateTime.UtcNow.AddDays(-30); // mặc định 30 ngày gần nhất nếu không chỉ định
+        var to = ToUtc(toDate) ?? DateTime.UtcNow;
 
         // Invoice trong khoảng thời gian (lọc theo CreatedAt, không phải PaidAt — để thấy đủ cả
         // hóa đơn chưa thanh toán phát sinh trong kỳ, phục vụ đúng checklist "Total invoice/Paid/Unpaid")
@@ -124,8 +124,11 @@ public class ReportsQueryService : IReportsQueryService
             var deliveredQuery = _context.RepairTickets
                 .Where(t => t.TechnicianId == tech.Id && t.Status.Code == RepairStatusCodes.Delivered && t.DeliveredAt != null);
 
-            if (fromDate is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt >= fromDate);
-            if (toDate is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt <= toDate);
+            var from = ToUtc(fromDate);
+            var to = ToUtc(toDate);
+
+            if (from is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt >= from);
+            if (to is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt <= to);
 
             var delivered = await deliveredQuery.Select(t => new { t.ReceivedAt, t.DeliveredAt }).ToListAsync();
 
@@ -140,6 +143,15 @@ public class ReportsQueryService : IReportsQueryService
         }
 
         return result.OrderByDescending(t => t.Completed).ToList();
+    }
+
+    private static DateTime? ToUtc(DateTime? value)
+    {
+        if (value is null) return null;
+
+        return value.Value.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc)
+            : value.Value.ToUniversalTime();
     }
 
     private static readonly Dictionary<string, string> StatusLabels = new()

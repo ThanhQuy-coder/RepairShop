@@ -4,6 +4,8 @@ import { extractApiError } from '../../utils/apiError';
 import type { InventoryTransactionItem } from '../../types/inventory.types';
 import { Table, Badge, ErrorMessage, Pagination, type TableColumn } from '../../components/common';
 
+import styles from './Inventory.module.css';
+
 const TYPE_LABEL: Record<string, string> = {
   Import: 'Nhập kho',
   Export: 'Xuất kho (sửa chữa)',
@@ -45,19 +47,33 @@ export default function InventoryTransactionsPage() {
       header: 'Thời gian',
       render: (t) => new Date(t.createdAt).toLocaleString('vi-VN'),
     },
-    { key: 'partName', header: 'Linh kiện', render: (t) => t.partName },
+    { key: 'partName', header: 'Linh kiện', render: (t) => <strong>{t.partName}</strong> },
     {
       key: 'type',
-      header: 'Loại',
+      header: 'Loại giao dịch',
       render: (t) => <Badge variant={TYPE_VARIANT[t.type]}>{TYPE_LABEL[t.type]}</Badge>,
     },
-    { key: 'quantity', header: 'Số lượng', render: (t) => t.quantity },
+    {
+      key: 'quantity',
+      header: 'Số lượng',
+      render: (t) => (
+        <span style={{ fontWeight: 600 }}>
+          {t.type === 'Import' ? `+${t.quantity}` : `-${t.quantity}`}
+        </span>
+      ),
+    },
     { key: 'performedByName', header: 'Người thực hiện', render: (t) => t.performedByName },
   ];
 
   return (
-    <div>
-      <h2 style={{ marginBottom: 16 }}>Lịch sử nhập/xuất kho</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.eyebrow}>NHẬT KÝ KHO</span>
+          <h1 className={styles.title}>Lịch sử nhập/xuất kho</h1>
+          <p className={styles.subtitle}>Kiểm toán toàn bộ biến động linh kiện, xuất sửa chữa và điều chỉnh tồn kho.</p>
+        </div>
+      </div>
       {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchData} />}
       <Table
         columns={columns}
@@ -70,3 +86,4 @@ export default function InventoryTransactionsPage() {
     </div>
   );
 }
+

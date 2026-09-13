@@ -1,6 +1,7 @@
 .container {
   display: flex;
   min-height: 100vh;
+  background: var(--color-bg-canvas, #f4f6f5);
 }
 
 .main {
@@ -12,13 +13,23 @@
 
 .content {
   flex: 1;
-  padding: var(--spacing-lg);
-  background: var(--color-bg-subtle);
+  padding: 32px 36px 48px;
+  background: var(--color-bg-canvas, #f4f6f5);
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    padding: 24px 24px 36px;
+  }
 }
 
 @media (max-width: 768px) {
   .content {
     padding: var(--spacing-md);
-    padding-top: 60px;
-  } /* chừa chỗ cho nút hamburger */
+    padding-top: 68px; /* chừa chỗ cho nút hamburger */
+  }
 }
+

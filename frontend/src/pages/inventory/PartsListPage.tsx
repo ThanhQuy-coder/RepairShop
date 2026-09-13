@@ -16,6 +16,7 @@ import PartFormModal from '../../components/inventory/PartFormModal';
 import StockTransactionModal from '../../components/inventory/StockTransactionModal';
 import { inventoryService } from '../../services/inventoryService';
 import SummaryCard from '../../components/dashboard/SummaryCard';
+import styles from './Inventory.module.css';
 
 const PAGE_SIZE = 15;
 
@@ -66,8 +67,12 @@ export default function PartsListPage() {
   }, [debouncedSearch]);
 
   const columns: TableColumn<Part>[] = [
-    { key: 'sku', header: 'SKU', render: (p) => p.sku },
-    { key: 'name', header: 'Tên linh kiện', render: (p) => p.name },
+    {
+      key: 'sku',
+      header: 'Mã SKU',
+      render: (p) => <span className={styles.skuTag}>{p.sku}</span>,
+    },
+    { key: 'name', header: 'Tên linh kiện', render: (p) => <strong>{p.name}</strong> },
     { key: 'category', header: 'Danh mục', render: (p) => p.category ?? '—' },
     {
       key: 'unitPrice',
@@ -78,8 +83,8 @@ export default function PartsListPage() {
       key: 'quantityOnHand',
       header: 'Tồn kho',
       render: (p) => (
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {p.quantityOnHand}
+        <span className={styles.stockQty}>
+          <span>{p.quantityOnHand}</span>
           {p.isLowStock && <Badge variant="danger">Sắp hết</Badge>}
         </span>
       ),
@@ -87,9 +92,9 @@ export default function PartsListPage() {
     {
       key: 'stockActions',
       header: '',
-      width: '160px',
+      width: '180px',
       render: (p) => (
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div className={styles.actionBtns}>
           <Button
             variant="ghost"
             size="sm"
@@ -121,10 +126,15 @@ export default function PartsListPage() {
   }, [parts]);
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-        <h2>Linh kiện</h2>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.eyebrow}>QUẢN TRỊ KHO</span>
+          <h1 className={styles.title}>Kho linh kiện</h1>
+          <p className={styles.subtitle}>Kiểm soát số lượng tồn kho, định giá và quản lý nhập linh kiện thay thế.</p>
+        </div>
         <Button
+          size="md"
           onClick={() => {
             setEditingPart(null);
             setIsFormOpen(true);
@@ -134,53 +144,48 @@ export default function PartsListPage() {
         </Button>
       </div>
 
-      <div style={{ maxWidth: 360, marginBottom: 16 }}>
-        <Input
-          placeholder="Tìm theo tên hoặc SKU..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchParts} />}
-
       {summary && (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 12,
-            marginBottom: 24,
-          }}
-        >
-          <SummaryCard icon="📦" label="Tổng linh kiện" value={summary.totalParts} isEmphasized />
-          <SummaryCard icon="⚠️" label="Sắp hết hàng" value={summary.lowStockCount} />
-          <SummaryCard icon="❌" label="Hết hàng" value={summary.outOfStockCount} />
+        <div className={styles.summaryGrid}>
+          <SummaryCard icon="📦" label="Tổng số linh kiện" value={summary.totalParts} isEmphasized />
+          <SummaryCard icon="⚠️" label="Linh kiện sắp hết hàng" value={summary.lowStockCount} />
+          <SummaryCard icon="❌" label="Linh kiện hết hàng" value={summary.outOfStockCount} />
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-        <Button
-          variant={stockFilter === 'All' ? 'primary' : 'secondary'}
-          size="sm"
-          onClick={() => setStockFilter('All')}
-        >
-          Tất cả
-        </Button>
-        <Button
-          variant={stockFilter === 'LowStock' ? 'primary' : 'secondary'}
-          size="sm"
-          onClick={() => setStockFilter('LowStock')}
-        >
-          Sắp hết
-        </Button>
-        <Button
-          variant={stockFilter === 'OutOfStock' ? 'primary' : 'secondary'}
-          size="sm"
-          onClick={() => setStockFilter('OutOfStock')}
-        >
-          Hết hàng
-        </Button>
+      {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchParts} />}
+
+      <div className={styles.controlCard}>
+        <div className={styles.searchBar}>
+          <Input
+            placeholder="Tìm theo tên linh kiện hoặc mã SKU..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div className={styles.filterChips}>
+          <button
+            type="button"
+            className={`${styles.chip} ${stockFilter === 'All' ? styles.chipActive : ''}`}
+            onClick={() => setStockFilter('All')}
+          >
+            Tất cả
+          </button>
+          <button
+            type="button"
+            className={`${styles.chip} ${stockFilter === 'LowStock' ? styles.chipActive : ''}`}
+            onClick={() => setStockFilter('LowStock')}
+          >
+            ⚠️ Sắp hết hàng
+          </button>
+          <button
+            type="button"
+            className={`${styles.chip} ${stockFilter === 'OutOfStock' ? styles.chipActive : ''}`}
+            onClick={() => setStockFilter('OutOfStock')}
+          >
+            ❌ Hết hàng
+          </button>
+        </div>
       </div>
 
       <Table
@@ -188,7 +193,7 @@ export default function PartsListPage() {
         data={parts}
         keyExtractor={(p) => p.id}
         isLoading={isLoading}
-        emptyMessage="Chưa có linh kiện nào."
+        emptyMessage="Chưa có linh kiện nào phù hợp."
       />
 
       <Pagination page={page} pageSize={PAGE_SIZE} total={total} onPageChange={setPage} />
@@ -212,3 +217,4 @@ export default function PartsListPage() {
     </div>
   );
 }
+

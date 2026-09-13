@@ -100,15 +100,22 @@ export default function TicketListPage() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Phiếu sửa chữa</h2>
+        <div>
+          <span className={styles.eyebrow}>QUẢN LÝ DỊCH VỤ</span>
+          <h1 className={styles.title}>Phiếu sửa chữa</h1>
+          <p className={styles.subtitle}>Theo dõi toàn bộ phiếu tiếp nhận, phân công kỹ thuật viên và kiểm soát tiến độ xử lý.</p>
+        </div>
         {(role === 'Receptionist' || role === 'Admin') && (
-          <Button onClick={() => navigate('/tickets/create')}>+ Tiếp nhận thiết bị</Button>
+          <Button size="md" onClick={() => navigate('/tickets/create')}>
+            + Tiếp nhận thiết bị
+          </Button>
         )}
       </div>
 
-      <div className={styles.filterBar}>
+      <div className={styles.filterCard}>
+
         <Select
           options={STATUS_OPTIONS}
           placeholder="-- Tất cả trạng thái --"

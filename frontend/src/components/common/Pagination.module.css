@@ -1,11 +1,14 @@
 .wrapper {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-md, 16px);
   justify-content: center;
-  padding: var(--spacing-md) 0;
+  padding: 20px 0 8px;
 }
+
 .info {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 500;
+  color: var(--color-text-muted, #64748b);
 }
+

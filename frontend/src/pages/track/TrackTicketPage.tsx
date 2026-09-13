@@ -80,10 +80,6 @@ export default function TrackTicketPage() {
           <span className={styles.statusText}>{data.statusLabel}</span>
         </div>
 
-        <div className={styles.statusBanner}>
-          <span className={styles.statusText}>{data.status}</span>
-        </div>
-
         <PublicTrackingTimeline currentStatus={data.status} statusHistory={data.statusHistory} />
 
         {data.estimatedCompletion && (

@@ -28,20 +28,32 @@ export default function CreateTicketPage() {
 
   return (
     <div className={styles.wrapper}>
-      <h2>Tiếp nhận thiết bị</h2>
+      <div className={styles.topHeader}>
+        <span className={styles.eyebrow}>QUY TRÌNH DỊCH VỤ</span>
+        <h1 className={styles.title}>Tiếp nhận thiết bị mới</h1>
+        <p className={styles.desc}>Từng bước ghi nhận thông tin khách hàng, kiểm tra thiết bị và xác nhận tình trạng.</p>
+      </div>
 
       {step !== 'success' && (
         <div className={styles.stepper}>
-          {STEP_LABELS.map((s, i) => (
-            <span
-              key={s.key}
-              className={`${styles.stepItem} ${i <= currentStepIndex ? styles.stepActive : ''}`}
-            >
-              {s.label}
-            </span>
-          ))}
+          {STEP_LABELS.map((s, i) => {
+            const isCompleted = i < currentStepIndex;
+            const isCurrent = i === currentStepIndex;
+            return (
+              <div
+                key={s.key}
+                className={`${styles.stepItem} ${isCurrent ? styles.stepCurrent : ''} ${isCompleted ? styles.stepCompleted : ''}`}
+              >
+                <div className={styles.stepCircle}>
+                  {isCompleted ? '✓' : i + 1}
+                </div>
+                <span className={styles.stepTitle}>{s.label.split('. ')[1]}</span>
+              </div>
+            );
+          })}
         </div>
       )}
+
 
       <div className={styles.stepContent}>
         {step === 'customer' && (

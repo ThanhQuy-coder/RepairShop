@@ -15,8 +15,21 @@ public class WarrantyRepository : IWarrantyRepository
             join t in _context.RepairTickets on w.RepairTicketId equals t.Id
             join d in _context.Devices on t.DeviceId equals d.Id
             where t.CustomerId == customerId
-            select new CustomerWarrantyView(w, t.Id, t.TicketCode, d.Brand + " " + d.Model);
+            select new
+            {
+                Warranty = w,
+                TicketId = t.Id,
+                TicketCode = t.TicketCode,
+                DeviceLabel = d.Brand + " " + d.Model,
+                StartDate = w.StartDate
+            };
 
-        return await query.OrderByDescending(v => v.Warranty.StartDate).ToListAsync();
+        var warranties = await query
+            .OrderByDescending(v => v.StartDate)
+            .ToListAsync();
+
+        return warranties
+            .Select(v => new CustomerWarrantyView(v.Warranty, v.TicketId, v.TicketCode, v.DeviceLabel))
+            .ToList();
     }
 }

@@ -1,83 +1,148 @@
+.container {
+  max-width: 1100px;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: var(--spacing-md);
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .section {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-lg);
-  margin-bottom: var(--spacing-md);
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
 }
 
 .section h3 {
-  margin-bottom: var(--spacing-md);
-  font-size: var(--font-size-lg);
+  margin-bottom: 20px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .sectionHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 20px;
+}
+
+.sectionHeader h3 {
+  margin-bottom: 0;
 }
 
 .infoGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
 }
+
+.infoItem {
+  padding: 12px 16px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border-subtle, #f1f5f9);
+  border-radius: var(--radius-md, 10px);
+}
+
 .infoLabel {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-muted, #64748b);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.infoValue {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text, #1e293b);
 }
 
 .deviceGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--spacing-md);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .deviceCard {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-md);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  padding: 16px;
+  background: #ffffff;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.2s ease;
 }
+
 .deviceCard:hover {
-  border-color: var(--color-primary);
+  border-color: var(--color-primary-border, #9ec5bc);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.deviceTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
 }
 
 .deviceMeta {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
 }
 
 .ticketList {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 10px;
 }
 
 .ticketRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  background: #ffffff;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
+
 .ticketRow:hover {
-  background: var(--color-bg-subtle);
+  background: var(--color-bg-subtle, #f8fafc);
+  border-color: #cbd5e1;
+}
+
+.ticketLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .ticketCode {
-  font-weight: 600;
-  min-width: 130px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-primary, #185a4e);
+  min-width: 140px;
 }
+
+.ticketIssue {
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
+}
+

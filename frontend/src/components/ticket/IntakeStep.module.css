@@ -1,97 +1,125 @@
 .toggle {
   display: flex;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-sm, 8px);
+  margin-bottom: var(--spacing-lg, 24px);
+  background: var(--color-bg-subtle, #f8fafc);
+  padding: 4px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--color-border, #e2e8f0);
 }
 
 .toggleBtn {
   flex: 1;
-  padding: var(--spacing-sm);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg);
-  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-sm, 6px);
   cursor: pointer;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-base, 14px);
+  font-weight: 500;
+  color: var(--color-text-muted, #64748b);
+  transition: all 0.15s ease;
 }
+
 .toggleActive {
-  border-color: var(--color-primary);
-  background: #eff6ff;
-  color: var(--color-primary);
-  font-weight: 600;
+  background: #ffffff;
+  color: var(--color-primary, #185a4e);
+  font-weight: 700;
+  box-shadow: var(--shadow-xs);
 }
 
 .hint {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm, 13px);
+  color: var(--color-text-muted, #64748b);
+  margin-bottom: var(--spacing-sm, 8px);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: 16px;
 }
 
 .selectedCard {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-sm);
-  background: #eff6ff;
-  margin-bottom: var(--spacing-md);
+  padding: 14px 18px;
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-primary-subtle, #eef6f4);
+  margin-bottom: var(--spacing-md, 16px);
 }
 
 .actions {
   display: flex;
   justify-content: space-between;
-  margin-top: var(--spacing-lg);
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-subtle, #f1f5f9);
 }
+
 .deviceOption {
-  padding: var(--spacing-md);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
+
 .deviceOption:hover {
-  border-color: var(--color-primary);
-  background: #eff6ff;
+  border-color: var(--color-primary-border, #9ec5bc);
+  background: var(--color-primary-subtle, #eef6f4);
+  transform: translateY(-1px);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: 6px;
 }
+
 .label {
-  font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  color: var(--color-text, #1e293b);
 }
 
 .textarea {
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-base);
+  padding: 10px 14px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-base, 14px);
   font-family: inherit;
   resize: vertical;
   outline: none;
+  background: #ffffff;
+  color: var(--color-text, #1e293b);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
 .textarea:focus {
-  border-color: var(--color-primary);
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.15);
 }
 
 .numberInput {
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-base);
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--font-size-base, 14px);
   outline: none;
-  width: 160px;
+  width: 180px;
+}
+
+.numberInput:focus {
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.15);
 }
 
 .fileInput {
   display: block;
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--spacing-md, 16px);
+  font-size: 14px;
 }
+

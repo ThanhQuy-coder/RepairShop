@@ -84,10 +84,15 @@ export default function CustomerListPage() {
   ];
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Khách hàng</h2>
+        <div>
+          <span className={styles.eyebrow}>DANH MỤC KHÁCH HÀNG</span>
+          <h1 className={styles.title}>Quản lý khách hàng</h1>
+          <p className={styles.subtitle}>Tìm kiếm hồ sơ khách hàng, số điện thoại và tra cứu các thiết bị đã bàn giao.</p>
+        </div>
         <Button
+          size="md"
           onClick={() => {
             setEditingCustomer(null);
             setIsFormOpen(true);
@@ -97,13 +102,16 @@ export default function CustomerListPage() {
         </Button>
       </div>
 
-      <div className={styles.searchBar}>
-        <Input
-          placeholder="Tìm theo tên hoặc số điện thoại..."
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
+      <div className={styles.searchCard}>
+        <div className={styles.searchBar}>
+          <Input
+            placeholder="Tìm theo họ tên hoặc số điện thoại..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+        </div>
       </div>
+
 
       {errorMessage && <ErrorMessage message={errorMessage} onRetry={fetchCustomers} />}
 

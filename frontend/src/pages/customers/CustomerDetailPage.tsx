@@ -55,7 +55,7 @@ export default function CustomerDetailPage() {
     return <ErrorMessage message={errorMessage ?? 'Không tìm thấy khách hàng.'} />;
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.header}>
         <Button variant="ghost" size="sm" onClick={() => navigate('/customers')}>
           ← Danh sách khách hàng
@@ -69,21 +69,21 @@ export default function CustomerDetailPage() {
       <section className={styles.section}>
         <h3>Thông tin khách hàng</h3>
         <div className={styles.infoGrid}>
-          <div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Họ tên</span>
-            <p>{customer.fullName}</p>
+            <p className={styles.infoValue}>{customer.fullName}</p>
           </div>
-          <div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Số điện thoại</span>
-            <p>{customer.phone}</p>
+            <p className={styles.infoValue}>{customer.phone}</p>
           </div>
-          <div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Email</span>
-            <p>{customer.email ?? '—'}</p>
+            <p className={styles.infoValue}>{customer.email ?? '—'}</p>
           </div>
-          <div>
+          <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Địa chỉ</span>
-            <p>{customer.address ?? '—'}</p>
+            <p className={styles.infoValue}>{customer.address ?? '—'}</p>
           </div>
         </div>
       </section>
@@ -107,7 +107,7 @@ export default function CustomerDetailPage() {
                 className={styles.deviceCard}
                 onClick={() => navigate(`/devices/${d.id}`)}
               >
-                <strong>
+                <strong className={styles.deviceTitle}>
                   {d.brand} {d.model}
                 </strong>
                 <span className={styles.deviceMeta}>
@@ -132,8 +132,10 @@ export default function CustomerDetailPage() {
                 className={styles.ticketRow}
                 onClick={() => navigate(`/tickets/${t.id}`)}
               >
-                <span className={styles.ticketCode}>{t.ticketCode}</span>
-                <span>{t.issueReported}</span>
+                <div className={styles.ticketLeft}>
+                  <span className={styles.ticketCode}>{t.ticketCode}</span>
+                  <span className={styles.ticketIssue}>{t.issueReported}</span>
+                </div>
                 <Badge variant={TICKET_STATUS_BADGE_VARIANT[t.status]}>
                   {TICKET_STATUS_LABELS[t.status]}
                 </Badge>
@@ -142,6 +144,7 @@ export default function CustomerDetailPage() {
           </div>
         )}
       </section>
+
 
       <CustomerFormModal
         isOpen={isEditOpen}

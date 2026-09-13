@@ -1,8 +1,9 @@
 .sidebar {
-  width: 240px;
+  width: 264px;
   min-height: 100vh;
-  background: var(--color-bg);
-  border-right: 1px solid var(--color-border);
+  background: #173b36;
+  border-right: 0;
+  color: #e7efe8;
   display: flex;
   flex-direction: column;
 }
@@ -11,13 +12,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-lg) var(--spacing-md);
-  border-bottom: 1px solid var(--color-border);
+  padding: 25px 22px 22px;
+  border-bottom: 1px solid rgba(231, 239, 232, 0.16);
 }
 
 .brand {
   font-weight: 700;
-  font-size: var(--font-size-lg);
+  font-size: 16px;
+  letter-spacing: 0.02em;
 }
 
 .closeButton {
@@ -35,24 +37,29 @@
 .nav {
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-sm);
-  gap: 2px;
+  padding: 18px 12px;
+  gap: 5px;
 }
 
 .navItem {
-  padding: 10px var(--spacing-md);
-  border-radius: var(--radius-sm);
-  color: var(--color-text);
+  padding: 11px 14px;
+  border-radius: 6px;
+  color: #b8cbc1;
   text-decoration: none;
   font-size: var(--font-size-base);
-  transition: background-color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 .navItem:hover {
-  background: var(--color-bg-subtle);
+  background: rgba(231, 239, 232, 0.1);
+  color: #fff;
 }
 .active {
-  background: var(--color-primary);
-  color: white;
+  background: #c56b45;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .overlay {
@@ -70,7 +77,8 @@
     width: 40px;
     height: 40px;
     font-size: 20px;
-    background: var(--color-bg);
+    background: #173b36;
+    color: #fff;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
     cursor: pointer;

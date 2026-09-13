@@ -2,12 +2,16 @@
   max-width: 480px;
   margin: 0 auto;
   text-align: center;
-  padding: var(--spacing-xl) 0;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #d9dfd9;
+  box-shadow: 8px 8px 0 #e7ece5;
 }
 
 .title {
-  font-size: 24px;
-  font-weight: 700;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 30px;
+  font-weight: 500;
   margin-bottom: var(--spacing-sm);
 }
 .subtitle {
@@ -23,4 +27,15 @@
 }
 .searchRow > *:first-child {
   flex: 1;
+}
+@media (max-width: 540px) {
+  .wrapper {
+    padding: 24px 18px;
+  }
+  .searchRow {
+    flex-direction: column;
+  }
+  .searchRow > * {
+    width: 100%;
+  }
 }
