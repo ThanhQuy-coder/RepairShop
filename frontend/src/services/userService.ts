@@ -1,6 +1,6 @@
 import apiClient from './apiClient';
 import type { PagedResponse } from '../types/common.types';
-import type { UserListItem } from '../types/user.types';
+import type { UserListItem, UserProfileResponse } from '../types/user.types';
 import type { UserRole } from '../types/auth.types';
 
 export const userService = {
@@ -15,4 +15,5 @@ export const userService = {
   }) => apiClient.post<UserListItem>('/users', payload).then((res) => res.data),
   setStatus: (id: string, isActive: boolean) =>
     apiClient.patch<UserListItem>(`/users/${id}/status`, { isActive }).then((res) => res.data),
+  getMyProfile: () => apiClient.get<UserProfileResponse>('users/me').then((res) => res.data),
 };

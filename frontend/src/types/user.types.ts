@@ -7,3 +7,12 @@ export interface UserListItem {
   role: UserRole;
   isActive: boolean;
 }
+
+export interface UserProfileResponse {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string | null;
+  role: string;
+  isActive: boolean;
+}

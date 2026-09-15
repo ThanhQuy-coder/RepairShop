@@ -98,7 +98,8 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
           <span className={styles.portalEyebrow}>CỔNG THÔNG TIN KHÁCH HÀNG</span>
           <h1 className={styles.portalTitle}>Xin chào, {email ?? 'Quý khách'}!</h1>
           <p className={styles.portalSubtitle}>
-            Theo dõi tiến độ sửa chữa, tra cứu bảo hành và quản lý thiết bị của bạn tại một nơi tập trung
+            Theo dõi tiến độ sửa chữa, tra cứu bảo hành và quản lý thiết bị của bạn tại một nơi tập
+            trung
           </p>
         </header>
 
@@ -107,7 +108,8 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             <div className={styles.actionCardIcon}>🔧</div>
             <div className={styles.actionCardTitle}>Phiếu sửa chữa của tôi</div>
             <div className={styles.actionCardDesc}>
-              Xem trạng thái thời gian thực, tiến độ tiếp nhận, báo giá và nhật ký kỹ thuật của các thiết bị gửi sửa.
+              Xem trạng thái thời gian thực, tiến độ tiếp nhận, báo giá và nhật ký kỹ thuật của các
+              thiết bị gửi sửa.
             </div>
             <div className={styles.actionCardLink}>
               Truy cập phiếu sửa chữa <span>→</span>
@@ -118,7 +120,8 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             <div className={styles.actionCardIcon}>🛡️</div>
             <div className={styles.actionCardTitle}>Bảo hành thiết bị</div>
             <div className={styles.actionCardDesc}>
-              Kiểm tra thời hạn bảo hành linh kiện, trạng thái hiệu lực và gửi yêu cầu bảo hành trực tuyến nhanh chóng.
+              Kiểm tra thời hạn bảo hành linh kiện, trạng thái hiệu lực và gửi yêu cầu bảo hành trực
+              tuyến nhanh chóng.
             </div>
             <div className={styles.actionCardLink}>
               Xem danh sách bảo hành <span>→</span>
@@ -129,7 +132,8 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             <div className={styles.actionCardIcon}>🔍</div>
             <div className={styles.actionCardTitle}>Tra cứu nhanh</div>
             <div className={styles.actionCardDesc}>
-              Nhập mã biên nhận sửa chữa để tra cứu công khai tiến độ bàn giao bất kỳ lúc nào mà không cần đăng nhập lại.
+              Nhập mã biên nhận sửa chữa để tra cứu công khai tiến độ bàn giao bất kỳ lúc nào mà
+              không cần đăng nhập lại.
             </div>
             <div className={styles.actionCardLink}>
               Mở trang tra cứu <span>→</span>
@@ -143,19 +147,22 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             <li className={styles.tipItem}>
               <span>⚡</span>
               <div>
-                <strong>Tiếp nhận tức thì:</strong> Biên nhận rõ ràng, thông báo qua hệ thống ngay khi kiểm tra xong.
+                <strong>Tiếp nhận tức thì:</strong> Biên nhận rõ ràng, thông báo qua hệ thống ngay
+                khi kiểm tra xong.
               </div>
             </li>
             <li className={styles.tipItem}>
               <span>🛡️</span>
               <div>
-                <strong>Linh kiện chính hãng:</strong> Bảo hành điện tử rõ ràng, tra cứu mã số dễ dàng 24/7.
+                <strong>Linh kiện chính hãng:</strong> Bảo hành điện tử rõ ràng, tra cứu mã số dễ
+                dàng 24/7.
               </div>
             </li>
             <li className={styles.tipItem}>
               <span>🤝</span>
               <div>
-                <strong>Báo giá minh bạch:</strong> Kỹ thuật viên chỉ tiến hành sửa chữa sau khi quý khách đồng thuận.
+                <strong>Báo giá minh bạch:</strong> Kỹ thuật viên chỉ tiến hành sửa chữa sau khi quý
+                khách đồng thuận.
               </div>
             </li>
           </ul>
@@ -180,7 +187,7 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             <div className={styles.profileMeta}>
               <div className={styles.profileEmail}>{email ?? 'Chưa cập nhật email'}</div>
               <div>
-                <Badge variant="primary">{role ?? 'Customer'}</Badge>
+                <Badge variant="info">{role ?? 'Customer'}</Badge>
               </div>
             </div>
           </div>
@@ -196,7 +203,10 @@ export default function PlaceholderPage({ title }: PlaceholderPageProps) {
             </div>
             <div className={styles.detailRow}>
               <span className={styles.detailLabel}>Trạng thái phiên đăng nhập:</span>
-              <span className={styles.detailValue} style={{ color: 'var(--color-success, #1b8a5a)' }}>
+              <span
+                className={styles.detailValue}
+                style={{ color: 'var(--color-success, #1b8a5a)' }}
+              >
                 ● Đang hoạt động
               </span>
             </div>

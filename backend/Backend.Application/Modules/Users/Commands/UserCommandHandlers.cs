@@ -4,7 +4,6 @@ using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Users.DTOs;
 using RepairShop.Domain.Common;
-using RepairShop.Domain.Modules.Identity;
 
 namespace RepairShop.Application.Modules.Users.Commands;
 
@@ -47,7 +46,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserL
 
         var role = await _roleRepository.GetByNameAsync(request.Role)
             ?? throw new NotFoundException("Vai trò", request.Role);
-        var user = new User(request.FullName, request.Email,
+        var user = new Domain.Modules.Identity.User(request.FullName, request.Email,
             _passwordHasher.Hash(request.Password), role.Id, request.Phone);
 
         await _userRepository.AddAsync(user);

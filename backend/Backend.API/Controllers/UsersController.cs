@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using RepairShop.Application.Modules.Users.Queries;
 using RepairShop.Application.Modules.Users.Commands;
+using RepairShop.Application.Modules.Identity.Queries;
 
 namespace RepairShop.API.Controllers;
 
@@ -44,4 +45,18 @@ public class UsersController : ControllerBase
     }
 
     public record SetUserStatusBody(bool IsActive);
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var result = await _mediator.Send(new GetProfileQuery());
+
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
 }

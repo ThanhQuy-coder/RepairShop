@@ -35,6 +35,8 @@ import ServicesPage from '../pages/website/ServicesPage';
 import ArticlesPage from '../pages/website/ArticlesPage';
 import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
 import QuotesPage from '../pages/quotes/QuotesPage';
+import CustomerHomePage from '../pages/customers/CustomerHomePage';
+import CustomerProfilePage from '../pages/customers/CustomerProfilePage';
 
 export default function AppRoutes() {
   return (
@@ -109,12 +111,9 @@ export default function AppRoutes() {
         {/* ===== Customer ===== */}
         <Route element={<RoleGuard allowedRoles={['Customer']} />}>
           <Route element={<CustomerLayout />}>
-            <Route
-              path="customer/home"
-              element={<PlaceholderPage title="Trang chủ khách hàng" />}
-            />
+            <Route path="customer/home" element={<CustomerHomePage />} />
             <Route path="customer/my-tickets" element={<MyTicketsPage />} />{' '}
-            <Route path="customer/profile" element={<PlaceholderPage title="Hồ sơ" />} />
+            <Route path="customer/profile" element={<CustomerProfilePage />} />
             <Route path="customer/warranty" element={<MyWarrantyPage />} />
           </Route>
         </Route>
