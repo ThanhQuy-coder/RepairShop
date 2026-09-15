@@ -34,14 +34,17 @@ public class CreateInventoryTransactionCommandHandler : IRequestHandler<CreateIn
 
         var userId = _currentUser.UserId!.Value;
 
-        // API Spec Tuần 2 chỉ cho phép "IMPORT"|"ADJUSTMENT" ở endpoint thủ công này
+        // API Spec Tuần 2 chỉ cho phép "IMPORT"|"IncreaseAdjustment"|"DownwardAdjustment" ở endpoint thủ công này
         // (EXPORT tự động qua UsePart() ở Repair Workflow, không đi qua API này — đúng BR-16)
-        if (!Enum.TryParse<TransactionType>(request.Type, ignoreCase: true, out var type) || type == TransactionType.Export)
-            throw new DomainException("Type chỉ được là 'Import' hoặc 'Adjustment' cho giao dịch thủ công.");
+        if (!Enum.TryParse<TransactionType>(request.Type, ignoreCase: true, out var type)
+            || type == TransactionType.Export)
+            throw new DomainException("Type chỉ được là 'Import' hoặc 'IncreaseAdjustment' hoặc 'DownwardAdjustment' cho giao dịch thủ công.");
+
+        var isIncrease = request.Type.Equals(TransactionType.IncreaseAdjustment.ToString(), StringComparison.OrdinalIgnoreCase);
 
         var transaction = type == TransactionType.Import
             ? inventory.RecordImport(request.Quantity, userId)
-            : inventory.RecordAdjustment(request.Quantity, isIncrease: true, userId); // Adjustment thủ công mặc định là tăng; điều chỉnh giảm dùng action riêng nếu cần mở rộng sau
+            : inventory.RecordAdjustment(request.Quantity, isIncrease, userId); // Adjustment thủ công mặc định là tăng; điều chỉnh giảm dùng action riêng nếu cần mở rộng sau
 
         _inventoryRepository.TrackNewTransaction(transaction);
         await _inventoryRepository.SaveChangesAsync();

@@ -8,8 +8,8 @@ public class CreateInventoryTransactionCommandValidator : AbstractValidator<Crea
     public CreateInventoryTransactionCommandValidator()
     {
         RuleFor(x => x.PartId).NotEmpty();
-        RuleFor(x => x.Type).NotEmpty().Must(t => t is "Import" or "Adjustment")
-            .WithMessage("Type phải là 'Import' hoặc 'Adjustment'.");
+        RuleFor(x => x.Type).NotEmpty().Must(t => t is "Import" or "IncreaseAdjustment" or "DownwardAdjustment")
+            .WithMessage("Type phải là 'Import' hoặc 'IncreaseAdjustment' hoặc 'DownwardAdjustment'.");
         RuleFor(x => x.Quantity).GreaterThan(0);
     }
 }

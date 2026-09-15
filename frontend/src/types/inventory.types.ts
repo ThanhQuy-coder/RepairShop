@@ -29,7 +29,7 @@ export interface InventoryTransactionItem {
   id: string;
   partId: string;
   partName: string;
-  type: 'Import' | 'Export' | 'Adjustment';
+  type: 'Import' | 'Export' | 'IncreaseAdjustment' | 'DownwardAdjustment';
   quantity: number;
   relatedTicketId: string | null;
   performedByName: string;

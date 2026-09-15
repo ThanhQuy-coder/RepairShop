@@ -1,13 +1,18 @@
 import apiClient from './apiClient';
 import type { PagedResponse } from '../types/common.types';
-import type { InventoryDashboardSummary, InventoryItem, InventoryTransactionItem, Part } from '../types/inventory.types';
+import type {
+  InventoryDashboardSummary,
+  InventoryItem,
+  InventoryTransactionItem,
+  Part,
+} from '../types/inventory.types';
 
 export const inventoryService = {
   getInventory: () => apiClient.get<InventoryItem[]>('/inventory').then((res) => res.data),
 
   createTransaction: (payload: {
     partId: string;
-    type: 'Import' | 'Adjustment';
+    type: 'Import' | 'IncreaseAdjustment' | 'DownwardAdjustment';
     quantity: number;
   }) => apiClient.post('/inventory/transactions', payload),
 
