@@ -29,15 +29,13 @@ class LLMClient:
         self._timeout = settings.request_timeout_seconds
 
     async def generate_json(self, system_prompt: str, user_prompt: str) -> dict:
-        """Gọi LLM, ép trả về JSON hợp lệ (response_format=json_object), parse thành dict."""
         payload = {
             "model": self._model,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            "response_format": {"type": "json_object"},
-            "temperature": 0.2,  # thấp — cần output ổn định, có cấu trúc, không "sáng tạo" ngoài phạm vi
+            "temperature": 0.2,
         }
 
         headers = {
@@ -48,12 +46,23 @@ class LLMClient:
         try:
             async with httpx.AsyncClient(timeout=self._timeout) as client:
                 response = await client.post(
-                    f"{self._base_url}/chat/completions", json=payload, headers=headers
+                    f"{self._base_url.rstrip('/')}/chat/completions",
+                    json=payload,
+                    headers=headers,
                 )
+
+            print("=== LLM DEBUG ===")
+            print("URL:", f"{self._base_url.rstrip('/')}/chat/completions")
+            print("MODEL:", self._model)
+            print("STATUS:", response.status_code)
+            print("BODY:", response.text)
+            print("=================")
+
         except httpx.TimeoutException as exc:
             raise LLMTimeoutError(
                 "LLM provider did not respond within timeout."
             ) from exc
+
         except httpx.HTTPError as exc:
             raise LLMResponseError(f"HTTP error calling LLM provider: {exc}") from exc
 
@@ -65,7 +74,11 @@ class LLMClient:
         try:
             body = response.json()
             content = body["choices"][0]["message"]["content"]
+
+            print("LLM CONTENT:", content)
+
             return json.loads(content)
+
         except (KeyError, IndexError, json.JSONDecodeError) as exc:
             raise LLMResponseError(
                 f"Unable to parse LLM response as JSON: {exc}"

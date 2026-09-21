@@ -50,6 +50,14 @@ export default function LoginPage() {
 
       login(result.accessToken, role, result.email);
 
+      const redirectPath = sessionStorage.getItem('post-login-redirect');
+      sessionStorage.removeItem('post-login-redirect');
+
+      if (redirectPath && (role === 'Customer' || role === 'Receptionist')) {
+        navigate(redirectPath, { replace: true });
+        return;
+      }
+
       navigate(ROLE_REDIRECT[role] ?? '/dashboard', { replace: true });
     } catch (err) {
       const apiError = extractApiError(err);

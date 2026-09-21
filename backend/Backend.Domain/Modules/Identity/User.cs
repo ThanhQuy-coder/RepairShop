@@ -36,6 +36,16 @@ public class User : BaseEntity
         Phone = phone;
     }
 
+    public void UpdateProfile(string fullName, string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            throw new DomainException("Họ tên không được để trống.");
+
+        FullName = fullName.Trim();
+        Phone = string.IsNullOrWhiteSpace(phone) ? null : phone.Trim();
+        MarkUpdated();
+    }
+
     public void ChangePassword(string newPasswordHash)
     {
         PasswordHash = newPasswordHash;

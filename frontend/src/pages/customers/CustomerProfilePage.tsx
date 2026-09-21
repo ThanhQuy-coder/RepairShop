@@ -32,11 +32,38 @@ export default function CustomerProfilePage() {
     loadProfile();
   }, [addToast]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Hiện tại API chỉ có getMyProfile nên chưa có endpoint cập nhật.
-    addToast('info', 'Chức năng cập nhật hồ sơ sẽ được kết nối với API sau.');
+    const trimmedName = fullName.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedName) {
+      addToast('error', 'Vui lòng nhập họ và tên.');
+      return;
+    }
+
+    if (!trimmedPhone) {
+      addToast('error', 'Vui lòng nhập số điện thoại.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updated = await userService.updateMyProfile({
+        fullName: trimmedName,
+        phone: trimmedPhone,
+      });
+
+      setFullName(updated.fullName || '');
+      setPhone(updated.phone || '');
+      addToast('success', 'Cập nhật hồ sơ thành công.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Không thể cập nhật hồ sơ.';
+      addToast('error', message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const avatarLetter = (fullName || user?.email || 'U')[0].toUpperCase();

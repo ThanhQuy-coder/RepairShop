@@ -30,6 +30,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Thiết bị', path: '/devices' },
     { label: 'Phiếu sửa chữa', path: '/tickets' },
     { label: 'Báo giá', path: '/tickets' },
+    { label: 'Tư vấn giá AI', path: '/staff/ai-advisory' },
   ],
   Technician: [
     { label: 'Dashboard', path: '/staff/dashboard' },
@@ -47,6 +48,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
 export const PUBLIC_NAV: NavItem[] = [
   { label: 'Trang chủ', path: '/' },
   { label: 'Dịch vụ', path: '/services' },
+  { label: 'Tư vấn giá AI', path: '/estimate' },
   { label: 'Bài viết', path: '/articles' },
   { label: 'Tra cứu tiến độ', path: '/track' },
 ];

@@ -37,6 +37,7 @@ import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
 import QuotesPage from '../pages/quotes/QuotesPage';
 import CustomerHomePage from '../pages/customers/CustomerHomePage';
 import CustomerProfilePage from '../pages/customers/CustomerProfilePage';
+import AIEstimatePage from '../pages/website/AIEstimatePage';
 
 export default function AppRoutes() {
   return (
@@ -46,6 +47,7 @@ export default function AppRoutes() {
         <Route element={<PublicLayout />}>
           <Route index element={<PlaceholderPage title="Trang chủ" />} />
           <Route path="services" element={<ServicesPage />} />
+          <Route path="estimate" element={<AIEstimatePage />} />
           <Route path="articles" element={<ArticlesPage />} />
           <Route path="track" element={<TrackTicketPage />} />
           <Route path="track/:ticketCode" element={<TrackTicketPage />} />
@@ -61,6 +63,7 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin']} />}>
           <Route element={<StaffLayout />}>
             <Route path="staff/dashboard" element={<StaffDashboardPage />} />{' '}
+            <Route path="staff/ai-advisory" element={<AIEstimatePage />} />
             <Route path="devices" element={<DevicesPage />} />
             <Route path="devices/:id" element={<DeviceDetailPage />} />
             <Route path="tickets" element={<TicketListPage />} />{' '}

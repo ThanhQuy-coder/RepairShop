@@ -5,6 +5,7 @@ using MediatR;
 using RepairShop.Application.Modules.Users.Queries;
 using RepairShop.Application.Modules.Users.Commands;
 using RepairShop.Application.Modules.Identity.Queries;
+using RepairShop.Application.Modules.Identity.Commands;
 
 namespace RepairShop.API.Controllers;
 
@@ -59,4 +60,15 @@ public class UsersController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPatch("me")]
+    [HttpPut("me")]
+    [Authorize]
+    public async Task<IActionResult> UpdateCurrentUser([FromBody] UpdateMyProfileRequest body)
+    {
+        var result = await _mediator.Send(new UpdateMyProfileCommand(body.FullName, body.Phone));
+        return Ok(result);
+    }
+
+    public record UpdateMyProfileRequest(string FullName, string Phone);
 }

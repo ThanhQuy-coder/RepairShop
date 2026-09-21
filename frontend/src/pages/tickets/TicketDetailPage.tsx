@@ -19,7 +19,6 @@ import TicketActions from '../../components/ticket/TicketActions';
 import styles from './TicketDetailPage.module.css';
 import QuoteCard from '../../components/quote/QuoteCard';
 import QuoteApprovalForm from '../../components/quote/QuoteApprovalForm';
-import AIAdvisoryPanel from '../../components/ai/AIAdvisoryPanel';
 import CreateReviewModal from '../../components/review/CreateReviewModal';
 
 export default function TicketDetailPage() {
@@ -137,7 +136,6 @@ export default function TicketDetailPage() {
               </div>
             </div>
           </section>
-
           {/* Issue / Diagnosis */}
           <section className={styles.section}>
             <h3>Tình trạng & Chẩn đoán</h3>
@@ -184,26 +182,11 @@ export default function TicketDetailPage() {
               )}
             </div>
           </section>
-
-
-          {role === 'Customer' && (
-            <section className={styles.section}>
-              <h3>Tư vấn AI tham khảo</h3>
-              <AIAdvisoryPanel
-                deviceType={device?.deviceType ?? 'Phone'}
-                brand={device?.brand ?? ''}
-                model={device?.model ?? ''}
-                initialIssueDescription={ticket.issueReported}
-              />
-            </section>
-          )}
-
           {/* Images */}
           <section className={styles.section}>
             <h3>Hình ảnh</h3>
             <TicketImageGallery images={images} />
           </section>
-
           <section className={styles.section}>
             <h3>Linh kiện đã sử dụng</h3>
             {ticket.usedParts?.length ? (
@@ -226,7 +209,6 @@ export default function TicketDetailPage() {
               </p>
             )}
           </section>
-
           {/* Quote */}
           <section className={styles.section}>
             <h3>Báo giá</h3>
@@ -257,20 +239,7 @@ export default function TicketDetailPage() {
                 onQuoteCreated={loadAll}
               />
             )}
-          </section>
-
-          {(role === 'Receptionist' || role === 'Admin') &&
-            ['CHECKED_IN', 'ASSIGNED', 'DIAGNOSING'].includes(ticket.status) && (
-              <section className={styles.section}>
-                <h3>Tư vấn AI</h3>
-                <AIAdvisoryPanel
-                  deviceType={device?.deviceType ?? 'Phone'}
-                  brand={device?.brand ?? ''}
-                  model={device?.model ?? ''}
-                  initialIssueDescription={ticket.issueReported}
-                />
-              </section>
-            )}
+          </section>{' '}
         </div>
 
         <div className={styles.sideCol}>
