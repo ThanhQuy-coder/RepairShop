@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using RepairShop.Domain.Common;
 using RepairShop.Infrastructure.ExternalServices;
 using RepairShop.Infrastructure.AI;
+using RepairShop.Infrastructure.Notifications;
 
 namespace RepairShop.Infrastructure;
 
@@ -65,6 +66,10 @@ public static class DependencyInjection
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped<ITimeSlotConfigRepository, TimeSlotConfigRepository>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()

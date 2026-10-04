@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using RepairShop.Domain.Modules.Billing;
 using RepairShop.Domain.Modules.Content;
 using RepairShop.Domain.Modules.Reviews;
+using RepairShop.Domain.Modules.Appointments;
+using RepairShop.Domain.Modules.Notifications;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -35,6 +37,9 @@ public class AppDbContext : DbContext
     public DbSet<Service> Services => Set<Service>();
     public DbSet<Article> Articles => Set<Article>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<TimeSlotConfig> TimeSlotConfigs => Set<TimeSlotConfig>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

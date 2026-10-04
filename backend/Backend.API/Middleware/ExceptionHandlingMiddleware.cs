@@ -93,6 +93,9 @@ public class ExceptionHandlingMiddleware
 
             InsufficientStockException stockEx => (HttpStatusCode.Conflict, new ApiErrorResponse { Message = stockEx.Message }),
 
+            DomainException domainEx when domainEx.Message.StartsWith("SLOT_FULL") =>
+                (HttpStatusCode.Conflict, new ApiErrorResponse { Message = domainEx.Message.Replace("SLOT_FULL: ", "") }),
+
             DomainException domainEx => (
                 HttpStatusCode.BadRequest,
                 new ApiErrorResponse { Message = domainEx.Message }),
@@ -110,7 +113,6 @@ public class ExceptionHandlingMiddleware
                 new ApiErrorResponse { Message = ownershipEx.Message }),
 
             ForbiddenException forbiddenEx => (HttpStatusCode.Forbidden, new ApiErrorResponse { Message = forbiddenEx.Message }),
-
             _ => (
                 HttpStatusCode.InternalServerError,
                 new ApiErrorResponse { Message = "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau." })
