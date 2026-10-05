@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.OpenApi;
+using RepairShop.API.Hubs;
 using RepairShop.API.Middleware;
 using RepairShop.Application;
+using RepairShop.Application.Common.Interfaces;
 using RepairShop.Infrastructure;
 using Serilog;
 
@@ -64,6 +66,10 @@ try
                 .AllowAnyMethod());
     });
 
+    builder.Services.AddSignalR();
+    builder.Services.AddSingleton<INotificationPusher, SignalRNotificationPusher>();
+
+
     var app = builder.Build();
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -85,7 +91,7 @@ try
     app.UseAuthorization();
     app.MapControllers();
     app.UseRateLimiter();
-
+    app.MapHub<NotificationHub>("/hubs/notifications");
     app.Run();
 }
 catch (Exception ex)

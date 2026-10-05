@@ -11,15 +11,28 @@ namespace RepairShop.Infrastructure.Notifications;
 public class NotificationService : INotificationService
 {
     private readonly INotificationRepository _repository;
-    public NotificationService(INotificationRepository repository) => _repository = repository;
+    private readonly INotificationPusher _pusher;
+    public NotificationService(INotificationRepository repository, INotificationPusher pusher)
+    {
+        _repository = repository;
+        _pusher = pusher;
+    }
 
     public async Task CreateAsync(Guid userId, string type, string title, string message,
         string? relatedEntityType = null, Guid? relatedEntityId = null)
     {
         var notification = new Notification(userId, type, title, message, relatedEntityType, relatedEntityId);
         await _repository.AddAsync(notification);
-        // KHÔNG SaveChangesAsync() ở đây — dùng chung transaction với nghiệp vụ gọi nó (VD CreateAppointment),
-        // đảm bảo Notification và business event luôn cùng tồn tại hoặc cùng rollback.
+        await _pusher.PushToUserAsync(userId, new
+        {
+            notification.Id,
+            notification.Type,
+            notification.Title,
+            notification.Message,
+            notification.RelatedEntityType,
+            notification.RelatedEntityId,
+            notification.CreatedAt,
+        });
     }
 
     public async Task CreateForRoleAsync(string roleName, string type, string title, string message,

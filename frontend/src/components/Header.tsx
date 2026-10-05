@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from './common';
 import styles from './Header.module.css';
+import NotificationBell from './notification/NotificationBell';
 
 interface HeaderProps {
   showAuthActions?: boolean; // false cho PublicLayout khi chưa login
@@ -33,12 +34,13 @@ export default function Header({ showAuthActions = true }: HeaderProps) {
       </div>
       {showAuthActions && email ? (
         <div className={styles.userArea}>
+          <NotificationBell />
           <div className={styles.profileBadge}>
             <div className={styles.avatar}>{initial}</div>
             <div className={styles.meta}>
               <span className={styles.userEmail}>{email}</span>
               <span className={`${styles.roleTag} ${role ? styles[role.toLowerCase()] : ''}`}>
-                {role ? ROLE_LABELS[role] ?? role : ''}
+                {role ? (ROLE_LABELS[role] ?? role) : ''}
               </span>
             </div>
           </div>
@@ -56,4 +58,3 @@ export default function Header({ showAuthActions = true }: HeaderProps) {
     </header>
   );
 }
-
