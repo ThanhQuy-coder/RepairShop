@@ -12,10 +12,15 @@ public class DeliverTicketCommandHandler : IRequestHandler<DeliverTicketCommand,
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<DeliverTicketCommandHandler> _logger;
 
     public DeliverTicketCommandHandler(IRepairTicketRepository ticketRepository,
-        IRepairStatusRepository statusRepository, ICurrentUserService currentUser,
+        IRepairStatusRepository statusRepository,
+        ICurrentUserService currentUser,
+        ICustomerRepository customerRepository,
+        INotificationService notificationService,
         ILogger<DeliverTicketCommandHandler> logger,
         IUnitOfWork unitOfWork)
     {
@@ -23,6 +28,8 @@ public class DeliverTicketCommandHandler : IRequestHandler<DeliverTicketCommand,
         _statusRepository = statusRepository;
         _currentUser = currentUser;
         _logger = logger;
+        _customerRepository = customerRepository;
+        _notificationService = notificationService;
         _unitOfWork = unitOfWork;
     }
 
@@ -38,6 +45,12 @@ public class DeliverTicketCommandHandler : IRequestHandler<DeliverTicketCommand,
         {
             ticket.Deliver(deliveredStatus, userId, request.DeliveryNote); // enforce đã thanh toán (Task 4.12)
             _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
+
+            await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
+                _customerRepository, _notificationService, ticket.CustomerId,
+                "TicketDelivered", "Đã bàn giao thiết bị",
+                $"Phiếu {ticket.TicketCode} đã được bàn giao. Cảm ơn bạn đã sử dụng dịch vụ!", ticket.Id);
+
             await _ticketRepository.SaveChangesAsync();
         }, cancellationToken);
 

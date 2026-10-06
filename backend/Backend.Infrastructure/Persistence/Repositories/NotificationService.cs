@@ -23,16 +23,24 @@ public class NotificationService : INotificationService
     {
         var notification = new Notification(userId, type, title, message, relatedEntityType, relatedEntityId);
         await _repository.AddAsync(notification);
-        await _pusher.PushToUserAsync(userId, new
+
+        try
         {
-            notification.Id,
-            notification.Type,
-            notification.Title,
-            notification.Message,
-            notification.RelatedEntityType,
-            notification.RelatedEntityId,
-            notification.CreatedAt,
-        });
+            await _pusher.PushToUserAsync(userId, new
+            {
+                notification.Id,
+                notification.Type,
+                notification.Title,
+                notification.Message,
+                notification.RelatedEntityType,
+                notification.RelatedEntityId,
+                notification.CreatedAt,
+            });
+        }
+        catch
+        {
+            
+        }
     }
 
     public async Task CreateForRoleAsync(string roleName, string type, string title, string message,

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { UserRole } from '../types/auth.types';
+import { notificationSignalRService } from '../services/notificationSignalRService';
 
 interface AuthUser {
   email: string;
@@ -77,9 +78,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   logout: () => {
-    clearExpirationTimer();
-    clearStoredSession();
-    set({ accessToken: null, role: null, user: null, isAuthenticated: false, isHydrated: true });
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('role');
+    localStorage.removeItem('email');
+    notificationSignalRService.disconnect(); // thêm dòng này
+    set({ accessToken: null, role: null, user: null, isAuthenticated: false });
   },
 
   hydrate: () => {

@@ -12,15 +12,22 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<PassQualityCheckCommandHandler> _logger;
 
     public PassQualityCheckCommandHandler(IRepairTicketRepository ticketRepository,
-        IRepairStatusRepository statusRepository, ICurrentUserService currentUser,
+        IRepairStatusRepository statusRepository,
+        ICurrentUserService currentUser,
+        ICustomerRepository customerRepository,
+        INotificationService notificationService,
         ILogger<PassQualityCheckCommandHandler> logger)
     {
         _ticketRepository = ticketRepository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
+        _customerRepository = customerRepository;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -48,6 +55,12 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
 
         _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
         await _ticketRepository.SaveChangesAsync();
+
+        await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
+            _customerRepository, _notificationService, ticket.CustomerId,
+            "TicketReadyForPickup", "Thiết bị đã sẵn sàng bàn giao",
+            $"Phiếu {ticket.TicketCode} đã kiểm thử xong, mời bạn đến cửa hàng nhận máy.", ticket.Id);
+
 
         _logger.LogInformation("Ticket {TicketCode} QA ĐẠT, chuyển READY_FOR_PICKUP", ticket.TicketCode);
 

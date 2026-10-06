@@ -14,6 +14,7 @@ public class AssignTechnicianCommandHandler : IRequestHandler<AssignTechnicianCo
     private readonly IUserRepository _userRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<AssignTechnicianCommandHandler> _logger;
 
     public AssignTechnicianCommandHandler(
@@ -21,12 +22,14 @@ public class AssignTechnicianCommandHandler : IRequestHandler<AssignTechnicianCo
         IUserRepository userRepository,
         IRepairStatusRepository statusRepository,
         ICurrentUserService currentUser,
+        INotificationService notificationService,
         ILogger<AssignTechnicianCommandHandler> logger)
     {
         _ticketRepository = ticketRepository;
         _userRepository = userRepository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -62,6 +65,10 @@ public class AssignTechnicianCommandHandler : IRequestHandler<AssignTechnicianCo
         _ticketRepository.TrackNewStatusHistory(newHistory); // fix Guid-tracking đã áp dụng ở Bước 0
 
         await _ticketRepository.SaveChangesAsync();
+
+        await _notificationService.CreateAsync(
+            technician.Id, "TicketAssigned", "Bạn được phân công phiếu mới",
+            $"Phiếu {ticket.TicketCode} vừa được phân công cho bạn.", "Ticket", ticket.Id);
 
         _logger.LogInformation("Gán Technician {TechnicianId} cho Ticket {TicketCode}",
             technician.Id, ticket.TicketCode);

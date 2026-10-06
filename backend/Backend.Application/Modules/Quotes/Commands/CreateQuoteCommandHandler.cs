@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Quotes;
+using RepairShop.Application.Modules.Tickets;
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Quotes.Enums;
@@ -13,16 +14,24 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
     private readonly IQuoteRepository _quoteRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
+    private readonly ICustomerRepository _customerRepository;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<CreateQuoteCommandHandler> _logger;
 
-    public CreateQuoteCommandHandler(IRepairTicketRepository ticketRepository, IQuoteRepository quoteRepository,
-        IRepairStatusRepository statusRepository, ICurrentUserService currentUser,
+    public CreateQuoteCommandHandler(IRepairTicketRepository ticketRepository,
+    IQuoteRepository quoteRepository,
+        IRepairStatusRepository statusRepository,
+        ICurrentUserService currentUser,
+        ICustomerRepository customerRepository,
+        INotificationService notificationService,
         ILogger<CreateQuoteCommandHandler> logger)
     {
         _ticketRepository = ticketRepository;
         _quoteRepository = quoteRepository;
         _statusRepository = statusRepository;
         _currentUser = currentUser;
+        _customerRepository = customerRepository;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -55,6 +64,12 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
 
         await _quoteRepository.SaveChangesAsync(); // dùng chung 1 DbContext, SaveChanges 1 lần là đủ cho cả 2 thay đổi
+
+        await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
+            _customerRepository, _notificationService, ticket.CustomerId,
+            "QuoteCreated", "Báo giá mới cần xác nhận",
+            $"Phiếu {ticket.TicketCode} đã có báo giá {quote.TotalAmount:N0}đ, vui lòng xem và phản hồi.",
+            ticket.Id);
 
         _logger.LogInformation("Tạo Quote {QuoteId} cho Ticket {TicketCode}, tổng tiền {TotalAmount}",
             quote.Id, ticket.TicketCode, quote.TotalAmount);
