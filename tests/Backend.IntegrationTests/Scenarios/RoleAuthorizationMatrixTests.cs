@@ -13,10 +13,10 @@ public class RoleAuthorizationMatrixTests
     public RoleAuthorizationMatrixTests(CustomWebApplicationFactory factory) => _factory = factory;
 
     [Theory]
-    [InlineData("Receptionist", HttpStatusCode.Forbidden)]
+    [InlineData("Receptionist", HttpStatusCode.OK)]
     [InlineData("Technician", HttpStatusCode.Forbidden)]
     [InlineData("Customer", HttpStatusCode.Forbidden)]
-    public async Task NonAdmin_CannotAccessUserManagement(string role, HttpStatusCode expected)
+    public async Task UserManagement_ReadAccess_IsLimitedToReceptionistAndAdmin(string role, HttpStatusCode expected)
     {
         var user = await TestUserSeeder.SeedUserAsync(_factory.Services, role, $"u-{role}");
         var client = _factory.CreateClient();

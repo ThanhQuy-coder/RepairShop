@@ -11,6 +11,9 @@ public class AppointmentRepository : IAppointmentRepository
     public AppointmentRepository(AppDbContext context) => _context = context;
 
     public Task<Appointment?> GetByIdAsync(Guid id) => _context.Appointments.FirstOrDefaultAsync(a => a.Id == id);
+    public Task<List<Appointment>> GetByCustomerIdAsync(Guid customerId) =>
+        _context.Appointments.Where(a => a.CustomerId == customerId)
+            .OrderByDescending(a => a.AppointmentDate).ThenByDescending(a => a.CreatedAt).ToListAsync();
 
     public Task<int> CountBookedAsync(DateOnly date, Guid timeSlotId) =>
         _context.Appointments.CountAsync(a =>

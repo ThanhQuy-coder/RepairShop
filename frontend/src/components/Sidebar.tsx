@@ -37,6 +37,7 @@ export default function Sidebar({ items, title }: SidebarProps) {
             <NavLink
               key={item.path}
               to={item.path}
+              end={item.end}
               onClick={() => setIsOpen(false)} // đóng sidebar sau khi chọn menu trên mobile
               className={({ isActive }) => `${styles.navItem} ${isActive ? styles.active : ''}`}
             >

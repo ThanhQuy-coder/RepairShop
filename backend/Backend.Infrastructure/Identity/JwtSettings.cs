@@ -8,4 +8,5 @@ public class JwtSettings
     public string Issuer { get; set; } = default!; // Nhà phát hành token
     public string Audience { get; set; } = default!; // Đối tượng sử dụng
     public int ExpiryMinutes { get; set; } = 60;
+    public int RefreshTokenExpiryDays { get; set; } = 30;
 }

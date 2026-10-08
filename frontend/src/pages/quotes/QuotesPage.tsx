@@ -14,8 +14,20 @@ interface QuoteRow extends Quote {
   deviceLabel: string;
 }
 
-const statusLabel = { Pending: 'Chờ xác nhận', Approved: 'Đã duyệt', Rejected: 'Đã từ chối' };
-const statusVariant = { Pending: 'warning', Approved: 'success', Rejected: 'danger' } as const;
+const statusLabel = {
+  Pending: 'Chờ xác nhận',
+  Approved: 'Đã duyệt',
+  Rejected: 'Đã từ chối',
+  QuoteRejected: 'Đã từ chối - chờ báo giá lại',
+  NeedsRequote: 'Cần báo giá lại',
+};
+const statusVariant = {
+  Pending: 'warning',
+  Approved: 'success',
+  Rejected: 'danger',
+  QuoteRejected: 'danger',
+  NeedsRequote: 'warning',
+} as const;
 
 export default function QuotesPage() {
   const navigate = useNavigate();

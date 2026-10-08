@@ -21,6 +21,8 @@ export interface AppointmentResponse {
 }
 
 export const appointmentService = {
+  getMine: () => apiClient.get<AppointmentResponse[]>('/appointments/mine').then((res) => res.data),
+  cancel: (id: string) => apiClient.patch<AppointmentResponse>(`/appointments/${id}/cancel`).then((res) => res.data),
   getAvailableSlots: (date: string) =>
     apiClient.get<AvailableSlot[]>('/appointments/available-slots', { params: { date } }).then((res) => res.data),
   create: (payload: {

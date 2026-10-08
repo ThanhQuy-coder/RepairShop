@@ -37,7 +37,9 @@ export default function TicketQuoteSection({
         </div>
       )}
 
-      {canCreateQuote && ticketStatus === 'DIAGNOSING' && (
+      {canCreateQuote &&
+        (ticketStatus === 'DIAGNOSING' ||
+          quotes.some((quote) => quote.status === 'QuoteRejected' || quote.status === 'NeedsRequote')) && (
         <Button size="sm" onClick={() => setIsModalOpen(true)}>
           + Tạo báo giá
         </Button>

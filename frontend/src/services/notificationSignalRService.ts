@@ -1,5 +1,6 @@
 import * as signalR from '@microsoft/signalr';
 import { useNotificationStore } from '../store/notificationStore';
+import { useAuthStore } from '../store/authStore';
 import type { NotificationItem } from '../types/notification.types';
 
 const HUB_URL = `${import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')}/hubs/notifications`;
@@ -18,11 +19,11 @@ class NotificationSignalRService {
   connect(): void {
     if (this.connection) return;
 
-    const token = localStorage.getItem('accessToken');
+    const token = useAuthStore.getState().accessToken;
     if (!token) return;
 
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl(HUB_URL, { accessTokenFactory: () => localStorage.getItem('accessToken') ?? '' })
+      .withUrl(HUB_URL, { accessTokenFactory: () => useAuthStore.getState().accessToken ?? '' })
       .withAutomaticReconnect(RECONNECT_DELAYS_MS)
       .configureLogging(signalR.LogLevel.Warning)
       .build();

@@ -34,6 +34,15 @@ public class AppointmentsController : ControllerBase
         return CreatedAtAction(nameof(GetAvailableSlots), result);
     }
 
+    [HttpGet("mine")]
+    [Authorize(Roles = RepairShop.Domain.Common.Roles.Customer)]
+    public async Task<IActionResult> Mine() => Ok(await _mediator.Send(new GetMyAppointmentsQuery()));
+
+    [HttpPatch("{id:guid}/cancel")]
+    [Authorize(Roles = RepairShop.Domain.Common.Roles.Customer)]
+    public async Task<IActionResult> Cancel(Guid id) =>
+        Ok(await _mediator.Send(new CancelAppointmentCommand(id)));
+
     [HttpPatch("{id:guid}/confirm")]
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> Confirm(Guid id) => Ok(await _mediator.Send(new ConfirmAppointmentCommand(id)));

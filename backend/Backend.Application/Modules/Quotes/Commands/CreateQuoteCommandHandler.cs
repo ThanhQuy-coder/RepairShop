@@ -42,9 +42,14 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
 
         var userId = _currentUser.UserId!.Value;
 
-        // FR-030: dựa trên kết quả chẩn đoán — Domain (SubmitQuote) đã tự kiểm tra DiagnosisResult != null,
-        // và tự chặn nếu ticket không ở DIAGNOSING (transition rule, Task 4.2)
-        var quote = new Quote(ticket.Id, request.Description, userId);
+        var previous = ticket.Quotes.OrderByDescending(q => q.Version).FirstOrDefault();
+        var isRequote = previous?.Status is RepairShop.Domain.Common.Enums.QuoteStatus.QuoteRejected
+            or RepairShop.Domain.Common.Enums.QuoteStatus.NeedsRequote;
+        if (isRequote)
+            previous!.MarkNeedsRequote();
+
+        var quote = new Quote(ticket.Id, request.Description, userId,
+            (previous?.Version ?? 0) + 1, previous?.Id);
 
         foreach (var item in request.Items)
         {
@@ -55,7 +60,8 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         ticket.AttachQuote(quote); // giữ đúng quan hệ domain (Task 4.1)
 
         var waitingApprovalStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.WaitingApproval);
-        ticket.SubmitQuote(waitingApprovalStatus, userId); // DIAGNOSING -> WAITING_APPROVAL
+        if (!isRequote)
+            ticket.SubmitQuote(waitingApprovalStatus, userId); // DIAGNOSING -> WAITING_APPROVAL
 
         // Quote là entity MỚI hoàn toàn -> Add tường minh, EF tự cascade-Added QuoteItems bên trong
         await _quoteRepository.AddAsync(quote);

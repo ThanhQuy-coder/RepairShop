@@ -1,5 +1,5 @@
 export type QuoteItemType = 'Service' | 'Part';
-export type QuoteStatus = 'Pending' | 'Approved' | 'Rejected';
+export type QuoteStatus = 'Pending' | 'Approved' | 'Rejected' | 'QuoteRejected' | 'NeedsRequote';
 
 export interface QuoteItem {
   id: string;
@@ -18,6 +18,8 @@ export interface Quote {
   status: QuoteStatus;
   items: QuoteItem[];
   createdAt: string;
+  version: number;
+  previousQuoteId?: string;
 }
 
 export interface CreateQuoteRequest {

@@ -48,15 +48,10 @@ public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, Quo
         {
             quote.Reject(request.RejectReason);
 
-            var closedStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.ClosedRejected);
-            ticket.RejectQuote(closedStatus, userId, request.RejectReason);
-
-            _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
-
             await _quoteRepository.SaveChangesAsync();
         }, cancellationToken);
         
-        _logger.LogInformation("Quote {QuoteId} bị từ chối, Ticket {TicketCode} chuyển CLOSED_REJECTED",
+        _logger.LogInformation("Quote {QuoteId} bị từ chối, Ticket {TicketCode} sẵn sàng cho NEEDS_REQUOTE",
             quote.Id, ticket.TicketCode);
 
         return QuoteMapper.ToResponse(quote);

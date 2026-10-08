@@ -13,7 +13,7 @@ public class QuoteRejectedScenarioTests
     public QuoteRejectedScenarioTests(CustomWebApplicationFactory factory) => _factory = factory;
 
     [Fact]
-    public async Task Ticket_WhenQuoteRejected_ShouldTransitionToClosedRejected_AndStayTerminal()
+    public async Task Quote_WhenRejected_ShouldRemainVersionableForRequote()
     {
         var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recep");
         var technician = await TestUserSeeder.SeedUserAsync(_factory.Services, "Technician", "tech");
@@ -28,17 +28,12 @@ public class QuoteRejectedScenarioTests
         client.AuthorizeAs(customer.Token);
         var rejectRes = await client.PatchAsJsonAsync($"/api/quotes/{quoteId}/reject", new { rejectReason = "Giá quá cao so với thị trường" });
         rejectRes.StatusCode.Should().Be(HttpStatusCode.OK);
-        (await rejectRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("Rejected");
+        (await rejectRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("QuoteRejected");
 
-        // Ticket phải đi đúng nhánh CLOSED_REJECTED (Task 4.9)
+        // Từ chối quote kết thúc phiên bản quote hiện tại, không đóng vĩnh viễn ticket.
         client.AuthorizeAs(receptionist.Token);
         var ticketRes = await client.GetAsync($"/api/tickets/{ticketId}");
-        (await ticketRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("CLOSED_REJECTED");
-
-        // CLOSED_REJECTED là terminal — không còn transition nào đi tiếp được (Task 4.2)
-        var tryAssignAgain = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/assign-technician",
-            new { technicianId = technician.UserId, note = (string?)null });
-        tryAssignAgain.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        (await ticketRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("WAITING_APPROVAL");
     }
 
     [Fact]

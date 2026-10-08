@@ -40,6 +40,7 @@ public class AppDbContext : DbContext
     public DbSet<TimeSlotConfig> TimeSlotConfigs => Set<TimeSlotConfig>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

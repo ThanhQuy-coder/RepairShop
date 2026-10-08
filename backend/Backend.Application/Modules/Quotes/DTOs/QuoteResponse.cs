@@ -1,2 +1,2 @@
 public record QuoteResponse(Guid Id, Guid TicketId, string Description, decimal TotalAmount,
-    string Status, List<QuoteItemResponse> Items, DateTime CreatedAt);
+    string Status, List<QuoteItemResponse> Items, DateTime CreatedAt, int Version = 1, Guid? PreviousQuoteId = null);

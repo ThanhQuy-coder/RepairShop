@@ -9,5 +9,5 @@ internal static class QuoteMapper
         quote.Id, quote.RepairTicketId, quote.Description, quote.TotalAmount, quote.Status.ToString(),
         quote.Items.Select(i => new QuoteItemResponse(i.Id, i.ItemType.ToString(), i.Description,
             i.Quantity, i.UnitPrice, i.Subtotal)).ToList(),
-        quote.CreatedAt);
+        quote.CreatedAt, quote.Version, quote.PreviousQuoteId);
 }

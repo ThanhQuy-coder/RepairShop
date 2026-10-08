@@ -3,6 +3,7 @@ import type { UserRole } from '../types/auth.types';
 export interface NavItem {
   label: string;
   path: string;
+  end?: boolean;
   icon?: string; // tên icon (nếu dùng thư viện icon sau này), tạm để text
 }
 
@@ -28,8 +29,8 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Dashboard', path: '/staff/dashboard' },
     { label: 'Khách hàng', path: '/customers' },
     { label: 'Thiết bị', path: '/devices' },
-    { label: 'Phiếu sửa chữa', path: '/tickets' },
-    { label: 'Báo giá', path: '/tickets' },
+    { label: 'Phiếu sửa chữa', path: '/tickets', end: true },
+    { label: 'Báo giá', path: '/tickets/quotes' },
     { label: 'Tư vấn giá AI', path: '/staff/ai-advisory' },
   ],
   Technician: [
@@ -40,6 +41,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
   Customer: [
     { label: 'Trang chủ', path: '/customer/home' },
     { label: 'Phiếu của tôi', path: '/customer/my-tickets' },
+    { label: 'Lịch hẹn', path: '/customer/appointments' },
     { label: 'Bảo hành', path: '/customer/warranty' },
     { label: 'Hồ sơ', path: '/customer/profile' },
   ],

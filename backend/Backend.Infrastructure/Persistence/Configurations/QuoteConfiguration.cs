@@ -20,6 +20,12 @@ public class QuoteConfiguration : IEntityTypeConfiguration<Quote>
             .HasMaxLength(20)
             .HasDefaultValue(QuoteStatus.Pending);
         builder.Property(q => q.RejectReason).HasMaxLength(255);
+        builder.Property(q => q.Version).IsRequired();
+        builder.HasIndex(q => new { q.RepairTicketId, q.Version }).IsUnique();
+        builder.HasOne<Quote>()
+            .WithMany()
+            .HasForeignKey(q => q.PreviousQuoteId)
+            .OnDelete(DeleteBehavior.Restrict);
         builder.Property(q => q.CreatedAt).HasDefaultValueSql("now()");
 
         // RepairTicketId KHÔNG unique — 1 ticket có thể có nhiều Quote (re-quote sau khi bị từ chối)

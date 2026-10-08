@@ -36,6 +36,7 @@ import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
 import QuotesPage from '../pages/quotes/QuotesPage';
 import CustomerHomePage from '../pages/customers/CustomerHomePage';
 import CustomerProfilePage from '../pages/customers/CustomerProfilePage';
+import MyAppointmentsPage from '../pages/customers/MyAppointmentsPage';
 import AIEstimatePage from '../pages/website/AIEstimatePage';
 import HomePage from '../pages/website/HomePage';
 import ServiceDetailPage from '../pages/website/ServiceDetailPage';
@@ -73,6 +74,7 @@ export default function AppRoutes() {
             <Route path="devices" element={<DevicesPage />} />
             <Route path="devices/:id" element={<DeviceDetailPage />} />
             <Route path="tickets" element={<TicketListPage />} />{' '}
+            <Route path="tickets/quotes" element={<QuotesPage />} />{' '}
             <Route path="tickets/create" element={<CreateTicketPage />} />{' '}
             <Route path="customers" element={<CustomerListPage />} />
             <Route path="customers/:id" element={<CustomerDetailPage />} />
@@ -122,6 +124,7 @@ export default function AppRoutes() {
           <Route element={<CustomerLayout />}>
             <Route path="customer/home" element={<CustomerHomePage />} />
             <Route path="customer/my-tickets" element={<MyTicketsPage />} />{' '}
+            <Route path="customer/appointments" element={<MyAppointmentsPage />} />{' '}
             <Route path="customer/profile" element={<CustomerProfilePage />} />
             <Route path="customer/warranty" element={<MyWarrantyPage />} />
           </Route>

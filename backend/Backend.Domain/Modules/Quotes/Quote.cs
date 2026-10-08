@@ -14,6 +14,8 @@ public class Quote : BaseEntity
     public decimal TotalAmount { get; private set; }
     public QuoteStatus Status { get; private set; } = QuoteStatus.Pending;
     public Guid CreatedByUserId { get; private set; }
+    public int Version { get; private set; } = 1;
+    public Guid? PreviousQuoteId { get; private set; }
     public string? RejectReason { get; private set; }
     public DateTime? RespondedAt { get; private set; }
 
@@ -25,7 +27,8 @@ public class Quote : BaseEntity
 
     private Quote() { } // for EF Core
 
-    public Quote(Guid repairTicketId, string description, Guid createdByUserId)
+    public Quote(Guid repairTicketId, string description, Guid createdByUserId,
+        int version = 1, Guid? previousQuoteId = null)
     {
         if (string.IsNullOrWhiteSpace(description))
             throw new DomainException("Mô tả báo giá không được để trống.");
@@ -33,6 +36,8 @@ public class Quote : BaseEntity
         RepairTicketId = repairTicketId;
         Description = description;
         CreatedByUserId = createdByUserId;
+        Version = version;
+        PreviousQuoteId = previousQuoteId;
     }
 
     public void AddItem(QuoteItemType itemType, string description, int quantity, decimal unitPrice, Guid? partId = null)
@@ -64,9 +69,17 @@ public class Quote : BaseEntity
         if (string.IsNullOrWhiteSpace(reason))
             throw new DomainException("Phải nêu lý do khi từ chối báo giá.");
 
-        Status = QuoteStatus.Rejected;
+        Status = QuoteStatus.QuoteRejected;
         RejectReason = reason;
         RespondedAt = DateTime.UtcNow;
+        MarkUpdated();
+    }
+
+    public void MarkNeedsRequote()
+    {
+        if (Status != QuoteStatus.QuoteRejected)
+            throw new DomainException("Chỉ báo giá đã bị từ chối mới có thể yêu cầu báo giá lại.");
+        Status = QuoteStatus.NeedsRequote;
         MarkUpdated();
     }
 }

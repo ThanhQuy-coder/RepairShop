@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import type { UserRole } from '../types/auth.types';
-import { notificationSignalRService } from '../services/notificationSignalRService';
 
 interface AuthUser {
   email: string;
@@ -15,7 +14,7 @@ interface AuthState {
   isHydrated: boolean;
   login: (accessToken: string, role: UserRole, email: string) => void;
   logout: () => void;
-  hydrate: () => void;
+  hydrate: () => Promise<void>;
 }
 
 let expirationTimer: number | undefined;
@@ -25,12 +24,6 @@ function clearExpirationTimer() {
     window.clearTimeout(expirationTimer);
     expirationTimer = undefined;
   }
-}
-
-function clearStoredSession() {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('role');
-  localStorage.removeItem('email');
 }
 
 function getTokenExpiration(token: string): number | null {
@@ -67,44 +60,35 @@ export const useAuthStore = create<AuthState>((set) => ({
   isHydrated: false,
 
   login: (accessToken, role, email) => {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('role', role);
-    localStorage.setItem('email', email);
     set({ accessToken, role, user: { email, role }, isAuthenticated: true, isHydrated: true });
     scheduleExpiration(accessToken, () => {
-      clearStoredSession();
       set({ accessToken: null, role: null, user: null, isAuthenticated: false, isHydrated: true });
     });
   },
 
   logout: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('role');
-    localStorage.removeItem('email');
-    notificationSignalRService.disconnect(); // thêm dòng này
+    clearExpirationTimer();
+    void import('../services/authService').then(({ authService }) => authService.logout());
+    void import('../services/notificationSignalRService').then(({ notificationSignalRService }) =>
+      notificationSignalRService.disconnect());
     set({ accessToken: null, role: null, user: null, isAuthenticated: false });
   },
 
-  hydrate: () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const role = localStorage.getItem('role') as UserRole | null;
-    const email = localStorage.getItem('email');
-    if (accessToken && role && email) {
-      set({ accessToken, role, user: { email, role }, isAuthenticated: true, isHydrated: true });
-      scheduleExpiration(accessToken, () => {
-        clearStoredSession();
-        set({
-          accessToken: null,
-          role: null,
-          user: null,
-          isAuthenticated: false,
-          isHydrated: true,
-        });
+  hydrate: async () => {
+    try {
+      const { authService } = await import('../services/authService');
+      const response = await authService.refresh();
+      set({
+        accessToken: response.accessToken,
+        role: response.role as UserRole,
+        user: { email: response.email, role: response.role as UserRole },
+        isAuthenticated: true,
+        isHydrated: true,
       });
-    } else {
+      scheduleExpiration(response.accessToken, () => useAuthStore.getState().logout());
+    } catch {
       clearExpirationTimer();
-      clearStoredSession();
-      set({ isHydrated: true });
+      set({ accessToken: null, role: null, user: null, isAuthenticated: false, isHydrated: true });
     }
   },
 }));

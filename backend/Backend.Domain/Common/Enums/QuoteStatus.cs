@@ -4,5 +4,7 @@ public enum QuoteStatus
 {
     Pending,
     Approved,
-    Rejected
+    Rejected,
+    QuoteRejected,
+    NeedsRequote
 }
