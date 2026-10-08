@@ -4,6 +4,7 @@ import { contentService } from '../../services/contentService';
 import type { ArticleListItem } from '../../types/content.types';
 
 import { EmptyState, Loading, Pagination } from '../../components/common';
+import { Link } from 'react-router-dom';
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<ArticleListItem[]>([]);
@@ -48,12 +49,16 @@ export default function ArticlesPage() {
         }}
       >
         {paginatedArticles.map((article) => (
-          <article
+          <Link
             key={article.id}
+            to={`/articles/${article.id}`}
             style={{
               border: '1px solid var(--color-border)',
               borderRadius: 8,
               padding: 16,
+              textDecoration: 'none',
+              color: 'inherit',
+              display: 'block',
             }}
           >
             {article.imageUrl && (
@@ -75,7 +80,7 @@ export default function ArticlesPage() {
             <small style={{ color: 'var(--color-text-muted)' }}>
               {new Date(article.createdAt).toLocaleDateString('vi-VN')}
             </small>
-          </article>
+          </Link>
         ))}
       </div>
 

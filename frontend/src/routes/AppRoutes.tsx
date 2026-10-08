@@ -13,7 +13,6 @@ import RegisterPage from '../pages/auth/RegisterPage';
 import TrackTicketPage from '../pages/track/TrackTicketPage';
 import UnauthorizedPage from '../pages/errors/UnauthorizedPage';
 import NotFoundPage from '../pages/errors/NotFoundPage';
-import PlaceholderPage from '../pages/PlaceholderPage';
 import CustomerListPage from '../pages/customers/CustomerListPage';
 import CustomerDetailPage from '../pages/customers/CustomerDetailPage';
 import DevicesPage from '../pages/devices/DevicesPage';
@@ -38,6 +37,10 @@ import QuotesPage from '../pages/quotes/QuotesPage';
 import CustomerHomePage from '../pages/customers/CustomerHomePage';
 import CustomerProfilePage from '../pages/customers/CustomerProfilePage';
 import AIEstimatePage from '../pages/website/AIEstimatePage';
+import HomePage from '../pages/website/HomePage';
+import ServiceDetailPage from '../pages/website/ServiceDetailPage';
+import ArticleDetailPage from '../pages/website/ArticleDetailPage';
+import BookingPage from '../pages/website/BookingPage';
 
 export default function AppRoutes() {
   return (
@@ -45,10 +48,13 @@ export default function AppRoutes() {
       <Route element={<App />}>
         {/* ===== Public — không cần đăng nhập ===== */}
         <Route element={<PublicLayout />}>
-          <Route index element={<PlaceholderPage title="Trang chủ" />} />
+          <Route index element={<HomePage />} />
           <Route path="services" element={<ServicesPage />} />
+          <Route path="services/:id" element={<ServiceDetailPage />} />
           <Route path="estimate" element={<AIEstimatePage />} />
           <Route path="articles" element={<ArticlesPage />} />
+          <Route path="articles/:id" element={<ArticleDetailPage />} />
+          <Route path="book" element={<BookingPage />} />
           <Route path="track" element={<TrackTicketPage />} />
           <Route path="track/:ticketCode" element={<TrackTicketPage />} />
           <Route path="login" element={<LoginPage />} />

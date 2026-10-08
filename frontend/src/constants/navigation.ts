@@ -48,6 +48,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
 export const PUBLIC_NAV: NavItem[] = [
   { label: 'Trang chủ', path: '/' },
   { label: 'Dịch vụ', path: '/services' },
+  { label: 'Đặt lịch', path: '/book' },
   { label: 'Tư vấn giá AI', path: '/estimate' },
   { label: 'Bài viết', path: '/articles' },
   { label: 'Tra cứu tiến độ', path: '/track' },
