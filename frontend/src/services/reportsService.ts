@@ -1,5 +1,10 @@
 import apiClient from './apiClient';
-import type { DashboardSummary, RevenueReport, TechnicianSummaryItem } from '../types/reports.types';
+import type {
+  DashboardSummary,
+  RevenueReport,
+  SlaSummary,
+  TechnicianSummaryItem,
+} from '../types/reports.types';
 
 export const reportsService = {
   getDashboardSummary: () =>
@@ -12,4 +17,7 @@ export const reportsService = {
     apiClient
       .get<TechnicianSummaryItem[]>('/reports/technician-performance', { params })
       .then((res) => res.data),
+
+  getSlaSummary: () =>
+    apiClient.get<SlaSummary>('/reports/sla-summary').then((res) => res.data),
 };

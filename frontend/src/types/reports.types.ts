@@ -48,6 +48,13 @@ export interface StatusBreakdownItem {
   count: number;
 }
 
+export interface SlaSummary {
+  onTrack: number;
+  dueSoon: number;
+  overdue: number;
+  activeTotal: number;
+}
+
 export interface DashboardSummary {
   repair: RepairSummary;
   revenue: RevenueSummary;

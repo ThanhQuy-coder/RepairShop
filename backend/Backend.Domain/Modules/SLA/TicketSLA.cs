@@ -46,6 +46,12 @@ public sealed class TicketSLA : BaseEntity
         return true;
     }
 
+    public void ReleaseOverdueNotification()
+    {
+        if (Status == SLAStatus.Overdue)
+            OverdueNotifiedAt = null;
+    }
+
     public void RefreshStatus(DateTime now)
     {
         if (Status == SLAStatus.Completed) return;

@@ -12,6 +12,7 @@ using RepairShop.Domain.Modules.Reviews;
 using RepairShop.Domain.Modules.Appointments;
 using RepairShop.Domain.Modules.Notifications;
 using RepairShop.Domain.Modules.SLA;
+using RepairShop.Domain.Common.Enums;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -52,5 +53,56 @@ public class AppDbContext : DbContext
         modelBuilder.UsePropertyAccessMode(PropertyAccessMode.Field);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+
+    public override async Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        await SynchronizeTicketSlaLifecycleAsync(cancellationToken);
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task SynchronizeTicketSlaLifecycleAsync(CancellationToken cancellationToken)
+    {
+        var ticketEntries = ChangeTracker.Entries<RepairTicket>()
+            .Where(entry => entry.State == EntityState.Added ||
+                (entry.State == EntityState.Modified &&
+                 entry.Property(ticket => ticket.StatusId).IsModified))
+            .ToList();
+
+        foreach (var entry in ticketEntries)
+        {
+            var ticket = entry.Entity;
+            var statusCode = ticket.Status?.Code
+                ?? await RepairStatuses.Where(status => status.Id == ticket.StatusId)
+                    .Select(status => status.Code)
+                    .SingleAsync(cancellationToken);
+            var deviceType = ticket.Device?.DeviceType
+                ?? await Devices.Where(device => device.Id == ticket.DeviceId)
+                    .Select(device => device.DeviceType)
+                    .SingleAsync(cancellationToken);
+
+            if (entry.State == EntityState.Modified)
+            {
+                var activeSlas = await TicketSLAs
+                    .Where(sla => sla.RepairTicketId == ticket.Id &&
+                        sla.Status != SLAStatus.Completed)
+                    .ToListAsync(cancellationToken);
+                foreach (var activeSla in activeSlas)
+                    activeSla.Complete(DateTime.UtcNow);
+            }
+
+            var policy = await SLAPolicies
+                .Where(candidate => candidate.IsActive &&
+                    candidate.StatusCode == statusCode &&
+                    (candidate.DeviceType == deviceType || candidate.DeviceType == null))
+                .OrderByDescending(candidate => candidate.DeviceType.HasValue)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (policy is not null)
+                TicketSLAs.Add(new TicketSLA(ticket.Id, policy.Id, statusCode,
+                    entry.State == EntityState.Added ? ticket.ReceivedAt : DateTime.UtcNow,
+                    policy.DurationMinutes));
+        }
     }
 }

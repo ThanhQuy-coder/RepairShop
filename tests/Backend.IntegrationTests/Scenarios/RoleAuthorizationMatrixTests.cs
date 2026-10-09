@@ -76,6 +76,35 @@ public class RoleAuthorizationMatrixTests
         res.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
+    [Theory]
+    [InlineData("Receptionist")]
+    [InlineData("Technician")]
+    [InlineData("Customer")]
+    public async Task NonAdmin_CannotAccessSlaEndpoints(string role)
+    {
+        var user = await TestUserSeeder.SeedUserAsync(_factory.Services, role, $"sla-{role}");
+        var client = _factory.CreateClient();
+        client.AuthorizeAs(user.Token);
+
+        var policies = await client.GetAsync("/api/sla/policies");
+        var summary = await client.GetAsync("/api/reports/sla-summary");
+
+        policies.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        summary.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task Admin_CanReadSlaSummary()
+    {
+        var admin = await TestUserSeeder.SeedUserAsync(_factory.Services, "Admin", "sla-admin");
+        var client = _factory.CreateClient();
+        client.AuthorizeAs(admin.Token);
+
+        var response = await client.GetAsync("/api/reports/sla-summary");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
     [Fact]
     public async Task Unauthenticated_CannotAccessAnyProtectedEndpoint()
     {
