@@ -11,6 +11,7 @@ using RepairShop.Domain.Modules.Content;
 using RepairShop.Domain.Modules.Reviews;
 using RepairShop.Domain.Modules.Appointments;
 using RepairShop.Domain.Modules.Notifications;
+using RepairShop.Domain.Modules.SLA;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -41,6 +42,8 @@ public class AppDbContext : DbContext
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<SLAPolicy> SLAPolicies => Set<SLAPolicy>();
+    public DbSet<TicketSLA> TicketSLAs => Set<TicketSLA>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

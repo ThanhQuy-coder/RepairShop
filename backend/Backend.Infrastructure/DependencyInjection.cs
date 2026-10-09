@@ -13,6 +13,7 @@ using RepairShop.Domain.Common;
 using RepairShop.Infrastructure.ExternalServices;
 using RepairShop.Infrastructure.AI;
 using RepairShop.Infrastructure.Notifications;
+using RepairShop.Infrastructure.SLA;
 
 namespace RepairShop.Infrastructure;
 
@@ -71,6 +72,7 @@ public static class DependencyInjection
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddHostedService<SlaMonitoringWorker>();
 
 
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
