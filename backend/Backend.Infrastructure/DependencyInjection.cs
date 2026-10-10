@@ -1,5 +1,4 @@
 using System.Text;
-using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Identity;
 using RepairShop.Infrastructure.Identity;
 using RepairShop.Infrastructure.Persistence;
@@ -14,6 +13,7 @@ using RepairShop.Infrastructure.ExternalServices;
 using RepairShop.Infrastructure.AI;
 using RepairShop.Infrastructure.Notifications;
 using RepairShop.Infrastructure.SLA;
+using RepairShop.Application.Common.Interfaces;
 
 namespace RepairShop.Infrastructure;
 
@@ -72,6 +72,8 @@ public static class DependencyInjection
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<ISlaPolicyRepository, SlaPolicyRepository>();
+        services.AddScoped<ISlaQueryService, SlaQueryService>();
         services.AddHostedService<SlaMonitoringWorker>();
 
 
