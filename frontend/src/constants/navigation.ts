@@ -25,6 +25,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Báo cáo doanh thu', path: '/admin/reports/revenue' },
     { label: 'Hiệu suất KTV', path: '/admin/reports/technicians' },
     { label: 'Giám sát SLA', path: '/admin/reports/sla' },
+    { label: 'Profit Dashboard', path: '/admin/reports/profit' },
   ],
   Receptionist: [
     { label: 'Dashboard', path: '/staff/dashboard' },

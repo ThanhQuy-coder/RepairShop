@@ -11,3 +11,20 @@ public record RevenueReportResponse(
 
 public record GetRevenueReportQuery(DateTime? FromDate, DateTime? ToDate, RevenueGroupBy GroupBy)
     : IRequest<RevenueReportResponse>;
+
+public record ProfitReportItem(
+    string TicketCode,
+    decimal Revenue,
+    decimal Cost,
+    decimal GrossProfit,
+    decimal MarginPercent);
+
+public record ProfitReportResponse(
+    List<ProfitReportItem> Items,
+    decimal TotalRevenue,
+    decimal TotalCost,
+    decimal GrossProfit,
+    decimal MarginPercent);
+
+public record GetProfitReportQuery(DateTime? FromDate, DateTime? ToDate)
+    : IRequest<ProfitReportResponse>;

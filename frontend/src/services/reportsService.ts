@@ -3,6 +3,7 @@ import type {
   DashboardSummary,
   RevenueReport,
   SlaSummary,
+  ProfitReport,
   TechnicianSummaryItem,
 } from '../types/reports.types';
 
@@ -20,4 +21,7 @@ export const reportsService = {
 
   getSlaSummary: () =>
     apiClient.get<SlaSummary>('/reports/sla-summary').then((res) => res.data),
+
+  getProfitReport: (params: { fromDate?: string; toDate?: string }) =>
+    apiClient.get<ProfitReport>('/reports/profit', { params }).then((res) => res.data),
 };

@@ -12,6 +12,7 @@ public interface IReportsQueryService
         DateTime? toDate, RevenueGroupBy groupBy);
 
     Task<List<TechnicianSummaryItem>> GetTechnicianPerformanceAsync(DateTime? fromDate, DateTime? toDate);
+    Task<ProfitReportResponse> GetProfitReportAsync(DateTime? fromDate, DateTime? toDate);
     Task<List<StatusBreakdownItem>> GetStatusBreakdownAsync();
     Task<int> GetTotalCustomersAsync();
 }

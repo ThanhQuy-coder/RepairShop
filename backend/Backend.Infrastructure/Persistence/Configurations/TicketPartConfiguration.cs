@@ -10,6 +10,7 @@ public class TicketPartConfiguration : IEntityTypeConfiguration<TicketPart>
         builder.ToTable("TicketParts");
         builder.HasKey(tp => tp.Id);
         builder.Property(tp => tp.UnitPriceAtUse).HasColumnType("decimal(12,2)"); // snapshot giá — Data Dictionary Tuần 2
+        builder.Property(tp => tp.CostPriceAtUse).HasColumnType("decimal(12,2)");
 
         builder.HasOne(tp => tp.Part).WithMany().HasForeignKey(tp => tp.PartId).OnDelete(DeleteBehavior.Restrict);
     }

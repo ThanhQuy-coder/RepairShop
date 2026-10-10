@@ -42,6 +42,22 @@ export interface RevenueReport {
   unpaidInvoices: number;
 }
 
+export interface ProfitReportItem {
+  ticketCode: string;
+  revenue: number;
+  cost: number;
+  grossProfit: number;
+  marginPercent: number;
+}
+
+export interface ProfitReport {
+  items: ProfitReportItem[];
+  totalRevenue: number;
+  totalCost: number;
+  grossProfit: number;
+  marginPercent: number;
+}
+
 export interface StatusBreakdownItem {
   statusCode: string;
   statusLabel: string;

@@ -30,6 +30,7 @@ public class Part : BaseEntity
 
         Name = name;
         Sku = sku;
+        CostPrice = costPrice;
         UnitPrice = unitPrice;
         Unit = unit;
         MinStockThreshold = minStockThreshold;

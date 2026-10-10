@@ -287,7 +287,7 @@ public class RepairTicket : BaseEntity
         if (transaction is null)
             throw new InsufficientStockException(part.Name, quantity, inventory.QuantityOnHand);
 
-        var ticketPart = new TicketPart(Id, part.Id, quantity, part.UnitPrice);
+        var ticketPart = new TicketPart(Id, part.Id, quantity, part.UnitPrice, part.CostPrice);
         _ticketParts.Add(ticketPart);
         MarkUpdated();
     }

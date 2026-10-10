@@ -38,4 +38,14 @@ public class ReportsController : ControllerBase
         var result = await _mediator.Send(new GetTechnicianPerformanceQuery(fromDate, toDate));
         return Ok(result);
     }
+
+    [HttpGet("profit")]
+    public async Task<IActionResult> GetProfit(
+        [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new GetProfitReportQuery(fromDate, toDate), cancellationToken);
+        return Ok(result);
+    }
 }

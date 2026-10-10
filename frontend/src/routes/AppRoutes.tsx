@@ -43,6 +43,7 @@ import ServiceDetailPage from '../pages/website/ServiceDetailPage';
 import ArticleDetailPage from '../pages/website/ArticleDetailPage';
 import BookingPage from '../pages/website/BookingPage';
 import SlaDashboardPage from '../pages/reports/SlaDashboardPage';
+import ProfitReportPage from '../pages/reports/ProfitReportPage';
 
 export default function AppRoutes() {
   return (
@@ -117,6 +118,7 @@ export default function AppRoutes() {
             <Route path="admin/reports/revenue" element={<RevenueReportPage />} />
             <Route path="admin/reports/technicians" element={<TechnicianPerformancePage />} />
             <Route path="admin/reports/sla" element={<SlaDashboardPage />} />
+            <Route path="admin/reports/profit" element={<ProfitReportPage />} />
             <Route path="admin/reviews" element={<ReviewsAdminPage />} />
           </Route>
         </Route>

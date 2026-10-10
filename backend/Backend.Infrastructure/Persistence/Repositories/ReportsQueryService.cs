@@ -145,6 +145,39 @@ public class ReportsQueryService : IReportsQueryService
         return result.OrderByDescending(t => t.Completed).ToList();
     }
 
+    public async Task<ProfitReportResponse> GetProfitReportAsync(
+        DateTime? fromDate, DateTime? toDate)
+    {
+        var from = ToUtc(fromDate) ?? DateTime.UtcNow.AddDays(-30);
+        var toExclusive = ToUtc(toDate)?.Date.AddDays(1) ?? DateTime.UtcNow;
+
+        var invoices = await _context.Invoices
+            .Where(invoice => invoice.PaidAt != null &&
+                invoice.PaidAt >= from && invoice.PaidAt < toExclusive)
+            .ToListAsync();
+        var ticketIds = invoices.Select(invoice => invoice.RepairTicketId).ToList();
+        var tickets = await _context.RepairTickets
+            .Where(ticket => ticketIds.Contains(ticket.Id))
+            .Include(ticket => ticket.TicketParts)
+            .ToDictionaryAsync(ticket => ticket.Id);
+
+        var items = invoices.Select(invoice =>
+        {
+            var revenue = invoice.TotalAmount;
+            var cost = tickets[invoice.RepairTicketId].TicketParts.Sum(part => part.CostSubtotal);
+            var profit = revenue - cost;
+            var margin = revenue == 0 ? 0 : profit / revenue * 100;
+            return new ProfitReportItem(
+                tickets[invoice.RepairTicketId].TicketCode, revenue, cost, profit, margin);
+        }).ToList();
+
+        var totalRevenue = items.Sum(item => item.Revenue);
+        var totalCost = items.Sum(item => item.Cost);
+        var grossProfit = items.Sum(item => item.GrossProfit);
+        var marginPercent = totalRevenue == 0 ? 0 : grossProfit / totalRevenue * 100;
+        return new ProfitReportResponse(items, totalRevenue, totalCost, grossProfit, marginPercent);
+    }
+
     private static DateTime? ToUtc(DateTime? value)
     {
         if (value is null) return null;

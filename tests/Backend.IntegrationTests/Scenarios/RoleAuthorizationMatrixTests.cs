@@ -76,6 +76,18 @@ public class RoleAuthorizationMatrixTests
         res.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
+    [Fact]
+    public async Task Receptionist_CannotAccessProfitReport()
+    {
+        var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recepProfit");
+        var client = _factory.CreateClient();
+        client.AuthorizeAs(receptionist.Token);
+
+        var response = await client.GetAsync("/api/reports/profit");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
     [Theory]
     [InlineData("Receptionist")]
     [InlineData("Technician")]
