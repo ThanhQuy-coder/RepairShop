@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Shared.Models;
@@ -91,10 +92,18 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.Conflict,
                 new ApiErrorResponse { Message = operationEx.Message }),
 
+            DbUpdateConcurrencyException => (
+                HttpStatusCode.Conflict,
+                new ApiErrorResponse { Message = "Lịch hẹn đã được xử lý bởi người dùng khác. Vui lòng tải lại dữ liệu." }),
+
             InsufficientStockException stockEx => (HttpStatusCode.Conflict, new ApiErrorResponse { Message = stockEx.Message }),
 
             DomainException domainEx when domainEx.Message.StartsWith("SLOT_FULL") =>
                 (HttpStatusCode.Conflict, new ApiErrorResponse { Message = domainEx.Message.Replace("SLOT_FULL: ", "") }),
+
+            DomainException domainEx when domainEx.Message.Contains("đang PENDING", StringComparison.OrdinalIgnoreCase) => (
+                HttpStatusCode.Conflict,
+                new ApiErrorResponse { Message = domainEx.Message }),
 
             DomainException domainEx => (
                 HttpStatusCode.BadRequest,

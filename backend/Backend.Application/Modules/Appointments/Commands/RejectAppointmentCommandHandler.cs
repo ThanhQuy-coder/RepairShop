@@ -3,6 +3,7 @@ using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Common.Exceptions;
 
 public class RejectAppointmentCommandHandler : IRequestHandler<RejectAppointmentCommand, AppointmentResponse>
 {
@@ -23,8 +24,8 @@ public class RejectAppointmentCommandHandler : IRequestHandler<RejectAppointment
     public async Task<AppointmentResponse> Handle(RejectAppointmentCommand request, CancellationToken cancellationToken)
     {
         var appointment = await _repo.GetByIdAsync(request.Id) ?? throw new NotFoundException("Lịch hẹn", request.Id);
-
-        appointment.Reject(_currentUser.UserId!.Value);
+        var rejectionReason = request.RejectionReason ?? throw new DomainException("Lý do từ chối không được để trống.");
+        appointment.Reject(_currentUser.UserId!.Value, rejectionReason);
         _repo.Update(appointment);
 
         if (appointment.CustomerId is not null)
@@ -38,7 +39,7 @@ public class RejectAppointmentCommandHandler : IRequestHandler<RejectAppointment
         }
 
         await _repo.SaveChangesAsync();
-        return new AppointmentResponse(appointment.Id, appointment.FullName, appointment.Phone,
+        return new AppointmentResponse(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone,
             appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
     }
 }

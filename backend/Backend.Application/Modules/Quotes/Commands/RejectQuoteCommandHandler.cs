@@ -4,7 +4,6 @@ using RepairShop.Application.Common.Authorization;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Quotes;
-using RepairShop.Domain.Common;
 
 public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, QuoteResponse>
 {
@@ -40,10 +39,6 @@ public class RejectQuoteCommandHandler : IRequestHandler<RejectQuoteCommand, Quo
         var userId = _currentUser.UserId!.Value;
         var ticket = quote.RepairTicket;
 
-        // Rule mentor: "Nếu Quote = REJECTED thì Ticket phải đi theo nhánh xử lý từ chối"
-        // -> KHÔNG có đường nào khác ngoài CLOSED_REJECTED. RejectQuote() trong RepairTicketStateMachine
-        //    (Task 4.2) chỉ cho WAITING_APPROVAL -> CLOSED_REJECTED, không có lựa chọn thứ 2 -> đúng
-        //    tinh thần "theo state machine đã chốt", không phải nhánh tự do CANCELLED/CLOSED tùy chọn.
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
             quote.Reject(request.RejectReason);

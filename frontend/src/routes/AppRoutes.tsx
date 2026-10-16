@@ -44,6 +44,10 @@ import ArticleDetailPage from '../pages/website/ArticleDetailPage';
 import BookingPage from '../pages/website/BookingPage';
 import SlaDashboardPage from '../pages/reports/SlaDashboardPage';
 import ProfitReportPage from '../pages/reports/ProfitReportPage';
+import AppointmentDetailPage from '../pages/appointments/AppointmentDetailPage';
+import AppointmentLookupPage from '../pages/website/AppointmentLookupPage';
+import AppointmentManagementPage from '../pages/appointments/AppointmentManagementPage';
+import AppointmentSettingsPage from '../pages/admin/AppointmentSettingsPage';
 
 export default function AppRoutes() {
   return (
@@ -58,6 +62,7 @@ export default function AppRoutes() {
           <Route path="articles" element={<ArticlesPage />} />
           <Route path="articles/:id" element={<ArticleDetailPage />} />
           <Route path="book" element={<BookingPage />} />
+          <Route path="appointments/lookup" element={<AppointmentLookupPage />} />
           <Route path="track" element={<TrackTicketPage />} />
           <Route path="track/:ticketCode" element={<TrackTicketPage />} />
           <Route path="login" element={<LoginPage />} />
@@ -80,6 +85,8 @@ export default function AppRoutes() {
             <Route path="tickets/create" element={<CreateTicketPage />} />{' '}
             <Route path="customers" element={<CustomerListPage />} />
             <Route path="customers/:id" element={<CustomerDetailPage />} />
+            <Route path="staff/appointments/:id" element={<AppointmentDetailPage />} />
+            <Route path="staff/appointments" element={<AppointmentManagementPage />} />
           </Route>
         </Route>
 
@@ -120,6 +127,7 @@ export default function AppRoutes() {
             <Route path="admin/reports/sla" element={<SlaDashboardPage />} />
             <Route path="admin/reports/profit" element={<ProfitReportPage />} />
             <Route path="admin/reviews" element={<ReviewsAdminPage />} />
+            <Route path="admin/appointments/settings" element={<AppointmentSettingsPage />} />
           </Route>
         </Route>
 

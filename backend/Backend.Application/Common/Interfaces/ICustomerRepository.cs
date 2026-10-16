@@ -11,4 +11,6 @@ public interface ICustomerRepository
     void Update(Customer customer);
     Task SaveChangesAsync();
     Task<Customer?> GetByUserIdAsync(Guid userId);
+    Task<Dictionary<string, Guid>> GetIdsByPhonesAsync(
+        IEnumerable<string> phones, CancellationToken cancellationToken = default);
 }

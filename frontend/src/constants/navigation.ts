@@ -17,6 +17,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Thiết bị', path: '/admin/devices' },
     { label: 'Phiếu sửa chữa', path: '/admin/tickets' },
     { label: 'Báo giá', path: '/admin/quotes' },
+    { label: 'Cấu hình lịch hẹn', path: '/admin/appointments/settings' },
     { label: 'Kho linh kiện', path: '/admin/inventory' },
     { label: 'Nhập/Xuất kho', path: '/admin/inventory-transactions' },
     { label: 'Dịch vụ', path: '/admin/services' },
@@ -33,7 +34,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Thiết bị', path: '/devices' },
     { label: 'Phiếu sửa chữa', path: '/tickets', end: true },
     { label: 'Báo giá', path: '/tickets/quotes' },
-    { label: 'Tư vấn giá AI', path: '/staff/ai-advisory' },
+    { label: 'Lịch hẹn', path: '/staff/appointments' },
   ],
   Technician: [
     { label: 'Dashboard', path: '/staff/dashboard' },

@@ -67,4 +67,12 @@ public class CustomersController : ControllerBase
         var result = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
+
+    [HttpGet("find-by-phone")]
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
+    public async Task<IActionResult> FindByPhone([FromQuery] string phone)
+    {
+        var result = await _mediator.Send(new FindCustomerByPhoneQuery(phone));
+        return Ok(result);
+    }
 }

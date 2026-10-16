@@ -1,5 +1,6 @@
 using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Modules.Appointments.Enums;
+using System.Security.Cryptography;
 
 namespace RepairShop.Domain.Modules.Appointments;
 
@@ -16,15 +17,24 @@ public class Appointment
     public DateOnly AppointmentDate { get; private set; }
     public Guid TimeSlotId { get; private set; }
     public AppointmentStatus Status { get; private set; } = AppointmentStatus.Pending;
+    public string? RejectionReason { get; private set; } = string.Empty;
     public Guid? ConfirmedByUserId { get; private set; }
     public Guid? LinkedTicketId { get; private set; }
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public string LookupTokenHash { get; private set; } = default!;
 
     private Appointment() { } // for EF Core
 
-    public Appointment(string fullName, string phone, DateOnly appointmentDate, Guid timeSlotId,
-        Guid? customerId = null, string? deviceType = null, string? brand = null, string? model = null,
-        string? issueDescription = null)
+    public Appointment(string fullName,
+        string phone,
+        DateOnly appointmentDate,
+        Guid timeSlotId,
+        Guid? customerId = null,
+        string? deviceType = null,
+        string? brand = null,
+        string? model = null,
+        string? issueDescription = null,
+        string? lookupTokenHash = null)
     {
         if (string.IsNullOrWhiteSpace(fullName)) throw new DomainException("Họ tên không được để trống.");
         if (string.IsNullOrWhiteSpace(phone)) throw new DomainException("Số điện thoại không được để trống.");
@@ -40,6 +50,7 @@ public class Appointment
         Brand = brand;
         Model = model;
         IssueDescription = issueDescription;
+        LookupTokenHash = lookupTokenHash ?? Convert.ToHexString(SHA256.HashData(RandomNumberGenerator.GetBytes(32)));
     }
 
     /// <summary>BR-21 tinh thần: Receptionist/Admin xác nhận lịch hẹn.</summary>
@@ -52,12 +63,13 @@ public class Appointment
         ConfirmedByUserId = confirmedByUserId;
     }
 
-    public void Reject(Guid confirmedByUserId)
+    public void Reject(Guid confirmedByUserId, string rejectionReason)
     {
         if (Status != AppointmentStatus.Pending)
             throw new DomainException($"Chỉ từ chối được lịch hẹn đang PENDING (hiện tại: {Status}).");
 
         Status = AppointmentStatus.Rejected;
+        RejectionReason = rejectionReason;
         ConfirmedByUserId = confirmedByUserId;
     }
 

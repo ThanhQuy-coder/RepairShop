@@ -4,6 +4,7 @@ using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Appointments;
 
 public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointmentCommand, AppointmentResponse>
 {
@@ -46,6 +47,6 @@ public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointme
         await _notificationService.CreateAsync(customer.UserId.Value, type, title, message, "Appointment", relatedId);
     }
 
-    private static AppointmentResponse Map(RepairShop.Domain.Modules.Appointments.Appointment a) =>
-        new(a.Id, a.FullName, a.Phone, a.AppointmentDate, a.TimeSlotId, a.Status.ToString(), a.CreatedAt);
+    private static AppointmentResponse Map(Appointment a) =>
+        new(a.Id, Guid.Empty, a.FullName, a.Phone, a.AppointmentDate, a.TimeSlotId, a.Status.ToString(), a.CreatedAt);
 }

@@ -4,5 +4,7 @@ public enum DeviceType
 {
     Phone,
     Laptop,
-    Electronics
+    Electronics,
+    Tablet,
+    Smartwatch,
 }

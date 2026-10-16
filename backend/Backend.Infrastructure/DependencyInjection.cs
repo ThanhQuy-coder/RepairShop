@@ -13,6 +13,7 @@ using RepairShop.Infrastructure.ExternalServices;
 using RepairShop.Infrastructure.AI;
 using RepairShop.Infrastructure.Notifications;
 using RepairShop.Infrastructure.SLA;
+using RepairShop.Infrastructure.Time;
 using RepairShop.Application.Common.Interfaces;
 
 namespace RepairShop.Infrastructure;
@@ -71,6 +72,7 @@ public static class DependencyInjection
         services.AddScoped<ITimeSlotConfigRepository, TimeSlotConfigRepository>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+        services.AddSingleton<IBusinessClock, BusinessClock>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ISlaPolicyRepository, SlaPolicyRepository>();
         services.AddScoped<ISlaQueryService, SlaQueryService>();

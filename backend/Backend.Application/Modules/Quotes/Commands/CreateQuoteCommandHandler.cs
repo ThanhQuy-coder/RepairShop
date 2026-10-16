@@ -5,6 +5,7 @@ using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Quotes;
 using RepairShop.Application.Modules.Tickets;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Common.Enums;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Quotes.Enums;
 
@@ -35,6 +36,11 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         _logger = logger;
     }
 
+    /// <summary>
+    /// Thực hiện tạo mới 1 Quote cho RepairTicket, kèm các QuoteItem bên trong.
+    /// Nếu là Requote (báo giá trước đó bị từ chối), sẽ đánh dấu Quote cũ là NeedsRequote.
+    /// Nếu là Quote đầu tiên, sẽ chuyển RepairTicket sang trạng thái WaitingApproval.
+    /// </summary>
     public async Task<QuoteResponse> Handle(CreateQuoteCommand request, CancellationToken cancellationToken)
     {
         var ticket = await _ticketRepository.GetByIdAsync(request.TicketId)
@@ -43,8 +49,9 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         var userId = _currentUser.UserId!.Value;
 
         var previous = ticket.Quotes.OrderByDescending(q => q.Version).FirstOrDefault();
-        var isRequote = previous?.Status is RepairShop.Domain.Common.Enums.QuoteStatus.QuoteRejected
-            or RepairShop.Domain.Common.Enums.QuoteStatus.NeedsRequote;
+        var isRequote = previous?.Status is QuoteStatus.QuoteRejected
+            or QuoteStatus.NeedsRequote;
+
         if (isRequote)
             previous!.MarkNeedsRequote();
 
@@ -57,19 +64,17 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
             quote.AddItem(itemType, item.Description, item.Quantity, item.UnitPrice, item.PartId);
         }
 
-        ticket.AttachQuote(quote); // giữ đúng quan hệ domain (Task 4.1)
+        ticket.AttachQuote(quote);
 
         var waitingApprovalStatus = await _statusRepository.GetByCodeAsync(RepairStatusCodes.WaitingApproval);
         if (!isRequote)
             ticket.SubmitQuote(waitingApprovalStatus, userId); // DIAGNOSING -> WAITING_APPROVAL
 
-        // Quote là entity MỚI hoàn toàn -> Add tường minh, EF tự cascade-Added QuoteItems bên trong
         await _quoteRepository.AddAsync(quote);
 
-        // ticket đã tracked Unchanged (GetByIdAsync) -> StatusHistory mới cần Track tường minh (như Task 4.6)
         _ticketRepository.TrackNewStatusHistory(ticket.StatusHistories.Last());
 
-        await _quoteRepository.SaveChangesAsync(); // dùng chung 1 DbContext, SaveChanges 1 lần là đủ cho cả 2 thay đổi
+        await _quoteRepository.SaveChangesAsync();
 
         await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
             _customerRepository, _notificationService, ticket.CustomerId,

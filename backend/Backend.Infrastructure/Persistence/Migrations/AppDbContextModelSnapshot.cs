@@ -62,6 +62,11 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("LinkedTicketId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("LookupTokenHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
                     b.Property<string>("Model")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -70,6 +75,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("RejectionReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -81,6 +90,12 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("TimeSlotId")
                         .HasColumnType("uuid");
 
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ConfirmedByUserId");
@@ -90,6 +105,9 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.HasIndex("LinkedTicketId")
                         .IsUnique()
                         .HasFilter("\"LinkedTicketId\" IS NOT NULL");
+
+                    b.HasIndex("LookupTokenHash")
+                        .IsUnique();
 
                     b.HasIndex("Phone");
 

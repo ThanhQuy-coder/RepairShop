@@ -1,3 +1,4 @@
+using RepairShop.Application.Modules.Appointments.DTOs;
 using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.Application.Common.Interfaces;
@@ -5,6 +6,9 @@ namespace RepairShop.Application.Common.Interfaces;
 public interface IAppointmentRepository
 {
     Task<Appointment?> GetByIdAsync(Guid id);
+    Task<AppointmentDetailResponse?> GetDetailByIdAsync(Guid id);
+    Task<Appointment?> GetByLookupAsync(string lookupTokenHash, string phone);
+    Task<List<Appointment>> GetForStaffAsync();
     Task<List<Appointment>> GetByCustomerIdAsync(Guid customerId);
     Task<int> CountBookedAsync(DateOnly date, Guid timeSlotId); // PENDING + CONFIRMED
     Task AddAsync(Appointment appointment);

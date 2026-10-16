@@ -54,9 +54,9 @@
 .actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-border-subtle, #f1f5f9);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-subtle, #f1f5f9);
 }
 
 .deviceOption {

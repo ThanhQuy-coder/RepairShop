@@ -44,4 +44,15 @@ public class CustomerRepository : ICustomerRepository
 
     public Task<Customer?> GetByUserIdAsync(Guid userId) =>
         _context.Customers.FirstOrDefaultAsync(c => c.UserId == userId);
+
+    public async Task<Dictionary<string, Guid>> GetIdsByPhonesAsync(
+        IEnumerable<string> phones, CancellationToken cancellationToken = default)
+    {
+        var phoneList = phones.ToList();
+
+        return await _context.Customers
+            .AsNoTracking()
+            .Where(c => phoneList.Contains(c.Phone))
+            .ToDictionaryAsync(c => c.Phone, c => c.Id, cancellationToken);
+    }
 }

@@ -2,6 +2,7 @@ using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.Application.Modules.Appointments.Commands;
 
@@ -34,7 +35,7 @@ public class CancelAppointmentCommandHandler : IRequestHandler<CancelAppointment
         return ToResponse(appointment);
     }
 
-    internal static AppointmentResponse ToResponse(Domain.Modules.Appointments.Appointment appointment) =>
-        new(appointment.Id, appointment.FullName, appointment.Phone, appointment.AppointmentDate,
+    internal static AppointmentResponse ToResponse(Appointment appointment) =>
+        new(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone, appointment.AppointmentDate,
             appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
 }

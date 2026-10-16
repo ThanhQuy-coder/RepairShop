@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 using Microsoft.OpenApi;
 using RepairShop.API.Hubs;
 using RepairShop.API.Middleware;
@@ -55,13 +56,23 @@ try
             opt.Window = TimeSpan.FromMinutes(1);
             opt.QueueLimit = 0;               // vượt quá -> từ chối ngay, không xếp hàng
         });
+        options.AddPolicy("PublicAppointmentLookupPolicy", context =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1),
+                    QueueLimit = 0
+                }));
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     });
 
     builder.Services.AddCors(options =>
     {
         options.AddPolicy("AllowFrontend", policy =>
-            policy.WithOrigins("http://localhost:5173")
+            policy.WithOrigins("http://localhost:5174",
+                "http://localhost:5173")
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials());

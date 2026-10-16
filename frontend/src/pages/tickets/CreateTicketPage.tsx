@@ -1,15 +1,22 @@
-import { useState } from 'react';
-import type { Customer } from '../../types/customer.types';
-import type { Device } from '../../types/device.types';
-import type { Ticket } from '../../types/ticket.types';
+import { useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useLocation } from 'react-router-dom';
+
+import { useTicketIntakeStore, type AppointmentIntakeData, type WizardStep } from '../../store/ticketIntakeStore';
+
 import IntakeCustomerStep from '../../components/ticket/IntakeCustomerStep';
 import IntakeDeviceStep from '../../components/ticket/IntakeDeviceStep';
 import IntakeIssueStep from '../../components/ticket/IntakeIssueStep';
 import IntakeImagesStep from '../../components/ticket/IntakeImagesStep';
 import IntakeSuccessStep from '../../components/ticket/IntakeSuccessStep';
+
 import styles from './CreateTicketPage.module.css';
 
-type WizardStep = 'customer' | 'device' | 'issue' | 'images' | 'success';
+const stepVariants = {
+  initial: { opacity: 0, x: 24 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -24 },
+};
 
 const STEP_LABELS: { key: WizardStep; label: string }[] = [
   { key: 'customer', label: '1. Khách hàng' },
@@ -19,21 +26,37 @@ const STEP_LABELS: { key: WizardStep; label: string }[] = [
 ];
 
 export default function CreateTicketPage() {
-  const [step, setStep] = useState<WizardStep>('customer');
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [device, setDevice] = useState<Device | null>(null);
-  const [createdTicket, setCreatedTicket] = useState<Ticket | null>(null);
+  const location = useLocation();
 
+  const appointment =
+    (
+      location.state as {
+        appointment?: AppointmentIntakeData;
+      } | null
+    )?.appointment ?? null;
+
+  const step = useTicketIntakeStore((s) => s.step);
+  const customer = useTicketIntakeStore((s) => s.customer);
+  const device = useTicketIntakeStore((s) => s.device);
+  const createdTicket = useTicketIntakeStore((s) => s.createdTicket);
+  const setCreatedTicket = useTicketIntakeStore((s) => s.setCreatedTicket);
+  const setStep = useTicketIntakeStore((s) => s.setStep);
+  const initializeFromAppointment = useTicketIntakeStore((s) => s.initializeFromAppointment);
   const currentStepIndex = STEP_LABELS.findIndex((s) => s.key === step);
+
+  useEffect(() => {
+    initializeFromAppointment(appointment);
+  }, [location.key, initializeFromAppointment, appointment?.id]);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.topHeader}>
         <span className={styles.eyebrow}>QUY TRÌNH DỊCH VỤ</span>
         <h1 className={styles.title}>Tiếp nhận thiết bị mới</h1>
-        <p className={styles.desc}>Từng bước ghi nhận thông tin khách hàng, kiểm tra thiết bị và xác nhận tình trạng.</p>
+        <p className={styles.desc}>
+          Từng bước ghi nhận thông tin khách hàng, kiểm tra thiết bị và xác nhận tình trạng.
+        </p>
       </div>
-
       {step !== 'success' && (
         <div className={styles.stepper}>
           {STEP_LABELS.map((s, i) => {
@@ -44,9 +67,7 @@ export default function CreateTicketPage() {
                 key={s.key}
                 className={`${styles.stepItem} ${isCurrent ? styles.stepCurrent : ''} ${isCompleted ? styles.stepCompleted : ''}`}
               >
-                <div className={styles.stepCircle}>
-                  {isCompleted ? '✓' : i + 1}
-                </div>
+                <div className={styles.stepCircle}>{isCompleted ? '✓' : i + 1}</div>
                 <span className={styles.stepTitle}>{s.label.split('. ')[1]}</span>
               </div>
             );
@@ -54,47 +75,38 @@ export default function CreateTicketPage() {
         </div>
       )}
 
-
       <div className={styles.stepContent}>
-        {step === 'customer' && (
-          <IntakeCustomerStep
-            onNext={(c) => {
-              setCustomer(c);
-              setStep('device');
-            }}
-          />
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={step}
+            variants={stepVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.22, ease: 'easeOut' }}
+          >
+            {step === 'customer' && <IntakeCustomerStep />}
 
-        {step === 'device' && customer && (
-          <IntakeDeviceStep
-            customer={customer}
-            onBack={() => setStep('customer')}
-            onNext={(d) => {
-              setDevice(d);
-              setStep('issue');
-            }}
-          />
-        )}
+            {step === 'device' && customer && <IntakeDeviceStep />}
 
-        {step === 'issue' && customer && device && (
-          <IntakeIssueStep
-            customer={customer}
-            device={device}
-            onBack={() => setStep('device')}
-            onCreated={(ticket) => {
-              setCreatedTicket(ticket);
-              setStep('images');
-            }}
-          />
-        )}
+            {step === 'issue' && customer && device && (
+              <IntakeIssueStep
+                customer={customer}
+                device={device}
+                onBack={() => setStep('device')}
+                onCreated={setCreatedTicket}
+              />
+            )}
 
-        {step === 'images' && createdTicket && (
-          <IntakeImagesStep ticket={createdTicket} onDone={() => setStep('success')} />
-        )}
+            {step === 'images' && createdTicket && (
+              <IntakeImagesStep ticket={createdTicket} onDone={() => setStep('success')} />
+            )}
 
-        {step === 'success' && createdTicket && (
-          <IntakeSuccessStep ticket={createdTicket} customer={customer} device={device} />
-        )}
+            {step === 'success' && createdTicket && (
+              <IntakeSuccessStep ticket={createdTicket} customer={customer} device={device} />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

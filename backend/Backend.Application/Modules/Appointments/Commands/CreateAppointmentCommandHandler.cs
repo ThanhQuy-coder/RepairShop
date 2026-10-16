@@ -2,6 +2,7 @@ using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
 using RepairShop.Domain.Modules.Appointments;
+using System.Security.Cryptography;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using RepairShop.Domain.Common.Exceptions;
@@ -16,15 +17,18 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
     private readonly INotificationService _notificationService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateAppointmentCommandHandler> _logger;
+    private readonly IBusinessClock _clock;
 
     public CreateAppointmentCommandHandler(ITimeSlotConfigRepository slotRepo, IAppointmentRepository appointmentRepo,
-        INotificationService notificationService, IUnitOfWork unitOfWork, ILogger<CreateAppointmentCommandHandler> logger)
+        INotificationService notificationService, IUnitOfWork unitOfWork, ILogger<CreateAppointmentCommandHandler> logger,
+        IBusinessClock clock)
     {
         _slotRepo = slotRepo;
         _appointmentRepo = appointmentRepo;
         _notificationService = notificationService;
         _unitOfWork = unitOfWork;
         _logger = logger;
+        _clock = clock;
     }
 
     public async Task<AppointmentResponse> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
@@ -41,7 +45,13 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         if (!slot.AppliesTo(request.AppointmentDate))
             throw new DomainException("Khung giờ này không áp dụng cho ngày đã chọn.");
 
+        var requestedLocalTime = request.AppointmentDate.ToDateTime(slot.SlotStart);
+        if (requestedLocalTime <= _clock.Now.DateTime)
+            throw new DomainException("Thời gian hẹn phải ở tương lai theo múi giờ cửa hàng.");
+
         Appointment? appointment = null;
+        var lookupToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        var lookupHash = Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(lookupToken)));
 
         await _unitOfWork.ExecuteInTransactionAsync(async () =>
         {
@@ -56,8 +66,9 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
                 throw new DomainException("SLOT_FULL: Khung giờ này đã đầy, vui lòng chọn khung giờ khác.");
 
             // 7. Tạo Appointment PENDING (mặc định trong constructor)
-            appointment = new Appointment(request.FullName, request.Phone, request.AppointmentDate, request.TimeSlotId,
-                request.CustomerId, request.DeviceType, request.Brand, request.Model, request.IssueDescription);
+            var normalizedPhone = new string(request.Phone.Where(char.IsDigit).ToArray());
+            appointment = new Appointment(request.FullName, normalizedPhone, request.AppointmentDate, request.TimeSlotId,
+                request.CustomerId, request.DeviceType, request.Brand, request.Model, request.IssueDescription, lookupHash);
 
             await _appointmentRepo.AddAsync(appointment);
 
@@ -72,7 +83,7 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         _logger.LogInformation("Tạo Appointment {AppointmentId} cho {FullName} ngày {Date}, slot {SlotId}",
             appointment!.Id, appointment.FullName, appointment.AppointmentDate, request.TimeSlotId);
 
-        return new AppointmentResponse(appointment.Id, appointment.FullName, appointment.Phone,
-            appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
+        return new AppointmentResponse(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone,
+            appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt, lookupToken);
     }
 }

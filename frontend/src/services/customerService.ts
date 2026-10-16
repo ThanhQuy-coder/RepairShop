@@ -18,4 +18,7 @@ export const customerService = {
 
   update: (payload: UpdateCustomerRequest) =>
     apiClient.put<Customer>(`/customers/${payload.id}`, payload).then((res) => res.data),
+
+  findByPhone: (phone: string) =>
+    apiClient.get<Customer | null>('/customers/find-by-phone', { params: { phone } }).then((res) => res.data),
 };
