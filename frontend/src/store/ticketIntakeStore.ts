@@ -70,6 +70,7 @@ export const useTicketIntakeStore = create<TicketIntakeState>()((set) => ({
     set({
       device,
       createdTicket: null,
+      step: 'issue',
     }),
 
   setCreatedTicket: (ticket) =>

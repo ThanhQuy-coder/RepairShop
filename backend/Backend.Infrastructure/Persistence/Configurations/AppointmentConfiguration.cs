@@ -21,6 +21,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.DeviceType).HasMaxLength(20);
         builder.Property(a => a.Brand).HasMaxLength(50);
         builder.Property(a => a.Model).HasMaxLength(100);
+        builder.Property(a => a.SerialNumber).HasMaxLength(100);
         builder.Property(a => a.IssueDescription).HasMaxLength(500);
         builder.Property(a => a.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValue(
             AppointmentStatus.Pending);

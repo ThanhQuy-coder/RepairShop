@@ -58,7 +58,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, AuthRespo
 
         await _userRepository.SaveChangesAsync();
 
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name);
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name, user.Phone!);
         return new AuthResponse(accessToken, 3600, customerRole.Name, user.Email);
     }
 }

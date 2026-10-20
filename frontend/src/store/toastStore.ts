@@ -18,10 +18,19 @@ export const useToastStore = create<ToastState>((set) => ({
   toasts: [],
 
   addToast: (type, message) => {
-    const id = crypto.randomUUID();
-    set((state) => ({ toasts: [...state.toasts, { id, type, message }] }));
+    const id =
+      typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
-    // Tự động biến mất sau 3.5s — không cần người dùng tự tay đóng cho thông báo ngắn
+    set((state) => {
+      if (state.toasts.some((t) => t.type === type && t.message === message)) {
+        return state;
+      }
+      const next = [...state.toasts, { id, type, message }];
+      return { toasts: next.slice(-5) };
+    });
+
     setTimeout(() => {
       set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
     }, 3500);

@@ -82,15 +82,6 @@ export default function IntakeIssueStep({
         />
       </div>
 
-      {issueReported.trim().length > 5 && (
-        <AIAdvisoryPanel
-          deviceType={device.deviceType}
-          brand={device.brand}
-          model={device.model}
-          initialIssueDescription={issueReported}
-        />
-      )}
-
       <div className={styles.field}>
         <label className={styles.label}>Tình trạng ban đầu (vết trầy/móp có sẵn)</label>
         <textarea

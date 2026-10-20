@@ -4,5 +4,5 @@ namespace RepairShop.Application.Common.Interfaces;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateAccessToken(User user, string roleName);
+    string GenerateAccessToken(User user, string roleName, string phone);
 }

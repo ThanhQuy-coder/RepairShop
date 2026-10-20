@@ -50,7 +50,7 @@ public class AuthService : IAuthService
         await LinkCustomerByPhoneAsync(user, request.Phone);
         await _userRepository.SaveChangesAsync();
 
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name);
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name, user.Phone!);
         return new AuthResponse(accessToken, 3600, customerRole.Name, user.Email);
     }
 
@@ -67,7 +67,7 @@ public class AuthService : IAuthService
 
         // Tạo role và lưu vào token
         var roleName = user.Role?.Name ?? DefaultSelfRegisterRole;
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName);
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName, user.Phone!);
 
         return new AuthResponse(accessToken, 3600, roleName, user.Email);
     }

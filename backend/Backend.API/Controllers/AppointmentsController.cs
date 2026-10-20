@@ -81,7 +81,8 @@ public class AppointmentsController : ControllerBase
 
     [HttpGet("mine")]
     [Authorize(Roles = Roles.Customer)]
-    public async Task<IActionResult> Mine(CancellationToken cancellationToken) => Ok(await _mediator.Send(new GetMyAppointmentsQuery(), cancellationToken));
+    public async Task<IActionResult> Mine(CancellationToken cancellationToken) 
+        => Ok(await _mediator.Send(new GetMyAppointmentsQuery(), cancellationToken));
 
     [HttpPatch("{id:guid}/cancel")]
     [Authorize(Roles = Roles.Customer)]
@@ -98,6 +99,11 @@ public class AppointmentsController : ControllerBase
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> Reject(Guid id, RejectBody rejectBody) =>
         Ok(await _mediator.Send(new RejectAppointmentCommand(id, rejectBody.RejectionReason)));
+
+    [HttpPatch("{id:guid}/no-show")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> MarkNoShow(Guid id) 
+        => Ok(await _mediator.Send(new MarkNoShowAppointmentCommand(id)));
 
     public record ConvertBody(Guid CustomerId, Guid DeviceId);
 

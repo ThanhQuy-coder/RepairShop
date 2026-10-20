@@ -18,6 +18,7 @@ public sealed record AppointmentDetailResponse(
     string? DeviceType,
     string? Brand,
     string? Model,
+    string? SerialNumber,
     string? IssueDescription,
     DateOnly AppointmentDate,
     Guid TimeSlotId,

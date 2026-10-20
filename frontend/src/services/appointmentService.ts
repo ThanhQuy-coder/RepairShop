@@ -12,6 +12,7 @@ export interface AvailableSlot {
 
 export interface AppointmentResponse {
   id: string;
+  customerId: string;
   fullName: string;
   phone: string;
   appointmentDate: string;
@@ -27,6 +28,7 @@ export interface AppointmentDetailResponse extends AppointmentResponse {
   deviceType?: string;
   brand?: string;
   model?: string;
+  serialNumber?: string;
   issueDescription?: string;
   rejectionReason?: string;
 }
@@ -74,4 +76,7 @@ export const appointmentService = {
     timeSlotId: string;
     customerId?: string | null;
   }) => apiClient.post<AppointmentResponse>('/appointments', payload).then((res) => res.data),
+
+  noShow: (id: string) =>
+    apiClient.patch<AppointmentResponse>(`/appointments/${id}/no-show`).then((res) => res.data),
 };

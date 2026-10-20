@@ -8,16 +8,30 @@ using RepairShop.Application.Modules.Appointments.DTOs;
 namespace RepairShop.Application.Modules.Appointments.Queries;
 
 public sealed class LookupAppointmentQueryHandler(IAppointmentRepository repository)
-    : IRequestHandler<LookupAppointmentQuery, AppointmentResponse>
+    : IRequestHandler<LookupAppointmentQuery, AppointmentDetailResponse>
 {
-    public async Task<AppointmentResponse> Handle(LookupAppointmentQuery request, CancellationToken cancellationToken)
+    public async Task<AppointmentDetailResponse> Handle(LookupAppointmentQuery request, CancellationToken cancellationToken)
     {
         var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(request.LookupToken)));
         var appointment = await repository.GetByLookupAsync(hash, request.Phone.Trim());
         if (appointment is null)
             throw new NotFoundException("Lịch hẹn", Guid.Empty);
 
-        return new AppointmentResponse(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone,
-            appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
+        return new AppointmentDetailResponse(
+            appointment.Id,
+            appointment.FullName,
+            appointment.Phone,
+            appointment.DeviceType,
+            appointment.Brand,
+            appointment.Model,
+            appointment.SerialNumber,
+            appointment.IssueDescription,
+            appointment.AppointmentDate,
+            appointment.TimeSlotId,
+            appointment.SlotStart,
+            appointment.SlotEnd,
+            appointment.Status.ToString(),
+            appointment.RejectionReason,
+            appointment.CreatedAt);
     }
 }

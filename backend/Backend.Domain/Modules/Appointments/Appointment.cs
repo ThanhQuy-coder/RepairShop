@@ -13,6 +13,7 @@ public class Appointment
     public string? DeviceType { get; private set; }
     public string? Brand { get; private set; }
     public string? Model { get; private set; }
+    public string? SerialNumber { get; private set; }
     public string? IssueDescription { get; private set; }
     public DateOnly AppointmentDate { get; private set; }
     public Guid TimeSlotId { get; private set; }
@@ -53,7 +54,6 @@ public class Appointment
         LookupTokenHash = lookupTokenHash ?? Convert.ToHexString(SHA256.HashData(RandomNumberGenerator.GetBytes(32)));
     }
 
-    /// <summary>BR-21 tinh thần: Receptionist/Admin xác nhận lịch hẹn.</summary>
     public void Confirm(Guid confirmedByUserId)
     {
         if (Status != AppointmentStatus.Pending)
@@ -73,7 +73,6 @@ public class Appointment
         ConfirmedByUserId = confirmedByUserId;
     }
 
-    /// <summary>Customer hủy lịch hẹn chưa xác nhận hoặc còn trong hạn hủy.</summary>
     public void Cancel()
     {
         if (Status is not (AppointmentStatus.Pending or AppointmentStatus.Confirmed))
@@ -82,7 +81,6 @@ public class Appointment
         Status = AppointmentStatus.Cancelled;
     }
 
-    /// <summary>BR-22: chỉ Appointment đã CONFIRMED mới convert được, và chỉ convert đúng 1 lần.</summary>
     public void ConvertToTicket(Guid ticketId)
     {
         if (Status != AppointmentStatus.Confirmed)

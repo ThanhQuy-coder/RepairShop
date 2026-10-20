@@ -2,10 +2,12 @@ using MediatR;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.Commands;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.Application.Modules.Appointments.Queries;
 
-public class GetMyAppointmentsQueryHandler : IRequestHandler<GetMyAppointmentsQuery, List<AppointmentResponse>>
+public class GetMyAppointmentsQueryHandler : IRequestHandler<GetMyAppointmentsQuery,
+    List<AppointmentResponse>>
 {
     private readonly IAppointmentRepository _appointments;
     private readonly ICustomerRepository _customers;
@@ -21,9 +23,26 @@ public class GetMyAppointmentsQueryHandler : IRequestHandler<GetMyAppointmentsQu
 
     public async Task<List<AppointmentResponse>> Handle(GetMyAppointmentsQuery request, CancellationToken cancellationToken)
     {
-        var customer = await _customers.GetByUserIdAsync(_currentUser.UserId!.Value);
-        if (customer is null) return [];
-        var appointments = await _appointments.GetByCustomerIdAsync(customer.Id);
-        return appointments.Select(CancelAppointmentCommandHandler.ToResponse).ToList();
+        if (_currentUser.UserId is null)
+            return [];
+
+        var appointments = await _appointments.GetByPhoneAsync(_currentUser.Phone!);
+
+        if (appointments is null || appointments.Count == 0)
+            return [];
+
+        return appointments.Select(ToResponse).ToList();
     }
+
+    internal static AppointmentResponse ToResponse(Appointment appointment) =>
+        new(
+            appointment.Id,
+            appointment.CustomerId ?? Guid.Empty,
+            appointment.FullName,
+            appointment.Phone,
+            appointment.AppointmentDate,
+            appointment.TimeSlotId,
+            appointment.Status.ToString(),
+            appointment.CreatedAt
+        );
 }

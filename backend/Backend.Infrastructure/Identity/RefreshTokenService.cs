@@ -64,7 +64,7 @@ public class RefreshTokenService : IRefreshTokenService
             new Domain.Modules.Identity.RefreshToken(user.Id, Hash(raw),
                 DateTime.UtcNow.AddDays(_settings.RefreshTokenExpiryDays)));
         await _db.SaveChangesAsync(cancellationToken);
-        return (new AuthResponse(_jwt.GenerateAccessToken(user, role), expiresIn, role, user.Email), raw);
+        return (new AuthResponse(_jwt.GenerateAccessToken(user, role, user.Phone!), expiresIn, role, user.Email), raw);
     }
 
     private static string Hash(string value) =>

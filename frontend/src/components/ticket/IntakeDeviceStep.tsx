@@ -4,21 +4,36 @@ import { deviceService } from '../../services/deviceService';
 import { extractApiError } from '../../utils/apiError';
 import type { Device, DeviceType } from '../../types/device.types';
 import styles from './IntakeStep.module.css';
-import { useTicketIntakeStore } from '../../store/ticketIntakeStore';
+import { useTicketIntakeStore, type WizardStep } from '../../store/ticketIntakeStore';
+import { useToastStore } from '../../store/toastStore';
 
 const DEVICE_TYPE_OPTIONS = [
+  { value: '', label: 'Chọn loại thiết bị' },
+  { value: 'Tablet', label: 'Máy tính bảng' },
+  { value: 'Smartwatch', label: 'Đồng hồ thông minh' },
   { value: 'Phone', label: 'Điện thoại' },
   { value: 'Laptop', label: 'Laptop' },
   { value: 'Electronics', label: 'Thiết bị điện tử khác' },
 ];
 
 export default function IntakeDeviceStep() {
-  // Lấy dữ liệu và actions trực tiếp từ Zustand.
   const customer = useTicketIntakeStore((s) => s.customer);
   const appointmentData = useTicketIntakeStore((s) => s.appointmentData);
   const selectedDevice = useTicketIntakeStore((s) => s.device);
   const setDevice = useTicketIntakeStore((s) => s.setDevice);
+  const addToast = useToastStore((s) => s.addToast);
   const setStep = useTicketIntakeStore((s) => s.setStep);
+
+  const handleChangeStep = (nextStep: WizardStep) => {
+    if (appointmentData) {
+      addToast(
+        'error',
+        'Vui lòng thoát khỏi quy trình ghi nhận để thay đổi khách hàng hoặc thông tin khách hàng.'
+      );
+      return;
+    }
+    setStep(nextStep);
+  };
 
   const [existingDevices, setExistingDevices] = useState<Device[]>([]);
   const [isLoadingDevices, setIsLoadingDevices] = useState(true);
@@ -35,7 +50,7 @@ export default function IntakeDeviceStep() {
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    // Chưa có khách hàng thì không gọi API.
+    addToast('info', 'Vui lòng kiểm tra thông tin thực tế trước khi tiếp tục.');
     if (!customer) {
       setExistingDevices([]);
       setIsLoadingDevices(false);
@@ -87,6 +102,10 @@ export default function IntakeDeviceStep() {
     setIsSaving(true);
 
     try {
+      if (form.deviceType.trim() === '' || form.brand.trim() === '' || form.model.trim() === '') {
+        addToast('error', 'Vui lòng điền đầy đủ thông tin thiết bị.');
+        return;
+      }
       const device = await deviceService.create({
         customerId: customer.id,
         deviceType: form.deviceType,
@@ -94,11 +113,10 @@ export default function IntakeDeviceStep() {
         model: form.model,
         serialNumber: form.serialNumber.trim() || undefined,
       });
-
-      // Lưu thiết bị vào Zustand.
-      // Không chuyển sang bước issue tại đây.
+      addToast('success', `Đã lưu thiết bị ${device.brand} ${device.model} thành công.`);
       setDevice(device);
     } catch (err) {
+      addToast('error', 'Không thể lưu thiết bị. Vui lòng thử lại.');
       setErrorMessage(extractApiError(err).message);
     } finally {
       setIsSaving(false);
@@ -111,7 +129,7 @@ export default function IntakeDeviceStep() {
       <div>
         <ErrorMessage message="Không tìm thấy khách hàng. Vui lòng quay lại chọn khách hàng." />
         <div className={styles.actions}>
-          <Button variant="secondary" onClick={() => setStep('customer')}>
+          <Button variant="secondary" onClick={() => handleChangeStep('customer')}>
             ← Quay lại
           </Button>
         </div>
@@ -122,7 +140,7 @@ export default function IntakeDeviceStep() {
   return (
     <div>
       <div className={styles.actions}>
-        <Button variant="secondary" onClick={() => setStep('customer')}>
+        <Button variant="secondary" onClick={() => handleChangeStep('customer')}>
           ← Quay lại
         </Button>
       </div>
@@ -222,17 +240,6 @@ export default function IntakeDeviceStep() {
             </form>
           )}
         </>
-      )}
-
-      {selectedDevice && (
-        <div className={styles.selectedCard} role="status">
-          <strong>Thiết bị đã ghi nhận</strong>
-          <p>
-            {selectedDevice.brand} {selectedDevice.model}
-          </p>
-          <p>Serial/IMEI: {selectedDevice.serialNumber || 'Không có'}</p>
-          <p>Vui lòng kiểm tra thiết bị thực tế trước khi tiếp tục.</p>
-        </div>
       )}
     </div>
   );

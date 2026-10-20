@@ -24,6 +24,7 @@ public sealed class GetAppointmentDetailQueryHandler : IRequestHandler<GetAppoin
             appointment.DeviceType,
             appointment.Brand,
             appointment.Model,
+            appointment.SerialNumber,
             appointment.IssueDescription,
             appointment.AppointmentDate,
             appointment.TimeSlotId,

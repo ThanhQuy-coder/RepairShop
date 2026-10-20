@@ -12,13 +12,17 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<CreateCustomerCommandHandler> _logger;
+    private readonly IAppointmentRepository _appointmentRepository;
 
     public CreateCustomerCommandHandler(ICustomerRepository customerRepository,
-        ILogger<CreateCustomerCommandHandler> logger, IUserRepository userRepository)
+        ILogger<CreateCustomerCommandHandler> logger,
+        IUserRepository userRepository,
+        IAppointmentRepository appointmentRepository)
     {
         _customerRepository = customerRepository;
         _userRepository = userRepository;
         _logger = logger;
+        _appointmentRepository = appointmentRepository;
     }
 
     public async Task<CustomerResponse> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
@@ -41,6 +45,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         }
 
         Guid? linkedUserId = request.UserId;
+        string emailUser = string.Empty;
         if (linkedUserId is null)
         {
             var userWithSamePhone = await _userRepository.GetByPhoneAsync(request.Phone);
@@ -56,17 +61,28 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
                         $"Tài khoản '{userWithSamePhone.Email}' đã liên kết với 1 hồ sơ khách hàng khác.");
 
                 linkedUserId = userWithSamePhone.Id;
+                emailUser = userWithSamePhone.Email;
             }
         }
 
         var customer = new Customer(request.FullName, request.Phone,
-            request.Email, request.Address, linkedUserId);
+            emailUser, request.Address, linkedUserId);
 
         await _customerRepository.AddAsync(customer);
         await _customerRepository.SaveChangesAsync();
 
-        _logger.LogInformation("Tạo mới Customer {CustomerId} - {Phone}, liên kết UserId: {UserId}",
-            customer.Id, customer.Phone, linkedUserId);
+        var appointmentUpdated = await _appointmentRepository.UpdateCustomerIdAsync(request.Phone, customer.Id);
+
+        if (appointmentUpdated > 0)
+        {
+            _logger.LogInformation("Cập nhật {Count} cuộc hẹn với số điện thoại {Phone} sang CustomerId: {CustomerId}",
+                appointmentUpdated, request.Phone, customer.Id);
+        }
+        else
+        {
+            _logger.LogInformation("Không tìm thấy cuộc hẹn nào với số điện thoại {Phone} để cập nhật sang CustomerId: {CustomerId}",
+                request.Phone, customer.Id);
+        }
 
         return new CustomerResponse(customer.Id, customer.FullName, customer.Phone, customer.Email,
             customer.Address, customer.CreatedAt);

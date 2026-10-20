@@ -97,11 +97,19 @@ export default function AppointmentDetailPage() {
         <div className={styles.infoGrid}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Thiết bị</span>
-            <p className={styles.infoValue}>
-              {[appointment.deviceType, appointment.brand, appointment.model]
-                .filter(Boolean)
-                .join(' ') || 'Chưa cung cấp'}
-            </p>
+            <p className={styles.infoValue}>{appointment.deviceType || 'Chưa cung cấp'}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Hãng</span>
+            <p className={styles.infoValue}>{appointment.brand || 'Chưa cung cấp'}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Kiểu máy (Model)</span>
+            <p className={styles.infoValue}>{appointment.model || 'Chưa cung cấp'}</p>
+          </div>
+          <div className={styles.infoItem}>
+            <span className={styles.infoLabel}>Số serial</span>
+            <p className={styles.infoValue}>{appointment.serialNumber || 'Chưa cung cấp'}</p>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>Mô tả vấn đề</span>

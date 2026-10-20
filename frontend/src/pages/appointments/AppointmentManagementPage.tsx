@@ -10,6 +10,7 @@ import {
   type TableColumn,
 } from '../../components/common';
 import { extractApiError } from '../../utils/apiError';
+import type { AppointmentIntakeData } from '../../store/ticketIntakeStore';
 
 const statusLabels: Record<string, string> = {
   Pending: 'Chờ xác nhận',
@@ -31,10 +32,35 @@ export default function AppointmentManagementPage() {
   const [rejectionReason, setRejectionReason] = useState('');
   const [reasonError, setReasonError] = useState<string | null>(null);
 
-  const handleCreateTicket = (data: AppointmentResponse) => {
-    navigate('/tickets/create', {
-      state: { appointment: data },
-    });
+  const handleCreateTicket = async (data: AppointmentResponse) => {
+    try {
+      const detail = await appointmentService.getById(data.id);
+
+      const appointment: AppointmentIntakeData = {
+        id: detail.id,
+        customerId: detail.customerId,
+        fullName: detail.fullName,
+        phone: detail.phone,
+        appointmentDate: detail.appointmentDate,
+        timeSlotId: detail.timeSlotId,
+        slotStart: detail.slotStart,
+        slotEnd: detail.slotEnd,
+        status: detail.status,
+        createdAt: detail.createdAt,
+        lookupToken: detail.lookupToken,
+        deviceType: detail.deviceType as
+          'Phone' | 'Laptop' | 'Electronics' | 'Tablet' | 'Smartwatch',
+        brand: detail.brand,
+        model: detail.model,
+        serialNumber: detail.serialNumber,
+      };
+
+      navigate('/tickets/create', {
+        state: { appointment },
+      });
+    } catch (error) {
+      console.error('Không thể lấy chi tiết lịch hẹn:', error);
+    }
   };
 
   const load = useCallback(async () => {
@@ -53,7 +79,11 @@ export default function AppointmentManagementPage() {
     void load();
   }, [load]);
 
-  const transition = async (id: string, rejectionReason: string, action: 'confirm' | 'reject') => {
+  const transition = async (
+    id: string,
+    rejectionReason: string,
+    action: 'confirm' | 'reject' | 'noShow'
+  ) => {
     try {
       await appointmentService[action](id, rejectionReason);
       await load();
@@ -99,7 +129,13 @@ export default function AppointmentManagementPage() {
       render: (a) => (
         <Badge
           variant={
-            a.status === 'Pending' ? 'warning' : a.status === 'Rejected' ? 'danger' : 'success'
+            a.status === 'Pending'
+              ? 'warning'
+              : a.status === 'Rejected'
+                ? 'danger'
+                : a.status === 'NoShow'
+                  ? 'danger'
+                  : 'success'
           }
         >
           {statusLabels[a.status] ?? a.status}
@@ -125,9 +161,18 @@ export default function AppointmentManagementPage() {
             </>
           )}
           {a.status === 'Confirmed' && (
-            <Button size="sm" onClick={() => handleCreateTicket(a)}>
-              Chuyển thành ticket
-            </Button>
+            <>
+              <Button size="sm" onClick={() => handleCreateTicket(a)}>
+                Chuyển thành ticket
+              </Button>
+              <Button
+                size="sm"
+                variant="warning"
+                onClick={() => transition(a.id, 'khách không đến', 'noShow')}
+              >
+                Không đến
+              </Button>
+            </>
           )}{' '}
         </div>
       ),

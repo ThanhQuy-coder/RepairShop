@@ -30,7 +30,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponse>
             throw new InvalidCredentialsException();
 
         var roleName = user.Role?.Name ?? "Customer";
-        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName);
+        var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName, user.Phone!);
 
         return new AuthResponse(accessToken, 3600, roleName, user.Email);
     }
