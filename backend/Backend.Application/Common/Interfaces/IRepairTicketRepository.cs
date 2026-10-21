@@ -29,4 +29,10 @@ public interface IRepairTicketRepository
     Task SaveChangesAsync();
 
     void TrackNewReview(Review review);
+
+    Task<RepairTicket?> GetActiveTicketByDeviceIdAsync(Guid deviceId);
+
+    Task<HashSet<Guid>> GetDeviceIdsWithActiveTicketAsync(
+        IEnumerable<Guid> deviceIds,
+        CancellationToken cancellationToken = default);
 }

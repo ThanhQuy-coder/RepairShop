@@ -183,20 +183,26 @@ export default function IntakeDeviceStep() {
                 flexWrap: 'wrap',
               }}
             >
-              {existingDevices.map((d) => (
-                <button
-                  key={d.id}
-                  type="button"
-                  className={styles.deviceOption}
-                  onClick={() => setDevice(d)}
-                  aria-pressed={selectedDevice?.id === d.id}
-                >
-                  <strong>
-                    {d.brand} {d.model}
-                  </strong>{' '}
-                  — {d.serialNumber ?? 'Không có Serial'}
-                </button>
-              ))}
+              {existingDevices.map((d) => {
+                const isLocked = d.isConvertTicket === true;
+                return (
+                  <button
+                    key={d.id}
+                    type="button"
+                    className={styles.deviceOption}
+                    onClick={() => setDevice(d)}
+                    disabled={isLocked}
+                    aria-pressed={selectedDevice?.id === d.id}
+                    title={isLocked ? 'Thiết bị đang có ticket chưa xử lý xong' : undefined}
+                  >
+                    <strong>
+                      {d.brand} {d.model}
+                    </strong>{' '}
+                    — {d.serialNumber ?? 'Không có Serial'}
+                    {isLocked && <span className={styles.badge}>Đang có ticket</span>}
+                  </button>
+                );
+              })}
             </div>
           ) : (
             <form onSubmit={handleCreateNew} className={styles.form}>

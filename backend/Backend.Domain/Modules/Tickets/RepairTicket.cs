@@ -14,7 +14,8 @@ namespace RepairShop.Domain.Modules.Tickets;
 
 public class RepairTicket : BaseEntity
 {
-    private const int MaxImagesPerTicket = 5;
+    private const int MaxImagesPerTicket = 12;
+    private const int MaxImagesPerType = 6;
     public string TicketCode { get; private set; } = default!;
     public Guid CustomerId { get; private set; }
     public Guid DeviceId { get; private set; }
@@ -107,8 +108,25 @@ public class RepairTicket : BaseEntity
         if (string.IsNullOrWhiteSpace(imageUrl))
             throw new DomainException("URL ảnh không được để trống.");
 
+        EnsureCanAddImage(imageType);
+
+        _images.Add(new TicketImage(Id, imageUrl, imageType, uploadedByUserId, caption));
+        MarkUpdated();
+    }
+
+    public void EnsureCanAddImage(ImageType imageType)
+    {
         if (_images.Count >= MaxImagesPerTicket)
             throw new DomainException($"Mỗi phiếu sửa chữa chỉ được lưu tối đa {MaxImagesPerTicket} ảnh.");
+
+        var imagesOfType = _images.Count(image => image.ImageType == imageType);
+        if (imageType is ImageType.BeforeRepair or ImageType.AfterRepair &&
+            imagesOfType >= MaxImagesPerType)
+        {
+            var imageTypeLabel = imageType == ImageType.BeforeRepair ? "trước sửa chữa" : "sau sửa chữa";
+            throw new DomainException(
+                $"Mỗi phiếu sửa chữa chỉ được lưu tối đa {MaxImagesPerType} ảnh {imageTypeLabel}.");
+        }
 
         var terminalStatuses = new[] { RepairStatusCodes.Delivered, RepairStatusCodes.ClosedRejected };
         if (terminalStatuses.Contains(Status.Code))
@@ -126,9 +144,6 @@ public class RepairTicket : BaseEntity
         if (imageType == ImageType.AfterRepair &&
             Status.Code is not (RepairStatusCodes.InRepair or RepairStatusCodes.QaTesting or RepairStatusCodes.ReadyForPickup))
             throw new DomainException("Ảnh AFTER_REPAIR chỉ được thêm khi đang/đã sửa chữa xong.");
-
-        _images.Add(new TicketImage(Id, imageUrl, imageType, uploadedByUserId, caption));
-        MarkUpdated();
     }
 
     // ───────────────────────── Workflow: Assign → Diagnosis ─────────────────────────

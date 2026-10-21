@@ -96,6 +96,15 @@ export default function AppointmentSettingsPage() {
     }
   };
 
+  const activate = async (slot: TimeSlot) => {
+    try {
+      await apiClient.post(`/time-slots/${slot.id}/activate`);
+      await load();
+    } catch (err) {
+      setError(extractApiError(err).message);
+    }
+  };
+
   const columns: TableColumn<TimeSlot>[] = [
     {
       key: 'day',
@@ -124,6 +133,11 @@ export default function AppointmentSettingsPage() {
           {s.isActive && (
             <Button size="sm" variant="danger" onClick={() => void deactivate(s)}>
               Tắt
+            </Button>
+          )}
+          {!s.isActive && (
+            <Button size="sm" variant="success" onClick={() => void activate(s)}>
+              Bật lại
             </Button>
           )}
         </div>

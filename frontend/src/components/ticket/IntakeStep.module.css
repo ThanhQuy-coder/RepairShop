@@ -123,3 +123,17 @@
   font-size: 14px;
 }
 
+.deviceOption:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  white-space: nowrap;
+}
+

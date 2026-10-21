@@ -32,8 +32,10 @@ public class UploadTicketImageCommandHandler : IRequestHandler<UploadTicketImage
         var userId = _currentUser.UserId
             ?? throw new UnauthorizedAccessException("Không xác định được người upload từ token.");
 
-        // Upload lên Cloudinary TRƯỚC — nếu Domain reject (VD sai trạng thái) thì ảnh coi như "mồ côi" trên
-        // Cloudinary (chấp nhận đánh đổi ở quy mô đồ án; hệ thống production thật sẽ cần cơ chế dọn rác/rollback).
+        // Kiểm tra rule trước khi upload để không tạo ảnh mồ côi trên Cloudinary.
+        ticket.EnsureCanAddImage(request.ImageType);
+
+        // Các ràng buộc nghiệp vụ đã được kiểm tra trước khi upload để tránh tạo ảnh mồ côi.
         var uploadResult = await _fileStorageService.UploadImageAsync(
             request.FileStream, request.FileName, folder: $"repair_shop/tickets/{ticket.TicketCode}");
 

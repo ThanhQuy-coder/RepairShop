@@ -105,7 +105,7 @@ export default function DeviceFormModal({
           label="Loại thiết bị"
           options={DEVICE_TYPE_OPTIONS}
           value={form.deviceType}
-          disabled={!!editingDevice} // đổi loại thiết bị sau khi tạo là bất thường nghiệp vụ — khoá lại khi Edit
+          disabled={!!editingDevice}
           onChange={(e) => setForm({ ...form, deviceType: e.target.value as DeviceType })}
         />
 

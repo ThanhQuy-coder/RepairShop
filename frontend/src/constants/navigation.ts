@@ -54,6 +54,7 @@ export const PUBLIC_NAV: NavItem[] = [
   { label: 'Trang chủ', path: '/' },
   { label: 'Dịch vụ', path: '/services' },
   { label: 'Đặt lịch', path: '/book' },
+  { label: 'Tra cứu lịch hẹn', path: '/appointments/lookup' },
   { label: 'Tư vấn giá AI', path: '/estimate' },
   { label: 'Bài viết', path: '/articles' },
   { label: 'Tra cứu tiến độ', path: '/track' },

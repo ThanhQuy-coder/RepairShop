@@ -25,8 +25,6 @@ public class TicketsController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return CreatedAtAction(nameof(Create), new { id = result.Id }, result);
-        // Lưu ý: chưa có GET /api/tickets/{id} thật (thuộc Task khác trong Tuần 4) nên tạm route lại chính action này —
-        // sẽ đổi thành nameof(GetById) khi task đó hoàn thành.
     }
 
     [HttpPatch("{id:guid}/intake-condition")]

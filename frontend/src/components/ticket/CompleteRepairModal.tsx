@@ -21,19 +21,30 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
 
   const [repairNote, setRepairNote] = useState('');
   const [completionNotes, setCompletionNotes] = useState('');
-  const [afterFile, setAfterFile] = useState<File | null>(null);
+  const [afterFiles, setAfterFiles] = useState<File[]>([]);
+  const [existingAfterCount, setExistingAfterCount] = useState(0);
+  const [existingTotalCount, setExistingTotalCount] = useState(0);
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingImages, setIsLoadingImages] = useState(false);
   const { showSuccess } = useToast();
 
   useEffect(() => {
     if (isOpen) {
-      partService.list({}).then((response) => {
-        setParts(response.items);
-      });
+      setIsLoadingImages(true);
+      Promise.all([partService.list({}), ticketService.getImages(ticketId)])
+        .then(([partsResponse, images]) => {
+          setParts(partsResponse.items);
+          setExistingAfterCount(images.filter((image) => image.imageType === 'AfterRepair').length);
+          setExistingTotalCount(images.length);
+        })
+        .catch((err) => {
+          setErrorMessage(extractApiError(err).message);
+        })
+        .finally(() => setIsLoadingImages(false));
     }
-  }, [isOpen]);
+  }, [isOpen, ticketId]);
 
   const handleAddPart = async () => {
     if (!selectedPartId) return;
@@ -53,12 +64,18 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
       setErrorMessage('Vui lòng nhập ghi chú hoàn tất trước khi kết thúc.');
       return;
     }
+    const availableSlots = Math.min(6 - existingAfterCount, 12 - existingTotalCount);
+    if (afterFiles.length > availableSlots) {
+      setErrorMessage(`Ticket chỉ còn tối đa ${availableSlots} ảnh sau sửa chữa.`);
+      return;
+    }
+
     setIsSaving(true);
     setErrorMessage(null);
     try {
       if (repairNote.trim()) await ticketService.addRepairNote(ticketId, repairNote);
 
-      if (afterFile) {
+      for (const afterFile of afterFiles) {
         const formData = new FormData();
         formData.append('file', afterFile);
         formData.append('imageType', 'AfterRepair');
@@ -86,7 +103,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
           <Button variant="secondary" onClick={onClose} disabled={isSaving}>
             Đóng
           </Button>
-          <Button onClick={handleFinish} isLoading={isSaving}>
+          <Button onClick={handleFinish} isLoading={isSaving} disabled={isLoadingImages}>
             Xác nhận hoàn tất
           </Button>
         </>
@@ -145,9 +162,26 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
       <input
         type="file"
         accept="image/*"
-        onChange={(e: ChangeEvent<HTMLInputElement>) => setAfterFile(e.target.files?.[0] ?? null)}
+        multiple
+        disabled={isLoadingImages || isSaving}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
+          const selectedFiles = Array.from(e.target.files ?? []);
+          const availableSlots = Math.min(6 - existingAfterCount, 12 - existingTotalCount);
+          if (selectedFiles.length > availableSlots) {
+            setAfterFiles([]);
+            setErrorMessage(`Ticket chỉ còn tối đa ${availableSlots} ảnh sau sửa chữa.`);
+            e.target.value = '';
+            return;
+          }
+
+          setErrorMessage(null);
+          setAfterFiles(selectedFiles);
+        }}
         style={{ marginBottom: 16 }}
       />
+      <p style={{ fontSize: 13, marginTop: -8, marginBottom: 16 }}>
+        Đã chọn {afterFiles.length}/6 ảnh sau sửa chữa
+      </p>
 
       <h4 style={{ marginBottom: 8 }}>Ghi chú hoàn tất *</h4>
       <textarea
@@ -160,7 +194,7 @@ export default function CompleteRepairModal({ isOpen, ticketId, onClose, onDone 
         }}
         value={completionNotes}
         onChange={(e) => setCompletionNotes(e.target.value)}
-        placeholder="Bắt buộc trước khi chuyển sang kiểm thử QA (Task 4.10)..."
+        placeholder="Bắt buộc trước khi chuyển sang kiểm thử QA..."
       />
     </Modal>
   );

@@ -66,6 +66,11 @@
   color: #64748b;
 }
 
+.resultLabelAction {
+  font-weight: 600;
+  color: var(--color-primary, #185a4e);
+}
+
 .resultValue {
   text-align: right;
   word-break: break-word;

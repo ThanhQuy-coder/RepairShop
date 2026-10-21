@@ -37,6 +37,12 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
         _logger = logger;
     }
 
+    private Task<bool> IsDeviceConvertedToTicket(Guid deviceId, CancellationToken cancellationToken)
+    {
+        var query = _ticketRepository.GetActiveTicketByDeviceIdAsync(deviceId);
+        return query.ContinueWith(t => t.Result != null, cancellationToken);
+    }
+
     public async Task<TicketResponse> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
     {
         // 1. Validate Customer
@@ -50,6 +56,10 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
         // 3. Kiểm tra Device thuộc Customer — chặn Customer A dùng Device của Customer B
         if (device.CustomerId != customer.Id)
             throw new DeviceOwnershipMismatchException(device.Id, customer.Id);
+
+        // Chặn tạo Ticket mới nếu Device đã có Ticket đang mở (CHECKED_IN, DIAGNOSING, REPAIRING, AWAITING_PARTS)
+        if (await IsDeviceConvertedToTicket(device.Id, cancellationToken))
+            throw new DeviceAlreadyHasActiveTicketException(device.Id);
 
         // 4. Sinh Ticket Code (đã tự kiểm tra trùng bên trong TicketCodeGenerator)
         var ticketCode = await _codeGenerator.GenerateUniqueCodeAsync();

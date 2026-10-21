@@ -47,8 +47,10 @@ export const appointmentService = {
       .post<AppointmentResponse>('/appointments/lookup', { lookupToken, phone })
       .then((res) => res.data),
 
-  cancel: (id: string) =>
-    apiClient.patch<AppointmentResponse>(`/appointments/${id}/cancel`).then((res) => res.data),
+  cancel: (id: string, lookupToken: string, phone: string) =>
+    apiClient
+      .patch<AppointmentResponse>(`/appointments/${id}/cancel`, { lookupToken, phone })
+      .then((res) => res.data),
 
   confirm: (id: string) =>
     apiClient.patch<AppointmentResponse>(`/appointments/${id}/confirm`).then((res) => res.data),
@@ -79,4 +81,9 @@ export const appointmentService = {
 
   noShow: (id: string) =>
     apiClient.patch<AppointmentResponse>(`/appointments/${id}/no-show`).then((res) => res.data),
+
+  markCompleted: (id: string) =>
+    apiClient
+      .patch<AppointmentResponse>(`/appointments/${id}/mark-completed`)
+      .then((res) => res.data),
 };

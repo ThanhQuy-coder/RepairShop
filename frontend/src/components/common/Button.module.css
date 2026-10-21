@@ -95,3 +95,14 @@
   color: var(--color-primary-hover, #13483e);
 }
 
+.success {
+  background: var(--color-success, #16a34a);
+  color: #ffffff;
+  box-shadow: var(--shadow-xs);
+}
+
+.success:hover:not(:disabled) {
+  background: var(--color-success-hover, #15803d);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}

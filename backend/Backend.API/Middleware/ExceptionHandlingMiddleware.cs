@@ -121,6 +121,10 @@ public class ExceptionHandlingMiddleware
                 HttpStatusCode.Conflict, // 409 — đúng tinh thần lỗi "vi phạm ràng buộc quan hệ dữ liệu", không phải 400 (sai format) hay 403 (sai quyền)
                 new ApiErrorResponse { Message = ownershipEx.Message }),
 
+            DeviceAlreadyHasActiveTicketException activeTicketEx => (
+                HttpStatusCode.Conflict,
+                new ApiErrorResponse { Message = activeTicketEx.Message }),
+
             ForbiddenException forbiddenEx => (HttpStatusCode.Forbidden, new ApiErrorResponse { Message = forbiddenEx.Message }),
             _ => (
                 HttpStatusCode.InternalServerError,

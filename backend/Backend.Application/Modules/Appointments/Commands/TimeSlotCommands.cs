@@ -56,3 +56,20 @@ public class DeleteTimeSlotCommandHandler : IRequestHandler<DeleteTimeSlotComman
         return Unit.Value;
     }
 }
+
+public record ActivateTimeSlotCommand(Guid Id) : IRequest<Unit>;
+
+public class ActivateTimeSlotCommandHandler : IRequestHandler<ActivateTimeSlotCommand, Unit>
+{
+    private readonly ITimeSlotConfigRepository _repo;
+    public ActivateTimeSlotCommandHandler(ITimeSlotConfigRepository repo) => _repo = repo;
+
+    public async Task<Unit> Handle(ActivateTimeSlotCommand request, CancellationToken cancellationToken)
+    {
+        var slot = await _repo.GetByIdAsync(request.Id) ?? throw new NotFoundException("Khung giờ", request.Id);
+        slot.Activate();
+        _repo.Update(slot);
+        await _repo.SaveChangesAsync();
+        return Unit.Value;
+    }
+}

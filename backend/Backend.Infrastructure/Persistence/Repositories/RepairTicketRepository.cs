@@ -135,4 +135,28 @@ public class RepairTicketRepository : IRepairTicketRepository
 
     public void TrackNewReview(Review review)
         => _context.Entry(review).State = EntityState.Added;
+
+    public Task<RepairTicket?> GetActiveTicketByDeviceIdAsync(Guid deviceId)
+    {
+        return _context.RepairTickets
+            .Where(t => t.DeviceId == deviceId)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task<HashSet<Guid>> GetDeviceIdsWithActiveTicketAsync(
+        IEnumerable<Guid> deviceIds,
+        CancellationToken cancellationToken = default)
+    {
+        var ids = deviceIds as ICollection<Guid> ?? deviceIds.ToList();
+        if (ids.Count == 0) return new HashSet<Guid>();
+
+        var result = await _context.RepairTickets
+            .Where(t => ids.Contains(t.DeviceId))
+            .Select(t => t.DeviceId)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+
+        return result.ToHashSet();
+    }
 }

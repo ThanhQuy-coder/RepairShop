@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, ErrorMessage, Input, Loading } from '../../components/common';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Button, ErrorMessage, Input, Loading, Select } from '../../components/common';
 import {
   appointmentService,
   type AvailableSlot,
@@ -8,8 +8,18 @@ import {
 } from '../../services/appointmentService';
 import { extractApiError } from '../../utils/apiError';
 import styles from './BookingPage.module.css';
+import type { DeviceType } from '../../types/device.types';
 
 const today = new Date().toISOString().slice(0, 10);
+
+const DEVICE_TYPE_OPTIONS = [
+  { value: '', label: 'Chọn loại thiết bị' },
+  { value: 'Tablet', label: 'Máy tính bảng' },
+  { value: 'Smartwatch', label: 'Đồng hồ thông minh' },
+  { value: 'Phone', label: 'Điện thoại' },
+  { value: 'Laptop', label: 'Laptop' },
+  { value: 'Electronics', label: 'Thiết bị điện tử khác' },
+];
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
@@ -110,6 +120,9 @@ export default function BookingPage() {
         {searchParams.get('serviceId') && (
           <small>Dịch vụ đã chọn sẽ được xác nhận khi tiếp nhận thiết bị.</small>
         )}
+        <Link to="/appointments/lookup" className={styles.secondary}>
+          Đã có lịch hẹn? Tra cứu ngay →
+        </Link>
       </header>
       <form onSubmit={submit} className={styles.form}>
         {errorMessage && <ErrorMessage message={errorMessage} />}
@@ -168,10 +181,11 @@ export default function BookingPage() {
             />
           </div>
           <div className={styles.twoColumns}>
-            <Input
+            <Select
               label="Loại thiết bị"
+              options={DEVICE_TYPE_OPTIONS}
               value={deviceType}
-              onChange={(event) => setDeviceType(event.target.value)}
+              onChange={(event) => setDeviceType(event.target.value as DeviceType)}
             />
             <Input label="Hãng" value={brand} onChange={(event) => setBrand(event.target.value)} />
             <Input label="Model" value={model} onChange={(event) => setModel(event.target.value)} />
@@ -194,11 +208,6 @@ export default function BookingPage() {
         <Button type="submit" size="lg" isLoading={isSubmitting}>
           Xác nhận đặt lịch
         </Button>
-        <div style={{ textAlign: 'center' }}>
-          <Link to="/appointments/lookup" className={styles.secondary}>
-            Đã có lịch hẹn? Tra cứu ngay →
-          </Link>
-        </div>
       </form>
     </main>
   );

@@ -82,7 +82,8 @@ public class AppointmentRepository : IAppointmentRepository
             a.AppointmentDate == date && a.TimeSlotId == timeSlotId &&
             (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed));
 
-    public async Task AddAsync(Appointment appointment) => await _context.Appointments.AddAsync(appointment);
+    public async Task AddAsync(Appointment appointment) 
+        => await _context.Appointments.AddAsync(appointment);
     public void Update(Appointment appointment) => _context.Appointments.Update(appointment);
     public Task SaveChangesAsync() => _context.SaveChangesAsync();
 

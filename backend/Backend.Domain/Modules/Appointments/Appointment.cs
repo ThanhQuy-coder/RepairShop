@@ -89,7 +89,15 @@ public class Appointment
             throw new DomainException("Lịch hẹn này đã được chuyển đổi thành phiếu sửa chữa trước đó.");
 
         LinkedTicketId = ticketId;
-        Status = AppointmentStatus.Converted;
+        Status = AppointmentStatus.Arrived;
+    }
+
+    public void MarkComplete()
+    {
+        if (Status != AppointmentStatus.Arrived)
+            throw new DomainException("Chỉ đánh dấu COMPLETE cho lịch hẹn đã ARRIVED.");
+
+        Status = AppointmentStatus.Complete;
     }
 
     public void MarkNoShow()

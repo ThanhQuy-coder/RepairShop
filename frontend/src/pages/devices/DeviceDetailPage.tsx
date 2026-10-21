@@ -101,7 +101,11 @@ export default function DeviceDetailPage() {
         ) : (
           <div className={styles.ticketList}>
             {history.map((h) => (
-              <div key={h.ticketCode} className={styles.ticketRow}>
+              <div
+                key={h.ticketCode}
+                className={styles.ticketRow}
+                onClick={() => navigate(`/tickets/${h.id}`)}
+              >
                 <span className={styles.ticketCode}>{h.ticketCode}</span>
                 <span>{h.deviceLabel}</span>
                 <Badge variant={TICKET_STATUS_BADGE_VARIANT[h.status]}>

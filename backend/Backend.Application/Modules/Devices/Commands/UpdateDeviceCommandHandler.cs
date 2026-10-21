@@ -21,6 +21,6 @@ public class UpdateDeviceCommandHandler : IRequestHandler<UpdateDeviceCommand, D
         await _deviceRepository.SaveChangesAsync();
 
         return new DeviceResponse(device.Id, device.CustomerId, device.DeviceType.ToString(),
-            device.Brand, device.Model, device.SerialNumber, device.CreatedAt);
+            device.Brand, device.Model, device.SerialNumber, device.CreatedAt, false);
     }
 }

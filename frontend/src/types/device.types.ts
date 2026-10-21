@@ -8,6 +8,7 @@ export interface Device {
   model: string;
   serialNumber?: string;
   createdAt: string;
+  isConvertTicket: boolean;
 }
 
 export interface CreateDeviceRequest {

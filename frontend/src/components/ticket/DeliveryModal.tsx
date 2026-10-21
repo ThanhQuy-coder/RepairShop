@@ -33,7 +33,6 @@ export default function DeliveryModal({
     setIsSaving(true);
     setErrorMessage(null);
     try {
-      // Payment = Mock/Manual (Task 4.12, Tuần 4) — xuất Invoice, đánh dấu đã thanh toán ngay tại quầy, rồi Deliver
       const invoiceId = existingInvoice
         ? existingInvoice.id
         : ((await ticketService.createInvoice(ticketId, paymentMethod)).data as { id: string }).id;

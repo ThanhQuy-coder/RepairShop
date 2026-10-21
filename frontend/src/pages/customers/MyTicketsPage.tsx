@@ -14,9 +14,6 @@ export default function MyTicketsPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // Backend tự lọc theo Customer đang đăng nhập (mở rộng tương tự ownership filter của
-    // Technician ở Task 5.10 — cần Backend bổ sung "if role == Customer thì lọc CustomerId
-    // theo UserId" trong RepairTicketRepository.SearchAsync; xem ghi chú review cuối bài).
     ticketService
       .list({ pageSize: 50 })
       .then((res) => setTickets(res.items))

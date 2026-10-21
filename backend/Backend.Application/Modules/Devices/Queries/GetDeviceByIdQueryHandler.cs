@@ -8,7 +8,10 @@ public class GetDeviceByIdQueryHandler : IRequestHandler<GetDeviceByIdQuery, Dev
 {
     private readonly IDeviceRepository _deviceRepository;
 
-    public GetDeviceByIdQueryHandler(IDeviceRepository deviceRepository) => _deviceRepository = deviceRepository;
+    public GetDeviceByIdQueryHandler(IDeviceRepository deviceRepository)
+    {
+        _deviceRepository = deviceRepository;
+    }
 
     public async Task<DeviceResponse> Handle(GetDeviceByIdQuery request, CancellationToken cancellationToken)
     {
@@ -16,6 +19,6 @@ public class GetDeviceByIdQueryHandler : IRequestHandler<GetDeviceByIdQuery, Dev
             ?? throw new KeyNotFoundException($"Không tìm thấy thiết bị với Id '{request.Id}'.");
 
         return new DeviceResponse(device.Id, device.CustomerId, device.DeviceType.ToString(),
-            device.Brand, device.Model, device.SerialNumber, device.CreatedAt);
+            device.Brand, device.Model, device.SerialNumber, device.CreatedAt, false);
     }
 }

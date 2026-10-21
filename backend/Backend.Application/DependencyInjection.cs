@@ -2,6 +2,8 @@ using RepairShop.Application.Common.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Auth;
 
 namespace RepairShop.Application;
 
@@ -18,6 +20,7 @@ public static class DependencyInjection
 
         // Kích hoạt Validation Pipeline Behavior cho MediatR
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddScoped<IOtpGenerator, OtpGenerator>();
 
         return services;
     }

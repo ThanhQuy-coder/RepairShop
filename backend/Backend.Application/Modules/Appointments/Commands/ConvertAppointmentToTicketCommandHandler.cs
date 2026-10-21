@@ -1,10 +1,12 @@
 using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
+using RepairShop.Application.Modules.Appointments.Commands;
 using RepairShop.Application.Modules.Tickets.Commands;
 using RepairShop.Application.Modules.Tickets.DTOs;
 
-public class ConvertAppointmentToTicketCommandHandler : IRequestHandler<ConvertAppointmentToTicketCommand, TicketResponse>
+public class ConvertAppointmentToTicketCommandHandler 
+    : IRequestHandler<ConvertAppointmentToTicketCommand, TicketResponse>
 {
     private readonly IAppointmentRepository _appointmentRepo;
     private readonly IMediator _mediator;

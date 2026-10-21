@@ -17,7 +17,8 @@ const statusLabels: Record<string, string> = {
   Confirmed: 'Đã xác nhận',
   Rejected: 'Đã từ chối',
   Cancelled: 'Đã hủy',
-  Converted: 'Đã chuyển ticket',
+  Arrived: 'Đã chuyển ticket',
+  Complete: 'Hoàn thành',
   NoShow: 'Không đến',
 };
 
@@ -31,6 +32,10 @@ export default function AppointmentManagementPage() {
   );
   const [rejectionReason, setRejectionReason] = useState('');
   const [reasonError, setReasonError] = useState<string | null>(null);
+  const [completingAppointment, setCompletingAppointment] = useState<AppointmentResponse | null>(
+    null
+  );
+  const [isCompleting, setIsCompleting] = useState(false);
 
   const handleCreateTicket = async (data: AppointmentResponse) => {
     try {
@@ -82,7 +87,7 @@ export default function AppointmentManagementPage() {
   const transition = async (
     id: string,
     rejectionReason: string,
-    action: 'confirm' | 'reject' | 'noShow'
+    action: 'confirm' | 'reject' | 'noShow' | 'markCompleted'
   ) => {
     try {
       await appointmentService[action](id, rejectionReason);
@@ -108,6 +113,21 @@ export default function AppointmentManagementPage() {
 
     await transition(rejectingAppointment.id, rejectionReason.trim(), 'reject');
     setRejectingAppointment(null);
+  };
+
+  const handleOpenCompleteModal = (appointment: AppointmentResponse) => {
+    setCompletingAppointment(appointment);
+  };
+
+  const handleConfirmComplete = async () => {
+    if (!completingAppointment) return;
+    setIsCompleting(true);
+    try {
+      await transition(completingAppointment.id, '', 'markCompleted');
+      setCompletingAppointment(null);
+    } finally {
+      setIsCompleting(false);
+    }
   };
 
   const columns: TableColumn<AppointmentResponse>[] = [
@@ -167,10 +187,20 @@ export default function AppointmentManagementPage() {
               </Button>
               <Button
                 size="sm"
-                variant="warning"
+                variant="secondary"
                 onClick={() => transition(a.id, 'khách không đến', 'noShow')}
               >
                 Không đến
+              </Button>
+            </>
+          )}
+          {a.status === 'Arrived' && (
+            <>
+              <Button size="sm" onClick={() => handleCreateTicket(a)}>
+                Chuyển thành ticket
+              </Button>
+              <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
+                Hoàn thành
               </Button>
             </>
           )}{' '}
@@ -240,6 +270,59 @@ export default function AppointmentManagementPage() {
           </Button>
           <Button variant="danger" onClick={() => void handleConfirmReject()}>
             Xác nhận từ chối
+          </Button>
+        </div>
+      </Modal>
+
+      {/* Modal xác nhận hoàn thành lịch hẹn */}
+      <Modal
+        isOpen={!!completingAppointment}
+        onClose={() => {
+          if (isCompleting) return;
+          setCompletingAppointment(null);
+        }}
+        title="Hoàn thành lịch hẹn"
+      >
+        <p>
+          Bạn có chắc chắn muốn đánh dấu lịch hẹn này là <strong>Hoàn thành</strong>?
+        </p>
+        {completingAppointment && (
+          <div
+            style={{
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: 6,
+              padding: '10px 12px',
+              marginTop: 8,
+              fontSize: 14,
+              color: '#334155',
+            }}
+          >
+            <div>
+              Khách hàng: <strong>{completingAppointment.fullName}</strong>
+            </div>
+            <div>Số điện thoại: {completingAppointment.phone}</div>
+            <div>Ngày hẹn: {completingAppointment.appointmentDate}</div>
+          </div>
+        )}
+        <p style={{ color: '#64748b', fontSize: 13, marginTop: 12 }}>
+          Sau khi hoàn thành, lịch hẹn sẽ không thể thay đổi trạng thái.
+        </p>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+          <Button
+            variant="secondary"
+            onClick={() => setCompletingAppointment(null)}
+            disabled={isCompleting}
+          >
+            Hủy
+          </Button>
+          <Button
+            variant="success"
+            onClick={() => void handleConfirmComplete()}
+            disabled={isCompleting}
+          >
+            {isCompleting ? 'Đang xử lý...' : 'Xác nhận hoàn thành'}
           </Button>
         </div>
       </Modal>

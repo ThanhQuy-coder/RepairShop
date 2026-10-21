@@ -18,10 +18,11 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
     private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<CreateAppointmentCommandHandler> _logger;
     private readonly IBusinessClock _clock;
+    private readonly IOtpGenerator _otpGenerator;
 
     public CreateAppointmentCommandHandler(ITimeSlotConfigRepository slotRepo, IAppointmentRepository appointmentRepo,
         INotificationService notificationService, IUnitOfWork unitOfWork, ILogger<CreateAppointmentCommandHandler> logger,
-        IBusinessClock clock)
+        IBusinessClock clock, IOtpGenerator otpGenerator)
     {
         _slotRepo = slotRepo;
         _appointmentRepo = appointmentRepo;
@@ -29,6 +30,7 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         _unitOfWork = unitOfWork;
         _logger = logger;
         _clock = clock;
+        _otpGenerator = otpGenerator;
     }
 
     public async Task<AppointmentResponse> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
@@ -50,7 +52,7 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
             throw new DomainException("Thời gian hẹn phải ở tương lai theo múi giờ cửa hàng.");
 
         Appointment? appointment = null;
-        var lookupToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        var lookupToken = _otpGenerator.GenerateNumericOtp();
         var lookupHash = Convert.ToHexString(SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(lookupToken)));
 
         await _unitOfWork.ExecuteInTransactionAsync(async () =>

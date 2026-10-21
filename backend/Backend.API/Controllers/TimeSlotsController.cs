@@ -43,4 +43,12 @@ public class TimeSlotsController : ControllerBase
         await _mediator.Send(new DeleteTimeSlotCommand(id));
         return NoContent();
     }
+
+    [HttpPost("{id:guid}/activate")]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
+    public async Task<IActionResult> Activate(Guid id)
+    {
+        await _mediator.Send(new ActivateTimeSlotCommand(id));
+        return NoContent();
+    }
 }
