@@ -21,3 +21,151 @@
   gap: var(--spacing-sm);
   justify-content: flex-end;
 }
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) FIX BUG: width 100% + padding không có box-sizing → tràn 24px.
+      Đây là lỗi phổ biến nhất của form element. */
+.textarea {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) CRITICAL — iOS Safari auto-zoom khi focus textarea font-size < 16px.
+      Target iOS Safari, không đụng Android/desktop. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Fallback nếu không muốn dùng @supports (đơn giản hơn, an toàn 100%):
+@media (max-width: 768px) {
+  .textarea { font-size: 16px; }
+}
+*/
+
+/* 3) Giới hạn resize — user kéo textarea cao vô hạn sẽ đẩy button row
+      ra khỏi viewport. Chặn trên + chặn dưới hợp lý. */
+.textarea {
+  min-height: 80px;
+  max-height: 40vh;
+}
+@supports (max-height: 40dvh) {
+  .textarea {
+    max-height: 40dvh;
+  }
+}
+
+/* 4) Label: wrap an toàn (tiếng Việt dài) + hiển thị đúng */
+.label {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 5) Button row: cho phép wrap thay vì tràn / ép co */
+.buttonRow {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 6) Touch device: button trong row cần hit area đủ lớn */
+@media (pointer: coarse) {
+  .buttonRow > .button,
+  .buttonRow > button {
+    min-height: 44px;
+  }
+
+  /* Textarea: bump padding nhẹ cho dễ chạm vào vùng soạn thảo */
+  .textarea {
+    padding: 12px 14px;
+  }
+}
+
+/* 7) Mobile: giảm margin-bottom cho gọn, button row có thể full-width stack
+      — trên màn ≤380px, 2 nút cạnh nhau thường không đủ chỗ cho text tiếng Việt */
+@media (max-width: 640px) {
+  .textarea {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+  }
+
+  .label {
+    font-size: var(--font-size-sm, 13px);
+    margin-bottom: 4px;
+  }
+
+  .buttonRow {
+    gap: 8px;
+  }
+}
+
+/* 8) Rất nhỏ: stack nút dọc, đảo thứ tự để nút chính ở dưới
+      (pattern mobile-native: "Hủy" trên, "Gửi" dưới) */
+@media (max-width: 380px) {
+  .buttonRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .buttonRow > .button,
+  .buttonRow > button {
+    width: 100%;
+  }
+
+  .textarea {
+    margin-bottom: 10px;
+  }
+}
+
+/* 9) Landscape mobile: textarea cao + button row có thể chiếm hết màn
+      — giảm max-height textarea và margin */
+@media (max-height: 480px) and (orientation: landscape) {
+  .textarea {
+    max-height: 30vh;
+    min-height: 60px;
+    margin-bottom: 8px;
+  }
+
+  .buttonRow {
+    gap: 6px;
+  }
+}
+@supports (max-height: 30dvh) {
+  @media (max-height: 480px) and (orientation: landscape) {
+    .textarea {
+      max-height: 30dvh;
+    }
+  }
+}
+
+/* 10) Container query: form nằm trong sidebar / drawer / card hẹp
+      → button row stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .buttonRow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .buttonRow > .button,
+  .buttonRow > button {
+    width: 100%;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion (nếu sau này có transition focus) */
+@media (prefers-reduced-motion: reduce) {
+  .textarea,
+  .buttonRow * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

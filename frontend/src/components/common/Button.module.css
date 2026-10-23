@@ -106,3 +106,102 @@
   box-shadow: var(--shadow-sm);
   transform: translateY(-1px);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: button không vượt quá container, text dài bị clip gọn */
+.button {
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* 2) Touch device: đảm bảo hit area tối thiểu ~44px (WCAG 2.5.5)
+      — .sm gốc chỉ 32px, quá nhỏ để chạm ngón tay */
+@media (pointer: coarse) {
+  .sm {
+    min-height: 36px;
+    padding: 6px 14px;
+  }
+  .md {
+    min-height: 44px;
+  }
+  .lg {
+    min-height: 48px;
+  }
+  .button {
+    gap: 6px;
+  }
+}
+
+/* 3) Tắt hover-lift trên thiết bị không có hover thực
+      — tránh hiệu ứng "dính" sau khi chạm (sticky hover) */
+@media (hover: none) {
+  .primary:hover:not(:disabled),
+  .secondary:hover:not(:disabled),
+  .danger:hover:not(:disabled),
+  .success:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* 4) Mobile: thu gọn font/padding cho sm và md */
+@media (max-width: 640px) {
+  .sm {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  .md {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+  .button {
+    letter-spacing: 0;
+  }
+}
+
+/* 5) Rất nhỏ: lg không phình quá khổ */
+@media (max-width: 380px) {
+  .lg {
+    font-size: 14px;
+    padding: 10px 16px;
+    height: 42px;
+  }
+  .button {
+    gap: 4px;
+  }
+}
+
+/* 6) Container query: button tự thích nghi theo vùng chứa
+      (parent cần container-type: inline-size — thêm ở layout, không đụng .button) */
+@container (max-width: 200px) {
+  .button {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+/* 7) Utility opt-in: full-width trên mobile
+      — dùng .button.block-on-mobile khi cần (form, CTA dưới cùng) */
+@media (max-width: 480px) {
+  .block-on-mobile {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* 8) Tôn trọng prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+  .button:active:not(:disabled),
+  .primary:hover:not(:disabled),
+  .secondary:hover:not(:disabled),
+  .danger:hover:not(:disabled),
+  .success:hover:not(:disabled) {
+    transform: none;
+  }
+}

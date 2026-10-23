@@ -95,7 +95,9 @@
   outline: none;
   background: #ffffff;
   color: var(--color-text, #1e293b);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .textarea:focus {
@@ -137,3 +139,309 @@
   white-space: nowrap;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn tổng cho container */
+.toggle,
+.form,
+.selectedCard,
+.actions,
+.field,
+.deviceOption {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) Toggle: cho phép wrap nếu quá nhiều tab trên mobile
+      — nhưng KHÔNG wrap ở desktop (giữ 1 hàng phẳng) */
+.toggle {
+  flex-wrap: wrap;
+}
+
+.toggleBtn {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Selected card: title + value co được, không tràn
+      — flex space-between gốc thiếu min-width: 0 */
+.selectedCard {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selectedCard > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 4) Actions: cho phép wrap thay vì tràn */
+.actions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 5) Device option: badge + label chung row có thể tràn
+      — cho phép wrap badge xuống dòng khi cần */
+.deviceOption {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.deviceOption .badge,
+.badge {
+  /* Badge trong flow có margin-left gốc — cho phép wrap tự nhiên */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 6) FIX: textarea width 100% + padding không box-sizing → tràn
+      (giống bug đã fix ở component textarea trước) */
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 80px;
+  max-height: 40vh;
+}
+@supports (max-height: 40dvh) {
+  .textarea {
+    max-height: 40dvh;
+  }
+}
+
+/* 7) NumberInput: 180px cố định → tràn trong cột <200px */
+.numberInput {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 180px;
+  min-width: 0;
+}
+
+/* 8) Label + hint: wrap an toàn (tiếng Việt dài) */
+.label,
+.hint {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 9) CRITICAL — iOS auto-zoom khi focus textarea / numberInput <16px */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .textarea,
+    .numberInput {
+      font-size: 16px;
+    }
+  }
+}
+
+/* 10) Touch device: nút / toggle / option cần hit area ≥44px */
+@media (pointer: coarse) {
+  .toggleBtn {
+    min-height: 40px; /* compromise cho tab ngang */
+    padding: 10px 12px;
+  }
+
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    min-height: 44px;
+  }
+
+  .deviceOption {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+
+  .numberInput {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+}
+
+/* 11) Tắt hover-lift "dính" trên touch cho deviceOption */
+@media (hover: none) {
+  .deviceOption:hover {
+    border-color: var(--color-border, #e2e8f0);
+    background: transparent;
+    transform: none;
+  }
+}
+
+/* 12) Mobile: giảm padding toggle, form gap, selectedCard */
+@media (max-width: 640px) {
+  .toggle {
+    gap: 4px;
+    padding: 4px;
+    margin-bottom: 16px;
+  }
+
+  .toggleBtn {
+    padding: 8px 10px;
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .form {
+    gap: 12px;
+  }
+
+  .selectedCard {
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+
+  .actions {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .deviceOption {
+    padding: 12px 14px;
+  }
+
+  .textarea {
+    margin-bottom: 12px;
+  }
+
+  .fileInput {
+    font-size: var(--font-size-sm, 13px);
+    margin-bottom: 12px;
+  }
+
+  .numberInput {
+    max-width: 100%;
+  }
+}
+
+/* 13) Rất nhỏ (≤380px): stack actions dọc, badge xuống dòng */
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    width: 100%;
+  }
+
+  .selectedCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+/* 14) Landscape mobile: chiều cao khan hiếm — giảm margin + padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .toggle {
+    margin-bottom: 12px;
+  }
+
+  .form {
+    gap: 10px;
+  }
+
+  .textarea {
+    min-height: 60px;
+    max-height: 30vh;
+    margin-bottom: 8px;
+  }
+  @supports (max-height: 30dvh) {
+    .textarea {
+      max-height: 30dvh;
+    }
+  }
+
+  .actions {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  .deviceOption {
+    padding: 10px 12px;
+  }
+}
+
+/* 15) Container query: form trong drawer / sidebar / modal hẹp
+      → toggle stack dọc, actions stack, numberInput full-width.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .toggle {
+    flex-direction: column;
+  }
+
+  .toggleBtn {
+    text-align: left;
+    padding: 10px 12px;
+  }
+
+  .selectedCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    width: 100%;
+  }
+
+  .numberInput {
+    max-width: 100%;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+}
+
+/* 16) File input trên touch: native control nhỏ, tăng hit area */
+@media (pointer: coarse) {
+  .fileInput {
+    min-height: 40px;
+    padding: 8px 0;
+  }
+
+  .fileInput::file-selector-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    margin-right: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border, #e2e8f0);
+    background: #ffffff;
+    cursor: pointer;
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 17) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .toggleBtn,
+  .deviceOption,
+  .textarea,
+  .numberInput {
+    transition: none;
+  }
+
+  .deviceOption:hover {
+    transform: none;
+  }
+}

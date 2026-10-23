@@ -52,3 +52,132 @@
   color: var(--color-text-muted, #64748b);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Scroll UX: smooth touch scroll, chặn overscroll sang page bên cạnh */
+.wrapper {
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* 2) Scrollbar rõ ràng — mặc định mobile ẩn scrollbar khiến user
+      không biết bảng có thể vuốt ngang */
+.wrapper {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 3) Sticky header — user cuộn dọc bảng dài vẫn biết cột nào là cột nào.
+      Sticky hoạt động trong phạm vi .wrapper (overflow-x: auto),
+      không xung đột với page scroll. */
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* 4) Sticky cột đầu tiên — khi vuốt ngang trên mobile, cột ID / tên
+      luôn hiển thị để giữ context cho các cột còn lại.
+      Nếu bảng không có "cột định danh" rõ ràng, bỏ block này. */
+.table th:first-child,
+.table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #ffffff;
+}
+.table thead th:first-child {
+  background: #f8fafc; /* giữ màu header gốc, override bg trắng trên */
+  z-index: 3; /* cao hơn td first-child và th khác để không bị che */
+}
+/* Viền phải mờ phân tách cột sticky với phần cuộn — tránh cảm giác "dính" */
+.table th:first-child,
+.table td:first-child {
+  box-shadow: 1px 0 0 var(--color-border, #e2e8f0);
+}
+
+/* 5) Mobile: giảm padding, thu nhỏ font — bảng đỡ tràn, đọc dễ hơn */
+@media (max-width: 640px) {
+  .table th {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+  .table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+  .emptyCell {
+    padding: 32px 12px;
+  }
+}
+
+/* 6) Touch device: hàng clickable cần vùng chạm ~44px.
+      Áp dụng cho td để toàn hàng là tap target thực sự. */
+@media (pointer: coarse) {
+  .clickableRow td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+/* 7) Tắt hover-row trên thiết bị không hover thực
+      — tránh hiệu ứng "dính" sau khi tap (sticky hover bug) */
+@media (hover: none) {
+  .clickableRow:hover {
+    background-color: transparent;
+  }
+}
+
+/* 8) Rất nhỏ: thu thêm padding cho bảng 320px */
+@media (max-width: 380px) {
+  .table th {
+    padding: 8px 10px;
+    font-size: 10.5px;
+  }
+  .table td {
+    padding: 10px;
+    font-size: 12.5px;
+  }
+}
+
+/* 9) Landscape mobile / tablet thấp: bảng dày đặc hơn để thấy nhiều hàng */
+@media (max-height: 500px) and (orientation: landscape) {
+  .table th {
+    padding: 8px 12px;
+  }
+  .table td {
+    padding: 10px 12px;
+  }
+}
+
+/* 10) Container query: bảng nằm trong card / drawer hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 480px) {
+  .table th {
+    padding: 8px 10px;
+  }
+  .table td {
+    padding: 10px;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion: tắt transition hover-row */
+@media (prefers-reduced-motion: reduce) {
+  .clickableRow {
+    transition: none;
+  }
+}

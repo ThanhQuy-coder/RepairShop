@@ -41,3 +41,53 @@
   border-color: var(--color-info-border, #bae6fd);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append, không sửa rule gốc
+   ========================================================== */
+
+/* 1) Chống tràn: badge không vượt quá container chứa nó */
+.badge {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) Truncate an toàn khi bị ép hẹp
+      (white-space: nowrap đã có sẵn, chỉ cần thêm 2 dòng này) */
+.badge {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 3) Tablet / mobile: thu gọn nhẹ cho cân đối */
+@media (max-width: 640px) {
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    line-height: 1.35;
+  }
+}
+
+/* 4) Màn hình rất nhỏ: thu thêm, bỏ letter-spacing */
+@media (max-width: 380px) {
+  .badge {
+    font-size: 10.5px;
+    padding: 2px 6px;
+    letter-spacing: 0;
+  }
+}
+
+/* 5) Container query: badge tự thích nghi theo vùng chứa
+      (parent cần container-type: inline-size — thêm 1 dòng ở layout,
+      KHÔNG ảnh hưởng code cũ) */
+@container (max-width: 160px) {
+  .badge {
+    max-width: 100%;
+  }
+}
+
+/* 6) Touch device: đảm bảo vùng chạm thoải mái (tuỳ chọn) */
+@media (pointer: coarse) {
+  .badge {
+    min-height: 24px;
+  }
+}

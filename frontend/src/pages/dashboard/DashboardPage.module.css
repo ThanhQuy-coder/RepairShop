@@ -112,7 +112,9 @@
 .actionArrow {
   font-size: 18px;
   color: var(--color-text-muted, #64748b);
-  transition: transform 0.15s ease, color 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    color 0.15s ease;
 }
 
 .actionCard:hover .actionArrow {
@@ -120,3 +122,148 @@
   color: var(--color-primary, #185a4e);
 }
 
+/* ==========================================================
+   RESPONSIVE ENHANCEMENTS — chỉ bổ sung, KHÔNG sửa rule cũ
+   ========================================================== */
+
+/* Tablet: ≤ 992px — thu gọn lưới thẻ thống kê */
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
+/* Tablet nhỏ / điện thoại ngang: ≤ 768px */
+@media (max-width: 768px) {
+  /* Container: thêm padding an toàn (nếu layout cha đã có padding,
+     có thể xoá 3 dòng dưới để tránh padding kép) */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .statsSection {
+    margin-bottom: 28px;
+  }
+
+  .sectionHeading {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  /* Thẻ thống kê: cố định 2 cột cho gọn gàng, thay vì auto-fit
+     (auto-fit có thể ra 4-5 cột gây chật trên tablet) */
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* Truy cập nhanh: 1 cột để mô tả có không gian thở */
+  .actionGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .actionCard {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .actionIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .actionContent h4 {
+    font-size: 14px;
+  }
+
+  .actionContent p {
+    font-size: 12.5px;
+  }
+}
+
+/* Điện thoại dọc: ≤ 480px */
+@media (max-width: 480px) {
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Header xếp dọc, nút CTA giãn full width cho dễ bấm */
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .actionCard {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .actionIcon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: var(--radius-sm, 8px);
+  }
+
+  /* Mũi tên chỉ báo hướng: giảm nhẹ */
+  .actionArrow {
+    font-size: 16px;
+  }
+}
+
+/* Điện thoại rất nhỏ: ≤ 360px */
+@media (max-width: 360px) {
+  /* Thẻ thống kê: 1 cột để số liệu không bị vỡ chữ */
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionContent h4 {
+    font-size: 13.5px;
+  }
+}
+
+/* Tôn trọng người dùng giảm chuyển động (a11y) */
+@media (prefers-reduced-motion: reduce) {
+  .actionCard,
+  .actionArrow {
+    transition: none;
+  }
+
+  .actionCard:hover {
+    transform: none;
+  }
+
+  .actionCard:hover .actionArrow {
+    transform: none;
+  }
+}
+
+/* Bổ sung an toàn: chống tràn chữ trong card nội dung dài
+   (không override giá trị cũ vì thuộc tính này chưa được set) */
+.actionContent h4,
+.actionContent p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

@@ -28,3 +28,137 @@
   overflow-y: auto;
   flex: 1;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn ngang: panel không vượt viewport
+      — quan trọng nhất khi wrapper không đủ rộng cho 360px */
+.dropdown {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+
+/* 2) Scroll UX: momentum + chặn scroll-chain kéo page bên dưới */
+.body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.body::-webkit-scrollbar {
+  width: 8px;
+}
+.body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 3) Header: wrap an toàn nếu title + nút "Đánh dấu đã đọc" dài */
+.header {
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.headerTitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* 4) Tablet nhỏ: panel 360px có thể sát mép viewport — giảm nhẹ */
+@media (max-width: 400px) {
+  .dropdown {
+    width: calc(100vw - 24px);
+    max-width: 360px;
+  }
+}
+
+/* 5) Mobile: chuyển sang full-width sheet gắn trên bell
+      — thay vì 360px cố định tràn mép.
+      Giữ position: absolute để vẫn mở gần bell (dropdown), không cần JS. */
+@media (max-width: 640px) {
+  .dropdown {
+    /* Full-width trừ 2 mép nhỏ, không cần biết bell ở đâu */
+    position: fixed;
+    top: calc(56px + env(safe-area-inset-top, 0px));
+    right: 8px;
+    left: 8px;
+    width: auto;
+    max-width: none;
+    max-height: calc(
+      100dvh - 72px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+    border-radius: 10px;
+  }
+
+  /* Fallback cho browser không hỗ trợ dvh */
+  @supports not (max-height: 100dvh) {
+    .dropdown {
+      max-height: calc(100vh - 72px - env(safe-area-inset-top, 0px));
+    }
+  }
+
+  .header {
+    padding: 12px 14px;
+  }
+
+  .headerTitle {
+    font-size: var(--font-size-base, 14px);
+  }
+}
+
+/* 6) Rất nhỏ: sát mép hơn, giảm radius, padding gọn */
+@media (max-width: 380px) {
+  .dropdown {
+    left: 6px;
+    right: 6px;
+    border-radius: 8px;
+    max-height: calc(
+      100dvh - 64px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  .header {
+    padding: 10px 12px;
+  }
+}
+
+/* 7) Landscape mobile: chiều cao khan hiếm — panel thấp hơn,
+      tránh chiếm quá nửa màn hình khi xoay ngang */
+@media (max-height: 480px) and (orientation: landscape) {
+  .dropdown {
+    top: calc(44px + env(safe-area-inset-top, 0px));
+    max-height: calc(
+      100dvh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+    );
+  }
+
+  .header {
+    padding: 8px 12px;
+  }
+}
+
+/* 8) Container query: panel mở trong header / toolbar hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 400px) {
+  .dropdown {
+    width: calc(100vw - 16px);
+    max-width: 100%;
+  }
+}
+
+/* 9) Tôn trọng reduced-motion (nếu sau này thêm animation mở/đóng) */
+@media (prefers-reduced-motion: reduce) {
+  .dropdown,
+  .body {
+    animation: none !important;
+    transition: none !important;
+  }
+}

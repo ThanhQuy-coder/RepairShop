@@ -12,3 +12,90 @@
   color: var(--color-text-muted, #64748b);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: wrapper không vượt container + cho phép xuống dòng */
+.wrapper {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 2) Info text: không bị shrink, wrap an toàn khi cột hẹp */
+.info {
+  flex-shrink: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  text-align: center;
+}
+
+/* 3) Tablet: giảm gap nhẹ cho cân đối */
+@media (max-width: 768px) {
+  .wrapper {
+    gap: 12px;
+  }
+}
+
+/* 4) Mobile: gap nhỏ hơn, padding gọn hơn, info xuống dòng nếu cần */
+@media (max-width: 640px) {
+  .wrapper {
+    gap: 8px;
+    padding: 14px 0 6px;
+  }
+
+  .info {
+    font-size: var(--font-size-xs, 12px);
+  }
+}
+
+/* 5) Rất nhỏ: stack dọc — info trên, nút dưới
+      (khi 5+ nút số trang + info chắc chắn không vừa 1 hàng ở 320px) */
+@media (max-width: 480px) {
+  .wrapper {
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 0 4px;
+  }
+}
+
+/* 6) Touch device: nút phân trang trong wrapper cần hit area đủ lớn
+      — nhắm con trực tiếp để không ảnh hưởng button ở nơi khác.
+      Chỉ áp dụng nếu con là .button / <button>; selector khác thì đổi. */
+@media (pointer: coarse) {
+  .wrapper > .button,
+  .wrapper > button {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* 7) Landscape mobile: chiều cao khan hiếm — giảm padding mạnh */
+@media (max-height: 480px) and (orientation: landscape) {
+  .wrapper {
+    padding: 8px 0 4px;
+    gap: 6px;
+  }
+}
+
+/* 8) Container query: pagination trong card / modal / drawer hẹp
+      → tự stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .wrapper {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0 4px;
+  }
+}
+
+/* 9) Tôn trọng reduced-motion (nếu sau này thêm animation chuyển trang) */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

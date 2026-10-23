@@ -25,3 +25,128 @@
 .item:hover {
   background: var(--color-bg-subtle);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Scroll UX: momentum scroll trên iOS + chặn scroll-chain kéo page bên dưới */
+.dropdown {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.dropdown::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 2) Item: wrap text dài an toàn (email, path, error code không khoảng trắng) */
+.item {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+  min-width: 0;
+}
+
+/* 3) Touch device: item là tap target — cần ~44px chiều cao */
+@media (pointer: coarse) {
+  .item {
+    min-height: 44px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+/* 4) Tắt hover-item trên thiết bị không hover thực
+      — tránh "dính" highlight sau khi tap (sticky hover bug) */
+@media (hover: none) {
+  .item:hover {
+    background: transparent;
+  }
+}
+
+/* 5) Mobile: giảm max-height + padding item cho gọn */
+@media (max-width: 640px) {
+  .dropdown {
+    max-height: 240px; /* giữ đủ thấy ~5 item */
+    border-radius: 8px;
+  }
+
+  .item {
+    font-size: var(--font-size-base, 14px); /* dễ đọc hơn 13px trên mobile */
+    padding: 10px 12px;
+  }
+}
+
+/* 6) Rất nhỏ: thu thêm, giảm radius */
+@media (max-width: 380px) {
+  .dropdown {
+    max-height: 200px;
+    border-radius: 6px;
+  }
+
+  .item {
+    padding: 8px 10px;
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 7) Landscape mobile: chiều cao viewport khan hiếm — dropdown
+      KHÔNG được chiếm quá nửa màn hình, tránh che input / keyboard */
+@media (max-height: 480px) and (orientation: landscape) {
+  .dropdown {
+    max-height: 160px;
+  }
+
+  .item {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    min-height: 36px;
+  }
+}
+
+/* 8) Dùng dvh khi bàn phím ảo mở (mobile) — tránh dropdown bị đẩy khỏi màn.
+      Fallback: browser cũ bỏ qua, dùng 200px gốc. */
+@supports (max-height: 100dvh) {
+  @media (max-width: 640px) {
+    .dropdown {
+      /* Không vượt quá 40% viewport động — đủ thấy item nhưng không che hết */
+      max-height: min(240px, 40dvh);
+    }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .dropdown {
+      max-height: min(160px, 45dvh);
+    }
+  }
+}
+
+/* 9) Container query: dropdown gắn trong ô input hẹp (filter bar, inline form)
+      → tự thu gọn item dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 240px) {
+  .item {
+    font-size: var(--font-size-xs, 12px);
+    padding: 8px 10px;
+  }
+}
+
+/* 10) Tôn trọng reduced-motion (nếu sau này có animation mở/đóng dropdown) */
+@media (prefers-reduced-motion: reduce) {
+  .dropdown * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

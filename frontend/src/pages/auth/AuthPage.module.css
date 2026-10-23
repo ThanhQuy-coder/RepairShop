@@ -41,6 +41,154 @@
   color: var(--color-primary);
   text-decoration: none;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn ngang do box-shadow offset
+      — nếu parent có overflow-x: auto/scroll, shadow có thể gây scrollbar */
+.wrapper {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: clip; /* clip thay hidden: không tạo scroll container, không cắt dropdown */
+}
+
+/* 2) Card: box-sizing + safe max-width trong mọi trường hợp */
+.card {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* 3) Title: co giãn mượt — không để 31px chiếm 3 dòng trên mobile */
+.title {
+  font-size: clamp(24px, 5.5vw, 31px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+/* 4) Footer text + link: wrap an toàn, link tap target đủ lớn trên touch */
+.footerText {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+@media (pointer: coarse) {
+  .footerText a {
+    display: inline-block;
+    min-height: 24px;
+    padding: 2px 4px;
+    margin: -2px -4px; /* bù padding để không phá layout inline */
+  }
+}
+
+/* 5) Mobile rộng (481–640px): vẫn giữ card 420px max nhưng giảm padding
+      — rule @media 480px gốc chỉ xử lý ≤480px, bỏ sót 481–640px */
+@media (max-width: 640px) {
+  .card {
+    padding: 28px 24px;
+    gap: 14px;
+  }
+
+  .wrapper {
+    padding: 32px 16px;
+  }
+}
+
+/* 6) Safe area cho iPhone notch / home indicator */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .wrapper {
+    padding-top: max(32px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(32px, env(safe-area-inset-bottom, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* 7) Rất nhỏ (≤380px): thu thêm padding, giảm shadow offset cho gọn */
+@media (max-width: 380px) {
+  .wrapper {
+    padding: 24px 12px;
+  }
+
+  .card {
+    padding: 22px 18px;
+    gap: 12px;
+    /* Giảm shadow từ 10/6 xuống 4 — vẫn giữ style "neo" nhưng không chiếm chỗ */
+    box-shadow: 4px 4px 0 #d8e0d8;
+  }
+
+  .title {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+
+  .footerText {
+    font-size: var(--font-size-xs, 12px);
+  }
+}
+
+/* 8) Landscape mobile: chiều cao khan hiếm — giảm padding dọc,
+      min-height giữ form nằm giữa nhưng không đẩy footer khỏi màn */
+@media (max-height: 500px) and (orientation: landscape) {
+  .wrapper {
+    min-height: auto;
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 20px 24px;
+    gap: 12px;
+    /* Shadow ngang trong landscape trông lạc — dùng shadow dọc nhẹ */
+    box-shadow: 0 6px 0 #d8e0d8;
+  }
+
+  .title {
+    font-size: clamp(20px, 3.5vw, 24px);
+    margin-bottom: 2px;
+  }
+}
+
+/* 9) Container query: card trong split layout / sidebar auth hẹp
+      (vd trang login 2 cột: ảnh trái + form phải hẹp)
+      → tự thu padding dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 380px) {
+  .card {
+    padding: 24px 20px;
+    gap: 14px;
+    box-shadow: 6px 6px 0 #d8e0d8;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}
+
+/* 10) iOS Safari auto-zoom khi focus input bên trong card
+       — không đụng input component (đã fix riêng), chỉ note ở đây
+       nếu form control nằm trực tiếp trong card mà chưa qua component Input. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .card input,
+    .card select,
+    .card textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+/* 11) Tôn trọng reduced-motion (nếu sau này thêm animation card) */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper,
+  .card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 @media (max-width: 480px) {
   .card {
     padding: 28px 22px;

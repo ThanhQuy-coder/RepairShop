@@ -116,3 +116,136 @@
   }
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Safe area cho iPhone notch (env trả 0 nếu không có notch) */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .header {
+    padding-top: env(safe-area-inset-top, 0);
+    min-height: calc(64px + env(safe-area-inset-top, 0));
+  }
+}
+
+/* 2) Fallback khi browser không hỗ trợ backdrop-filter
+      — tránh header "trong suốt" trên Safari cũ */
+@supports not (backdrop-filter: blur(8px)) {
+  .header {
+    background: #ffffff;
+  }
+}
+
+/* 3) Chống tràn tổng + ellipsis hoạt động đúng */
+.header {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.userArea {
+  min-width: 0;
+  gap: var(--spacing-sm, 8px);
+}
+
+.profileBadge,
+.meta,
+.userEmail {
+  min-width: 0;
+}
+
+/* 4) Mobile ≤768px: thu gọn, bỏ padding-left 64px chết
+      (padding này chừa cho hamburger — nhưng hiện chưa có) */
+@media (max-width: 768px) {
+  .header {
+    /* XÓA dòng padding-left này nếu bạn định thêm hamburger sau */
+    padding-left: 16px;
+    min-height: 56px;
+  }
+
+  .userArea {
+    gap: 8px;
+  }
+
+  .profileBadge {
+    padding: 3px 8px 3px 4px;
+    gap: 8px;
+  }
+
+  .userEmail {
+    max-width: 100px;
+  }
+}
+
+/* 5) Touch: logout button đủ hit area */
+@media (pointer: coarse) {
+  .userArea > button {
+    min-height: 36px;
+    min-width: 36px;
+  }
+}
+
+/* 6) ≤480px: ẩn role, thu gọn logout, giảm email width
+      — roleTag không quan trọng bằng email trên màn chật */
+@media (max-width: 480px) {
+  .userArea {
+    gap: 6px;
+  }
+
+  .userArea > button {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .userEmail {
+    max-width: 80px;
+  }
+
+  .roleTag {
+    display: none;
+  }
+
+  .avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* 7) ≤380px: chỉ còn avatar + logout
+      — 320px không đủ chỗ cho email + avatar + logout */
+@media (max-width: 380px) {
+  .header {
+    padding-left: 12px;
+    padding-right: 12px;
+    min-height: 52px;
+  }
+
+  .meta {
+    display: none;
+  }
+
+  .profileBadge {
+    padding: 2px;
+    gap: 0;
+  }
+
+  .userArea > button {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* 8) Landscape mobile: header thấp hơn cho đỡ chiếm chỗ */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    min-height: 48px;
+  }
+}
+
+/* 9) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .header * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -50,3 +50,171 @@
   color: var(--color-text-muted, #64748b);
   margin-top: 8px;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1280px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: con trực tiếp co được — title/subtitle dài không tràn */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: co giãn mượt trên mobile */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Eyebrow + subtitle: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 5) FIX QUAN TRỌNG: grid minmax 220px cứng → dùng min() để không tràn
+      trong container <220px (drawer, modal, mobile có padding) */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 6) Empty: box-sizing + không tràn */
+.empty {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 7) Empty h2 + p: wrap an toàn (tiêu đề lỗi dài, tiếng Việt) */
+.empty h2 {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.empty p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* 8) Mobile: giảm padding empty + margin header, thu title */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+    margin-top: 4px;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .empty {
+    margin-top: 16px;
+    padding: 24px 16px;
+    border-radius: 10px;
+  }
+
+  .empty h2 {
+    font-size: var(--font-size-base, 16px);
+  }
+
+  .empty p {
+    font-size: var(--font-size-sm, 13px);
+    margin-top: 6px;
+  }
+}
+
+/* 9) Rất nhỏ (≤380px): thu thêm padding + font */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .grid {
+    gap: 10px;
+  }
+
+  .empty {
+    padding: 20px 12px;
+  }
+
+  .empty h2 {
+    font-size: 15px;
+  }
+
+  .empty p {
+    font-size: 12.5px;
+  }
+}
+
+/* 10) Landscape mobile: chiều cao khan hiếm — giảm padding dọc + margin */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .grid {
+    gap: 10px;
+  }
+
+  .empty {
+    margin-top: 12px;
+    padding: 20px 16px;
+  }
+}
+
+/* 11) Container query: page trong drawer / sidebar / modal hẹp
+      → grid tự stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .empty {
+    padding: 20px 14px;
+  }
+}
+
+/* 12) Tôn trọng reduced-motion (nếu sau này có transition card) */
+@media (prefers-reduced-motion: reduce) {
+  .grid,
+  .empty {
+    transition: none !important;
+  }
+}

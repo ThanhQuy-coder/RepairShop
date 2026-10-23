@@ -116,3 +116,299 @@
   gap: 10px;
   justify-content: flex-end;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(960px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: con trực tiếp co được — title/subtitle dài không tràn */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: co giãn mượt trên mobile */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Eyebrow + subtitle: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 5) Card: box-sizing + không tràn */
+.card,
+.list {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 6) FIX QUAN TRỌNG: deviceInfo flex row, text con co được
+      — thiếu min-width: 0 thì deviceTitle dài đẩy warrantyCodeTag ra ngoài */
+.deviceInfo {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.deviceInfo > *:not(.shieldIcon) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 7) DeviceTitle: tiếng Việt dài wrap an toàn */
+.deviceTitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 8) WarrantyCodeTag: mã monospace dài không khoảng trắng — cực dễ tràn */
+.warrantyCodeTag {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-all; /* monospace code → break-all đúng */
+  white-space: normal;
+  line-height: 1.3;
+}
+
+/* 9) MetaText: flex row, text con co được + wrap an toàn */
+.metaText {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.metaText > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 10) CardActions: cho phép wrap thay vì tràn */
+.cardActions {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 11) Touch: nút action cần hit area đủ lớn */
+@media (pointer: coarse) {
+  .cardActions > .button,
+  .cardActions > button,
+  .cardActions > a {
+    min-height: 44px;
+  }
+}
+
+/* 12) Tắt hover "dính" trên touch cho card */
+@media (hover: none) {
+  .card:hover {
+    border-color: var(--color-border, #e2e8f0);
+    box-shadow: var(--shadow-xs);
+  }
+}
+
+/* 13) Mobile: giảm padding card + cardBody, thu icon, gap */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .cardHeader {
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+
+  .deviceInfo {
+    gap: 10px;
+  }
+
+  .shieldIcon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .deviceTitle {
+    font-size: 15px;
+  }
+
+  .warrantyCodeTag {
+    font-size: 11px;
+    padding: 2px 6px;
+  }
+
+  .cardBody {
+    padding: 10px 12px;
+    margin: 10px 0 12px;
+  }
+
+  .metaText {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .list {
+    gap: 12px;
+  }
+}
+
+/* 14) Rất nhỏ (≤380px): thu thêm + action button full-width stack dọc */
+@media (max-width: 480px) {
+  .card {
+    padding: 14px;
+  }
+
+  .cardActions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .cardActions > .button,
+  .cardActions > button,
+  .cardActions > a {
+    width: 100%;
+  }
+
+  .shieldIcon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .deviceTitle {
+    font-size: var(--font-size-base, 14px);
+  }
+}
+
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .cardBody {
+    padding: 8px 10px;
+    margin: 8px 0 10px;
+  }
+
+  .metaText {
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+}
+
+/* 15) Landscape mobile: chiều cao khan hiếm — giảm margin + padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .card {
+    padding: 12px 16px;
+  }
+
+  .cardHeader {
+    margin-bottom: 8px;
+  }
+
+  .cardBody {
+    margin: 8px 0 10px;
+    padding: 8px 12px;
+  }
+
+  .list {
+    gap: 10px;
+  }
+}
+
+/* 16) Container query: card trong drawer / sidebar / modal hẹp
+      → action nút stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 400px) {
+  .card {
+    padding: 14px;
+  }
+
+  .cardActions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .cardActions > .button,
+  .cardActions > button,
+  .cardActions > a {
+    width: 100%;
+  }
+
+  .deviceTitle {
+    font-size: 15px;
+  }
+}
+
+@container (max-width: 280px) {
+  .card {
+    padding: 12px;
+  }
+
+  .shieldIcon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .warrantyCodeTag {
+    font-size: 10.5px;
+  }
+}
+
+/* 17) Tôn trọng reduced-motion: tắt transition card */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

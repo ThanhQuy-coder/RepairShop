@@ -46,3 +46,117 @@
 .info {
   background: var(--color-primary);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   Lưu ý: env(safe-area-inset-*) chỉ có tác dụng khi
+   <meta name="viewport" content="..., viewport-fit=cover">
+   ========================================================== */
+
+/* 1) Safe area + chống tràn ngang cho container
+      — bù notch và tai thỏ khi fixed ở góc phải trên */
+.container {
+  top: calc(var(--spacing-lg, 24px) + env(safe-area-inset-top, 0px));
+  right: calc(var(--spacing-lg, 24px) + env(safe-area-inset-right, 0px));
+  max-width: calc(100vw - var(--spacing-lg, 24px) * 2);
+  box-sizing: border-box;
+}
+
+/* 2) Toast: không vượt container + wrap text dài an toàn
+      — message dài chứa URL / error code không khoảng trắng sẽ tràn nếu thiếu */
+.toast {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Icon không bị shrink khi message dài */
+.icon {
+  flex-shrink: 0;
+}
+
+/* 4) Mobile: chuyển sang full-width bar ở đầu màn hình
+      — pattern chuẩn Material/iOS banner, dễ chạm, dễ đọc */
+@media (max-width: 640px) {
+  .container {
+    top: calc(8px + env(safe-area-inset-top, 0px));
+    left: calc(8px + env(safe-area-inset-left, 0px));
+    right: calc(8px + env(safe-area-inset-right, 0px));
+    max-width: none;
+    gap: 6px;
+  }
+
+  .toast {
+    min-width: 0;
+    width: 100%;
+    font-size: var(--font-size-sm, 13px);
+    padding: 10px 14px;
+    /* Đổi animation: trượt từ trên xuống hợp với full-width bar */
+    animation-name: slideDown;
+  }
+
+  .icon {
+    font-size: 14px;
+  }
+}
+
+/* 5) Keyframes mới — không đụng slideIn gốc, chỉ dùng cho mobile
+      vì toast full-width trượt từ phải sang trông lạc lõng */
+@keyframes slideDown {
+  from {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 6) Touch device: toast là tap target (cursor: pointer gốc)
+      — cần đủ 44px hit area để dễ chạm / dismiss */
+@media (pointer: coarse) {
+  .toast {
+    min-height: 44px;
+    padding: 12px 14px;
+  }
+}
+
+/* 7) Rất nhỏ: thu thêm, sát mép hơn, giảm font */
+@media (max-width: 380px) {
+  .container {
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    left: 6px;
+    right: 6px;
+    gap: 4px;
+  }
+
+  .toast {
+    font-size: var(--font-size-xs, 12px);
+    padding: 8px 12px;
+  }
+}
+
+/* 8) Landscape mobile: chiều cao khan hiếm — giảm padding, gap
+      để 2–3 toast chồng nhau vẫn còn thấy nội dung phía sau */
+@media (max-height: 480px) and (orientation: landscape) {
+  .container {
+    top: calc(6px + env(safe-area-inset-top, 0px));
+    gap: 4px;
+  }
+
+  .toast {
+    padding: 8px 12px;
+    min-height: 0;
+  }
+}
+
+/* 9) prefers-reduced-motion: toast là thông báo trang trí,
+      KHÔNG phải tín hiệu chức năng → tắt animation an toàn.
+      (Khác spinner: spinner phải giữ animation vì là tín hiệu "đang tải") */
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

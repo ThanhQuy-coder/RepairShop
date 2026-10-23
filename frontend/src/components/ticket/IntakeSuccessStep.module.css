@@ -53,3 +53,163 @@
   }
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn tổng */
+.successBox {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 2) TicketCode: cực kỳ dễ tràn với mã dài
+      — clamp co giãn theo viewport, không cho vượt container */
+.ticketCode {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-all; /* mã thường không có khoảng trắng */
+  font-size: clamp(18px, 5vw, 28px);
+  line-height: 1.25;
+}
+
+/* 3) Actions: cho phép wrap + co được trong container */
+.actions {
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 4) Touch device: nút action cần hit area đủ lớn */
+@media (pointer: coarse) {
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    min-height: 44px;
+  }
+}
+
+/* 5) Tắt hover "dính" trên touch nếu có */
+@media (hover: none) {
+  .actions > .button:hover,
+  .actions > button:hover {
+    transform: none;
+  }
+}
+
+/* 6) Mobile: giảm padding dọc successBox, thu icon + khoảng cách
+      — padding 32px top/bottom quá cao cho màn 568px (iPhone SE) */
+@media (max-width: 640px) {
+  .successBox {
+    padding: 24px 12px;
+  }
+
+  .checkIcon {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+    margin-bottom: 16px;
+    /* Giảm ring shadow cho gọn trên mobile */
+    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.1);
+  }
+
+  .ticketCode {
+    padding: 4px 12px;
+    margin: 12px 0 6px;
+  }
+
+  .actions {
+    margin-top: 24px;
+    gap: 8px;
+  }
+}
+
+/* 7) Rất nhỏ (≤380px): nút action full-width stack dọc
+      — 2 nút ngang không đủ chỗ cho text tiếng Việt + icon */
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    width: 100%;
+  }
+}
+
+/* 8) Landscape mobile: chiều cao khan hiếm — padding + icon gọn hơn */
+@media (max-height: 480px) and (orientation: landscape) {
+  .successBox {
+    padding: 16px 12px;
+  }
+
+  .checkIcon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+    margin-bottom: 12px;
+    box-shadow: 0 0 0 5px rgba(22, 163, 74, 0.1);
+  }
+
+  .ticketCode {
+    margin: 8px 0 4px;
+  }
+
+  .actions {
+    margin-top: 16px;
+  }
+}
+
+/* 9) Container query: successBox nằm trong modal / drawer hẹp
+      → ticketCode + actions tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .ticketCode {
+    font-size: 18px;
+    padding: 4px 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .checkIcon {
+    width: 52px;
+    height: 52px;
+    font-size: 26px;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions > .button,
+  .actions > button,
+  .actions > a {
+    width: 100%;
+  }
+}
+
+/* 10) Print: tránh vé bị cắt giữa 2 trang, in màu nền */
+@media print {
+  .printOnly {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion (nếu sau này có animation check bounce) */
+@media (prefers-reduced-motion: reduce) {
+  .checkIcon,
+  .ticketCode {
+    animation: none !important;
+    transition: none !important;
+  }
+}

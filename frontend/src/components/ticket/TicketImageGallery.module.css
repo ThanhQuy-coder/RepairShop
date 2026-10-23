@@ -23,3 +23,123 @@
   height: 100%;
   object-fit: cover;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn group + groupTitle */
+.group {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.groupTitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 2) Grid: box-sizing + không vượt container */
+.grid {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 3) Thumb: đảm bảo co giãn đúng trong grid cell + phản hồi touch */
+.thumb {
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+/* Ảnh: thêm will-change nhẹ cho scroll mượt trên gallery dài
+      (giới hạn vì will-change lạm dụng gây tốn memory) */
+.thumb img {
+  display: block;
+  background: var(--color-bg-subtle, #f8fafc); /* placeholder trong lúc load */
+}
+
+/* 4) Màn rất nhỏ (≤380px): giảm min xuống 84px để giữ 3 cột
+      thay vì 2 cột to — gallery ảnh thường muốn thấy nhiều thumb */
+@media (max-width: 380px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+    gap: 6px;
+  }
+
+  .groupTitle {
+    font-size: var(--font-size-xs, 12px);
+    margin-bottom: 6px;
+  }
+
+  .group {
+    margin-bottom: 12px;
+  }
+}
+
+/* 5) Tablet: giữ 100px (mặc định) nhưng tăng gap nhẹ cho thoáng */
+@media (min-width: 640px) and (max-width: 1024px) {
+  .grid {
+    gap: 10px;
+  }
+}
+
+/* 6) Desktop rộng: bump min để thumb không bị "tí hon" khi có 10+ cột
+      — 140px là điểm cân bằng giữa mật độ và kích thước xem ảnh */
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+}
+
+/* 7) Touch device: thumb là tap target (thường click để xem full)
+      — 100px quá lớn so với WCAG 44px nhưng cần phản hồi thị giác */
+@media (pointer: coarse) {
+  .thumb:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+}
+
+/* 8) Tắt hover-lift (nếu sau này thêm) trên thiết bị không hover */
+@media (hover: none) {
+  .thumb:hover {
+    /* Không có hover gốc, block phòng thủ khi thêm sau */
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* 9) Container query: gallery trong sidebar / drawer / modal hẹp
+      → tự điều chỉnh min thumb để vẫn thấy ≥2 cột.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 260px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 6px;
+  }
+}
+
+/* 10) Tăng tốc render gallery dài — browser bỏ qua render ngoài viewport.
+       Áp dụng cho thumb, không phải grid, để không phá layout tổng. */
+.thumb {
+  content-visibility: auto;
+  contain-intrinsic-size: 100px 100px;
+}
+
+/* 11) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .thumb {
+    transition: none;
+  }
+
+  .thumb:active {
+    transform: none;
+  }
+}

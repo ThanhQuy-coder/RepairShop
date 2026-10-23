@@ -127,6 +127,316 @@
   transform: translateX(4px);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(960px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header + text: chống tràn */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+/* 3) FIX QUAN TRỌNG: cardMain flex 1 thiếu min-width: 0
+      → text dài (device, issuePreview) không shrink được, đẩy cardMeta ra.
+      Áp dụng cho cả desktop 641–960px khi card vẫn row. */
+.cardMain {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 4) Con text trong cardMain co được — trừ icon */
+.cardMain > *:not(.deviceIcon) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 5) FIX issuePreview: nowrap + max-width 480px không shrink.
+      Thay max-width bằng max-width 100%, giữ ellipsis hoạt động
+      nhờ cardMain đã có min-width: 0. */
+.issuePreview {
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+/* 6) TicketCodeRow: cho phép wrap khi code + date không vừa */
+.ticketCodeRow {
+  flex-wrap: wrap;
+  row-gap: 4px;
+  min-width: 0;
+}
+
+.ticketCode {
+  overflow-wrap: anywhere;
+  word-break: break-all; /* mã ticket thường không có khoảng trắng */
+  line-height: 1.25;
+}
+
+.ticketDate {
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* 7) Device: wrap an toàn (tên thiết bị tiếng Việt dài) */
+.device {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 8) CardMeta: không bị ép khi row layout (641–960px) */
+.cardMeta {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+/* 9) Card: box-sizing + không tràn + focus-visible cho keyboard user
+      — card có cursor: pointer nhưng chưa có focus style */
+.card {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+  outline: none;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-primary, #185a4e);
+  outline-offset: 2px;
+  border-color: var(--color-primary, #185a4e);
+}
+
+/* 10) Tắt hover "dính" trên touch — card + actionCue đều có transform */
+@media (hover: none) {
+  .card:hover {
+    transform: none;
+    border-color: var(--color-border, #e2e8f0);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .card:hover .actionCue {
+    transform: none;
+  }
+}
+
+/* 11) Touch device: card là tap target — đảm bảo action cue đủ thấy,
+      và giữ hit area card ≥ 44px (đã đủ do padding 20px) */
+@media (pointer: coarse) {
+  .actionCue {
+    /* actionCue là tap target phụ (whole card clickable rồi) — nhưng
+       nếu có click riêng, đảm bảo vùng chạm */
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* 12) Tablet (641–960px): card vẫn row nhưng giảm padding + icon để đỡ chật */
+@media (max-width: 900px) {
+  .card {
+    padding: 16px 20px;
+    gap: 12px;
+  }
+
+  .cardMain {
+    gap: 12px;
+  }
+
+  .deviceIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .issuePreview {
+    max-width: 100%;
+  }
+}
+
+/* 13) Bổ sung cho @media 640px gốc: thu padding, gap, icon
+      — rule gốc chỉ đổi flex direction, chưa giảm kích thước */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .card {
+    padding: 14px 16px;
+    border-radius: 10px;
+    gap: 12px;
+  }
+
+  .cardMain {
+    gap: 12px;
+    width: 100%;
+  }
+
+  .deviceIcon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .ticketCode {
+    font-size: 15px;
+  }
+
+  .ticketDate {
+    font-size: 11px;
+  }
+
+  .device {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .issuePreview {
+    font-size: 12.5px;
+  }
+
+  /* cardMeta đã row + space-between từ rule gốc — giữ, chỉ thu gap */
+  .cardMeta {
+    gap: 8px;
+    margin-top: 6px;
+    padding-top: 10px;
+  }
+
+  .actionCue {
+    font-size: 12px;
+  }
+
+  .list {
+    gap: 12px;
+  }
+}
+
+/* 14) Rất nhỏ (≤380px): thu thêm, actionCue có thể xuống dòng */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .card {
+    padding: 12px 14px;
+  }
+
+  .deviceIcon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .ticketCode {
+    font-size: 14px;
+  }
+
+  .issuePreview {
+    font-size: 12px;
+  }
+
+  .actionCue {
+    font-size: 11.5px;
+  }
+}
+
+/* 15) Landscape mobile: chiều cao khan hiếm — giảm margin + padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .card {
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .cardMeta {
+    margin-top: 4px;
+    padding-top: 8px;
+  }
+
+  .list {
+    gap: 10px;
+  }
+}
+
+/* 16) Container query: card trong drawer / sidebar / modal hẹp
+      — tự stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 480px) {
+  .card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .cardMain {
+    width: 100%;
+  }
+
+  .cardMeta {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-border-subtle, #f1f5f9);
+  }
+}
+
+/* 17) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .actionCue {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .card:hover .actionCue {
+    transform: none;
+  }
+}
+
 @media (max-width: 640px) {
   .card {
     flex-direction: column;
@@ -142,4 +452,3 @@
     border-top: 1px solid var(--color-border-subtle, #f1f5f9);
   }
 }
-

@@ -134,3 +134,199 @@
   line-height: 1.4;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn tổng: timeline + step co được trong container */
+.timeline {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.step {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) QUAN TRỌNG: stepLabel phải co được trong flex row
+      — thiếu min-width: 0 thì label dài đẩy tràn thay vì wrap */
+.stepLabel {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Branch banner: text dài (tên branch, path) wrap an toàn */
+.branchBanner {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 4) History text: wrap an toàn, đặc biệt historyNote dài */
+.historyTransition,
+.historyMeta,
+.historyNote {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.historyNote {
+  line-height: 1.45;
+}
+
+/* 5) History list item: box-sizing + chống tràn */
+.historyList li {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 6) Touch device: summary là tap target — cần đủ vùng chạm */
+@media (pointer: coarse) {
+  .historyDetails summary {
+    padding: 8px 0;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* History item: tăng padding dọc cho dễ đọc, dễ chạm nếu clickable */
+  .historyList li {
+    padding: 12px 14px;
+  }
+}
+
+/* 7) Tắt hover "dính" trên touch cho summary */
+@media (hover: none) {
+  .historyDetails summary:hover {
+    text-decoration: none;
+  }
+}
+
+/* 8) Mobile: giảm gap, padding bottom stepLabel, padding banner */
+@media (max-width: 640px) {
+  .step {
+    gap: 10px;
+  }
+
+  .stepLabel {
+    padding: 2px 0 14px;
+    font-size: var(--font-size-sm, 13px);
+    line-height: 1.4;
+  }
+
+  .branchBanner {
+    padding: 8px 12px;
+    font-size: var(--font-size-xs, 12px);
+    margin-bottom: 12px;
+  }
+
+  .historyDetails {
+    margin-top: 16px;
+    padding-top: 12px;
+  }
+
+  .historyList {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .historyList li {
+    padding: 8px 12px;
+  }
+
+  .historyTransition {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .historyMeta {
+    font-size: 11px;
+  }
+
+  .historyNote {
+    font-size: var(--font-size-sm, 13px);
+    margin-top: 4px;
+  }
+}
+
+/* 9) Rất nhỏ (≤380px): thu thêm, giảm marker nhẹ cho cân đối
+      — KHÔNG bump marker vì không phải tap target */
+@media (max-width: 380px) {
+  .step {
+    gap: 8px;
+  }
+
+  .marker {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .connector {
+    min-height: 24px;
+  }
+
+  .stepLabel {
+    padding-bottom: 12px;
+    font-size: 12.5px;
+  }
+
+  .historyList li {
+    padding: 8px 10px;
+  }
+}
+
+/* 10) Landscape mobile: chiều cao khan hiếm — giảm padding dọc step */
+@media (max-height: 480px) and (orientation: landscape) {
+  .stepLabel {
+    padding-bottom: 10px;
+  }
+
+  .marker {
+    width: 24px;
+    height: 24px;
+  }
+
+  .connector {
+    min-height: 20px;
+  }
+}
+
+/* 11) Container query: timeline trong drawer / modal / sidebar hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .step {
+    gap: 8px;
+  }
+
+  .marker {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .stepLabel {
+    font-size: 12.5px;
+    padding-bottom: 12px;
+  }
+
+  .branchBanner {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .historyList li {
+    padding: 8px 10px;
+  }
+}
+
+/* 12) Tôn trọng reduced-motion: tắt transition marker */
+@media (prefers-reduced-motion: reduce) {
+  .marker {
+    transition: none;
+  }
+}

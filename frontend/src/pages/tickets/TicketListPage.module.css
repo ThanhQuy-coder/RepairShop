@@ -91,3 +91,201 @@
   color: var(--color-danger, #dc2626);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1280px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: con trực tiếp co được */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: co giãn mượt trên mobile */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Eyebrow + subtitle: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 5) FilterCard: box-sizing + không tràn */
+.filterCard {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 6) FIX QUAN TRỌNG: min-width 220px cứng → dùng min() để không bao giờ
+      vượt 100% parent (drawer hẹp, mobile có padding). */
+.filterCard > * {
+  min-width: min(220px, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 7) FIX QUAN TRỌNG: customerFilter min-width 240px cứng, còn lớn hơn
+      220px của filterCard → cần override riêng với min(). */
+.customerFilter {
+  min-width: min(240px, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 8) FIX QUAN TRỌNG: selectedCustomer flex space-between,
+      text con không min-width: 0 → customer name dài đẩy button ra ngoài.
+      Cho phép co và wrap text. */
+.selectedCustomer {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  height: auto; /* bỏ height 40px cứng — cho phép tăng khi text dài */
+  min-height: 40px; /* giữ min height để đồng bộ các control khác */
+  flex-wrap: wrap; /* nếu text rất dài + button, wrap an toàn */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 9) Con text trong selectedCustomer co được — trừ button close */
+.selectedCustomer > *:not(button) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 10) Touch device: button close 20×20px quá nhỏ → bump lên 32×32px
+       (compromise giữa WCAG 44px và không phá layout inline 40px) */
+@media (pointer: coarse) {
+  .selectedCustomer button {
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+    flex-shrink: 0;
+    /* margin âm để button không đẩy chiều cao selectedCustomer quá 40px */
+    margin: -6px -6px -6px 0;
+  }
+}
+
+/* 11) Tắt hover "dính" trên touch cho button close */
+@media (hover: none) {
+  .selectedCustomer button:hover {
+    background: none;
+    color: var(--color-text-muted, #64748b);
+  }
+}
+
+/* 12) Mobile: giảm padding filterCard, gap, cho filter con full-width */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .filterCard {
+    padding: 12px;
+    gap: 10px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  /* Filter con full-width trên mobile — mỗi filter 1 hàng, dễ chạm */
+  .filterCard > * {
+    min-width: 100%;
+  }
+
+  .customerFilter {
+    min-width: 100%;
+  }
+
+  .selectedCustomer {
+    padding: 8px 12px;
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 13) Rất nhỏ (≤380px): thu thêm padding, gap */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .filterCard {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .selectedCustomer {
+    padding: 6px 10px;
+    font-size: 12.5px;
+  }
+}
+
+/* 14) Landscape mobile: chiều cao khan hiếm — giảm padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .filterCard {
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+}
+
+/* 15) Container query: filter bar trong drawer / sidebar hẹp
+      → filter con full-width dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 400px) {
+  .filterCard {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .filterCard > * {
+    min-width: 100%;
+  }
+
+  .customerFilter {
+    min-width: 100%;
+  }
+}
+
+/* 16) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .selectedCustomer button {
+    transition: none;
+  }
+}

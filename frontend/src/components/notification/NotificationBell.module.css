@@ -31,3 +31,101 @@
   justify-content: center;
   padding: 0 3px;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: wrapper/button không vượt container */
+.wrapper {
+  display: inline-flex;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.bellButton {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* 2) Badge không bị cắt bởi button, không nowrap gãy khi "99+"
+      — badge tự nở nhờ padding, nhưng chặn max-width để không tràn wrapper */
+.badge {
+  box-sizing: border-box;
+  max-width: calc(100% - 4px);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none; /* badge là trang trí — click xuyên qua button */
+}
+
+/* 3) Touch device: bellButton cần hit area ~44px */
+@media (pointer: coarse) {
+  .bellButton {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  /* Badge đọc được hơn trên mobile — bump nhẹ, không quá to đè icon */
+  .badge {
+    font-size: 11px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    top: 0;
+    right: 0;
+    padding: 0 4px;
+  }
+}
+
+/* 4) Tắt hover "dính" trên thiết bị không hover thực */
+@media (hover: none) {
+  .bellButton:hover {
+    background: transparent;
+  }
+}
+
+/* 5) Mobile nhỏ: giữ badge cân đối, tránh lệch khi button bị ép */
+@media (max-width: 380px) {
+  .bellButton {
+    padding: 8px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .badge {
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+  }
+}
+
+/* 6) Container query: bell nằm trong header/toolbar hẹp
+      — tự thu gọn, badge vẫn hiển thị đủ.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 60px) {
+  .bellButton {
+    padding: 6px;
+  }
+
+  .badge {
+    font-size: 9px;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    padding: 0 3px;
+  }
+}
+
+/* 7) Tôn trọng reduced-motion nếu sau này thêm pulse/ring cho badge */
+@media (prefers-reduced-motion: reduce) {
+  .badge,
+  .bellButton {
+    animation: none !important;
+  }
+}

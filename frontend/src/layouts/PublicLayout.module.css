@@ -67,3 +67,131 @@
     font-size: 13px;
   }
 }
+
+/* ==========================================================
+   HAMBURGER + mobile menu — append only
+   ========================================================== */
+
+/* Nút hamburger: mặc định ẩn trên desktop */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: #23453f;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+}
+
+.hamburger:hover {
+  background: rgba(35, 69, 63, 0.08);
+}
+
+.hamburger:focus-visible {
+  outline: 2px solid #23453f;
+  outline-offset: 2px;
+}
+
+.hamburger svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* ==========================================================
+   MOBILE (≤650px): navbar gọn 1 hàng, nav thành dropdown panel
+   Các rule dưới đây OVERRIDE rule gốc @media (max-width: 650px)
+   ở trên cùng file — cascade đảm bảo rule sau thắng.
+   ========================================================== */
+@media (max-width: 650px) {
+  .navbar {
+    /* Reset flex-wrap + gap từ rule gốc, chỉ 3 item: logo | CTA | hamburger */
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 12px 16px;
+    justify-content: flex-start;
+    z-index: 100; /* đảm bảo menu nổi trên content */
+  }
+
+  /* CTA đẩy sang phải, sát hamburger */
+  .cta {
+    margin-left: auto;
+  }
+
+  .hamburger {
+    display: inline-flex;
+  }
+
+  /* Nav: biến thành dropdown panel dưới navbar.
+     Reset toàn bộ thuộc tính từ rule gốc (order: 3, width: 100%,
+     justify-content: space-between, gap: 12px). */
+  .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: auto;
+    order: initial;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 6px 0;
+    background: #ffffff;
+    border-bottom: 1px solid #d9dfd9;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .navLink {
+    /* Tap target đầy đủ, dễ chạm ngón tay */
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .navLink:last-child {
+    border-bottom: none;
+  }
+
+  .navLink:hover {
+    background: rgba(35, 69, 63, 0.05);
+    color: var(--color-primary);
+  }
+
+  /* Touch: hamburger 44px, sát mép hơn cho cân đối */
+  @media (pointer: coarse) {
+    .hamburger {
+      width: 44px;
+      height: 44px;
+    }
+  }
+}
+
+/* Safe area cho notch iPhone — env() trả 0 nếu không có notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+  @media (max-width: 650px) {
+    .navbar {
+      padding-top: calc(12px + env(safe-area-inset-top, 0));
+    }
+  }
+}
+
+/* Reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hamburger,
+  .nav,
+  .navLink {
+    transition: none !important;
+  }
+}

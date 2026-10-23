@@ -186,3 +186,330 @@
   border: 1px solid var(--color-border-subtle, #f1f5f9);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Wrapper: padding an toàn khi parent không có */
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1240px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* 2) HeaderCard: box-sizing + không tràn */
+.headerCard {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 3) HeaderMain: con co được — h2 + meta không ép méo */
+.headerMain {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.headerMain > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 4) HeaderMain h2: co giãn mượt */
+.headerMain h2 {
+  font-size: clamp(20px, 4.5vw, 26px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.headerMeta {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 5) Grid: box-sizing + không tràn */
+.grid {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mainCol,
+.sideCol {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 6) Section: box-sizing + không tràn */
+.section {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 7) Section h3: flex row (icon + text) — text con co được */
+.section h3 {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+  flex-wrap: wrap;
+}
+
+.section h3 > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 8) InfoGrid: box-sizing + không tràn */
+.infoGrid {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 9) InfoLabel / InfoValue / IssueText: wrap an toàn */
+.infoLabel,
+.infoValueText,
+.issueText {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.infoLabel {
+  line-height: 1.35;
+}
+
+/* 10) Risk / Result / Success box: box-sizing + text wrap */
+.riskBox,
+.resultBox,
+.successBox {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.riskLabel,
+.resultLabel,
+.successLabel {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.riskBox p,
+.resultBox p,
+.successBox p {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* 11) NotesText: pre-line giữ xuống dòng, nhưng cần wrap từ dài */
+.notesText {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 12) Mobile: giảm padding headerCard + section, gap grid */
+@media (max-width: 960px) {
+  /* QUAN TRỌNG: bỏ sticky khi grid đã về 1 cột — sticky vô nghĩa
+     và có thể gây bug scroll trên mobile */
+  .sideCol {
+    position: static;
+    top: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .headerCard {
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    gap: 6px;
+    border-radius: 10px;
+  }
+
+  .headerMain {
+    gap: 10px;
+  }
+
+  .headerMain h2 {
+    line-height: 1.3;
+  }
+
+  .headerMeta {
+    font-size: var(--font-size-xs, 12px);
+  }
+
+  .grid {
+    gap: 16px;
+  }
+
+  .mainCol,
+  .sideCol {
+    gap: 14px;
+  }
+
+  .section {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .section h3 {
+    margin-bottom: 14px;
+    font-size: 15px;
+  }
+
+  /* InfoGrid về 1 cột — 2 cột quá chật trên mobile */
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* infoFull không cần span nữa khi đã 1 cột */
+  .infoFull {
+    grid-column: auto;
+  }
+
+  .riskBox,
+  .resultBox,
+  .successBox {
+    padding: 12px 14px;
+  }
+
+  .riskBox p,
+  .resultBox p,
+  .successBox p {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .issueText {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .infoValueText {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .notesText {
+    padding: 10px 12px;
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 13) Rất nhỏ (≤380px): thu thêm padding, font */
+@media (max-width: 380px) {
+  .headerCard {
+    padding: 12px 14px;
+  }
+
+  .headerMain h2 {
+    font-size: 18px;
+  }
+
+  .section {
+    padding: 14px;
+  }
+
+  .section h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .riskBox,
+  .resultBox,
+  .successBox {
+    padding: 10px 12px;
+  }
+
+  .infoLabel,
+  .riskLabel,
+  .resultLabel,
+  .successLabel {
+    font-size: 11px;
+  }
+
+  .issueText,
+  .infoValueText {
+    font-size: 12.5px;
+  }
+
+  .notesText {
+    font-size: 12.5px;
+    padding: 8px 10px;
+  }
+}
+
+/* 14) Landscape mobile: chiều cao khan hiếm — giảm padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .headerCard {
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+
+  .section {
+    padding: 14px 18px;
+  }
+
+  .section h3 {
+    margin-bottom: 12px;
+  }
+
+  .grid {
+    gap: 14px;
+  }
+
+  .mainCol,
+  .sideCol {
+    gap: 12px;
+  }
+}
+
+/* 15) Container query: page trong drawer / modal hẹp
+      → grid 1 cột + infoGrid 1 cột dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sideCol {
+    position: static;
+    top: auto;
+  }
+}
+
+@container (max-width: 400px) {
+  .headerCard {
+    padding: 14px 16px;
+  }
+
+  .section {
+    padding: 14px;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .infoFull {
+    grid-column: auto;
+  }
+}
+
+/* 16) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .sideCol {
+    transition: none !important;
+  }
+}

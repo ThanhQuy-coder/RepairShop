@@ -89,6 +89,216 @@
   gap: 14px;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có, giữ max-width gốc */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: con trực tiếp co được — chống tràn title/button dài */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: co giãn mượt, không quá to trên mobile */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Eyebrow + subtitle: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 5) FilterCard: box-sizing + không tràn */
+.filterCard {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* 6) FIX QUAN TRỌNG: min-width 200px cứng → tràn trong cột <240px.
+      Dùng min(200px, 100%) để không bao giờ vượt parent. */
+.filterCard > * {
+  min-width: min(200px, 100%);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 7) UserCell: text co được trong flex row
+      — thiếu min-width: 0 thì tên dài đẩy tràn */
+.userCell {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.userCell > *:not(.userAvatar) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 8) UserName: wrap an toàn (tiếng Việt có dấu dài) */
+.userName {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 9) FormGrid + FormRow: box-sizing + con co được trong grid cell */
+.formGrid,
+.formRow {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.formRow > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* 10) Mobile: giảm padding + gap + avatar, thu subtitle */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .filterCard {
+    padding: 12px;
+    gap: 10px;
+    margin-bottom: 16px;
+    /* Trên mobile, mỗi filter chiếm 1 hàng */
+  }
+
+  .filterCard > * {
+    min-width: 100%;
+  }
+
+  .userCell {
+    gap: 8px;
+  }
+
+  .userAvatar {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .formGrid {
+    gap: 12px;
+  }
+
+  .formRow {
+    gap: 10px;
+  }
+}
+
+/* 11) Rất nhỏ (≤380px): thu thêm, tránh title chiếm 3 dòng */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .filterCard {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .userCell {
+    gap: 6px;
+  }
+
+  .userAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .userName {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 12) Landscape mobile: header + filter chiếm ít chiều cao hơn */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-size: clamp(18px, 3vw, 22px);
+  }
+
+  .filterCard {
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+}
+
+/* 13) Container query — QUAN TRỌNG cho formRow:
+      form nằm trong drawer / sidebar / modal hẹp mà viewport vẫn rộng
+      → 2 cột vẫn chật. Rule @media gốc (600px) không xử lý được case này. */
+@container (max-width: 400px) {
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .filterCard > * {
+    min-width: 100%;
+  }
+}
+
+@container (max-width: 320px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .filterCard {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .userAvatar {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* 14) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .container * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
 @media (max-width: 600px) {
   .formRow {
     grid-template-columns: 1fr;

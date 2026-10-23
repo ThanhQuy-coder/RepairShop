@@ -60,3 +60,166 @@
   font-size: 14px;
   line-height: 1.4;
 }
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: an toàn padding khi parent không có, không phá max-width gốc */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: wrap an toàn các khối text */
+.header {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 3) Title: co giãn mượt trên mobile — không tràn, không quá to */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Subtitle + eyebrow: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.subtitle {
+  max-width: 100%;
+}
+
+/* 5) Customer cell: text co được trong flex row
+      — thiếu min-width: 0 thì email/tên dài đẩy tràn cột table */
+.customerCell {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.customerCell > *:not(.customerAvatar) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 6) Comment: wrap an toàn cho text dài, URL, tiếng Việt */
+.commentText {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* 7) Star rating: không vỡ giữa chừng — giữ 5 sao liền mạch */
+.starRating {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* 8) Mobile: giảm khoảng cách header, title nhỏ hơn chút, gap cell gọn */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .title {
+    line-height: 1.3;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .customerCell {
+    gap: 8px;
+  }
+
+  .customerAvatar {
+    width: 28px;
+    height: 28px;
+    font-size: 11px;
+  }
+
+  .starRating {
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .commentText {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 9) Rất nhỏ (≤380px): thu thêm, tránh title chiếm 3 dòng */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .customerCell {
+    gap: 6px;
+  }
+
+  .customerAvatar {
+    width: 26px;
+    height: 26px;
+    font-size: 10.5px;
+  }
+
+  .commentText {
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+}
+
+/* 10) Landscape mobile: header chiếm ít chiều cao hơn */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-size: clamp(18px, 3vw, 22px);
+  }
+}
+
+/* 11) Container query: card/table trong drawer/sidebar hẹp
+      — tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .commentText {
+    font-size: 12.5px;
+  }
+
+  .customerAvatar {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* 12) Tôn trọng reduced-motion (nếu sau này thêm hover/transition) */
+@media (prefers-reduced-motion: reduce) {
+  .container * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

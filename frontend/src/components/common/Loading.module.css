@@ -23,3 +23,106 @@
     transform: rotate(360deg);
   }
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn + box-sizing chuẩn */
+.wrapper {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* 2) Spinner co giãn nhẹ theo vùng chứa
+      — không cố định 28px khi nằm trong cột rất hẹp */
+.spinner {
+  flex-shrink: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 3) Mobile: padding XL gốc quá cao — thu gọn */
+@media (max-width: 640px) {
+  .wrapper {
+    padding: var(--spacing-lg, 20px);
+    gap: 6px;
+  }
+}
+
+/* 4) Rất nhỏ: thu thêm, giữ spinner tỉ lệ với text xung quanh */
+@media (max-width: 380px) {
+  .wrapper {
+    padding: var(--spacing-md, 16px);
+    font-size: var(--font-size-xs, 12px);
+  }
+
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border-width: 2.5px;
+  }
+}
+
+/* 5) Landscape mobile: chiều cao khan hiếm, giảm padding mạnh */
+@media (max-height: 480px) and (orientation: landscape) {
+  .wrapper {
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .spinner {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* 6) Touch device: spinner nhỏ khó thấy khi đặt cạnh nút to
+      — không cần bump, nhưng đảm bảo không bị shrink trong flex row */
+@media (pointer: coarse) {
+  .spinner {
+    flex-shrink: 0;
+  }
+}
+
+/* 7) Container query: spinner trong button / card nhỏ / inline indicator
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 200px) {
+  .wrapper {
+    padding: 12px;
+    gap: 4px;
+  }
+
+  .spinner {
+    width: 22px;
+    height: 22px;
+    border-width: 2.5px;
+  }
+}
+
+/* 8) prefers-reduced-motion — QUAN TRỌNG:
+      KHÔNG tắt animation hoàn toàn, vì spinner là tín hiệu duy nhất
+      báo "đang tải". Tắt = user tưởng app bị treo.
+      Thay vào đó: làm chậm để giảm chóng mặt, vẫn giữ tín hiệu. */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.5s;
+  }
+}
+
+/* 9) Container có kích thước nhỏ chứa spinner + text ngang hàng
+      (inline loading) — cho phép wrap nếu không đủ chỗ */
+.wrapper {
+  flex-wrap: wrap;
+}
+
+/* 10) Nếu wrapper dùng trong ngữ cảnh fullscreen (overlay loading)
+       — đảm bảo căn giữa đúng trên mọi chiều cao */
+@media (max-height: 500px) {
+  .wrapper {
+    padding: 16px;
+  }
+}

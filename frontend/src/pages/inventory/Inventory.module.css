@@ -117,3 +117,288 @@
   display: flex;
   gap: 6px;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1280px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header + text: chống tràn */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 3) FIX: summaryGrid minmax 220px cứng → dùng min() để không tràn */
+.summaryGrid {
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 4) ControlCard: box-sizing + không tràn */
+.controlCard {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 5) FIX QUAN TRỌNG: searchBar min-width 280px cứng
+      → tràn ngay trên màn 320px có padding.
+      Dùng min() để không bao giờ vượt 100% parent. */
+.searchBar {
+  min-width: min(280px, 100%);
+  max-width: min(400px, 100%);
+  box-sizing: border-box;
+}
+
+/* 6) FIX: filterChips flex không wrap → nhiều chip trên mobile tràn.
+      Cho phép wrap, giữ chip liền mạch. */
+.filterChips {
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* 7) Chip: box-sizing + không wrap text (chip ngắn nhưng an toàn) */
+.chip {
+  box-sizing: border-box;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+/* 8) FIX: skuTag monospace không khoảng trắng → tràn cột table */
+.skuTag {
+  box-sizing: border-box;
+  max-width: 100%;
+  display: inline-block;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+  line-height: 1.35;
+}
+
+/* 9) FIX: stockQty flex icon + text, text con co được */
+.stockQty {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.stockQty > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 10) FIX: actionBtns flex không wrap → 2-3 nút action có thể tràn cột
+      hẹp. Cho phép wrap, nút không bị shrink méo. */
+.actionBtns {
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.actionBtns > * {
+  flex-shrink: 0;
+}
+
+/* 11) Touch: chip là tap target — đảm bảo hit area (đã có padding đủ,
+       nhưng tăng nhẹ trên touch) */
+@media (pointer: coarse) {
+  .chip {
+    min-height: 36px;
+    padding: 8px 14px;
+  }
+
+  .actionBtns > .button,
+  .actionBtns > button,
+  .actionBtns > a {
+    min-height: 40px;
+    min-width: 40px;
+  }
+}
+
+/* 12) Tắt hover "dính" trên touch (chip + chipActive) */
+@media (hover: none) {
+  .chip:hover {
+    background: #ffffff;
+    border-color: var(--color-border, #e2e8f0);
+  }
+
+  .chipActive:hover {
+    background: var(--color-primary, #185a4e);
+  }
+}
+
+/* 13) Mobile: controlCard stack, searchBar + chips full-width */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .summaryGrid {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .controlCard {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    gap: 12px;
+    border-radius: 10px;
+    /* Stack dọc khi control không vừa */
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .searchBar {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .filterChips {
+    gap: 6px;
+  }
+
+  .chip {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .skuTag {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+
+  .stockQty {
+    gap: 6px;
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 14) Rất nhỏ (≤380px): thu thêm padding, chip nhỏ hơn */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .controlCard {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .chip {
+    font-size: 11.5px;
+    padding: 5px 10px;
+  }
+
+  .summaryGrid {
+    gap: 10px;
+  }
+}
+
+/* 15) Landscape mobile: chiều cao khan hiếm — giảm padding + margin dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .summaryGrid {
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+
+  .controlCard {
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    gap: 10px;
+    /* Landscape có không gian ngang — quay lại row nếu đủ */
+    flex-direction: row;
+  }
+
+  .searchBar {
+    min-width: min(220px, 100%);
+  }
+}
+
+/* 16) Container query: page trong drawer / sidebar hẹp
+      → control stack dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 480px) {
+  .controlCard {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+  }
+
+  .searchBar {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .filterChips {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+}
+
+@container (max-width: 280px) {
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionBtns {
+    flex-direction: column;
+  }
+
+  .actionBtns > * {
+    width: 100%;
+  }
+}
+
+/* 17) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

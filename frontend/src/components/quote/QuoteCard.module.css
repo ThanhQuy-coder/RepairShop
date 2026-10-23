@@ -64,3 +64,279 @@
   padding-top: var(--spacing-md);
   border-top: 1px dashed var(--color-border);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn tổng */
+.card {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) Header: cho phép wrap thay vì ép co */
+.header {
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: wrap an toàn (tên đơn hàng, mã đơn dài) */
+.title {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+/* 4) createdAAt: không shrink, wrap an toàn */
+.createdAt {
+  flex-shrink: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* 5) Table: box-sizing + không vượt card */
+.itemsTable {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 6) Cell: wrap an toàn — chống tràn khi item name dài */
+.itemsTable th,
+.itemsTable td {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  vertical-align: top;
+}
+
+/* 7) Cột số (type, num, total): không wrap để giữ số liền mạch
+      — số tiền bị wrap giữa chừng rất khó đọc */
+.colType,
+.colNum,
+.totalLabel,
+.totalValue {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* 8) Số tiền dài có thể tràn phải nếu cột hẹp — cho phép cột giãn
+      tối thiểu, và cho phép scroll ngang nếu thực sự cần */
+.itemsTable td.colNum,
+.itemsTable td:last-child {
+  text-align: right;
+}
+
+/* 9) Actions slot: chống tràn, cho phép wrap nút */
+.actionsSlot {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.actionsSlot > .button,
+.actionsSlot > button,
+.actionsSlot > a {
+  min-width: 0;
+}
+
+/* 10) Mobile: giảm padding card, giảm font table, giảm padding cell */
+@media (max-width: 640px) {
+  .card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .header {
+    margin-bottom: 10px;
+  }
+
+  .title {
+    font-size: var(--font-size-base, 14px);
+    font-weight: 700;
+  }
+
+  .createdAt {
+    font-size: var(--font-size-xs, 12px);
+  }
+
+  .itemsTable {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .itemsTable th {
+    font-size: 11px;
+    padding: 8px 4px 6px;
+    letter-spacing: 0;
+  }
+
+  .itemsTable td {
+    padding: 8px 4px;
+  }
+
+  .totalLabel,
+  .totalValue {
+    padding-top: 8px;
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .totalValue {
+    font-size: var(--font-size-base, 14px);
+  }
+
+  .actionsSlot {
+    margin-top: 12px;
+    padding-top: 10px;
+    /* Cho phép nút full-width stack nếu có 2+ nút */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+/* 11) Rất nhỏ (≤380px): table có thể tràn cột — chuyển sang scroll wrapper
+      bằng cách set display: block cho table (không cần đổi HTML) */
+@media (max-width: 380px) {
+  .card {
+    padding: 10px;
+  }
+
+  .itemsTable {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Bảng scroll ngang — cột không bị bóp */
+  }
+
+  .itemsTable thead,
+  .itemsTable tbody,
+  .itemsTable tr {
+    display: table;
+    width: 100%;
+    table-layout: auto;
+    min-width: 320px;
+  }
+
+  .itemsTable thead {
+    display: table-header-group;
+  }
+
+  .itemsTable th,
+  .itemsTable td {
+    padding: 6px 4px;
+  }
+
+  /* Scrollbar rõ ràng */
+  .itemsTable::-webkit-scrollbar {
+    height: 6px;
+  }
+  .itemsTable::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  /* Actions full-width */
+  .actionsSlot > .button,
+  .actionsSlot > button,
+  .actionsSlot > a {
+    width: 100%;
+  }
+}
+
+/* 12) Touch device: action button cần hit area */
+@media (pointer: coarse) {
+  .actionsSlot > .button,
+  .actionsSlot > button,
+  .actionsSlot > a {
+    min-height: 44px;
+  }
+}
+
+/* 13) Tắt hover "dính" trên touch (nếu có) */
+@media (hover: none) {
+  .actionsSlot > .button:hover,
+  .actionsSlot > button:hover {
+    transform: none;
+  }
+}
+
+/* 14) Landscape mobile: chiều cao khan hiếm — giảm margin + padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .card {
+    padding: 12px;
+  }
+
+  .header {
+    margin-bottom: 8px;
+  }
+
+  .actionsSlot {
+    margin-top: 10px;
+    padding-top: 8px;
+  }
+
+  .itemsTable th,
+  .itemsTable td {
+    padding: 6px 4px;
+  }
+}
+
+/* 15) Container query: card trong drawer / sidebar / modal hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .card {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .itemsTable {
+    font-size: 12px;
+  }
+
+  .itemsTable th {
+    font-size: 10.5px;
+    padding: 6px 3px;
+  }
+
+  .itemsTable td {
+    padding: 6px 3px;
+  }
+
+  .totalValue {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .actionsSlot {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .actionsSlot > .button,
+  .actionsSlot > button,
+  .actionsSlot > a {
+    width: 100%;
+  }
+}
+
+/* 16) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .itemsTable *,
+  .actionsSlot * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

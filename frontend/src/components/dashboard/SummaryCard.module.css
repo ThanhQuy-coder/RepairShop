@@ -62,3 +62,165 @@
   margin-top: 4px;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: card + phần text co được trong flex parent */
+.card {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 2) Phần text (value + label) co được, wrap an toàn
+      — không có min-width: 0 thì flex item không shrink nổi */
+.value,
+.label {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Value: clamp để tự co trên card hẹp, không tràn
+      — 26px gốc giữ nguyên ở desktop, nhỏ dần trên card hẹp */
+.value {
+  font-size: clamp(20px, 22px + 0.4vw, 26px);
+  line-height: 1.2;
+}
+
+/* 4) Tắt hover-lift trên thiết bị không hover thực (touch) */
+@media (hover: none) {
+  .card:hover {
+    transform: none;
+    box-shadow: var(--shadow-xs);
+    border-color: var(--color-border, #e2e8f0);
+  }
+
+  .emphasized:hover {
+    box-shadow: 0 4px 12px rgba(24, 90, 78, 0.2);
+  }
+}
+
+/* 5) Mobile: giảm padding + gap + icon cho card đỡ chật
+      — grid 2 cột trên mobile thường cho card ~150–170px */
+@media (max-width: 640px) {
+  .card {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 8px;
+  }
+
+  .value {
+    font-size: clamp(18px, 5vw, 22px);
+  }
+
+  .label {
+    font-size: var(--font-size-xs, 12px);
+    margin-top: 2px;
+  }
+}
+
+/* 6) Rất nhỏ: card có thể chỉ ~130px — thu thêm, value nhỏ hơn */
+@media (max-width: 380px) {
+  .card {
+    padding: 12px;
+    gap: 10px;
+    border-radius: var(--radius-md, 10px);
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .value {
+    font-size: 18px;
+  }
+
+  .label {
+    font-size: 11px;
+  }
+}
+
+/* 7) Touch device: card có thể clickable (nếu dùng như nav card)
+      — đảm bảo hit area, nhưng không ép height cố định */
+@media (pointer: coarse) {
+  .card {
+    min-height: 72px;
+  }
+}
+
+/* 8) Landscape mobile: card thấp, giảm padding dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .card {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .icon {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+  }
+}
+
+/* 9) Container query — QUAN TRỌNG NHẤT cho component này:
+      card nằm trong grid 2/3/4 cột, độ rộng thực tế khác viewport.
+      Responsive theo card width chính xác hơn media query viewport.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 200px) {
+  .card {
+    padding: 14px;
+    gap: 10px;
+    border-radius: var(--radius-md, 10px);
+  }
+
+  .icon {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  .value {
+    font-size: 20px;
+  }
+
+  .label {
+    font-size: 11px;
+  }
+}
+
+@container (max-width: 140px) {
+  .card {
+    /* Card quá hẹp cho row layout — chuyển sang stack dọc */
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .value {
+    font-size: 18px;
+  }
+}
+
+/* 10) Tôn trọng reduced-motion: tắt transition + hover-lift */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}

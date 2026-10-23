@@ -16,3 +16,99 @@
   color: var(--color-text-muted);
   font-size: var(--font-size-lg);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Wrapper: padding ngang an toàn + box-sizing */
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* 2) Code: co giãn mượt — 64px quá to trên 320px */
+.code {
+  font-size: clamp(40px, 14vw, 64px);
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Message: wrap an toàn + line-height đọc tốt */
+.message {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.55;
+  max-width: 100%;
+}
+
+/* 4) Mobile: min-height nhỏ hơn + gap gọn + font message giảm */
+@media (max-width: 640px) {
+  .wrapper {
+    min-height: 50vh;
+    gap: 12px;
+  }
+
+  .message {
+    font-size: var(--font-size-base, 14px);
+  }
+}
+
+/* 5) Rất nhỏ (≤380px): thu thêm, code nhỏ hơn */
+@media (max-width: 380px) {
+  .wrapper {
+    min-height: 45vh;
+    gap: 10px;
+  }
+
+  .code {
+    font-size: clamp(36px, 13vw, 52px);
+  }
+
+  .message {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 6) Landscape mobile: chiều cao khan hiếm — bỏ min-height để không đẩy
+      content khỏi viewport khi xoay ngang */
+@media (max-height: 480px) and (orientation: landscape) {
+  .wrapper {
+    min-height: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    gap: 10px;
+  }
+
+  .code {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+}
+
+/* 7) Container query: page trong drawer / sidebar / modal hẹp
+      → tự thu code dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .code {
+    font-size: 40px;
+  }
+
+  .message {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 8) Tôn trọng reduced-motion (nếu sau này thêm animation pulse/fade) */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper *,
+  .code,
+  .message {
+    animation: none !important;
+    transition: none !important;
+  }
+}

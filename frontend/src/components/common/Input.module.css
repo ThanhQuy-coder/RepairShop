@@ -20,14 +20,15 @@
   font-size: var(--font-size-base, 14px);
   color: var(--color-text, #1e293b);
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
   box-shadow: var(--shadow-xs);
 }
 
 select.input {
   cursor: pointer;
 }
-
 
 .input::placeholder {
   color: #94a3b8;
@@ -53,3 +54,141 @@ select.input {
   font-weight: 500;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: wrapper + input không vượt container */
+.wrapper {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.input {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 2) CRITICAL — iOS Safari auto-zoom khi focus input có font-size < 16px.
+      Bump lên 16px trên mobile; desktop giữ 14px gốc.
+      Dùng @supports (-webkit-touch-callout: none) để chỉ target iOS Safari,
+      không đụng Android Chrome / desktop. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 768px) {
+    .input {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Fallback: nếu không muốn dùng @supports (đơn giản hơn),
+      bật ở mọi mobile — an toàn, không hại gì:
+@media (max-width: 768px) {
+  .input { font-size: 16px; }
+}
+*/
+
+/* 3) Touch device: min-height 40px hơi nhỏ, bump lên 44px */
+@media (pointer: coarse) {
+  .input {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+}
+
+/* 4) Error text: lỗi dài chứa URL / error code không khoảng trắng
+      → wrap an toàn, không tràn ngang */
+.errorText {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 5) Label dài (tiếng Việt hay dài) → wrap an toàn */
+.label {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+/* 6) Mobile: giảm padding ngang cho input, thu gọn khoảng cách label-input */
+@media (max-width: 640px) {
+  .input {
+    padding: 10px 12px;
+  }
+
+  .wrapper {
+    gap: 4px;
+  }
+}
+
+/* 7) Select trên iOS: native arrow nằm ngoài vùng padding,
+      text dài dễ bị arrow che. Thêm padding-right để chừa chỗ. */
+select.input {
+  padding-right: 36px;
+  text-overflow: ellipsis;
+  appearance: none;
+  -webkit-appearance: none;
+  /* Arrow đơn giản bằng SVG inline để không phụ thuộc asset */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 8px;
+}
+
+/* 8) Input date/time trên mobile: Safari hiển thị spinner rộng,
+      gây tràn. Cho phép co và ẩn spinner trên mobile. */
+@media (max-width: 640px) {
+  .input[type='date'],
+  .input[type='time'],
+  .input[type='datetime-local'],
+  .input[type='month'],
+  .input[type='week'] {
+    min-width: 0;
+  }
+
+  .input[type='date']::-webkit-calendar-picker-indicator,
+  .input[type='time']::-webkit-calendar-picker-indicator {
+    margin-left: 0;
+    padding: 0;
+  }
+}
+
+/* 9) Container query: form nằm trong sidebar / drawer / card hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 280px) {
+  .wrapper {
+    gap: 4px;
+  }
+
+  .input {
+    padding: 8px 10px;
+  }
+
+  .label {
+    font-size: var(--font-size-xs, 12px);
+  }
+}
+
+/* 10) Landscape mobile: chiều cao khan hiếm, giảm khoảng cách */
+@media (max-height: 480px) and (orientation: landscape) {
+  .wrapper {
+    gap: 3px;
+  }
+
+  .input {
+    min-height: 36px;
+    padding: 6px 12px;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion: tắt transition border/shadow */
+@media (prefers-reduced-motion: reduce) {
+  .input {
+    transition: none;
+  }
+}

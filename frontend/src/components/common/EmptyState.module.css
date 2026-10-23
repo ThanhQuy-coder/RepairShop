@@ -10,6 +10,9 @@
   border-radius: var(--radius-lg, 14px);
   color: var(--color-text-muted, #64748b);
   text-align: center;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   font-size: var(--font-size-base, 14px);
 }
 
@@ -18,3 +21,92 @@
   line-height: 1.5;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 2) Text con (p, span, v.v.) không bị cắt cứng khi cột hẹp */
+.wrapper > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 3) Tablet: giảm padding đôi chút cho cân đối */
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 36px 20px;
+  }
+}
+
+/* 4) Mobile: padding gốc 48px quá phí không gian — thu gọn mạnh */
+@media (max-width: 640px) {
+  .wrapper {
+    padding: 28px 16px;
+    gap: 6px;
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .wrapper p {
+    max-width: 100%;
+    line-height: 1.45;
+  }
+}
+
+/* 5) Rất nhỏ: thu thêm, tránh cảm giác "hộp rỗng" to đùng */
+@media (max-width: 380px) {
+  .wrapper {
+    padding: 22px 12px;
+    border-radius: var(--radius-md, 10px);
+  }
+}
+
+/* 6) Landscape mobile: chiều cao khan hiếm — ưu tiên nội dung */
+@media (max-height: 480px) and (orientation: landscape) {
+  .wrapper {
+    padding: 20px 16px;
+    gap: 4px;
+  }
+}
+
+/* 7) CTA bên trong empty state: full-width trên mobile
+      — nút "Thêm mới", "Tải lại"… thường là hành động chính,
+      nằm giữa cột hẹp thì full-width dễ chạm hơn.
+      Chỉ áp dụng cho button trực tiếp con của .wrapper,
+      không ảnh hưởng button ở nơi khác. */
+@media (max-width: 480px) {
+  .wrapper > .button,
+  .wrapper > button {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* 8) Container query: wrapper tự thích nghi khi nằm trong
+      cột hẹp (sidebar, table cell, drawer) bất kể viewport.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .wrapper {
+    padding: 20px 12px;
+    gap: 4px;
+  }
+
+  .wrapper p {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 9) Touch device: đảm bảo CTA trong empty state đủ lớn */
+@media (pointer: coarse) {
+  .wrapper > .button,
+  .wrapper > button {
+    min-height: 44px;
+  }
+}
+
+/* 10) Tôn trọng reduced-motion (nếu sau này thêm animation icon) */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

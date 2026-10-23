@@ -29,3 +29,167 @@
   margin-top: var(--spacing-sm);
   text-align: right;
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn tổng: card + list co được trong container */
+.card,
+.list {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) CardHeader: cho phép wrap thay vì ép co méo
+      — title dài + số tiền dài trên màn hẹp phải xuống dòng */
+.cardHeader {
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+}
+
+/* 3) Con trực tiếp của cardHeader co được — chống tràn */
+.cardHeader > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 4) Items: wrap an toàn + không bị thụt lề quá sâu trên mobile */
+.items {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.items li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 5) Total: chống tràn khi số tiền dài (1.234.567.890 ₫) */
+.total {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 6) Empty text: wrap an toàn */
+.empty {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+/* 7) Mobile: giảm padding, thụt lề list, gap — gọn hơn cho 320–375px */
+@media (max-width: 640px) {
+  .card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .cardHeader {
+    margin-bottom: 8px;
+    font-size: var(--font-size-sm, 13px);
+    gap: 4px;
+  }
+
+  .items {
+    padding-left: 18px;
+    font-size: var(--font-size-sm, 13px);
+    line-height: 1.45;
+  }
+
+  .total {
+    margin-top: 8px;
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .list {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+}
+
+/* 8) Rất nhỏ (≤380px): thu thêm padding, list thụt lề nông hơn */
+@media (max-width: 380px) {
+  .card {
+    padding: 10px;
+  }
+
+  .items {
+    padding-left: 16px;
+    font-size: 12.5px;
+  }
+
+  .cardHeader {
+    font-size: 12.5px;
+  }
+
+  .empty {
+    font-size: 12.5px;
+  }
+}
+
+/* 9) Landscape mobile: chiều cao khan hiếm — giảm padding + margin dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .card {
+    padding: 10px 12px;
+  }
+
+  .cardHeader {
+    margin-bottom: 6px;
+  }
+
+  .list {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .total {
+    margin-top: 6px;
+  }
+}
+
+/* 10) Container query: card trong drawer / sidebar / modal hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 280px) {
+  .card {
+    padding: 10px;
+  }
+
+  .cardHeader {
+    /* Card quá hẹp → stack dọc, title trên giá trị dưới */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .items {
+    padding-left: 16px;
+  }
+}
+
+/* 11) Touch device: nếu card clickable (mở detail) — đảm bảo hit area */
+@media (pointer: coarse) {
+  .card {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+/* 12) Tắt hover "dính" nếu card có hover sau này */
+@media (hover: none) {
+  .card:hover {
+    /* Không có hover gốc, nhưng giữ block phòng khi thêm sau */
+    background: transparent;
+  }
+}
+
+/* 13) Tôn trọng reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+}

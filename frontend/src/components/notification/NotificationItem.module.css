@@ -44,3 +44,144 @@
   font-size: 12px;
   color: var(--color-text-muted);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Item: box-sizing + chống tràn + cho phép co trong list */
+.item {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) Title: wrap an toàn, clamp 2 dòng — tránh title dài đẩy lệch layout.
+      Đặt trên 1 hàng với .time bằng cách giới hạn title, để time xuống dưới. */
+.title {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 3) Message: đảm bảo wrap được ngay cả khi có URL / error code dài
+      — line-clamp gốc đã có, chỉ thêm word-break để "cứng" hơn */
+.message {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 4) Time: không bị shrink, không xuống dòng xấu khi title dài
+      — đặt trong content nhưng nếu cấu trúc cho phép, đây là safeguard */
+.time {
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* 5) Touch device: item là tap target — cần ~44px chiều cao tối thiểu */
+@media (pointer: coarse) {
+  .item {
+    min-height: 64px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Dot 8px hơi nhỏ để thấy rõ trên mobile — giữ 8px nhưng chừa khoảng
+      để không bị chìm vào nền. Nếu muốn to hơn, đổi thành 10px. */
+  .dot {
+    width: 8px;
+    height: 8px;
+    margin-top: 7px;
+  }
+}
+
+/* 6) Tắt hover "dính" trên thiết bị không hover thực */
+@media (hover: none) {
+  .item:hover {
+    background: transparent;
+  }
+}
+
+/* 7) Mobile: giảm padding ngang cho gọn, giữ dọc đủ thoáng */
+@media (max-width: 640px) {
+  .item {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: var(--font-size-base, 14px);
+    line-height: 1.35;
+  }
+
+  .message {
+    font-size: var(--font-size-sm, 13px);
+    -webkit-line-clamp: 2; /* giữ nguyên, chỉ để rõ ràng */
+    line-height: 1.4;
+  }
+
+  .time {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+}
+
+/* 8) Rất nhỏ: thu thêm, giảm line-clamp message xuống 1 nếu cần
+      — tránh item quá cao trên màn 320px */
+@media (max-width: 380px) {
+  .item {
+    padding: 8px 10px;
+    gap: 6px;
+    min-height: 56px;
+  }
+
+  .message {
+    -webkit-line-clamp: 1;
+  }
+
+  .time {
+    font-size: 10.5px;
+  }
+}
+
+/* 9) Landscape mobile: chiều cao khan hiếm — item gọn hơn */
+@media (max-height: 480px) and (orientation: landscape) {
+  .item {
+    padding: 8px 12px;
+    min-height: 0;
+  }
+
+  .message {
+    -webkit-line-clamp: 1;
+  }
+}
+
+/* 10) Container query: item trong dropdown / panel hẹp
+      → thu gọn, giữ message clamp an toàn.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .item {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .title {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .message {
+    -webkit-line-clamp: 1;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion (nếu sau này có animation slide/ring) */
+@media (prefers-reduced-motion: reduce) {
+  .item * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

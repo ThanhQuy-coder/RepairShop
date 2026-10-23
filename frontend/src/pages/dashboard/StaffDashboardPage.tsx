@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useTicketSummary } from '../../hooks/useTicketSummary';
+import { useAppointmentSummary } from '../../hooks/useAppointmentSummary';
 import { Loading, ErrorMessage, Button } from '../../components/common';
 import SummaryCard from '../../components/dashboard/SummaryCard';
 import styles from './DashboardPage.module.css';
@@ -7,6 +8,11 @@ import styles from './DashboardPage.module.css';
 export default function StaffDashboardPage() {
   const navigate = useNavigate();
   const { summary, isLoading, errorMessage } = useTicketSummary();
+  const {
+    summary: appointmentSummary,
+    isLoading: isAppointmentLoading,
+    errorMessage: appointmentErrorMessage,
+  } = useAppointmentSummary();
 
   return (
     <div className={styles.container}>
@@ -14,7 +20,9 @@ export default function StaffDashboardPage() {
         <div>
           <span className={styles.eyebrow}>BÀN LÀM VIỆC LỄ TÂN</span>
           <h1 className={styles.title}>Tổng quan điều phối</h1>
-          <p className={styles.subtitle}>Tiếp nhận thiết bị, theo dõi tiến độ và quản lý thông tin khách hàng.</p>
+          <p className={styles.subtitle}>
+            Tiếp nhận thiết bị, theo dõi tiến độ và quản lý thông tin khách hàng.
+          </p>
         </div>
         <Button size="lg" onClick={() => navigate('/tickets/create')}>
           + Tiếp nhận thiết bị
@@ -35,6 +43,25 @@ export default function StaffDashboardPage() {
           </div>
         </section>
       )}
+
+      <section className={styles.statsSection}>
+        <h2 className={styles.sectionHeading}>Trạng thái phiếu lịch hẹn</h2>
+        {isAppointmentLoading && <Loading />}
+        {appointmentErrorMessage && <ErrorMessage message={appointmentErrorMessage} />}
+        {appointmentSummary && (
+          <div className={styles.grid}>
+            <SummaryCard
+              icon="📅"
+              label="Tổng số lịch hẹn"
+              value={appointmentSummary.total}
+              isEmphasized
+            />
+            {appointmentSummary.groups.map((g) => (
+              <SummaryCard key={g.key} icon={g.icon} label={g.label} value={g.count} />
+            ))}
+          </div>
+        )}
+      </section>
 
       <div className={styles.shortcuts}>
         <h2 className={styles.sectionHeading}>Truy cập nhanh nghiệp vụ</h2>
@@ -70,4 +97,3 @@ export default function StaffDashboardPage() {
     </div>
   );
 }
-

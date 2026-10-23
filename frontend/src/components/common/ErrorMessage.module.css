@@ -19,3 +19,108 @@
 .retryButton {
   margin-top: var(--spacing-sm);
 }
+
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Chống tràn: alert + con trực tiếp không vượt container */
+.wrapper {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.wrapper > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* 2) Message lỗi dài, đặc biệt chứa URL / error code / path
+      → buộc xuống dòng, không cho tràn ngang */
+.message {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) List lỗi: từng item dài cũng phải wrap an toàn,
+      và list không bị thụt lề quá sâu trên máy hẹp */
+.list {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.list li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 4) Mobile: giảm padding ngang + thụt lề list cho cân đối */
+@media (max-width: 640px) {
+  .wrapper {
+    padding: var(--spacing-sm) 12px;
+    border-radius: 8px;
+  }
+
+  .list {
+    padding-left: 20px;
+  }
+
+  .message {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* 5) Rất nhỏ: thu thêm, giảm thụt lề list */
+@media (max-width: 380px) {
+  .wrapper {
+    padding: 8px 10px;
+  }
+
+  .list {
+    padding-left: 16px;
+    margin-top: 4px;
+  }
+}
+
+/* 6) Retry button trên mobile: full-width, dễ chạm
+      — nhắm đúng con của .retryButton để không ảnh hưởng button khác */
+@media (max-width: 480px) {
+  .retryButton {
+    margin-top: 12px;
+  }
+
+  .retryButton > .button,
+  .retryButton > button {
+    width: 100%;
+  }
+}
+
+/* 7) Touch device: đảm bảo retry button đủ hit area */
+@media (pointer: coarse) {
+  .retryButton > .button,
+  .retryButton > button {
+    min-height: 44px;
+  }
+}
+
+/* 8) Container query: alert nằm trong form / sidebar / card hẹp
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .wrapper {
+    padding: 8px 10px;
+  }
+
+  .list {
+    padding-left: 16px;
+  }
+}
+
+/* 9) Tôn trọng reduced-motion (nếu sau này có animation shake/pulse) */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

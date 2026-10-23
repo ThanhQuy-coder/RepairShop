@@ -47,3 +47,129 @@
   max-width: 420px;
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Container: padding an toàn khi parent không có */
+.container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: min(1280px, 100%);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 2) Header: con trực tiếp co được — title/subtitle dài không tràn
+      (header gốc đã flex-wrap nhưng thiếu min-width: 0 cho con) */
+.header > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* 3) Title: co giãn mượt trên mobile */
+.title {
+  font-size: clamp(20px, 4.5vw, 24px);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+/* 4) Eyebrow + subtitle: wrap an toàn */
+.eyebrow,
+.subtitle {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.45;
+  max-width: 100%;
+}
+
+/* 5) SearchCard: box-sizing + không tràn */
+.searchCard {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+/* 6) SearchBar: co đúng trong mọi container
+      — max-width gốc 420px giữ cho desktop;
+      thêm width: 100% + max-width 100% để input bên trong co theo.
+      Không tràn, không bị ép cứng 420px khi container hẹp hơn. */
+.searchBar {
+  width: 100%;
+  max-width: min(420px, 100%);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* 7) Mobile: giảm padding searchCard, margin header */
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+    gap: 12px;
+  }
+
+  .subtitle {
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .searchCard {
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+  }
+
+  .searchBar {
+    max-width: 100%;
+  }
+}
+
+/* 8) Rất nhỏ (≤380px): thu thêm padding, title nhỏ hơn */
+@media (max-width: 380px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  .searchCard {
+    padding: 10px 12px;
+  }
+}
+
+/* 9) Landscape mobile: chiều cao khan hiếm — giảm padding + margin dọc */
+@media (max-height: 480px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 12px;
+  }
+
+  .searchCard {
+    padding: 10px 16px;
+    margin-bottom: 12px;
+  }
+}
+
+/* 10) Container query: page trong layout có sidebar hẹp / drawer
+      → tự thu gọn dù viewport còn rộng.
+      Parent cần container-type: inline-size — thêm ở layout. */
+@container (max-width: 320px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .searchCard {
+    padding: 10px 12px;
+  }
+}
+
+/* 11) Tôn trọng reduced-motion (nếu searchCard có transition sau này) */
+@media (prefers-reduced-motion: reduce) {
+  .searchCard {
+    transition: none !important;
+  }
+}

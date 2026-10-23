@@ -23,13 +23,23 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleUp {
-  from { opacity: 0; transform: scale(0.96) translateY(4px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .header {
@@ -81,6 +91,136 @@
   border-bottom-right-radius: var(--radius-lg, 14px);
 }
 
+/* ==========================================================
+   RESPONSIVE ADDITIONS — append only
+   ========================================================== */
+
+/* 1) Dùng dvh thay vh — tránh bị cắt khi thanh địa chỉ mobile ẩn/hiện.
+      max-height khai báo lại, browser cũ bỏ qua và fallback về 88vh gốc. */
+.modal {
+  max-height: 88dvh;
+}
+
+/* 2) Safe area: tránh notch / home indicator trên iPhone */
+.overlay {
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0)
+    env(safe-area-inset-left, 0);
+  box-sizing: border-box;
+}
+
+/* 3) Touch: nút close 32px quá nhỏ để chạm ngón tay */
+@media (pointer: coarse) {
+  .closeButton {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+  }
+}
+
+/* 4) Mobile: chuyển sang dạng bottom-sheet / full-height
+      — tận dụng chiều cao, footer luôn thấy, header luôn thấy */
+@media (max-width: 640px) {
+  .overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    border-radius: var(--radius-lg, 14px) var(--radius-lg, 14px) 0 0;
+    border-bottom: none;
+    /* Tôn trọng home indicator khi sheet sát đáy */
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Sticky header + footer để nội dung dài vẫn đóng được, vẫn submit được */
+  .header {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+  }
+
+  .footer {
+    position: sticky;
+    bottom: 0;
+    /* Bù safe area để nút không bị home indicator che */
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0));
+    z-index: 1;
+  }
+}
+
+/* 5) Màn hình rất hẹp / xoay ngang điện thoại: footer stack dọc
+      — 2 nút cạnh nhau dễ tràn chữ, đặc biệt khi chữ tiếng Việt dài */
+@media (max-width: 380px), (max-height: 480px) {
+  .footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .footer > * {
+    width: 100%;
+  }
+}
+
+/* 6) Landscape mobile: modal cao không nên chiếm gần hết,
+      cần chừa chỗ cho thanh địa chỉ + bàn phím */
+@media (max-height: 500px) and (orientation: landscape) {
+  .modal {
+    max-height: 94dvh;
+    border-radius: 10px;
+    width: 88%;
+    max-width: 88%;
+  }
+  .header {
+    padding: 10px 16px;
+  }
+  .body {
+    padding: 16px;
+  }
+  .footer {
+    padding: 10px 16px;
+  }
+}
+
+/* 7) Bàn phím ảo mở (mobile): dùng svh để modal không bị che
+      — svh = small viewport height, tính cả lúc thanh địa chỉ hiện */
+@supports (max-height: 100svh) {
+  .modal {
+    max-height: 88svh;
+  }
+  @media (max-width: 640px) {
+    .modal {
+      max-height: 92svh;
+    }
+  }
+}
+
+/* 8) Tôn trọng reduced-motion: tắt animation scale/fade */
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+  }
+  .modal {
+    animation: none;
+  }
+}
+
+/* 9) Container query (nếu modal được render trong 1 container hẹp,
+      ví dụ drawer-in-drawer). Parent cần container-type: inline-size. */
+@container (max-width: 560px) {
+  .header,
+  .footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .body {
+    padding: 16px;
+  }
+}
+
 @media (max-width: 480px) {
   .modal {
     width: 95%;
@@ -90,4 +230,3 @@
     padding: var(--spacing-md, 16px);
   }
 }
-
