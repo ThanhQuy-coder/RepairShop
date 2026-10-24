@@ -23,7 +23,6 @@ public class MarkNotificationReadCommandHandler : IRequestHandler<MarkNotificati
         var notification = await _repo.GetByIdAsync(request.Id)
             ?? throw new NotFoundException("Thông báo", request.Id);
 
-        // BR-28 — enforce bằng Guard, KHÔNG dựa vào Role (Admin cũng không được đánh dấu hộ)
         NotificationAccessGuard.EnsureOwnsNotification(notification, _currentUser.UserId!.Value);
 
         notification.MarkAsRead();

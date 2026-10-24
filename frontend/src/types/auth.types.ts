@@ -16,6 +16,7 @@ export interface AuthResponse {
   expiresIn: number;
   role: string;
   email: string;
+  userId: string;
 }
 
 export interface UserProfile {

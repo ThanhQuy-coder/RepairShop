@@ -2,6 +2,7 @@ using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 
 namespace RepairShop.Application.Modules.Appointments.Commands;
 
@@ -43,12 +44,6 @@ public class MarkNoShowAppointmentCommandHandler : IRequestHandler<MarkNoShowApp
         }
 
         await _repo.SaveChangesAsync();
-        return new AppointmentResponse(appointment.Id, Guid.Empty,
-            appointment.FullName,
-            appointment.Phone,
-            appointment.AppointmentDate,
-            appointment.TimeSlotId,
-            appointment.Status.ToString(),
-            appointment.CreatedAt);
+        return appointment.ToResponse();
     }
 }

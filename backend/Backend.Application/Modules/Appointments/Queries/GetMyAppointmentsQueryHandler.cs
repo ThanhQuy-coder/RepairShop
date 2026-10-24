@@ -2,6 +2,7 @@ using MediatR;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.Commands;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.Application.Modules.Appointments.Queries;
@@ -31,18 +32,8 @@ public class GetMyAppointmentsQueryHandler : IRequestHandler<GetMyAppointmentsQu
         if (appointments is null || appointments.Count == 0)
             return [];
 
-        return appointments.Select(ToResponse).ToList();
+        return appointments
+            .Select(a => a.ToResponse())
+            .ToList();
     }
-
-    internal static AppointmentResponse ToResponse(Appointment appointment) =>
-        new(
-            appointment.Id,
-            appointment.CustomerId ?? Guid.Empty,
-            appointment.FullName,
-            appointment.Phone,
-            appointment.AppointmentDate,
-            appointment.TimeSlotId,
-            appointment.Status.ToString(),
-            appointment.CreatedAt
-        );
 }

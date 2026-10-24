@@ -31,6 +31,7 @@ export default function BookingPage() {
   const [deviceType, setDeviceType] = useState('');
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
+  const [serial, setSerial] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
   const [result, setResult] = useState<AppointmentResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -60,7 +61,7 @@ export default function BookingPage() {
         appointmentDate: date,
         timeSlotId: selectedSlot,
         customerId: null,
-        deviceInfo: { deviceType, brand, model, issueDescription },
+        deviceInfo: { deviceType, brand, model, issueDescription, serial },
       });
       if (created.lookupToken) {
         try {
@@ -191,8 +192,8 @@ export default function BookingPage() {
             <Input label="Model" value={model} onChange={(event) => setModel(event.target.value)} />
             <Input
               label="Số serial/IME"
-              value={model}
-              onChange={(event) => setModel(event.target.value)}
+              value={serial}
+              onChange={(event) => setSerial(event.target.value)}
             />
           </div>
           <label>

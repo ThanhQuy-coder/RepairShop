@@ -26,6 +26,8 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValue(
             AppointmentStatus.Pending);
         builder.Property(a => a.RejectionReason).HasMaxLength(500);
+        builder.Property(a => a.ConfirmedByUserId).IsRequired(false);
+        builder.Property(a => a.HandledByUserId).IsRequired(false);
         builder.Property(a => a.CreatedAt).HasDefaultValueSql("now()");
         builder.Property(a => a.LookupTokenHash).HasMaxLength(64).IsRequired();
         builder.HasIndex(a => a.LookupTokenHash).IsUnique();
@@ -33,10 +35,12 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.HasOne<Customer>().WithMany().HasForeignKey(a => a.CustomerId).OnDelete(DeleteBehavior.SetNull);
         builder.HasOne<TimeSlotConfig>().WithMany().HasForeignKey(a => a.TimeSlotId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne<User>().WithMany().HasForeignKey(a => a.ConfirmedByUserId).OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne<RepairTicket>().WithOne().HasForeignKey<Appointment>(a => a.LinkedTicketId).OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne<User>().WithMany()
+               .HasForeignKey(a => a.HandledByUserId)
+               .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(a => a.LinkedTicketId).IsUnique().HasFilter("\"LinkedTicketId\" IS NOT NULL");
         builder.HasIndex(a => new { a.AppointmentDate, a.TimeSlotId });
         builder.HasIndex(a => a.Phone);
+        builder.HasIndex(a => a.HandledByUserId);
     }
 }

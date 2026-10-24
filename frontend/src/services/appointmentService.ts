@@ -13,6 +13,8 @@ export interface AvailableSlot {
 export interface AppointmentResponse {
   id: string;
   customerId: string;
+  confirmedByUserId: string;
+  handledByUserId: string;
   fullName: string;
   phone: string;
   appointmentDate: string;
@@ -73,7 +75,13 @@ export const appointmentService = {
   create: (payload: {
     fullName: string;
     phone: string;
-    deviceInfo?: { deviceType?: string; brand?: string; model?: string; issueDescription?: string };
+    deviceInfo?: {
+      deviceType?: string;
+      brand?: string;
+      model?: string;
+      issueDescription?: string;
+      serial?: string;
+    };
     appointmentDate: string;
     timeSlotId: string;
     customerId?: string | null;
@@ -85,5 +93,10 @@ export const appointmentService = {
   markCompleted: (id: string) =>
     apiClient
       .patch<AppointmentResponse>(`/appointments/${id}/mark-completed`)
+      .then((res) => res.data),
+
+  markArrived: (id: string) =>
+    apiClient
+      .patch<AppointmentResponse>(`/appointments/${id}/mark-arrived`)
       .then((res) => res.data),
 };

@@ -3,6 +3,8 @@ namespace RepairShop.Application.Modules.Appointments.DTOs;
 public record AppointmentResponse(
     Guid Id,
     Guid? CustomerId,
+    Guid? ConfirmedByUserId,
+    Guid? HandledByUserId,
     string FullName,
     string Phone,
     DateOnly AppointmentDate,

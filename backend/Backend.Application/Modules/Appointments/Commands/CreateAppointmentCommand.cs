@@ -5,5 +5,5 @@ namespace RepairShop.Application.Modules.Appointments.Commands;
 
 public record CreateAppointmentCommand(
     string FullName, string Phone, DateOnly AppointmentDate, Guid TimeSlotId,
-    Guid? CustomerId, string? DeviceType, string? Brand, string? Model, string? IssueDescription)
+    Guid? CustomerId, string? DeviceType, string? Brand, string? Model, string? IssueDescription, string? Serial)
     : IRequest<AppointmentResponse>;

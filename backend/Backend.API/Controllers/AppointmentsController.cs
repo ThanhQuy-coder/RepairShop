@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using RepairShop.Domain.Common;
 using System.Collections.Concurrent;
+using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.API.Controllers;
 
@@ -33,7 +34,7 @@ public class AppointmentsController : ControllerBase
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken) =>
         Ok(await _mediator.Send(new GetAppointmentDetailQuery(id), cancellationToken));
 
-    public record DeviceInfoBody(string? DeviceType, string? Brand, string? Model, string? IssueDescription);
+    public record DeviceInfoBody(string? DeviceType, string? Brand, string? Model, string? IssueDescription, string? serial);
 
     public record CreateAppointmentBody(
         string FullName, string Phone, DeviceInfoBody? DeviceInfo, DateOnly AppointmentDate, Guid TimeSlotId, Guid? CustomerId);
@@ -44,7 +45,7 @@ public class AppointmentsController : ControllerBase
     {
         var result = await _mediator.Send(new CreateAppointmentCommand(
             body.FullName, body.Phone, body.AppointmentDate, body.TimeSlotId, body.CustomerId,
-            body.DeviceInfo?.DeviceType, body.DeviceInfo?.Brand, body.DeviceInfo?.Model, body.DeviceInfo?.IssueDescription), cancellationToken);
+            body.DeviceInfo?.DeviceType, body.DeviceInfo?.Brand, body.DeviceInfo?.Model, body.DeviceInfo?.IssueDescription, body.DeviceInfo?.serial), cancellationToken);
         return CreatedAtAction(nameof(GetAvailableSlots), result);
     }
 
@@ -127,4 +128,11 @@ public class AppointmentsController : ControllerBase
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> MarkCompleted(Guid id)
         => Ok(await _mediator.Send(new CompleteAppointmentCommand(id)));
+
+    [HttpPatch("{id:guid}/mark-arrived")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> MarkArrived(Guid id)
+    {
+        return Ok(await _mediator.Send(new ArriveAppointmentCommand(id)));
+    }
 }

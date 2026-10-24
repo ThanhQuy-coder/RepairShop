@@ -2,6 +2,7 @@ using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Common.Exceptions;
 
@@ -39,7 +40,6 @@ public class RejectAppointmentCommandHandler : IRequestHandler<RejectAppointment
         }
 
         await _repo.SaveChangesAsync();
-        return new AppointmentResponse(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone,
-            appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
+        return appointment.ToResponse();
     }
 }

@@ -51,7 +51,7 @@ public class AuthService : IAuthService
         await _userRepository.SaveChangesAsync();
 
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, customerRole.Name, user.Phone!);
-        return new AuthResponse(accessToken, 3600, customerRole.Name, user.Email);
+        return new AuthResponse(accessToken, 3600, customerRole.Name, user.Email, user.Id);
     }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -69,7 +69,7 @@ public class AuthService : IAuthService
         var roleName = user.Role?.Name ?? DefaultSelfRegisterRole;
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName, user.Phone!);
 
-        return new AuthResponse(accessToken, 3600, roleName, user.Email);
+        return new AuthResponse(accessToken, 3600, roleName, user.Email, user.Id);
     }
 
     private async Task LinkCustomerByPhoneAsync(User user, string? phone)

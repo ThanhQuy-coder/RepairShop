@@ -11,6 +11,7 @@ import {
 } from '../../components/common';
 import { extractApiError } from '../../utils/apiError';
 import type { AppointmentIntakeData } from '../../store/ticketIntakeStore';
+import { useAuth } from '../../hooks/useAuth';
 
 const statusLabels: Record<string, string> = {
   Pending: 'Chờ xác nhận',
@@ -24,6 +25,7 @@ const statusLabels: Record<string, string> = {
 
 export default function AppointmentManagementPage() {
   const navigate = useNavigate();
+  const currentUser = useAuth().user;
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +89,7 @@ export default function AppointmentManagementPage() {
   const transition = async (
     id: string,
     rejectionReason: string,
-    action: 'confirm' | 'reject' | 'noShow' | 'markCompleted'
+    action: 'confirm' | 'reject' | 'noShow' | 'markCompleted' | 'markArrived'
   ) => {
     try {
       await appointmentService[action](id, rejectionReason);
@@ -172,7 +174,7 @@ export default function AppointmentManagementPage() {
         >
           {a.status === 'Pending' && (
             <>
-              <Button size="sm" onClick={() => void transition(a.id, 'đã xác nhận', 'confirm')}>
+              <Button size="sm" onClick={() => void transition(a.id, '', 'confirm')}>
                 Xác nhận
               </Button>
               <Button size="sm" variant="danger" onClick={() => handleOpenRejectModal(a)}>
@@ -182,8 +184,8 @@ export default function AppointmentManagementPage() {
           )}
           {a.status === 'Confirmed' && (
             <>
-              <Button size="sm" onClick={() => handleCreateTicket(a)}>
-                Chuyển thành ticket
+              <Button size="sm" onClick={() => transition(a.id, '', 'markArrived')}>
+                Khách đã đến
               </Button>
               <Button
                 size="sm"
@@ -194,16 +196,17 @@ export default function AppointmentManagementPage() {
               </Button>
             </>
           )}
-          {a.status === 'Arrived' && (
-            <>
-              <Button size="sm" onClick={() => handleCreateTicket(a)}>
-                Chuyển thành ticket
-              </Button>
-              <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
-                Hoàn thành
-              </Button>
-            </>
-          )}{' '}
+          {a.status === 'Arrived' &&
+            (a.handledByUserId === currentUser?.id || a.handledByUserId === null) && (
+              <>
+                <Button size="sm" onClick={() => handleCreateTicket(a)}>
+                  Chuyển thành ticket
+                </Button>
+                <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
+                  Hoàn thành
+                </Button>
+              </>
+            )}{' '}
         </div>
       ),
     },

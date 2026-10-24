@@ -20,7 +20,7 @@ public class Appointment
     public AppointmentStatus Status { get; private set; } = AppointmentStatus.Pending;
     public string? RejectionReason { get; private set; } = string.Empty;
     public Guid? ConfirmedByUserId { get; private set; }
-    public Guid? LinkedTicketId { get; private set; }
+    public Guid? HandledByUserId { get; private set; }
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
     public string LookupTokenHash { get; private set; } = default!;
 
@@ -34,6 +34,7 @@ public class Appointment
         string? deviceType = null,
         string? brand = null,
         string? model = null,
+        string? serialNumber = null,
         string? issueDescription = null,
         string? lookupTokenHash = null)
     {
@@ -50,6 +51,7 @@ public class Appointment
         DeviceType = deviceType;
         Brand = brand;
         Model = model;
+        SerialNumber = serialNumber;
         IssueDescription = issueDescription;
         LookupTokenHash = lookupTokenHash ?? Convert.ToHexString(SHA256.HashData(RandomNumberGenerator.GetBytes(32)));
     }
@@ -81,14 +83,17 @@ public class Appointment
         Status = AppointmentStatus.Cancelled;
     }
 
-    public void ConvertToTicket(Guid ticketId)
+    public void MarkArrive(Guid userId)
     {
         if (Status != AppointmentStatus.Confirmed)
             throw new DomainException("Chỉ chuyển đổi được lịch hẹn đã CONFIRMED.");
-        if (LinkedTicketId is not null)
-            throw new DomainException("Lịch hẹn này đã được chuyển đổi thành phiếu sửa chữa trước đó.");
 
-        LinkedTicketId = ticketId;
+        if (HandledByUserId is null)
+            HandledByUserId = userId;
+
+        if (HandledByUserId != userId)
+            throw new DomainException("Chỉ nhân viên đã xử lý lịch hẹn mới có thể chuyển đổi sang Ticket.");
+
         Status = AppointmentStatus.Arrived;
     }
 

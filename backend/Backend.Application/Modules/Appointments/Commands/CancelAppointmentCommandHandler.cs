@@ -4,6 +4,7 @@ using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 using RepairShop.Domain.Modules.Appointments;
 using RepairShop.Domain.Modules.Appointments.Enums;
 
@@ -35,7 +36,7 @@ public class CancelAppointmentCommandHandler : IRequestHandler<CancelAppointment
         appointment.Cancel();
         _appointments.Update(appointment);
         await _appointments.SaveChangesAsync();
-        return ToResponse(appointment);
+        return appointment.ToResponse();
     }
 
     private async Task EnsureCanCancel(Appointment appointment, CancelAppointmentCommand request)
@@ -63,8 +64,4 @@ public class CancelAppointmentCommandHandler : IRequestHandler<CancelAppointment
             || appointment.Phone != request.Phone)
             throw new ForbiddenException("Thông tin xác thực không đúng.");
     }
-
-    internal static AppointmentResponse ToResponse(Appointment appointment) =>
-        new(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone, appointment.AppointmentDate,
-            appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt);
 }

@@ -9,7 +9,8 @@ public class CreateDeviceCommandValidator : AbstractValidator<CreateDeviceComman
     {
         RuleFor(x => x.CustomerId).NotEmpty();
         RuleFor(x => x.DeviceType).NotEmpty()
-            .Must(t => new[] { "Phone", "Laptop", "Electronics" }.Contains(t, StringComparer.OrdinalIgnoreCase))
+            .Must(t => new[] { "Phone", "Laptop", "Electronics", "Tablet",
+    "Smartwatch" }.Contains(t, StringComparer.OrdinalIgnoreCase))
             .WithMessage("DeviceType phải là Phone, Laptop hoặc Electronics.");
         RuleFor(x => x.Brand).NotEmpty().MaximumLength(50);
         RuleFor(x => x.Model).NotEmpty().MaximumLength(100);

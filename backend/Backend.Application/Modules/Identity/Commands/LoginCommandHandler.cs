@@ -32,6 +32,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthResponse>
         var roleName = user.Role?.Name ?? "Customer";
         var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roleName, user.Phone!);
 
-        return new AuthResponse(accessToken, 3600, roleName, user.Email);
+        return new AuthResponse(accessToken, 3600, roleName, user.Email, user.Id);
     }
 }

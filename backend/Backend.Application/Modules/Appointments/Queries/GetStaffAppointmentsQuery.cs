@@ -1,6 +1,7 @@
 using MediatR;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 
 namespace RepairShop.Application.Modules.Appointments.Queries;
 
@@ -25,15 +26,11 @@ public sealed class GetStaffAppointmentsQueryHandler(IAppointmentRepository repo
             .GetIdsByPhonesAsync(distinctPhones, cancellationToken);
 
         return appointments
-            .Select(a => new AppointmentResponse(
-                a.Id,
-                phoneToUserIdMap.TryGetValue(a.Phone, out var id) ? id : null,
-                a.FullName,
-                a.Phone,
-                a.AppointmentDate,
-                a.TimeSlotId,
-                a.Status.ToString(),
-                a.CreatedAt))
+            .Select(a =>
+            {
+                var customerId = phoneToUserIdMap.TryGetValue(a.Phone, out var id) ? (Guid?)id : null;
+                return a.ToResponse() with { CustomerId = customerId };
+            })
             .ToList();
     }
 }

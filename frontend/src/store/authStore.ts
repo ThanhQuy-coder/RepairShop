@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { UserRole } from '../types/auth.types';
 
 interface AuthUser {
+  id: string;
   email: string;
   role: UserRole;
 }
@@ -9,10 +10,11 @@ interface AuthUser {
 interface AuthState {
   user: AuthUser | null;
   accessToken: string | null;
+  userId: string | null;
   role: UserRole | null;
   isAuthenticated: boolean;
   isHydrated: boolean;
-  login: (accessToken: string, role: UserRole, email: string) => void;
+  login: (accessToken: string, role: UserRole, email: string, userId: string) => void; 
   logout: () => void;
   hydrate: () => Promise<void>;
 }
@@ -55,14 +57,22 @@ function scheduleExpiration(token: string, onExpired: () => void) {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   accessToken: null,
+  userId: null,
   role: null,
   isAuthenticated: false,
   isHydrated: false,
 
-  login: (accessToken, role, email) => {
-    set({ accessToken, role, user: { email, role }, isAuthenticated: true, isHydrated: true });
+  login: (accessToken, role, email, userId) => {
+    set({
+      accessToken,
+      role,
+      userId,
+      user: { id: userId, email, role },
+      isAuthenticated: true,
+      isHydrated: true,
+    });
     scheduleExpiration(accessToken, () => {
-      set({ accessToken: null, role: null, user: null, isAuthenticated: false, isHydrated: true });
+      set({ accessToken: null, role: null, userId: null, user: null, isAuthenticated: false, isHydrated: true });
     });
   },
 
@@ -71,7 +81,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     void import('../services/authService').then(({ authService }) => authService.logout());
     void import('../services/notificationSignalRService').then(({ notificationSignalRService }) =>
       notificationSignalRService.disconnect());
-    set({ accessToken: null, role: null, user: null, isAuthenticated: false });
+    set({ accessToken: null, role: null, userId: null, user: null, isAuthenticated: false });
   },
 
   hydrate: async () => {
@@ -81,14 +91,15 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({
         accessToken: response.accessToken,
         role: response.role as UserRole,
-        user: { email: response.email, role: response.role as UserRole },
+        userId: response.userId,
+        user: { id: response.userId, email: response.email, role: response.role as UserRole },
         isAuthenticated: true,
         isHydrated: true,
       });
       scheduleExpiration(response.accessToken, () => useAuthStore.getState().logout());
     } catch {
       clearExpirationTimer();
-      set({ accessToken: null, role: null, user: null, isAuthenticated: false, isHydrated: true });
+      set({ accessToken: null, role: null, userId: null, user: null, isAuthenticated: false, isHydrated: true });
     }
   },
 }));

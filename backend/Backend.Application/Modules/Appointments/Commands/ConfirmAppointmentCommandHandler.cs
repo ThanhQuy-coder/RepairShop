@@ -5,6 +5,7 @@ using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Modules.Appointments;
+using RepairShop.Application.Modules.Appointments.Mappings;
 
 public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointmentCommand, AppointmentResponse>
 {
@@ -26,7 +27,6 @@ public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointme
     {
         var appointment = await _repo.GetByIdAsync(request.Id) ?? throw new NotFoundException("Lịch hẹn", request.Id);
 
-        // Domain tự chặn nếu KHÔNG phải PENDING (bao gồm cả Cancelled/Rejected/Converted/NoShow)
         appointment.Confirm(_currentUser.UserId!.Value);
         _repo.Update(appointment);
 
@@ -34,7 +34,7 @@ public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointme
             NotificationTypes.AppointmentConfirmed, "Lịch hẹn đã được xác nhận",
             $"Lịch hẹn ngày {appointment.AppointmentDate:dd/MM/yyyy} của bạn đã được cửa hàng xác nhận.", appointment.Id);
         await _repo.SaveChangesAsync();
-        return Map(appointment);
+        return appointment.ToResponse();
     }
 
     private async Task NotifyCustomerIfLinked(Guid? customerId, string type, string title, string message, Guid relatedId)
@@ -46,7 +46,4 @@ public class ConfirmAppointmentCommandHandler : IRequestHandler<ConfirmAppointme
 
         await _notificationService.CreateAsync(customer.UserId.Value, type, title, message, "Appointment", relatedId);
     }
-
-    private static AppointmentResponse Map(Appointment a) =>
-        new(a.Id, Guid.Empty, a.FullName, a.Phone, a.AppointmentDate, a.TimeSlotId, a.Status.ToString(), a.CreatedAt);
 }

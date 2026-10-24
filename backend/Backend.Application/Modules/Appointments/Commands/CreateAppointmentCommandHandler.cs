@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Common;
+using RepairShop.Application.Modules.Appointments.Mappings;
 
 namespace RepairShop.Application.Modules.Appointments.Commands;
 
@@ -70,7 +71,7 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
             // 7. Tạo Appointment PENDING (mặc định trong constructor)
             var normalizedPhone = new string(request.Phone.Where(char.IsDigit).ToArray());
             appointment = new Appointment(request.FullName, normalizedPhone, request.AppointmentDate, request.TimeSlotId,
-                request.CustomerId, request.DeviceType, request.Brand, request.Model, request.IssueDescription, lookupHash);
+                request.CustomerId, request.DeviceType, request.Brand, request.Model, request.IssueDescription, request.Serial, lookupHash);
 
             await _appointmentRepo.AddAsync(appointment);
 
@@ -85,7 +86,6 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         _logger.LogInformation("Tạo Appointment {AppointmentId} cho {FullName} ngày {Date}, slot {SlotId}",
             appointment!.Id, appointment.FullName, appointment.AppointmentDate, request.TimeSlotId);
 
-        return new AppointmentResponse(appointment.Id, Guid.Empty, appointment.FullName, appointment.Phone,
-            appointment.AppointmentDate, appointment.TimeSlotId, appointment.Status.ToString(), appointment.CreatedAt, lookupToken);
+        return appointment.ToResponse(includeLookupToken: true);
     }
 }

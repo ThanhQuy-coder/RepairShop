@@ -2,6 +2,7 @@ using MediatR;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Appointments.DTOs;
+using RepairShop.Application.Modules.Appointments.Mappings;
 using RepairShop.Domain.Modules.Appointments;
 
 namespace RepairShop.Application.Modules.Appointments.Commands;
@@ -18,16 +19,6 @@ public class CompleteAppointmentCommandHandler
         _appointmentRepository = appointmentRepository;
         _notificationService = notificationService;
     }
-
-    private static AppointmentResponse Map(Appointment a) =>
-        new(a.Id,
-            a.CustomerId,
-            a.FullName,
-            a.Phone,
-            a.AppointmentDate,
-            a.TimeSlotId,
-            a.Status.ToString(),
-            a.CreatedAt);
 
 
     public async Task<AppointmentResponse> Handle(CompleteAppointmentCommand request,
@@ -52,6 +43,6 @@ public class CompleteAppointmentCommandHandler
             $"Lịch hẹn của bạn vào ngày {appointment.AppointmentDate:dd/MM/yyyy} đã được hoàn tất.",
             "Appointment", appointment.Id);
 
-        return Map(appointment);
+        return appointment.ToResponse();
     }
 }
