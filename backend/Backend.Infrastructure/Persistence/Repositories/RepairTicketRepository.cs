@@ -47,6 +47,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.TicketParts).ThenInclude(tp => tp.Part)
             .Include(t => t.Images)
             .Include(t => t.Invoice)
+            .Include(t => t.Review)
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == id);
 

@@ -19,6 +19,10 @@ internal static class TicketMapper
         ticket.RecommendedRepair,
         ticket.RequiredPartsNote,
         ticket.CompletionNotes,
+        ticket.Review is null
+            ? null
+            : new TicketReviewResponse(ticket.Review.Id, ticket.Review.Rating,
+                ticket.Review.Comment, ticket.Review.CreatedAt),
         ticket.Images?.Select(i => new TicketImageResponse(
             i.Id, i.ImageUrl, i.ImageType.ToString(), i.UploadedAt)).ToList(),
         ticket.TicketParts?.Select(tp => new TicketPartResponse(

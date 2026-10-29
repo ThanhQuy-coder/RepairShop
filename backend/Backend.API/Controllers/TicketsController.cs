@@ -194,7 +194,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/status-history")]
-    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
+    [Authorize]
     public async Task<IActionResult> GetStatusHistory(Guid id)
     {
         var result = await _mediator.Send(new GetTicketStatusHistoryQuery(id));

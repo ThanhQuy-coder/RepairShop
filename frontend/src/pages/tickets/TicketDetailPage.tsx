@@ -64,7 +64,7 @@ export default function TicketDetailPage() {
         });
         setImages(ticketData.images ?? []);
         setQuotes(quotesData);
-        setStatusHistory([]);
+        setStatusHistory(await ticketService.getStatusHistory(id));
         return;
       }
 
@@ -254,12 +254,24 @@ export default function TicketDetailPage() {
 
             <TicketActions ticket={ticket} quotes={quotes} onUpdated={loadAll} />
 
-            {role === 'Customer' && ticket.status === 'DELIVERED' && (
+            {role === 'Customer' && ticket.review ? (
+              <div>
+                <h4>Đánh giá của bạn</h4>
+                <div aria-label={`${ticket.review.rating} trên 5 sao`}>
+                  {'★'.repeat(ticket.review.rating)}
+                  {'☆'.repeat(5 - ticket.review.rating)}
+                </div>
+                {ticket.review.comment && <p>{ticket.review.comment}</p>}
+                <small>
+                  Đã đánh giá ngày {new Date(ticket.review.createdAt).toLocaleDateString('vi-VN')}
+                </small>
+              </div>
+            ) : role === 'Customer' && ticket.status === 'DELIVERED' ? (
               <Button onClick={() => setIsReviewModalOpen(true)}>Đánh giá</Button>
-            )}
+            ) : null}
           </section>
 
-          {role === 'Customer' && ticket.status === 'DELIVERED' && (
+          {role === 'Customer' && ticket.status === 'DELIVERED' && !ticket.review && (
             <CreateReviewModal
               isOpen={isReviewModalOpen}
               ticketId={ticket.id}

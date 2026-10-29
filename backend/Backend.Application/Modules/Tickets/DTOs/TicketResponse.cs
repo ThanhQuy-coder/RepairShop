@@ -22,10 +22,12 @@ public record TicketResponse(
     string? RecommendedRepair = null,
     string? RequiredPartsNote = null,
     string? CompletionNotes = null,
+    TicketReviewResponse? Review = null,
     List<TicketImageResponse>? Images = null,
     List<TicketPartResponse>? UsedParts = null,
     TicketInvoiceResponse? Invoice = null);
 
 public record TicketImageResponse(Guid Id, string ImageUrl, string ImageType, DateTime UploadedAt);
+public record TicketReviewResponse(Guid Id, int Rating, string? Comment, DateTime CreatedAt);
 public record TicketPartResponse(Guid TicketPartId, string PartName, int Quantity, decimal UnitPriceAtUse, decimal Subtotal);
 public record TicketInvoiceResponse(Guid Id, decimal TotalAmount, string PaymentMethod, DateTime? PaidAt, DateTime CreatedAt);

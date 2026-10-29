@@ -89,6 +89,14 @@ export interface TicketDetail extends Ticket {
   recommendedRepair?: string;
   requiredPartsNote?: string;
   completionNotes?: string;
+  review?: TicketReview;
+}
+
+export interface TicketReview {
+  id: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
 }
 
 export interface TicketImage {
