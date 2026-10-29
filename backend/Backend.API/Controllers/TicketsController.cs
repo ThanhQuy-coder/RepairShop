@@ -20,7 +20,7 @@ public class TicketsController : ControllerBase
     public TicketsController(IMediator mediator) => _mediator = mediator;
 
     [HttpPost]
-    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-015: Receptionist tạo ticket
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
     public async Task<IActionResult> Create(CreateTicketCommand command)
     {
         var result = await _mediator.Send(command);
@@ -38,7 +38,7 @@ public class TicketsController : ControllerBase
     public record UpdateConditionBody(string? ConditionNotes, string? RiskWarning);
 
     [HttpPost("{id:guid}/images")]
-    [Authorize(Policy = AuthorizationPolicies.StaffOnly)] // Domain tự phân biệt hợp lệ theo trạng thái, Controller chỉ chặn "phải là nhân viên"
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
     [RequestSizeLimit(5 * 1024 * 1024)]
     public async Task<IActionResult> UploadImage(Guid id, IFormFile file, [FromForm] ImageType imageType,
     [FromForm] string? caption)
@@ -69,10 +69,9 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [Authorize] // Role check: phải là nhân viên nội bộ (Task 7)
+    [Authorize]
     public async Task<IActionResult> GetById(Guid id)
     {
-        // Ownership check (khác role check) nằm TRONG Handler, không phải ở đây
         var result = await _mediator.Send(new GetTicketByIdQuery(id));
         return Ok(result);
     }
@@ -106,7 +105,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/quotes")]
-    [Authorize] // Receptionist/Admin/Technician/Customer (ticket của mình) — ownership check để dành khi làm GET tổng quát
+    [Authorize] 
     public async Task<IActionResult> GetQuotes(Guid id)
     {
         var result = await _mediator.Send(new GetTicketQuotesQuery(id));
@@ -221,7 +220,7 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize] // Admin/Receptionist thấy tất cả, Technician tự động chỉ thấy ticket của mình (lọc ở Repository)
+    [Authorize] 
     public async Task<IActionResult> GetTickets(
     [FromQuery] string? status, [FromQuery] Guid? technicianId, [FromQuery] Guid? customerId,
     [FromQuery] int page = 1, [FromQuery] int pageSize = 20)

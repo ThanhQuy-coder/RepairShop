@@ -32,6 +32,8 @@ public class Part : BaseEntity
         Sku = sku;
         CostPrice = costPrice;
         UnitPrice = unitPrice;
+        Category = category;
+        CompatibleDeviceType = compatibleDeviceType;
         Unit = unit;
         MinStockThreshold = minStockThreshold;
     }

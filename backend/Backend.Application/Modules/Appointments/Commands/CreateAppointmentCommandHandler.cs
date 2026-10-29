@@ -86,6 +86,6 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         _logger.LogInformation("Tạo Appointment {AppointmentId} cho {FullName} ngày {Date}, slot {SlotId}",
             appointment!.Id, appointment.FullName, appointment.AppointmentDate, request.TimeSlotId);
 
-        return appointment.ToResponse(includeLookupToken: true);
+        return appointment.ToResponse(includeLookupToken: true, lookupToken);
     }
 }

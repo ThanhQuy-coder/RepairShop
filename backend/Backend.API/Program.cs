@@ -7,6 +7,7 @@ using RepairShop.Application;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Infrastructure;
 using Serilog;
+using RepairShop.Infrastructure.Persistence.Seeders;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -97,6 +98,15 @@ try
         app.UseSwaggerUI();
     }
 
+    using (var scope = app.Services.CreateScope())
+    {
+        var initialiser = scope.ServiceProvider
+            .GetRequiredService<ApplicationDbContextInitialiser>();
+
+        await initialiser.InitialiseAsync();
+        await initialiser.SeedAsync();
+    }
+
     app.UseHttpsRedirection();
     app.UseCors("AllowFrontend");
     app.UseAuthentication();
@@ -104,7 +114,7 @@ try
     app.MapControllers();
     app.UseRateLimiter();
     app.MapHub<NotificationHub>("/hubs/notifications");
-    app.Run();
+    await app.RunAsync();
 }
 catch (Exception ex)
 {

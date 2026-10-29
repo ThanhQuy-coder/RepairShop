@@ -12,7 +12,8 @@ public static class AppointmentMappingExtensions
     /// </summary>
     public static AppointmentResponse ToResponse(
         this Appointment appointment,
-        bool includeLookupToken = false)
+        bool includeLookupToken = false,
+        string lookupToken = null!)
         => new(
             appointment.Id,
             appointment.CustomerId,
@@ -24,6 +25,6 @@ public static class AppointmentMappingExtensions
             appointment.TimeSlotId,
             appointment.Status.ToString(),
             appointment.CreatedAt,
-            includeLookupToken ? appointment.LookupTokenHash : null);
+            includeLookupToken ? lookupToken : null);
 
 }

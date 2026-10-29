@@ -8,7 +8,7 @@ public class InventoryConfiguration : IEntityTypeConfiguration<Inventory>
     {
         builder.ToTable("Inventories");
         builder.HasKey(i => i.Id);
-        builder.HasIndex(i => i.PartId).IsUnique(); // BR-14: 1-1 với Part
+        builder.HasIndex(i => i.PartId).IsUnique();
         builder.HasOne<Part>().WithOne().HasForeignKey<Inventory>(i => i.PartId)
             .OnDelete(DeleteBehavior.Cascade);
 

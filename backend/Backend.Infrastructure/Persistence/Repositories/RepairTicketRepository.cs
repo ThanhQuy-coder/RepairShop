@@ -87,9 +87,7 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Status)
             .Include(t => t.StatusHistories).ThenInclude(h => h.Status)
             .AsSplitQuery()
-            // Chủ động KHÔNG Include Customer, Receptionist, Technician, Images, Notes...
-            // -> không phải "che dữ liệu sau khi lấy", mà TỪ ĐẦU không kéo dữ liệu nhạy cảm vào bộ nhớ.
-            .AsNoTracking() // read-only, public, không cần EF theo dõi thay đổi -> tối ưu + rõ ý đồ "chỉ đọc"
+            .AsNoTracking()
             .FirstOrDefaultAsync(t => t.TicketCode == ticketCode);
 
     public async Task<(List<RepairTicket> Items, int Total)> SearchAsync(
@@ -104,13 +102,14 @@ public class RepairTicketRepository : IRepairTicketRepository
             .Include(t => t.Status)
             .AsQueryable();
 
-        // Ownership ở tầng query: Technician CHỈ thấy ticket của mình trong danh sách — khớp đúng nguyên tắc
-        // TicketAccessGuard (Task 4.6/4.16, Tuần 4), áp dụng ngay từ bước lọc, không phải lọc sau khi trả về.
         if (currentUserRole == Roles.Technician && currentUserId is not null)
             query = query.Where(t => t.TechnicianId == currentUserId);
 
         if (currentUserRole == Roles.Customer && currentUserId is not null)
             query = query.Where(t => t.Customer.UserId == currentUserId);
+
+        if (currentUserRole == Roles.Receptionist && currentUserId is not null)
+            query = query.Where(t => t.ReceptionistId == currentUserId);
 
         if (!string.IsNullOrWhiteSpace(statusCode))
             query = query.Where(t => t.Status.Code == statusCode);

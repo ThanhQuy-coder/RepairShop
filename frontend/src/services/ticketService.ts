@@ -14,8 +14,6 @@ import type { TicketListItem, TicketListFilters } from '../types/ticket.types';
 export const ticketService = {
   getById: (id: string) => apiClient.get<TicketDetail>(`/tickets/${id}`).then((res) => res.data),
 
-  // Lưu ý: Backend chưa có endpoint "GET /customers/{id}/tickets" (bị bỏ qua có chủ đích ở Task 10
-  // Tuần 3 vì mentor yêu cầu "chưa làm RepairTicket"). Gọi tạm để dành, xem ghi chú cuối bài.
   getByCustomerId: (customerId: string) =>
     apiClient.get<TicketListItem[]>(`/customers/${customerId}/tickets`).then((res) => res.data),
 

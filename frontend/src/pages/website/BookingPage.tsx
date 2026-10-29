@@ -93,8 +93,8 @@ export default function BookingPage() {
           <h1>Đã ghi nhận lịch hẹn của bạn.</h1>
           <p>Vui lòng lưu mã tra cứu để kiểm tra lịch hẹn sau này.</p>
           <div className={styles.confirmation}>
-            <span>Mã lịch hẹn</span>
-            <strong>{result.id}</strong>
+            <span>Mã tra cứu lịch hẹn</span>
+            <strong>{result.lookupToken}</strong>
             <span>Ngày hẹn</span>
             <strong>{new Date(result.appointmentDate).toLocaleDateString('vi-VN')}</strong>
             <span>Trạng thái</span>
