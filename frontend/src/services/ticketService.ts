@@ -61,6 +61,10 @@ export const ticketService = {
       recommendedRepair?: string;
       requiredPartsNote?: string;
       technicalNote?: string;
+      diagnosisSymptomIds?: string[];
+      diagnosisResultOther?: string;
+      requiredPartIds?: string[];
+      recommendedServiceIds?: string[];
     }
   ) =>
     apiClient

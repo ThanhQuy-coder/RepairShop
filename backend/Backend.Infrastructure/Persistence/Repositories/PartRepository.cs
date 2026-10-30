@@ -14,6 +14,12 @@ public class PartRepository : IPartRepository
     public Task<Part?> GetBySkuAsync(string sku)
     => _context.Parts.FirstOrDefaultAsync(p => p.Sku == sku);
 
+    public Task<List<Part>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        var idList = ids.Distinct().ToList();
+        return _context.Parts.Where(p => idList.Contains(p.Id)).ToListAsync();
+    }
+
     public async Task<(List<Part> Items, int Total)> SearchAsync(string? search,
         string? category, int page, int pageSize)
     {

@@ -13,6 +13,7 @@ using RepairShop.Domain.Modules.Appointments;
 using RepairShop.Domain.Modules.Notifications;
 using RepairShop.Domain.Modules.SLA;
 using RepairShop.Domain.Common.Enums;
+using RepairShop.Domain.Modules.Diagnostics;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -45,6 +46,7 @@ public class AppDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<SLAPolicy> SLAPolicies => Set<SLAPolicy>();
     public DbSet<TicketSLA> TicketSLAs => Set<TicketSLA>();
+    public DbSet<DiagnosisSymptom> DiagnosisSymptoms => Set<DiagnosisSymptom>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

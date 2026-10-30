@@ -1,0 +1,40 @@
+@baseUrl = https://localhost:7000/api
+
+### Technician: load active symptoms for a device type
+GET {{baseUrl}}/diagnosis-symptoms?deviceType=Phone
+Authorization: Bearer {{technicianToken}}
+
+### Admin: load all symptoms
+GET {{baseUrl}}/diagnosis-symptoms/admin
+Authorization: Bearer {{adminToken}}
+
+### Admin: create symptom
+POST {{baseUrl}}/diagnosis-symptoms
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Cổng sạc lỏng",
+  "deviceType": "Phone",
+  "sortOrder": 99
+}
+
+### Admin: update symptom
+PUT {{baseUrl}}/diagnosis-symptoms/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Cổng sạc lỏng/chập chờn",
+  "deviceType": "Phone",
+  "sortOrder": 99
+}
+
+### Admin: activate/deactivate symptom
+PATCH {{baseUrl}}/diagnosis-symptoms/00000000-0000-0000-0000-000000000000/active
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "isActive": false
+}

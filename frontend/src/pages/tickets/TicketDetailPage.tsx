@@ -162,6 +162,12 @@ export default function TicketDetailPage() {
                   <p>{ticket.diagnosisResult}</p>
                 </div>
               )}
+              {ticket.requiredPartsNote && (
+                <div className={styles.infoFull}>
+                  <span className={styles.infoLabel}>Linh kiện cần thiết</span>
+                  <p className={styles.infoValueText}>{ticket.requiredPartsNote}</p>
+                </div>
+              )}
               {ticket.rootCause && (
                 <div className={styles.infoFull}>
                   <span className={styles.infoLabel}>Nguyên nhân</span>

@@ -4,6 +4,7 @@ public interface IPartRepository
 {
     Task<Part?> GetByIdAsync(Guid id);
     Task<Part?> GetBySkuAsync(string sku);
+    Task<List<Part>> GetByIdsAsync(IEnumerable<Guid> ids);
     Task<(List<Part> Items, int Total)> SearchAsync(string? search, string? category, int page, int pageSize);
     Task<List<Part>> ListAsync(string? search);
     Task AddAsync(Part part);

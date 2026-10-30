@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import type { TicketDetail } from '../../types/ticket.types';
 import type { Quote } from '../../types/quote.types';
-import { ticketService } from '../../services/ticketService';
-import { extractApiError } from '../../utils/apiError';
-import { Button, ErrorMessage } from '../common';
+import { Button } from '../common';
 import AssignTechnicianModal from './AssignTechnicianModal';
 import SubmitDiagnosisModal from './SubmitDiagnosisModal';
 import CompleteRepairModal from './CompleteRepairModal';
@@ -29,25 +27,10 @@ interface TicketActionsProps {
  */
 export default function TicketActions({ ticket, quotes, onUpdated }: TicketActionsProps) {
   const { role } = useAuth();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [loadingAction, setLoadingAction] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<string | null>(null);
 
   const isStaffOnTicket = role === 'Receptionist' || role === 'Admin';
   const isTechnicianOnTicket = role === 'Technician';
-
-  const run = async (actionKey: string, fn: () => Promise<unknown>) => {
-    setErrorMessage(null);
-    setLoadingAction(actionKey);
-    try {
-      await fn();
-      onUpdated();
-    } catch (err) {
-      setErrorMessage(extractApiError(err).message);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
 
   const actions: {
     key: string;
@@ -64,18 +47,10 @@ export default function TicketActions({ ticket, quotes, onUpdated }: TicketActio
     });
   }
 
-  if (isTechnicianOnTicket && ticket.status === 'ASSIGNED') {
-    actions.push({
-      key: 'startDiagnosis',
-      label: 'Bắt đầu chẩn đoán',
-      onClick: () => run('startDiagnosis', () => ticketService.startDiagnosis(ticket.id)),
-    });
-  }
-
-  if (isTechnicianOnTicket && ticket.status === 'DIAGNOSING') {
+  if (isTechnicianOnTicket && ['ASSIGNED', 'DIAGNOSING'].includes(ticket.status)) {
     actions.push({
       key: 'submitDiagnosis',
-      label: 'Ghi kết quả chẩn đoán',
+      label: 'Chẩn đoán',
       onClick: () => setOpenModal('diagnosis'),
     });
   }
@@ -133,13 +108,11 @@ export default function TicketActions({ ticket, quotes, onUpdated }: TicketActio
 
   return (
     <div>
-      {errorMessage && <ErrorMessage message={errorMessage} />}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {actions.map((a) => (
           <Button
             key={a.key}
             variant={a.variant ?? 'primary'}
-            isLoading={loadingAction === a.key}
             onClick={a.onClick}
           >
             {a.label}
@@ -160,6 +133,7 @@ export default function TicketActions({ ticket, quotes, onUpdated }: TicketActio
       <SubmitDiagnosisModal
         isOpen={openModal === 'diagnosis'}
         ticketId={ticket.id}
+        deviceType={(ticket.deviceType ?? 'Phone') as import('../../types/diagnosis.types').DeviceType}
         onClose={() => setOpenModal(null)}
         onDone={() => {
           setOpenModal(null);

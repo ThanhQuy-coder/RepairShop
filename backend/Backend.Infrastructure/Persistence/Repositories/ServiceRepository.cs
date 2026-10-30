@@ -11,6 +11,12 @@ public class ServiceRepository : IServiceRepository
 
     public Task<Service?> GetByIdAsync(Guid id) => _context.Services.FirstOrDefaultAsync(s => s.Id == id);
 
+    public Task<List<Service>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        var idList = ids.Distinct().ToList();
+        return _context.Services.Where(s => idList.Contains(s.Id)).ToListAsync();
+    }
+
     public async Task<(List<Service> Items, int Total)> SearchAsync(bool? isActive, int page, int pageSize)
     {
         var query = _context.Services.AsQueryable();

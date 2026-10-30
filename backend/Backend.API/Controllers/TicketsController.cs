@@ -85,14 +85,18 @@ public class TicketsController : ControllerBase
     }
 
     public record SubmitDiagnosisBody(string DiagnosisResult, string? RootCause,
-        string? RecommendedRepair, string? RequiredPartsNote, string? TechnicalNote);
+        string? RecommendedRepair, string? RequiredPartsNote, string? TechnicalNote,
+        List<Guid>? DiagnosisSymptomIds = null, string? DiagnosisResultOther = null,
+        List<Guid>? RequiredPartIds = null, List<Guid>? RecommendedServiceIds = null);
 
     [HttpPatch("{id:guid}/diagnosis")]
     [Authorize(Roles = Roles.Technician)]
     public async Task<IActionResult> SubmitDiagnosis(Guid id, SubmitDiagnosisBody body)
     {
         var result = await _mediator.Send(new SubmitDiagnosisCommand(id, body.DiagnosisResult,
-            body.RootCause, body.RecommendedRepair, body.RequiredPartsNote, body.TechnicalNote));
+            body.RootCause, body.RecommendedRepair, body.RequiredPartsNote, body.TechnicalNote,
+            body.DiagnosisSymptomIds, body.DiagnosisResultOther, body.RequiredPartIds,
+            body.RecommendedServiceIds));
         return Ok(result);
     }
 
