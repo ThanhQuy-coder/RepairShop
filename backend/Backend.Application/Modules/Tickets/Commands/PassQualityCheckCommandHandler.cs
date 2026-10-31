@@ -58,7 +58,7 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
 
         await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
             _customerRepository, _notificationService, ticket.CustomerId,
-            "TicketReadyForPickup", "Thiết bị đã sẵn sàng bàn giao",
+            NotificationTypes.TicketReadyForPickup, "Thiết bị đã sẵn sàng bàn giao",
             $"Phiếu {ticket.TicketCode} đã kiểm thử xong, mời bạn đến cửa hàng nhận máy.", ticket.Id);
 
 

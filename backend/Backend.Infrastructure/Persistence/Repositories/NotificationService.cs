@@ -1,21 +1,27 @@
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Domain.Modules.Notifications;
+using Microsoft.Extensions.Logging;
 
 namespace RepairShop.Infrastructure.Notifications;
 
 /// <summary>
 /// Business event → INotificationService → Notification → Database (đúng sơ đồ Task 10.9).
-/// Chỉ có CreateAsync()/CreateForRoleAsync() — KHÔNG có logic đẩy real-time (SignalR để dành
-/// Tuần sau), đây thuần túy là lớp ghi dữ liệu, đúng phạm vi "notification data layer" đã chốt.
+/// CreateAsync lưu notification trước, sau đó đẩy realtime qua SignalR. Database là nguồn dữ liệu
+/// bền vững để polling/reload không làm mất thông báo khi client offline.
 /// </summary>
 public class NotificationService : INotificationService
 {
     private readonly INotificationRepository _repository;
     private readonly INotificationPusher _pusher;
-    public NotificationService(INotificationRepository repository, INotificationPusher pusher)
+    private readonly ILogger<NotificationService> _logger;
+    public NotificationService(
+        INotificationRepository repository,
+        INotificationPusher pusher,
+        ILogger<NotificationService> logger)
     {
         _repository = repository;
         _pusher = pusher;
+        _logger = logger;
     }
 
     public async Task CreateAsync(Guid userId, string type, string title, string message,
@@ -23,6 +29,7 @@ public class NotificationService : INotificationService
     {
         var notification = new Notification(userId, type, title, message, relatedEntityType, relatedEntityId);
         await _repository.AddAsync(notification);
+        await _repository.SaveChangesAsync();
 
         try
         {
@@ -37,9 +44,9 @@ public class NotificationService : INotificationService
                 notification.CreatedAt,
             });
         }
-        catch
+        catch (Exception ex)
         {
-            
+            _logger.LogWarning(ex, "Không thể đẩy notification realtime tới user {UserId}.", userId);
         }
     }
 

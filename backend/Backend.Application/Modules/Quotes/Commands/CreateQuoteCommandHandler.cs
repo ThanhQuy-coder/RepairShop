@@ -78,7 +78,7 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
 
         await TicketNotificationHelper.NotifyCustomerIfLinkedAsync(
             _customerRepository, _notificationService, ticket.CustomerId,
-            "QuoteCreated", "Báo giá mới cần xác nhận",
+            NotificationTypes.QuoteCreated, "Báo giá mới cần xác nhận",
             $"Phiếu {ticket.TicketCode} đã có báo giá {quote.TotalAmount:N0}đ, vui lòng xem và phản hồi.",
             ticket.Id);
 

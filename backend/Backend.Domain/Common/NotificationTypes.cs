@@ -10,4 +10,9 @@ public static class NotificationTypes
     public const string AppointmentCreated = "AppointmentCreated";
     public const string AppointmentConfirmed = "AppointmentConfirmed";
     public const string AppointmentRejected = "AppointmentRejected";
+    public const string TicketAssigned = "TicketAssigned";
+    public const string DiagnosisCompleted = "DiagnosisCompleted";
+    public const string QuoteCreated = "QuoteCreated";
+    public const string QuoteApproved = "QuoteApproved";
+    public const string TicketReadyForPickup = "TicketReadyForPickup";
 }

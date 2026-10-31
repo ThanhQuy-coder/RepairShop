@@ -27,9 +27,4 @@ public static class TicketNotificationHelper
     }
 
     public static string LabelFor(string statusCode) => StatusLabels.GetValueOrDefault(statusCode, statusCode);
-
-    internal static async Task NotifyCustomerIfLinkedAsync(object customerRepository, object notificationService, Guid customerId, string v1, string v2, string v3, Guid id)
-    {
-        throw new NotImplementedException();
-    }
 }

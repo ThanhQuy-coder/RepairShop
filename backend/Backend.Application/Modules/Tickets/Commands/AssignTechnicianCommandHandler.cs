@@ -67,7 +67,7 @@ public class AssignTechnicianCommandHandler : IRequestHandler<AssignTechnicianCo
         await _ticketRepository.SaveChangesAsync();
 
         await _notificationService.CreateAsync(
-            technician.Id, "TicketAssigned", "Bạn được phân công phiếu mới",
+            technician.Id, NotificationTypes.TicketAssigned, "Bạn được phân công phiếu mới",
             $"Phiếu {ticket.TicketCode} vừa được phân công cho bạn.", "Ticket", ticket.Id);
 
         _logger.LogInformation("Gán Technician {TechnicianId} cho Ticket {TicketCode}",

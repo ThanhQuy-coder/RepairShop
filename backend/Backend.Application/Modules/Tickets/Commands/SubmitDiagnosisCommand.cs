@@ -27,6 +27,7 @@ public class SubmitDiagnosisCommandHandler : IRequestHandler<SubmitDiagnosisComm
     private readonly IPartRepository _partRepository;
     private readonly IInventoryRepository _inventoryRepository;
     private readonly IServiceRepository _serviceRepository;
+    private readonly INotificationService _notificationService;
 
     public SubmitDiagnosisCommandHandler(
         IRepairTicketRepository ticketRepository,
@@ -35,7 +36,8 @@ public class SubmitDiagnosisCommandHandler : IRequestHandler<SubmitDiagnosisComm
         IDiagnosisSymptomRepository symptomRepository,
         IPartRepository partRepository,
         IInventoryRepository inventoryRepository,
-        IServiceRepository serviceRepository)
+        IServiceRepository serviceRepository,
+        INotificationService notificationService)
     {
         _ticketRepository = ticketRepository;
         _currentUser = currentUser;
@@ -44,6 +46,7 @@ public class SubmitDiagnosisCommandHandler : IRequestHandler<SubmitDiagnosisComm
         _partRepository = partRepository;
         _inventoryRepository = inventoryRepository;
         _serviceRepository = serviceRepository;
+        _notificationService = notificationService;
     }
 
     public async Task<TicketResponse> Handle(SubmitDiagnosisCommand request, CancellationToken cancellationToken)
@@ -72,6 +75,14 @@ public class SubmitDiagnosisCommandHandler : IRequestHandler<SubmitDiagnosisComm
             ticket.AddNote(request.TechnicalNote);
 
         await _ticketRepository.SaveChangesAsync();
+
+        await _notificationService.CreateAsync(
+            ticket.ReceptionistId,
+            NotificationTypes.DiagnosisCompleted,
+            "Kỹ thuật viên đã hoàn tất chẩn đoán",
+            $"Phiếu {ticket.TicketCode} đã có kết quả chẩn đoán, vui lòng kiểm tra và lập báo giá.",
+            "Ticket",
+            ticket.Id);
 
         return TicketMapper.ToResponse(ticket);
     }

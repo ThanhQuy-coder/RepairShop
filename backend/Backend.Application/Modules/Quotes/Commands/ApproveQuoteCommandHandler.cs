@@ -15,11 +15,15 @@ public class ApproveQuoteCommandHandler : IRequestHandler<ApproveQuoteCommand, Q
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<ApproveQuoteCommandHandler> _logger;
 
     public ApproveQuoteCommandHandler(IQuoteRepository quoteRepository, ICustomerRepository customerRepository,
         IRepairTicketRepository ticketRepository, IRepairStatusRepository statusRepository,
-        ICurrentUserService currentUser, IUnitOfWork unitOfWork, ILogger<ApproveQuoteCommandHandler> logger)
+        ICurrentUserService currentUser,
+        IUnitOfWork unitOfWork,
+        INotificationService notificationService,
+        ILogger<ApproveQuoteCommandHandler> logger)
     {
         _quoteRepository = quoteRepository;
         _customerRepository = customerRepository;
@@ -27,6 +31,7 @@ public class ApproveQuoteCommandHandler : IRequestHandler<ApproveQuoteCommand, Q
         _statusRepository = statusRepository;
         _currentUser = currentUser;
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -58,6 +63,17 @@ public class ApproveQuoteCommandHandler : IRequestHandler<ApproveQuoteCommand, Q
 
         _logger.LogInformation("Quote {QuoteId} được duyệt, Ticket {TicketCode} chuyển IN_REPAIR",
             quote.Id, ticket.TicketCode);
+
+        if (ticket.TechnicianId is not null)
+        {
+            await _notificationService.CreateAsync(
+                ticket.TechnicianId.Value,
+                NotificationTypes.QuoteApproved,
+                "Khách hàng đã chấp nhận báo giá",
+                $"Phiếu {ticket.TicketCode} đã được khách hàng chấp nhận, bạn có thể bắt đầu sửa chữa.",
+                "Ticket",
+                ticket.Id);
+        }
 
         return QuoteMapper.ToResponse(quote);
     }
