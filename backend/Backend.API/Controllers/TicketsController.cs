@@ -255,7 +255,7 @@ public class TicketsController : ControllerBase
     public record WarrantyClaimBody(string IssueReported);
 
     [HttpPost("{id:guid}/warranty-claim")]
-    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // Receptionist tạo hộ khi khách quay lại
+    [Authorize(Roles = "Customer,Receptionist,Admin")]
     public async Task<IActionResult> CreateWarrantyClaim(Guid id, WarrantyClaimBody body)
     {
         var result = await _mediator.Send(new CreateWarrantyClaimCommand(id, body.IssueReported));

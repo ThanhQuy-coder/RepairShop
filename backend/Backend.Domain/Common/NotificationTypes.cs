@@ -15,4 +15,5 @@ public static class NotificationTypes
     public const string QuoteCreated = "QuoteCreated";
     public const string QuoteApproved = "QuoteApproved";
     public const string TicketReadyForPickup = "TicketReadyForPickup";
+    public const string WarrantyClaimCreated = "WarrantyClaimCreated";
 }
