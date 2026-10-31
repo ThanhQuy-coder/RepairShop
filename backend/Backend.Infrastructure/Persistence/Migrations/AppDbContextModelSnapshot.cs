@@ -1023,6 +1023,9 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("QuoteId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ServiceId")
+                        .HasColumnType("uuid");
+
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(12,2)");
 
@@ -1031,6 +1034,8 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.HasIndex("PartId");
 
                     b.HasIndex("QuoteId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("QuoteItems", (string)null);
                 });
@@ -1702,7 +1707,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Quotes.QuoteItem", b =>
                 {
-                    b.HasOne("RepairShop.Domain.Modules.Inventory.Part", null)
+                    b.HasOne("RepairShop.Domain.Modules.Inventory.Part", "Part")
                         .WithMany()
                         .HasForeignKey("PartId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1712,6 +1717,15 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasForeignKey("QuoteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("RepairShop.Domain.Modules.Content.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Part");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Reviews.Review", b =>

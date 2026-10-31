@@ -9,7 +9,7 @@ public class PartRepository : IPartRepository
     public PartRepository(AppDbContext context) => _context = context;
 
     public Task<Part?> GetByIdAsync(Guid id)
-    => _context.Parts.FirstOrDefaultAsync(p => p.Id == id);
+    => _context.Parts.FirstOrDefaultAsync(p => p.Id == id && p.DeletedAt == null);
 
     public Task<Part?> GetBySkuAsync(string sku)
     => _context.Parts.FirstOrDefaultAsync(p => p.Sku == sku);

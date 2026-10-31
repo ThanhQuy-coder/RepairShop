@@ -186,6 +186,36 @@
   border: 1px solid var(--color-border-subtle, #f1f5f9);
 }
 
+.noteCard {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border-subtle, #f1f5f9);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-bg-subtle, #f8fafc);
+}
+
+.noteCard + .noteCard {
+  margin-top: 12px;
+}
+
+.technicalNotes {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.technicalNotes .noteCard {
+  background: #fff;
+}
+
+.emptyNotes {
+  margin: 0;
+  color: var(--color-text-muted, #64748b);
+  font-size: 14px;
+}
+
 /* ==========================================================
    RESPONSIVE ADDITIONS — append only
    ========================================================== */
@@ -320,6 +350,10 @@
   word-break: break-word;
 }
 
+.noteCard p {
+  margin: 0;
+}
+
 /* 12) Mobile: giảm padding headerCard + section, gap grid */
 @media (max-width: 960px) {
   /* QUAN TRỌNG: bỏ sticky khi grid đã về 1 cột — sticky vô nghĩa
@@ -367,6 +401,10 @@
   .section h3 {
     margin-bottom: 14px;
     font-size: 15px;
+  }
+
+  .noteCard {
+    padding: 12px 14px;
   }
 
   /* InfoGrid về 1 cột — 2 cột quá chật trên mobile */

@@ -3,6 +3,8 @@
   border-radius: var(--radius-md);
   padding: var(--spacing-lg);
   background: var(--color-bg);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .header {
@@ -25,6 +27,15 @@
   width: 100%;
   border-collapse: collapse;
   font-size: var(--font-size-base);
+  table-layout: fixed;
+}
+
+.tableWrapper {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .itemsTable th {
@@ -36,9 +47,33 @@
   font-weight: 600;
 }
 
+.itemsTable th:first-child,
+.itemsTable td:first-child {
+  width: 30%;
+}
+
+.itemsTable th:nth-child(2),
+.itemsTable td:nth-child(2) {
+  width: 20%;
+  text-align: left;
+}
+
+.itemsTable th:nth-child(3),
+.itemsTable td:nth-child(3) {
+  width: 8%;
+}
+
+.itemsTable th:nth-child(4),
+.itemsTable td:nth-child(4),
+.itemsTable th:nth-child(5),
+.itemsTable td:nth-child(5) {
+  width: 21%;
+}
+
 .itemsTable td {
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid var(--color-bg-subtle);
+  overflow-wrap: anywhere;
 }
 
 .colType,
@@ -63,6 +98,10 @@
   margin-top: var(--spacing-lg);
   padding-top: var(--spacing-md);
   border-top: 1px dashed var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
 }
 
 /* ==========================================================
@@ -110,6 +149,10 @@
   max-width: 100%;
 }
 
+.tableWrapper {
+  box-sizing: border-box;
+}
+
 /* 6) Cell: wrap an toàn — chống tràn khi item name dài */
 .itemsTable th,
 .itemsTable td {
@@ -124,16 +167,16 @@
 .colNum,
 .totalLabel,
 .totalValue {
-  white-space: nowrap;
-  overflow-wrap: normal;
-  word-break: normal;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* 8) Số tiền dài có thể tràn phải nếu cột hẹp — cho phép cột giãn
       tối thiểu, và cho phép scroll ngang nếu thực sự cần */
 .itemsTable td.colNum,
 .itemsTable td:last-child {
-  text-align: right;
+  text-align: left;
 }
 
 /* 9) Actions slot: chống tràn, cho phép wrap nút */
@@ -141,6 +184,11 @@
   box-sizing: border-box;
   max-width: 100%;
   min-width: 0;
+}
+
+.actionsSlot > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .actionsSlot > .button,
@@ -201,33 +249,20 @@
     flex-wrap: wrap;
     gap: 8px;
   }
+
+  .actionsSlot > * {
+    width: 100%;
+  }
 }
 
-/* 11) Rất nhỏ (≤380px): table có thể tràn cột — chuyển sang scroll wrapper
-      bằng cách set display: block cho table (không cần đổi HTML) */
+/* 11) Rất nhỏ (≤380px): giữ bảng dễ đọc và cuộn trong card, không tràn layout */
 @media (max-width: 380px) {
   .card {
     padding: 10px;
   }
 
   .itemsTable {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    /* Bảng scroll ngang — cột không bị bóp */
-  }
-
-  .itemsTable thead,
-  .itemsTable tbody,
-  .itemsTable tr {
-    display: table;
-    width: 100%;
-    table-layout: auto;
-    min-width: 320px;
-  }
-
-  .itemsTable thead {
-    display: table-header-group;
+    min-width: 500px;
   }
 
   .itemsTable th,
@@ -235,11 +270,10 @@
     padding: 6px 4px;
   }
 
-  /* Scrollbar rõ ràng */
-  .itemsTable::-webkit-scrollbar {
+  .tableWrapper::-webkit-scrollbar {
     height: 6px;
   }
-  .itemsTable::-webkit-scrollbar-thumb {
+  .tableWrapper::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
   }
@@ -322,6 +356,10 @@
   .actionsSlot {
     flex-direction: column-reverse;
     align-items: stretch;
+  }
+
+  .actionsSlot > * {
+    width: 100%;
   }
 
   .actionsSlot > .button,

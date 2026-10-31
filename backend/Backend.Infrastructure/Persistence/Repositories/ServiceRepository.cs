@@ -9,17 +9,18 @@ public class ServiceRepository : IServiceRepository
     private readonly AppDbContext _context;
     public ServiceRepository(AppDbContext context) => _context = context;
 
-    public Task<Service?> GetByIdAsync(Guid id) => _context.Services.FirstOrDefaultAsync(s => s.Id == id);
+    public Task<Service?> GetByIdAsync(Guid id) =>
+        _context.Services.FirstOrDefaultAsync(s => s.Id == id && s.DeletedAt == null);
 
     public Task<List<Service>> GetByIdsAsync(IEnumerable<Guid> ids)
     {
         var idList = ids.Distinct().ToList();
-        return _context.Services.Where(s => idList.Contains(s.Id)).ToListAsync();
+        return _context.Services.Where(s => idList.Contains(s.Id) && s.DeletedAt == null).ToListAsync();
     }
 
     public async Task<(List<Service> Items, int Total)> SearchAsync(bool? isActive, int page, int pageSize)
     {
-        var query = _context.Services.AsQueryable();
+        var query = _context.Services.Where(s => s.DeletedAt == null).AsQueryable();
         if (isActive is not null) query = query.Where(s => s.IsActive == isActive);
 
         var total = await query.CountAsync();

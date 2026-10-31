@@ -65,7 +65,7 @@ public class RespondQuoteCommandHandler : IRequestHandler<RespondQuoteCommand, Q
 
         return new QuoteResponse(quote.Id, quote.RepairTicketId, quote.Description, quote.TotalAmount,
             quote.Status.ToString(),
-            quote.Items.Select(i => new QuoteItemResponse(i.Id, i.ItemType.ToString(), i.Description,
+            quote.Items.Select(i => new QuoteItemResponse(i.Id, i.ItemType.ToString(), i.PartId, i.ServiceId, i.Description,
                 i.Quantity, i.UnitPrice, i.Subtotal)).ToList(),
             quote.CreatedAt);
     }

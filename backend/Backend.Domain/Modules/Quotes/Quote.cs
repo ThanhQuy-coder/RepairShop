@@ -40,12 +40,13 @@ public class Quote : BaseEntity
         PreviousQuoteId = previousQuoteId;
     }
 
-    public void AddItem(QuoteItemType itemType, string description, int quantity, decimal unitPrice, Guid? partId = null)
+    public void AddItem(QuoteItemType itemType, string description, int quantity, decimal unitPrice,
+        Guid? partId = null, Guid? serviceId = null)
     {
         if (Status != QuoteStatus.Pending)
             throw new DomainException("Không thể chỉnh sửa báo giá đã được khách phản hồi.");
 
-        var item = new QuoteItem(Id, itemType, description, quantity, unitPrice, partId);
+        var item = new QuoteItem(Id, itemType, description, quantity, unitPrice, partId, serviceId);
         _items.Add(item);
         TotalAmount = _items.Sum(i => i.Subtotal);
     }

@@ -15,7 +15,7 @@ public class PartsController : ControllerBase
     public PartsController(IMediator mediator) => _mediator = mediator;
 
     [HttpGet]
-    [Authorize(Policy = AuthorizationPolicies.InventoryViewers)] // Technician + Admin (Task 7 Tuần 3)
+    [Authorize(Policy = AuthorizationPolicies.StaffOnly)]
     public async Task<IActionResult> GetParts(
         [FromQuery] string? search, [FromQuery] string? category,
         [FromQuery] int page = 1, [FromQuery] int pageSize = 20)

@@ -1,4 +1,5 @@
 using MediatR;
+using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Common.Interfaces;
@@ -8,14 +9,20 @@ using RepairShop.Domain.Common;
 using RepairShop.Domain.Common.Enums;
 using RepairShop.Domain.Modules.Quotes;
 using RepairShop.Domain.Modules.Quotes.Enums;
+using RepairShop.Domain.Modules.Content;
+using RepairShop.Domain.Modules.Inventory;
 
 public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, QuoteResponse>
 {
+    private static ValidationException Invalid(string message) =>
+        new(new[] { new ValidationFailure("Items", message) });
     private readonly IRepairTicketRepository _ticketRepository;
     private readonly IQuoteRepository _quoteRepository;
     private readonly IRepairStatusRepository _statusRepository;
     private readonly ICurrentUserService _currentUser;
     private readonly ICustomerRepository _customerRepository;
+    private readonly IServiceRepository _serviceRepository;
+    private readonly IPartRepository _partRepository;
     private readonly INotificationService _notificationService;
     private readonly ILogger<CreateQuoteCommandHandler> _logger;
 
@@ -24,6 +31,8 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         IRepairStatusRepository statusRepository,
         ICurrentUserService currentUser,
         ICustomerRepository customerRepository,
+        IServiceRepository serviceRepository,
+        IPartRepository partRepository,
         INotificationService notificationService,
         ILogger<CreateQuoteCommandHandler> logger)
     {
@@ -32,6 +41,8 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
         _statusRepository = statusRepository;
         _currentUser = currentUser;
         _customerRepository = customerRepository;
+        _serviceRepository = serviceRepository;
+        _partRepository = partRepository;
         _notificationService = notificationService;
         _logger = logger;
     }
@@ -60,8 +71,41 @@ public class CreateQuoteCommandHandler : IRequestHandler<CreateQuoteCommand, Quo
 
         foreach (var item in request.Items)
         {
-            var itemType = Enum.Parse<QuoteItemType>(item.ItemType, ignoreCase: true);
-            quote.AddItem(itemType, item.Description, item.Quantity, item.UnitPrice, item.PartId);
+            if (!Enum.TryParse<QuoteItemType>(item.ItemType, true, out var itemType))
+                throw Invalid("ItemType phải là Service hoặc Part.");
+
+            if (itemType == QuoteItemType.Service)
+            {
+                if (item.ServiceId is null || item.PartId is not null)
+                    throw Invalid("Hạng mục dịch vụ phải có ServiceId và không có PartId.");
+
+                var service = await _serviceRepository.GetByIdAsync(item.ServiceId.Value);
+                if (service is null || service.IsDeleted)
+                    throw new NotFoundException("Dịch vụ", item.ServiceId.Value);
+                if (!service.IsActive)
+                    throw Invalid($"Dịch vụ '{service.Name}' đã ngừng hoạt động.");
+                if (!string.IsNullOrWhiteSpace(service.DeviceType) &&
+                    !string.Equals(service.DeviceType, ticket.Device.DeviceType.ToString(), StringComparison.OrdinalIgnoreCase))
+                    throw Invalid($"Dịch vụ '{service.Name}' không phù hợp với loại thiết bị.");
+                if (service.BasePrice is null)
+                    throw Invalid($"Dịch vụ '{service.Name}' chưa có giá niêm yết.");
+
+                quote.AddItem(itemType, service.Name, item.Quantity, service.BasePrice.Value,
+                    serviceId: service.Id);
+            }
+            else
+            {
+                if (item.PartId is null || item.ServiceId is not null)
+                    throw Invalid("Hạng mục linh kiện phải có PartId và không có ServiceId.");
+
+                var part = await _partRepository.GetByIdAsync(item.PartId.Value);
+                if (part is null || part.IsDeleted)
+                    throw new NotFoundException("Linh kiện", item.PartId.Value);
+                if (!part.IsActive)
+                    throw Invalid($"Linh kiện '{part.Name}' đã ngừng hoạt động.");
+
+                quote.AddItem(itemType, part.Name, item.Quantity, part.UnitPrice, partId: part.Id);
+            }
         }
 
         ticket.AttachQuote(quote);

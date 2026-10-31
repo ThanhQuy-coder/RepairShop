@@ -4,6 +4,8 @@ export type QuoteStatus = 'Pending' | 'Approved' | 'Rejected' | 'QuoteRejected' 
 export interface QuoteItem {
   id: string;
   itemType: QuoteItemType;
+  partId: string | null;
+  serviceId: string | null;
   description: string;
   quantity: number;
   unitPrice: number;
@@ -26,9 +28,8 @@ export interface CreateQuoteRequest {
   description: string;
   items: {
     itemType: QuoteItemType;
-    description: string;
     quantity: number;
-    unitPrice: number;
     partId?: string;
+    serviceId?: string;
   }[];
 }

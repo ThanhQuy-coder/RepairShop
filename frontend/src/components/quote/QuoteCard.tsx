@@ -35,34 +35,36 @@ export default function QuoteCard({ quote, children }: QuoteCardProps) {
       </div>
 
       {/* Diagnosis + Services + Parts + Quantity + Price = Total — đúng bố cục mentor yêu cầu */}
-      <table className={styles.itemsTable}>
-        <thead>
-          <tr>
-            <th>Hạng mục</th>
-            <th className={styles.colType}>Loại</th>
-            <th className={styles.colNum}>SL</th>
-            <th className={styles.colNum}>Đơn giá</th>
-            <th className={styles.colNum}>Thành tiền</th>
-          </tr>
-        </thead>
-        <tbody>
-          {quote.items.map((item) => (
-            <tr key={item.id}>
-              <td>{item.description}</td>
-              <td className={styles.colType}>{ITEM_TYPE_LABEL[item.itemType]}</td>
-              <td className={styles.colNum}>{item.quantity}</td>
-              <td className={styles.colNum}>{item.unitPrice.toLocaleString('vi-VN')}đ</td>
-              <td className={styles.colNum}>{item.subtotal.toLocaleString('vi-VN')}đ</td>
+      <div className={styles.tableWrapper}>
+        <table className={styles.itemsTable}>
+          <thead>
+            <tr>
+              <th>Hạng mục</th>
+              <th className={styles.colType}>Loại</th>
+              <th className={styles.colNum}>SL</th>
+              <th className={styles.colNum}>Đơn giá</th>
+              <th className={styles.colNum}>Thành tiền</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={4} className={styles.totalLabel}>Tổng cộng</td>
-            <td className={styles.totalValue}>{quote.totalAmount.toLocaleString('vi-VN')}đ</td>
-          </tr>
-        </tfoot>
-      </table>
+          </thead>
+          <tbody>
+            {quote.items.map((item) => (
+              <tr key={item.id}>
+                <td>{item.description}</td>
+                <td className={styles.colType}>{ITEM_TYPE_LABEL[item.itemType]}</td>
+                <td className={styles.colNum}>{item.quantity}</td>
+                <td className={styles.colNum}>{item.unitPrice.toLocaleString('vi-VN')}đ</td>
+                <td className={styles.colNum}>{item.subtotal.toLocaleString('vi-VN')}đ</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={4} className={styles.totalLabel}>Tổng cộng</td>
+              <td className={styles.totalValue}>{quote.totalAmount.toLocaleString('vi-VN')}đ</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
       {children && <div className={styles.actionsSlot}>{children}</div>}
     </div>

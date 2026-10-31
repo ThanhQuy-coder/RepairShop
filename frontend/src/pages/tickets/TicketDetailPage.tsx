@@ -136,56 +136,63 @@ export default function TicketDetailPage() {
               </div>
             </div>
           </section>
-          {/* Issue / Diagnosis */}
           <section className={styles.section}>
-            <h3>Tình trạng & Chẩn đoán</h3>
-            <div className={styles.infoGrid}>
-              <div className={styles.infoFull}>
-                <span className={styles.infoLabel}>Mô tả lỗi khách khai báo</span>
-                <p className={styles.issueText}>{ticket.issueReported}</p>
+            <h3>Tình trạng thiết bị</h3>
+            <div className={styles.noteCard}>
+              <span className={styles.infoLabel}>Mô tả lỗi khách khai báo</span>
+              <p className={styles.issueText}>{ticket.issueReported}</p>
+            </div>
+            {ticket.conditionNotes && (
+              <div className={styles.noteCard}>
+                <span className={styles.infoLabel}>Tình trạng ban đầu</span>
+                <p className={styles.infoValueText}>{ticket.conditionNotes}</p>
               </div>
-              {ticket.conditionNotes && (
-                <div className={styles.infoFull}>
-                  <span className={styles.infoLabel}>Tình trạng ban đầu</span>
-                  <p className={styles.infoValueText}>{ticket.conditionNotes}</p>
-                </div>
-              )}
-              {ticket.riskWarning && (
-                <div className={`${styles.infoFull} ${styles.riskBox}`}>
-                  <span className={styles.riskLabel}>⚠️ Cảnh báo rủi ro</span>
-                  <p>{ticket.riskWarning}</p>
-                </div>
-              )}
+            )}
+            {ticket.riskWarning && (
+              <div className={`${styles.noteCard} ${styles.riskBox}`}>
+                <span className={styles.riskLabel}>⚠️ Cảnh báo rủi ro</span>
+                <p>{ticket.riskWarning}</p>
+              </div>
+            )}
+          </section>
+
+          <section className={styles.section}>
+            <h3>Thông tin kỹ thuật</h3>
+            <div className={styles.technicalNotes}>
               {ticket.diagnosisResult && (
-                <div className={`${styles.infoFull} ${styles.resultBox}`}>
+                <div className={`${styles.noteCard} ${styles.resultBox}`}>
                   <span className={styles.resultLabel}>🔍 Kết quả chẩn đoán</span>
                   <p>{ticket.diagnosisResult}</p>
                 </div>
               )}
-              {ticket.requiredPartsNote && (
-                <div className={styles.infoFull}>
-                  <span className={styles.infoLabel}>Linh kiện cần thiết</span>
-                  <p className={styles.infoValueText}>{ticket.requiredPartsNote}</p>
-                </div>
-              )}
               {ticket.rootCause && (
-                <div className={styles.infoFull}>
+                <div className={styles.noteCard}>
                   <span className={styles.infoLabel}>Nguyên nhân</span>
                   <p className={styles.infoValueText}>{ticket.rootCause}</p>
                 </div>
               )}
-              {ticket.completionNotes && (
-                <div className={`${styles.infoFull} ${styles.successBox}`}>
-                  <span className={styles.successLabel}>✓ Ghi chú hoàn tất</span>
-                  <p>{ticket.completionNotes}</p>
+              {ticket.requiredPartsNote && (
+                <div className={styles.noteCard}>
+                  <span className={styles.infoLabel}>Linh kiện cần thiết</span>
+                  <p className={styles.infoValueText}>{ticket.requiredPartsNote}</p>
                 </div>
               )}
               {ticket.notes && (
-                <div className={styles.infoFull}>
+                <div className={styles.noteCard}>
                   <span className={styles.infoLabel}>Ghi chú kỹ thuật</span>
                   <p className={styles.notesText}>{ticket.notes}</p>
                 </div>
               )}
+              {ticket.completionNotes && (
+                <div className={`${styles.noteCard} ${styles.successBox}`}>
+                  <span className={styles.successLabel}>✓ Ghi chú hoàn tất</span>
+                  <p>{ticket.completionNotes}</p>
+                </div>
+              )}
+              {!ticket.diagnosisResult && !ticket.rootCause && !ticket.requiredPartsNote &&
+                !ticket.notes && !ticket.completionNotes && (
+                  <p className={styles.emptyNotes}>Chưa có ghi chú kỹ thuật.</p>
+                )}
             </div>
           </section>
           {/* Images */}
@@ -240,6 +247,7 @@ export default function TicketDetailPage() {
               <TicketQuoteSection
                 ticketId={ticket.id}
                 ticketStatus={ticket.status}
+                deviceType={ticket.deviceType}
                 quotes={quotes}
                 canCreateQuote={canCreateQuote}
                 onQuoteCreated={loadAll}

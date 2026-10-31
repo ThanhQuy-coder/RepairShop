@@ -7,6 +7,7 @@ import styles from './TicketQuoteSection.module.css';
 interface TicketQuoteSectionProps {
   ticketId: string;
   ticketStatus: string;
+  deviceType?: string;
   quotes: Quote[];
   canCreateQuote: boolean; // true khi role Receptionist/Admin và status = DIAGNOSING
   onQuoteCreated: () => void;
@@ -21,6 +22,7 @@ const QUOTE_STATUS_VARIANT: Record<string, 'default' | 'success' | 'danger'> = {
 export default function TicketQuoteSection({
   ticketId,
   ticketStatus,
+  deviceType,
   quotes,
   canCreateQuote,
   onQuoteCreated,
@@ -63,6 +65,7 @@ export default function TicketQuoteSection({
       <CreateQuoteModal
         isOpen={isModalOpen}
         ticketId={ticketId}
+        deviceType={deviceType}
         onClose={() => setIsModalOpen(false)}
         onCreated={() => {
           setIsModalOpen(false);

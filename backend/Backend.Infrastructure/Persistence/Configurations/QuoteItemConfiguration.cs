@@ -13,9 +13,15 @@ public class QuoteItemConfiguration : IEntityTypeConfiguration<QuoteItem>
         builder.Property(i => i.Description).HasMaxLength(255).IsRequired();
         builder.Property(i => i.UnitPrice).HasColumnType("decimal(12,2)");
 
-        builder.HasOne<RepairShop.Domain.Modules.Inventory.Part>()
+        builder.HasOne(i => i.Part)
             .WithMany()
             .HasForeignKey(i => i.PartId)
             .OnDelete(DeleteBehavior.Restrict); // không xoá Part nếu còn nằm trong báo giá cũ
+
+        builder.HasOne(i => i.Service)
+            .WithMany()
+            .HasForeignKey(i => i.ServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }
