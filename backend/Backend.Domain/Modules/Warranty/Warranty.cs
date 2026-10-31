@@ -9,17 +9,19 @@ public class Warranty : BaseEntity
 {
     public string WarrantyCode { get; private set; } = default!;
     public Guid RepairTicketId { get; private set; }
+    public Guid? WarrantyPackageId { get; private set; }
     public DateOnly StartDate { get; private set; }
     public DateOnly EndDate { get; private set; }
     public string? Terms { get; private set; }
     public WarrantyStatus Status { get; private set; } = WarrantyStatus.Active;
 
     public RepairTicket RepairTicket { get; private set; } = default!;
+    public WarrantyPackage? WarrantyPackage { get; private set; }
 
     private Warranty() { } // for EF Core
 
     public Warranty(string warrantyCode, Guid repairTicketId,
-        DateOnly startDate, DateOnly endDate, string? terms = null)
+        DateOnly startDate, DateOnly endDate, string? terms = null, Guid? warrantyPackageId = null)
     {
         if (string.IsNullOrWhiteSpace(warrantyCode))
             throw new DomainException("Mã bảo hành không được để trống.");
@@ -28,6 +30,7 @@ public class Warranty : BaseEntity
 
         WarrantyCode = warrantyCode;
         RepairTicketId = repairTicketId;
+        WarrantyPackageId = warrantyPackageId;
         StartDate = startDate;
         EndDate = endDate;
         Terms = terms;

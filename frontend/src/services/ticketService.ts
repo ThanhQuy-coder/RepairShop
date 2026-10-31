@@ -118,6 +118,6 @@ export const ticketService = {
       .patch<TicketDetail>(`/tickets/${ticketId}/deliver`, { deliveryNote })
       .then((res) => res.data),
 
-  createWarranty: (ticketId: string, warrantyMonths: number, terms?: string) =>
-    apiClient.post(`/tickets/${ticketId}/warranty`, { warrantyMonths, terms }),
+  createWarranty: (ticketId: string, warrantyPackageId: string) =>
+    apiClient.post(`/tickets/${ticketId}/warranty`, { warrantyPackageId }),
 };

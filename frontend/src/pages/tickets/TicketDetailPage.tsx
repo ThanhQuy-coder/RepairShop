@@ -120,204 +120,212 @@ export default function TicketDetailPage() {
   const canCreateQuote = role === 'Receptionist' || role === 'Admin';
 
   return (
-    <div className={styles.wrapper}>
-      {/* Ticket Header */}
-      <div className={styles.headerCard}>
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-          ← Quay lại
-        </Button>
-        <div className={styles.headerMain}>
-          <h2>{ticket.ticketCode}</h2>
-          <TicketStatusBadge status={ticket.status} />
+    <div className={styles.scrollArea}>
+      <div className={styles.wrapper}>
+        {/* Ticket Header */}
+        <div className={styles.headerCard}>
+          <Button variant="primary" size="sm" onClick={() => navigate(-1)}>
+            ← Quay lại
+          </Button>
+          <div className={styles.headerMain}>
+            <h2>{ticket.ticketCode}</h2>
+            <TicketStatusBadge status={ticket.status} />
+          </div>
+          <span className={styles.headerMeta}>
+            Tiếp nhận: {new Date(ticket.receivedAt).toLocaleString('vi-VN')}
+          </span>
         </div>
-        <span className={styles.headerMeta}>
-          Tiếp nhận: {new Date(ticket.receivedAt).toLocaleString('vi-VN')}
-        </span>
-      </div>
 
-      <div className={styles.grid}>
-        <div className={styles.mainCol}>
-          {/* Customer / Device */}
-          <section className={styles.section}>
-            <h3>Khách hàng & Thiết bị</h3>
-            <div className={styles.infoGrid}>
-              <div>
-                <span className={styles.infoLabel}>Khách hàng</span>
-                <p>
-                  {customer?.fullName} — {customer?.phone}
-                </p>
+        <div className={styles.grid}>
+          <div className={styles.mainCol}>
+            {/* Customer / Device */}
+            <section className={styles.section}>
+              <h3>Khách hàng & Thiết bị</h3>
+              <div className={styles.infoGrid}>
+                <div>
+                  <span className={styles.infoLabel}>Khách hàng</span>
+                  <p>
+                    {customer?.fullName} — {customer?.phone}
+                  </p>
+                </div>
+                <div>
+                  <span className={styles.infoLabel}>Thiết bị</span>
+                  <p>
+                    {device?.brand} {device?.model} ({device?.deviceType})
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className={styles.infoLabel}>Thiết bị</span>
-                <p>
-                  {device?.brand} {device?.model} ({device?.deviceType})
-                </p>
-              </div>
-            </div>
-          </section>
-          <section className={styles.section}>
-            <h3>Tình trạng thiết bị</h3>
-            <div className={styles.noteCard}>
-              <span className={styles.infoLabel}>Mô tả lỗi khách khai báo</span>
-              <p className={styles.issueText}>{ticket.issueReported}</p>
-            </div>
-            {ticket.conditionNotes && (
+            </section>
+            <section className={styles.section}>
+              <h3>Tình trạng thiết bị</h3>
               <div className={styles.noteCard}>
-                <span className={styles.infoLabel}>Tình trạng ban đầu</span>
-                <p className={styles.infoValueText}>{ticket.conditionNotes}</p>
+                <span className={styles.infoLabel}>Mô tả lỗi khách khai báo</span>
+                <p className={styles.issueText}>{ticket.issueReported}</p>
               </div>
-            )}
-            {ticket.riskWarning && (
-              <div className={`${styles.noteCard} ${styles.riskBox}`}>
-                <span className={styles.riskLabel}>⚠️ Cảnh báo rủi ro</span>
-                <p>{ticket.riskWarning}</p>
-              </div>
-            )}
-          </section>
-          <section className={styles.section}>
-            <h3>Thông tin kỹ thuật</h3>
-            <div className={styles.technicalNotes}>
-              {ticket.diagnosisResult && (
-                <div className={`${styles.noteCard} ${styles.resultBox}`}>
-                  <span className={styles.resultLabel}>🔍 Kết quả chẩn đoán</span>
-                  <p>{ticket.diagnosisResult}</p>
-                </div>
-              )}
-              {ticket.rootCause && (
+              {ticket.conditionNotes && (
                 <div className={styles.noteCard}>
-                  <span className={styles.infoLabel}>Nguyên nhân</span>
-                  <p className={styles.infoValueText}>{ticket.rootCause}</p>
+                  <span className={styles.infoLabel}>Tình trạng ban đầu</span>
+                  <p className={styles.infoValueText}>{ticket.conditionNotes}</p>
                 </div>
               )}
-              {ticket.requiredPartsNote && (
-                <div className={styles.noteCard}>
-                  <span className={styles.infoLabel}>Linh kiện cần thiết</span>
-                  <p className={styles.infoValueText}>{ticket.requiredPartsNote}</p>
+              {ticket.riskWarning && (
+                <div className={`${styles.noteCard} ${styles.riskBox}`}>
+                  <span className={styles.riskLabel}>⚠️ Cảnh báo rủi ro</span>
+                  <p>{ticket.riskWarning}</p>
                 </div>
               )}
-              {ticket.notes && (
-                <div className={styles.noteCard}>
-                  <span className={styles.infoLabel}>Ghi chú kỹ thuật</span>
-                  <p className={styles.notesText}>{ticket.notes}</p>
-                </div>
-              )}
-              {ticket.completionNotes && (
-                <div className={`${styles.noteCard} ${styles.successBox}`}>
-                  <span className={styles.successLabel}>✓ Ghi chú hoàn tất</span>
-                  <p>{ticket.completionNotes}</p>
-                </div>
-              )}
-              {!ticket.diagnosisResult &&
-                !ticket.rootCause &&
-                !ticket.requiredPartsNote &&
-                !ticket.notes &&
-                !ticket.completionNotes && (
-                  <p className={styles.emptyNotes}>Chưa có ghi chú kỹ thuật.</p>
-                )}
-            </div>
-          </section>
-          <TicketInspectionSummary results={inspectionResults} isLoading={areInspectionsLoading} />
-          {/* Images */}
-          <section className={styles.section}>
-            <h3>Hình ảnh</h3>
-            <TicketImageGallery images={images} />
-          </section>
-          <section className={styles.section}>
-            <h3>Linh kiện đã sử dụng</h3>
-            {ticket.usedParts?.length ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {ticket.usedParts.map((part) => (
-                  <div
-                    key={part.ticketPartId}
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
-                  >
-                    <span>
-                      {part.partName} × {part.quantity}
-                    </span>
-                    <span>{part.subtotal.toLocaleString('vi-VN')}đ</span>
+            </section>
+            <section className={styles.section}>
+              <h3>Thông tin kỹ thuật</h3>
+              <div className={styles.technicalNotes}>
+                {ticket.diagnosisResult && (
+                  <div className={`${styles.noteCard} ${styles.resultBox}`}>
+                    <span className={styles.resultLabel}>🔍 Kết quả chẩn đoán</span>
+                    <p>{ticket.diagnosisResult}</p>
                   </div>
-                ))}
+                )}
+                {ticket.rootCause && (
+                  <div className={styles.noteCard}>
+                    <span className={styles.infoLabel}>Nguyên nhân</span>
+                    <p className={styles.infoValueText}>{ticket.rootCause}</p>
+                  </div>
+                )}
+                {ticket.requiredPartsNote && (
+                  <div className={styles.noteCard}>
+                    <span className={styles.infoLabel}>Linh kiện cần thiết</span>
+                    <p className={styles.infoValueText}>{ticket.requiredPartsNote}</p>
+                  </div>
+                )}
+                {ticket.notes && (
+                  <div className={styles.noteCard}>
+                    <span className={styles.infoLabel}>Ghi chú kỹ thuật</span>
+                    <p className={styles.notesText}>{ticket.notes}</p>
+                  </div>
+                )}
+                {ticket.completionNotes && (
+                  <div className={`${styles.noteCard} ${styles.successBox}`}>
+                    <span className={styles.successLabel}>✓ Ghi chú hoàn tất</span>
+                    <p>{ticket.completionNotes}</p>
+                  </div>
+                )}
+                {!ticket.diagnosisResult &&
+                  !ticket.rootCause &&
+                  !ticket.requiredPartsNote &&
+                  !ticket.notes &&
+                  !ticket.completionNotes && (
+                    <p className={styles.emptyNotes}>Chưa có ghi chú kỹ thuật.</p>
+                  )}
               </div>
-            ) : (
-              <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
-                Chưa sử dụng linh kiện.
-              </p>
-            )}
-          </section>
-          {/* Quote */}
-          <section className={styles.section}>
-            <h3>Báo giá</h3>
-
-            {role === 'Customer' ? (
-              // Customer: chỉ xem quote đang PENDING (cần phản hồi) — quote đã Approved/Rejected thì chỉ xem, không có action
-              quotes.length === 0 ? (
-                <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
-                  Chưa có báo giá nào.
-                </p>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {quotes.map((q) => (
-                    <QuoteCard key={q.id} quote={q}>
-                      {q.status === 'Pending' && (
-                        <QuoteApprovalForm quoteId={q.id} onDecided={loadAll} />
-                      )}
-                    </QuoteCard>
+            </section>
+            <TicketInspectionSummary
+              results={inspectionResults}
+              isLoading={areInspectionsLoading}
+            />
+            {/* Images */}
+            <section className={styles.section}>
+              <h3>Hình ảnh</h3>
+              <TicketImageGallery images={images} />
+            </section>
+            <section className={styles.section}>
+              <h3>Linh kiện đã sử dụng</h3>
+              {ticket.usedParts?.length ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {ticket.usedParts.map((part) => (
+                    <div
+                      key={part.ticketPartId}
+                      style={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <span>
+                        {part.partName} × {part.quantity}
+                      </span>
+                      <span>{part.subtotal.toLocaleString('vi-VN')}đ</span>
+                    </div>
                   ))}
                 </div>
-              )
-            ) : (
-              <TicketQuoteSection
+              ) : (
+                <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
+                  Chưa sử dụng linh kiện.
+                </p>
+              )}
+            </section>
+            {/* Quote */}
+            <section className={styles.section}>
+              <h3>Báo giá</h3>
+
+              {role === 'Customer' ? (
+                quotes.length === 0 ? (
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: 14 }}>
+                    Chưa có báo giá nào.
+                  </p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {quotes.map((q) => (
+                      <QuoteCard key={q.id} quote={q}>
+                        {q.status === 'Pending' && (
+                          <QuoteApprovalForm quoteId={q.id} onDecided={loadAll} />
+                        )}
+                      </QuoteCard>
+                    ))}
+                  </div>
+                )
+              ) : (
+                <TicketQuoteSection
+                  ticketId={ticket.id}
+                  ticketStatus={ticket.status}
+                  deviceType={ticket.deviceType}
+                  quotes={quotes}
+                  canCreateQuote={canCreateQuote}
+                  onQuoteCreated={loadAll}
+                />
+              )}
+            </section>{' '}
+          </div>
+
+          <div className={styles.sideCol}>
+            {/* Workflow Timeline */}
+            <section className={styles.section}>
+              <h3>Quy trình xử lý</h3>
+              <TicketTimeline currentStatus={ticket.status} statusHistory={statusHistory} />
+            </section>
+
+            <section className={styles.section}>
+              <h3>Hành động</h3>
+
+              <TicketActions ticket={ticket} quotes={quotes} onUpdated={loadAll} />
+
+              {role === 'Customer' && (ticket.review || ticket.status === 'DELIVERED') && (
+                <hr className={styles.divider} aria-hidden="true" />
+              )}
+
+              {role === 'Customer' && ticket.review ? (
+                <div>
+                  <h4>Đánh giá của bạn</h4>
+                  <div aria-label={`${ticket.review.rating} trên 5 sao`}>
+                    {'★'.repeat(ticket.review.rating)}
+                    {'☆'.repeat(5 - ticket.review.rating)}
+                  </div>
+                  {ticket.review.comment && <p>{ticket.review.comment}</p>}
+                  <small>
+                    Đã đánh giá ngày {new Date(ticket.review.createdAt).toLocaleDateString('vi-VN')}
+                  </small>
+                </div>
+              ) : role === 'Customer' && ticket.status === 'DELIVERED' ? (
+                <Button onClick={() => setIsReviewModalOpen(true)}>Đánh giá</Button>
+              ) : null}
+            </section>
+
+            {role === 'Customer' && ticket.status === 'DELIVERED' && !ticket.review && (
+              <CreateReviewModal
+                isOpen={isReviewModalOpen}
                 ticketId={ticket.id}
-                ticketStatus={ticket.status}
-                deviceType={ticket.deviceType}
-                quotes={quotes}
-                canCreateQuote={canCreateQuote}
-                onQuoteCreated={loadAll}
+                onClose={() => setIsReviewModalOpen(false)}
+                onDone={() => {
+                  setIsReviewModalOpen(false);
+                  loadAll();
+                }}
               />
             )}
-          </section>{' '}
-        </div>
-
-        <div className={styles.sideCol}>
-          <section className={styles.section}>
-            <h3>Hành động</h3>
-
-            <TicketActions ticket={ticket} quotes={quotes} onUpdated={loadAll} />
-
-            {role === 'Customer' && ticket.review ? (
-              <div>
-                <h4>Đánh giá của bạn</h4>
-                <div aria-label={`${ticket.review.rating} trên 5 sao`}>
-                  {'★'.repeat(ticket.review.rating)}
-                  {'☆'.repeat(5 - ticket.review.rating)}
-                </div>
-                {ticket.review.comment && <p>{ticket.review.comment}</p>}
-                <small>
-                  Đã đánh giá ngày {new Date(ticket.review.createdAt).toLocaleDateString('vi-VN')}
-                </small>
-              </div>
-            ) : role === 'Customer' && ticket.status === 'DELIVERED' ? (
-              <Button onClick={() => setIsReviewModalOpen(true)}>Đánh giá</Button>
-            ) : null}
-          </section>
-
-          {/* Workflow Timeline */}
-          <section className={styles.section}>
-            <h3>Quy trình xử lý</h3>
-            <TicketTimeline currentStatus={ticket.status} statusHistory={statusHistory} />
-          </section>
-
-          {role === 'Customer' && ticket.status === 'DELIVERED' && !ticket.review && (
-            <CreateReviewModal
-              isOpen={isReviewModalOpen}
-              ticketId={ticket.id}
-              onClose={() => setIsReviewModalOpen(false)}
-              onDone={() => {
-                setIsReviewModalOpen(false);
-                loadAll();
-              }}
-            />
-          )}
+          </div>
         </div>
       </div>
     </div>

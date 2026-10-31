@@ -49,6 +49,7 @@ import AppointmentLookupPage from '../pages/website/AppointmentLookupPage';
 import AppointmentManagementPage from '../pages/appointments/AppointmentManagementPage';
 import AppointmentSettingsPage from '../pages/admin/AppointmentSettingsPage';
 import DiagnosisSymptomsAdminPage from '../pages/admin/DiagnosisSymptomsAdminPage';
+import WarrantyPackagesAdminPage from '../pages/admin/WarrantyPackagesAdminPage';
 
 export default function AppRoutes() {
   return (
@@ -130,6 +131,7 @@ export default function AppRoutes() {
             <Route path="admin/reviews" element={<ReviewsAdminPage />} />
             <Route path="admin/appointments/settings" element={<AppointmentSettingsPage />} />
             <Route path="admin/diagnosis-symptoms" element={<DiagnosisSymptomsAdminPage />} />
+            <Route path="admin/warranty-packages" element={<WarrantyPackagesAdminPage />} />
           </Route>
         </Route>
 

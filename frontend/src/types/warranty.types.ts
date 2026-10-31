@@ -6,6 +6,7 @@ export interface Warranty {
   terms: string | null;
   status: 'Active' | 'Voided';
   isExpired: boolean;
+  warrantyPackageId?: string | null;
 }
 
 export interface MyWarrantyItem {

@@ -1643,6 +1643,9 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<Guid?>("WarrantyPackageId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RepairTicketId")
@@ -1651,7 +1654,100 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.HasIndex("WarrantyCode")
                         .IsUnique();
 
+                    b.HasIndex("WarrantyPackageId");
+
                     b.ToTable("Warranties", (string)null);
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Warranty.WarrantyPackage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("DurationMonths")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Terms")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("WarrantyPackages", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000201"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Bảo hành lỗi kỹ thuật.",
+                            DurationMonths = 1,
+                            IsActive = true,
+                            Name = "Bảo hành cơ bản",
+                            Terms = "Bảo hành lỗi kỹ thuật."
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000202"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Áp dụng cho linh kiện thay thế.",
+                            DurationMonths = 3,
+                            IsActive = true,
+                            Name = "Bảo hành linh kiện 3 tháng",
+                            Terms = "Không bảo hành hư hỏng vật lý."
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000203"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Áp dụng cho pin thay thế.",
+                            DurationMonths = 6,
+                            IsActive = true,
+                            Name = "Bảo hành pin 6 tháng",
+                            Terms = "Không bảo hành chai pin do sử dụng."
+                        },
+                        new
+                        {
+                            Id = new Guid("00000000-0000-0000-0000-000000000204"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Gói bảo hành dài hạn theo chính sách cửa hàng.",
+                            DurationMonths = 12,
+                            IsActive = true,
+                            Name = "Bảo hành linh kiện 12 tháng",
+                            Terms = "Theo chính sách cửa hàng."
+                        });
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Appointments.Appointment", b =>
@@ -1988,7 +2084,14 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RepairShop.Domain.Modules.Warranty.WarrantyPackage", "WarrantyPackage")
+                        .WithMany()
+                        .HasForeignKey("WarrantyPackageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("RepairTicket");
+
+                    b.Navigation("WarrantyPackage");
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Customers.Customer", b =>

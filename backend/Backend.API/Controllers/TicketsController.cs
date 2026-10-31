@@ -224,13 +224,13 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
 
-    public record CreateWarrantyBody(int WarrantyMonths, string? Terms);
+    public record CreateWarrantyBody(Guid WarrantyPackageId);
 
     [HttpPost("{id:guid}/warranty")]
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)] // FR-036
     public async Task<IActionResult> CreateWarranty(Guid id, CreateWarrantyBody body)
     {
-        var result = await _mediator.Send(new CreateWarrantyCommand(id, body.WarrantyMonths, body.Terms));
+        var result = await _mediator.Send(new CreateWarrantyCommand(id, body.WarrantyPackageId));
         return Ok(result);
     }
 

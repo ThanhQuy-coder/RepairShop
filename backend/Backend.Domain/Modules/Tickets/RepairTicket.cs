@@ -276,14 +276,14 @@ public class RepairTicket : BaseEntity
     /// "Warranty không nên tồn tại trước khi Ticket hoàn tất/bàn giao" — enforce cứng bằng điều kiện
     /// Status.Code == DELIVERED. Đây KHÔNG phải kiểm tra tùy chọn, mà là điều kiện BẮT BUỘC đầu tiên.
     /// </summary>
-    public Warranty.Warranty CreateWarranty(string warrantyCode, DateOnly startDate, DateOnly endDate, string? terms)
+    public Warranty.Warranty CreateWarranty(string warrantyCode, DateOnly startDate, DateOnly endDate, string? terms, Guid? warrantyPackageId = null)
     {
         if (Status.Code != RepairStatusCodes.Delivered)
             throw new DomainException("Chỉ tạo thông tin bảo hành sau khi thiết bị đã được bàn giao (DELIVERED).");
         if (Warranty is not null)
             throw new DomainException("Ticket này đã có thông tin bảo hành.");
 
-        Warranty = new Warranty.Warranty(warrantyCode, Id, startDate, endDate, terms);
+        Warranty = new Warranty.Warranty(warrantyCode, Id, startDate, endDate, terms, warrantyPackageId);
         return Warranty;
     }
 

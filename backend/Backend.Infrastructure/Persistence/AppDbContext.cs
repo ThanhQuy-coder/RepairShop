@@ -30,6 +30,7 @@ public class AppDbContext : DbContext
     public DbSet<RepairTicket> RepairTickets => Set<RepairTicket>();
     public DbSet<Quote> Quotes => Set<Quote>();
     public DbSet<Warranty> Warranties => Set<Warranty>();
+    public DbSet<WarrantyPackage> WarrantyPackages => Set<WarrantyPackage>();
     public DbSet<RepairTicketStatusHistory> RepairTicketStatusHistories => Set<RepairTicketStatusHistory>();
     public DbSet<TicketImage> TicketImages => Set<TicketImage>();
     public DbSet<TicketPart> TicketParts => Set<TicketPart>();

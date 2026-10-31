@@ -19,6 +19,11 @@ public class WarrantyConfiguration : IEntityTypeConfiguration<Warranty>
         builder.Property(w => w.CreatedAt).HasDefaultValueSql("now()");
         builder.Property(w => w.WarrantyCode).HasMaxLength(20).IsRequired();
         builder.Property(w => w.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValue(WarrantyStatus.Active);
+        builder.HasOne(w => w.WarrantyPackage)
+            .WithMany()
+            .HasForeignKey(w => w.WarrantyPackageId)
+            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(w => w.WarrantyPackageId);
 
         // RepairTicketId là Unique — quan hệ 1-1 (1 ticket tối đa 1 Warranty, đúng BR-10)
         builder.HasIndex(w => w.RepairTicketId).IsUnique();

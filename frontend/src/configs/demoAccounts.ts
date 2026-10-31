@@ -46,6 +46,12 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
     email: import.meta.env.VITE_DEMO_CUSTOMER_B_EMAIL,
     password: password,
   },
+  {
+    role: 'Customer',
+    label: 'Khách hàng Khang',
+    email: import.meta.env.VITE_DEMO_CUSTOMER_KHANG_EMAIL,
+    password: import.meta.env.VITE_KHANG_PASSWORD || password,
+  },
 ];
 
 // Chỉ bật trong môi trường development hoặc khi chủ động cấu hình demo.

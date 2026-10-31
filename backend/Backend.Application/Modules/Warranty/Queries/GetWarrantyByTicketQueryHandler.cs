@@ -33,6 +33,6 @@ public class GetWarrantyByTicketQueryHandler : IRequestHandler<GetWarrantyByTick
             ?? throw new NotFoundException("Thông tin bảo hành của ticket", request.TicketId);
 
         return new WarrantyResponse(warranty.WarrantyCode, ticket.Id, warranty.StartDate, warranty.EndDate,
-            warranty.Terms, warranty.Status.ToString(), warranty.IsExpired());
+            warranty.Terms, warranty.Status.ToString(), warranty.IsExpired(), warranty.WarrantyPackageId);
     }
 }

@@ -93,6 +93,24 @@
 .ghost:hover:not(:disabled) {
   background: var(--color-primary-subtle, #eef6f4);
   color: var(--color-primary-hover, #13483e);
+  transform: none;
+}
+
+.ghost:active:not(:disabled) {
+  background: var(--color-primary-border, #9ec5bc);
+  color: var(--color-primary-hover, #13483e);
+}
+
+.warning {
+  background: var(--color-warning, #d97706);
+  color: #ffffff;
+  box-shadow: var(--shadow-xs);
+}
+
+.warning:hover:not(:disabled) {
+  background: var(--color-warning-hover, #b45309);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 .success {

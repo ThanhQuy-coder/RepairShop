@@ -1,3 +1,13 @@
+.scrollArea {
+  height: 100vh;
+  height: 75dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
 .wrapper {
   max-width: 1240px;
   margin: 0 auto;
@@ -37,8 +47,8 @@
 
 .grid {
   display: grid;
-  grid-template-columns: 1.7fr 1fr;
-  gap: 24px;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
   align-items: start;
 }
 
@@ -59,7 +69,7 @@
   flex-direction: column;
   gap: 20px;
   position: sticky;
-  top: 80px;
+  top: 8px;
 }
 
 .section {
@@ -352,6 +362,19 @@
 
 .noteCard p {
   margin: 0;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid currentColor;
+  opacity: 0.12;
+  margin: 16px 0;
+}
+
+.reviewBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 /* 12) Mobile: giảm padding headerCard + section, gap grid */

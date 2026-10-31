@@ -22,6 +22,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Kho linh kiện', path: '/admin/inventory' },
     { label: 'Nhập/Xuất kho', path: '/admin/inventory-transactions' },
     { label: 'Dịch vụ', path: '/admin/services' },
+    { label: 'Gói bảo hành', path: '/admin/warranty-packages' },
     { label: 'Bài viết', path: '/admin/articles' },
     { label: 'Đánh giá', path: '/admin/reviews' },
     { label: 'Báo cáo doanh thu', path: '/admin/reports/revenue' },

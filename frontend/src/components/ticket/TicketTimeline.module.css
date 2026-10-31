@@ -330,3 +330,293 @@
     transition: none;
   }
 }
+
+/* ==========================================================
+   COLLAPSIBLE — toggle + compact status
+   ========================================================== */
+
+.root {
+  min-width: 0;
+}
+
+/* --- Toggle button (ghost nhẹ) --- */
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin-bottom: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-primary, #185a4e);
+  font-size: var(--font-size-sm, 13px);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+  min-height: 30px;
+  max-width: 100%;
+  text-align: left;
+}
+
+.toggleButton:hover {
+  background: var(--color-primary-subtle, #eef6f4);
+  border-color: var(--color-primary-border, #9ec5bc);
+}
+
+.toggleButton:focus-visible {
+  outline: 2px solid var(--color-primary, #185a4e);
+  outline-offset: 2px;
+}
+
+.toggleButton:active {
+  background: var(--color-primary-border, #9ec5bc);
+}
+
+.toggleChevron {
+  font-size: 10px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* --- Compact status khi thu gọn --- */
+.compactStatus {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--color-primary-subtle, #eef6f4);
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  border-radius: var(--radius-md, 10px);
+  margin-bottom: 4px;
+  min-width: 0;
+}
+
+/* Marker hiện tại bên trong compact: giữ style gốc nhưng thu nhỏ shadow
+   để không "phình" trong hộp chật */
+.compactStatus .marker {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.18);
+}
+
+.compactLabel {
+  font-size: var(--font-size-base, 14px);
+  color: var(--color-text, #1e293b);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.compactLabel strong {
+  color: var(--color-primary, #185a4e);
+}
+
+/* --- Touch device: hit area đủ lớn (WCAG 2.5.5) --- */
+@media (pointer: coarse) {
+  .toggleButton {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+}
+
+/* --- Tắt hover trên thiết bị không có hover --- */
+@media (hover: none) {
+  .toggleButton:hover {
+    background: transparent;
+    border-color: transparent;
+  }
+}
+
+/* --- Mobile: toggle chiếm full width để dễ chạm --- */
+@media (max-width: 640px) {
+  .toggleButton {
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 12px;
+    font-size: var(--font-size-sm, 13px);
+  }
+
+  .compactStatus {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .compactLabel {
+    font-size: var(--font-size-sm, 13px);
+  }
+}
+
+/* --- Rất nhỏ ≤380px --- */
+@media (max-width: 380px) {
+  .compactStatus {
+    padding: 8px 10px;
+  }
+
+  .compactStatus .marker {
+    width: 22px;
+    height: 22px;
+    font-size: 10px;
+  }
+
+  .compactLabel {
+    font-size: 12.5px;
+  }
+}
+
+/* --- Tôn trọng reduced-motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .toggleButton {
+    transition: none;
+  }
+}
+
+/* ==========================================================
+   SCROLL BÊN TRONG KHI NỘI DUNG DÀI
+   ========================================================== */
+
+/* --- Timeline expanded: cuộn nội bộ khi vượt ngưỡng --- */
+.timelineScroll {
+  /* clamp: min 240px, lý tưởng 38vh, tối đa 460px
+     → desktop ~400px, laptop nhỏ ~320px, landscape mobile ~240px */
+  max-height: clamp(240px, 38vh, 460px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;     /* chặn scroll chaining sang page */
+  scrollbar-gutter: stable;         /* không nhảy layout khi scrollbar xuất hiện */
+  padding-right: 6px;               /* chừa chỗ scrollbar, không đè content */
+  -webkit-overflow-scrolling: touch;
+
+  /* Viền mờ trên/dưới để gợi ý còn nội dung — chỉ hiện khi thực sự scroll được */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 8px,
+    #000 calc(100% - 8px),
+    transparent 100%
+  );
+}
+
+/* Khi nội dung ngắn → mask vô hình (không có gì để scroll) */
+.timelineScroll:not(:hover)::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.timelineScroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.timelineScroll::-webkit-scrollbar-thumb {
+  background: var(--color-border, #e2e8f0);
+  border-radius: 4px;
+}
+
+.timelineScroll:hover::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted, #64748b);
+}
+
+/* --- History list: cuộn nội bộ --- */
+.historyScroll {
+  max-height: clamp(200px, 32vh, 360px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding-right: 6px;
+  -webkit-overflow-scrolling: touch;
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 6px,
+    #000 calc(100% - 6px),
+    transparent 100%
+  );
+}
+
+.historyScroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.historyScroll::-webkit-scrollbar-thumb {
+  background: var(--color-border, #e2e8f0);
+  border-radius: 4px;
+}
+
+.historyScroll:hover::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted, #64748b);
+}
+
+/* Firefox scrollbar (không hỗ trợ gradient mask đẹp như Chrome, chấp nhận) */
+.timelineScroll,
+.historyScroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border, #e2e8f0) transparent;
+}
+
+/* --- Touch device: ngưỡng thấp hơn vì ngón tay che nhiều --- */
+@media (pointer: coarse) {
+  .timelineScroll {
+    max-height: clamp(200px, 34vh, 400px);
+    padding-right: 2px;
+  }
+
+  .historyScroll {
+    max-height: clamp(180px, 30vh, 320px);
+    padding-right: 2px;
+  }
+
+  /* Ẩn scrollbar trên touch nhưng vẫn cuộn được */
+  .timelineScroll::-webkit-scrollbar,
+  .historyScroll::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+
+/* --- Mobile nhỏ: thu thêm --- */
+@media (max-width: 640px) {
+  .timelineScroll {
+    max-height: clamp(180px, 32vh, 340px);
+  }
+
+  .historyScroll {
+    max-height: clamp(160px, 28vh, 280px);
+  }
+}
+
+/* --- Landscape mobile: viewport thấp, ưu tiên content chính --- */
+@media (max-height: 480px) and (orientation: landscape) {
+  .timelineScroll {
+    max-height: 200px;
+  }
+
+  .historyScroll {
+    max-height: 160px;
+  }
+}
+
+/* --- Container query: trong drawer/modal hẹp --- */
+@container (max-width: 400px) {
+  .timelineScroll {
+    max-height: clamp(180px, 30vh, 320px);
+  }
+
+  .historyScroll {
+    max-height: clamp(160px, 26vh, 260px);
+  }
+}
+
+/* --- Tôn trọng reduced-motion: không smooth scroll --- */
+@media (prefers-reduced-motion: reduce) {
+  .timelineScroll,
+  .historyScroll {
+    scroll-behavior: auto;
+  }
+}

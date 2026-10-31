@@ -67,6 +67,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IReportsQueryService, ReportsQueryService>();
         services.AddScoped<IWarrantyRepository, WarrantyRepository>();
+        services.AddScoped<IWarrantyPackageRepository, WarrantyPackageRepository>();
         services.AddScoped<IArticleRepository, ArticleRepository>();
         services.AddScoped<IServiceRepository, ServiceRepository>();
         services.AddScoped<IDiagnosisSymptomRepository, DiagnosisSymptomRepository>();
