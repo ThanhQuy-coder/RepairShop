@@ -14,6 +14,7 @@ using RepairShop.Domain.Modules.Notifications;
 using RepairShop.Domain.Modules.SLA;
 using RepairShop.Domain.Common.Enums;
 using RepairShop.Domain.Modules.Diagnostics;
+using RepairShop.Domain.Modules.Inspections;
 
 namespace RepairShop.Infrastructure.Persistence;
 
@@ -47,6 +48,9 @@ public class AppDbContext : DbContext
     public DbSet<SLAPolicy> SLAPolicies => Set<SLAPolicy>();
     public DbSet<TicketSLA> TicketSLAs => Set<TicketSLA>();
     public DbSet<DiagnosisSymptom> DiagnosisSymptoms => Set<DiagnosisSymptom>();
+    public DbSet<InspectionTemplate> InspectionTemplates => Set<InspectionTemplate>();
+    public DbSet<InspectionResult> InspectionResults => Set<InspectionResult>();
+    public DbSet<InspectionItemResult> InspectionItemResults => Set<InspectionItemResult>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

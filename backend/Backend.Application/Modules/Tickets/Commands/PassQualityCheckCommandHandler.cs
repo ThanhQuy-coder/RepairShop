@@ -6,6 +6,7 @@ using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Tickets;
 using RepairShop.Application.Modules.Tickets.DTOs;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Modules.Inspections;
 
 public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCommand, TicketResponse>
 {
@@ -15,13 +16,15 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
     private readonly ICustomerRepository _customerRepository;
     private readonly INotificationService _notificationService;
     private readonly ILogger<PassQualityCheckCommandHandler> _logger;
+    private readonly IInspectionRepository _inspectionRepository;
 
     public PassQualityCheckCommandHandler(IRepairTicketRepository ticketRepository,
         IRepairStatusRepository statusRepository,
         ICurrentUserService currentUser,
         ICustomerRepository customerRepository,
         INotificationService notificationService,
-        ILogger<PassQualityCheckCommandHandler> logger)
+        ILogger<PassQualityCheckCommandHandler> logger,
+        IInspectionRepository inspectionRepository)
     {
         _ticketRepository = ticketRepository;
         _statusRepository = statusRepository;
@@ -29,6 +32,7 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
         _customerRepository = customerRepository;
         _notificationService = notificationService;
         _logger = logger;
+        _inspectionRepository = inspectionRepository;
     }
 
     public async Task<TicketResponse> Handle(PassQualityCheckCommand request, CancellationToken cancellationToken)
@@ -39,6 +43,8 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
         TicketAccessGuard.EnsureCanAccess(ticket, _currentUser);
 
         var userId = _currentUser.UserId!.Value;
+
+        await EnsureInspectionsCompleteAsync(ticket.Id);
 
         // Ghi 3 hạng mục kiểm tra như 1 note có cấu trúc — MVP tối thiểu, không tạo bảng QaChecklist riêng
         // (đúng tinh thần "chưa cần Inventory hoàn chỉnh" áp dụng tương tự cho QA: đủ dùng, không over-engineer)
@@ -65,5 +71,18 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
         _logger.LogInformation("Ticket {TicketCode} QA ĐẠT, chuyển READY_FOR_PICKUP", ticket.TicketCode);
 
         return TicketMapper.ToResponse(ticket);
+    }
+
+    private async Task EnsureInspectionsCompleteAsync(Guid ticketId)
+    {
+        var functional = await _inspectionRepository.GetResultAsync(ticketId, InspectionType.Functional);
+        var appearance = await _inspectionRepository.GetResultAsync(ticketId, InspectionType.Appearance);
+        var verification = await _inspectionRepository.GetResultAsync(ticketId, InspectionType.RepairVerification);
+        if (functional is null || appearance is null || verification is null)
+            throw new InvalidOperationException("Vui lòng hoàn tất đủ 3 checklist trước khi QA đạt.");
+        if (functional.Items.Any(x => x.Status is "Fail" or "NotTested") ||
+            appearance.Items.Any(x => x.Status == "Unknown") ||
+            verification.Items.Any(x => x.Status != "Fixed"))
+            throw new InvalidOperationException("Checklist còn mục chưa đạt hoặc chưa xác nhận, không thể QA đạt.");
     }
 }

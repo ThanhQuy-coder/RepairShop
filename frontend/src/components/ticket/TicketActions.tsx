@@ -153,7 +153,7 @@ export default function TicketActions({ ticket, quotes, onUpdated }: TicketActio
 
       <QaPassModal
         isOpen={openModal === 'qaPass'}
-        ticketId={ticket.id}
+        ticket={ticket}
         onClose={() => setOpenModal(null)}
         onDone={() => {
           setOpenModal(null);

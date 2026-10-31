@@ -20,6 +20,8 @@ import styles from './TicketDetailPage.module.css';
 import QuoteCard from '../../components/quote/QuoteCard';
 import QuoteApprovalForm from '../../components/quote/QuoteApprovalForm';
 import CreateReviewModal from '../../components/review/CreateReviewModal';
+import TicketInspectionSummary from '../../components/ticket/TicketInspectionSummary';
+import type { InspectionResponse, InspectionType } from '../../types/inspection.types';
 
 export default function TicketDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +35,10 @@ export default function TicketDetailPage() {
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [statusHistory, setStatusHistory] = useState<StatusHistoryItem[]>([]);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [inspectionResults, setInspectionResults] = useState<
+    Partial<Record<InspectionType, InspectionResponse>>
+  >({});
+  const [areInspectionsLoading, setAreInspectionsLoading] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -44,6 +50,17 @@ export default function TicketDetailPage() {
     try {
       const ticketData = await ticketService.getById(id);
       setTicket(ticketData as TicketDetail);
+      setAreInspectionsLoading(true);
+      const inspectionTypes: InspectionType[] = ['Functional', 'Appearance', 'RepairVerification'];
+      const inspectionEntries = await Promise.all(
+        inspectionTypes.map(
+          async (type) => [type, await ticketService.getInspection(id, type)] as const
+        )
+      );
+      setInspectionResults(
+        Object.fromEntries(inspectionEntries) as Partial<Record<InspectionType, InspectionResponse>>
+      );
+      setAreInspectionsLoading(false);
 
       if (role === 'Customer') {
         const quotesData = await quoteService.getByTicketId(id);
@@ -60,6 +77,7 @@ export default function TicketDetailPage() {
           brand: ticketData.deviceBrand ?? '',
           model: ticketData.deviceModel ?? '',
           serialNumber: ticketData.deviceSerialNumber,
+          isConvertTicket: false,
           createdAt: '',
         });
         setImages(ticketData.images ?? []);
@@ -83,6 +101,7 @@ export default function TicketDetailPage() {
       setStatusHistory(historyData);
     } catch (err) {
       setErrorMessage(extractApiError(err).message);
+      setAreInspectionsLoading(false);
     } finally {
       setIsLoading(false);
     }
@@ -155,7 +174,6 @@ export default function TicketDetailPage() {
               </div>
             )}
           </section>
-
           <section className={styles.section}>
             <h3>Thông tin kỹ thuật</h3>
             <div className={styles.technicalNotes}>
@@ -189,12 +207,16 @@ export default function TicketDetailPage() {
                   <p>{ticket.completionNotes}</p>
                 </div>
               )}
-              {!ticket.diagnosisResult && !ticket.rootCause && !ticket.requiredPartsNote &&
-                !ticket.notes && !ticket.completionNotes && (
+              {!ticket.diagnosisResult &&
+                !ticket.rootCause &&
+                !ticket.requiredPartsNote &&
+                !ticket.notes &&
+                !ticket.completionNotes && (
                   <p className={styles.emptyNotes}>Chưa có ghi chú kỹ thuật.</p>
                 )}
             </div>
           </section>
+          <TicketInspectionSummary results={inspectionResults} isLoading={areInspectionsLoading} />
           {/* Images */}
           <section className={styles.section}>
             <h3>Hình ảnh</h3>
@@ -257,12 +279,6 @@ export default function TicketDetailPage() {
         </div>
 
         <div className={styles.sideCol}>
-          {/* Workflow Timeline */}
-          <section className={styles.section}>
-            <h3>Quy trình xử lý</h3>
-            <TicketTimeline currentStatus={ticket.status} statusHistory={statusHistory} />
-          </section>
-
           <section className={styles.section}>
             <h3>Hành động</h3>
 
@@ -283,6 +299,12 @@ export default function TicketDetailPage() {
             ) : role === 'Customer' && ticket.status === 'DELIVERED' ? (
               <Button onClick={() => setIsReviewModalOpen(true)}>Đánh giá</Button>
             ) : null}
+          </section>
+
+          {/* Workflow Timeline */}
+          <section className={styles.section}>
+            <h3>Quy trình xử lý</h3>
+            <TicketTimeline currentStatus={ticket.status} statusHistory={statusHistory} />
           </section>
 
           {role === 'Customer' && ticket.status === 'DELIVERED' && !ticket.review && (

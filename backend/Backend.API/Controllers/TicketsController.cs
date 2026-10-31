@@ -8,6 +8,8 @@ using RepairShop.Domain.Common;
 using RepairShop.Application.Modules.Tickets.Queries;
 using RepairShop.Application.Modules.Warranty.Commands;
 using RepairShop.Application.Modules.Reviews.Commands;
+using RepairShop.Application.Modules.Inspections;
+using RepairShop.Domain.Modules.Inspections;
 
 namespace RepairShop.API.Controllers;
 
@@ -168,6 +170,23 @@ public class TicketsController : ControllerBase
     }
 
     public record FailQaBody(string FailureReason);
+
+    [HttpGet("{id:guid}/inspections/{type}")]
+    [Authorize]
+    public async Task<IActionResult> GetInspection(Guid id, InspectionType type) =>
+        Ok(await _mediator.Send(new GetInspectionQuery(id, type)));
+
+    [HttpGet("{id:guid}/inspection-templates/{type}")]
+    [Authorize]
+    public async Task<IActionResult> GetInspectionTemplates(Guid id, InspectionType type) =>
+        Ok(await _mediator.Send(new GetInspectionTemplatesQuery(id, type)));
+
+    [HttpPut("{id:guid}/inspections/{type}")]
+    [Authorize(Roles = Roles.Technician)]
+    public async Task<IActionResult> SaveInspection(Guid id, InspectionType type, SaveInspectionBody body) =>
+        Ok(await _mediator.Send(new SaveInspectionCommand(id, type, body.Items)));
+
+    public record SaveInspectionBody(List<InspectionItemInput> Items);
 
     [HttpPatch("{id:guid}/qa-fail")]
     [Authorize(Roles = Roles.Technician)]

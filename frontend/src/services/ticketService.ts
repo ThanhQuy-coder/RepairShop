@@ -10,6 +10,7 @@ import type {
 } from '../types/ticket.types';
 import type { PagedResponse } from '../types/common.types';
 import type { TicketListItem, TicketListFilters } from '../types/ticket.types';
+import type { InspectionResponse, InspectionTemplate, InspectionType, InspectionItem } from '../types/inspection.types';
 
 export const ticketService = {
   getById: (id: string) => apiClient.get<TicketDetail>(`/tickets/${id}`).then((res) => res.data),
@@ -99,6 +100,15 @@ export const ticketService = {
     apiClient
       .patch<TicketDetail>(`/tickets/${ticketId}/qa-fail`, { failureReason })
       .then((res) => res.data),
+
+  getInspectionTemplates: (ticketId: string, type: InspectionType) =>
+    apiClient.get<InspectionTemplate[]>(`/tickets/${ticketId}/inspection-templates/${type}`).then((res) => res.data),
+
+  getInspection: (ticketId: string, type: InspectionType) =>
+    apiClient.get<InspectionResponse>(`/tickets/${ticketId}/inspections/${type}`).then((res) => res.data),
+
+  saveInspection: (ticketId: string, type: InspectionType, items: InspectionItem[]) =>
+    apiClient.put<InspectionResponse>(`/tickets/${ticketId}/inspections/${type}`, { items }).then((res) => res.data),
 
   createInvoice: (ticketId: string, paymentMethod: 'Cash' | 'Transfer') =>
     apiClient.post(`/tickets/${ticketId}/invoice`, { paymentMethod }),

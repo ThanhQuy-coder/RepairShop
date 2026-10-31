@@ -747,6 +747,115 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RepairShop.Domain.Modules.Inspections.InspectionItemResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("InspectionResultId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ItemNameSnapshot")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<Guid?>("TemplateId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InspectionResultId");
+
+                    b.ToTable("InspectionItemResults", (string)null);
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Inspections.InspectionResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InspectionType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<Guid>("TicketId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId", "InspectionType")
+                        .IsUnique();
+
+                    b.ToTable("InspectionResults", (string)null);
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Inspections.InspectionTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeviceType")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("InspectionType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceType", "InspectionType", "SortOrder");
+
+                    b.ToTable("InspectionTemplates", (string)null);
+                });
+
             modelBuilder.Entity("RepairShop.Domain.Modules.Inventory.Inventory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1641,6 +1750,15 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("RepairShop.Domain.Modules.Inspections.InspectionItemResult", b =>
+                {
+                    b.HasOne("RepairShop.Domain.Modules.Inspections.InspectionResult", null)
+                        .WithMany("Items")
+                        .HasForeignKey("InspectionResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RepairShop.Domain.Modules.Inventory.Inventory", b =>
                 {
                     b.HasOne("RepairShop.Domain.Modules.Inventory.Part", null)
@@ -1888,6 +2006,11 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("RepairShop.Domain.Modules.Identity.User", b =>
                 {
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Inspections.InspectionResult", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Inventory.Inventory", b =>
