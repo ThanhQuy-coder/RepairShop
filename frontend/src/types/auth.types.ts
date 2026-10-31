@@ -28,4 +28,4 @@ export interface UserProfile {
   isActive: boolean;
 }
 
-export type UserRole = 'Admin' | 'Receptionist' | 'Technician' | 'Customer';
+export type UserRole = 'Admin' | 'Manager' | 'Receptionist' | 'Technician' | 'Accountant' | 'Customer';

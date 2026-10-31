@@ -7,6 +7,12 @@ export interface NavItem {
   icon?: string; // tên icon (nếu dùng thư viện icon sau này), tạm để text
 }
 
+export interface NavGroup {
+  label: string;
+  key: string;
+  items: NavItem[];
+}
+
 // Tách RIÊNG dữ liệu điều hướng khỏi component Sidebar — khi cần đổi menu chỉ sửa ở đây,
 // không đụng vào JSX của layout.
 export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
@@ -48,6 +54,65 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Bảo hành', path: '/customer/warranty' },
     { label: 'Hồ sơ', path: '/customer/profile' },
   ],
+  Manager: [],
+  Accountant: [],
+};
+
+export const ALLOWED_PATHS_BY_ROLE: Record<UserRole, string[]> = {
+  Admin: NAV_BY_ROLE.Admin.map((item) => item.path),
+  Manager: [],
+  Receptionist: NAV_BY_ROLE.Receptionist.map((item) => item.path),
+  Technician: NAV_BY_ROLE.Technician.map((item) => item.path),
+  Accountant: [],
+  Customer: NAV_BY_ROLE.Customer.map((item) => item.path),
+};
+
+const ADMIN_GROUP_DEFINITIONS: Array<{ key: string; label: string; paths: string[] }> = [
+  {
+    key: 'operations',
+    label: 'Vận hành',
+    paths: ['/admin/tickets', '/admin/quotes', '/admin/appointments/settings'],
+  },
+  {
+    key: 'catalog',
+    label: 'Danh mục',
+    paths: ['/admin/customers', '/admin/devices', '/admin/services', '/admin/warranty-packages', '/admin/diagnosis-symptoms'],
+  },
+  {
+    key: 'inventory',
+    label: 'Kho',
+    paths: ['/admin/inventory', '/admin/inventory-transactions'],
+  },
+  {
+    key: 'analytics',
+    label: 'Phân tích',
+    paths: ['/admin/reports/revenue', '/admin/reports/technicians', '/admin/reports/sla', '/admin/reports/profit'],
+  },
+  {
+    key: 'content',
+    label: 'Nội dung',
+    paths: ['/admin/articles', '/admin/reviews'],
+  },
+  {
+    key: 'system',
+    label: 'Hệ thống',
+    paths: ['/admin/dashboard', '/admin/users'],
+  },
+];
+
+export const NAV_GROUPS_BY_ROLE: Record<UserRole, NavGroup[]> = {
+  Admin: ADMIN_GROUP_DEFINITIONS.map((group) => ({
+    key: group.key,
+    label: group.label,
+    items: group.paths
+      .map((path) => NAV_BY_ROLE.Admin.find((item) => item.path === path))
+      .filter((item): item is NavItem => item !== undefined),
+  })),
+  Manager: [],
+  Receptionist: [],
+  Technician: [],
+  Accountant: [],
+  Customer: [],
 };
 
 export const PUBLIC_NAV: NavItem[] = [

@@ -41,6 +41,66 @@
   gap: 5px;
 }
 
+.group {
+  display: grid;
+  gap: 3px;
+}
+
+.groupButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 14px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #b8cbc1;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.groupButton:hover,
+.groupActive {
+  background: rgba(231, 239, 232, 0.1);
+  color: #fff;
+}
+
+.groupActive {
+  font-weight: 700;
+}
+
+.chevron {
+  font-size: 18px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  display: grid;
+  max-height: 0;
+  padding-left: 10px;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.2s ease, opacity 0.15s ease;
+}
+
+.submenuOpen {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.submenu > .navItem {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .navItem {
   padding: 11px 14px;
   border-radius: 6px;

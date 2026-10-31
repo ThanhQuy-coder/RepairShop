@@ -10,7 +10,7 @@ import styles from './AuthPage.module.css';
 import { DEMO_ACCOUNTS, ENABLE_DEMO_LOGIN } from '../../configs/demoAccounts';
 
 // Điều hướng theo role NGAY sau khi login — đúng yêu cầu API Contract Tuần 2
-const ROLE_REDIRECT: Record<UserRole, string> = {
+const ROLE_REDIRECT: Partial<Record<UserRole, string>> = {
   Admin: '/admin/dashboard',
   Receptionist: '/staff/dashboard',
   Technician: '/technician/tickets',
