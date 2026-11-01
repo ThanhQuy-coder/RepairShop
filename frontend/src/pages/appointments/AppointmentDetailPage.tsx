@@ -12,17 +12,19 @@ const statusLabels: Record<string, string> = {
   Confirmed: 'Đã xác nhận',
   Rejected: 'Đã từ chối',
   Cancelled: 'Đã hủy',
-  Converted: 'Đã chuyển ticket',
+  Arrived: 'Khách đã đến',
+  Complete: 'Hoàn thành',
   NoShow: 'Không đến',
 };
 
 const statusVariants: Record<string, 'default' | 'success' | 'warning' | 'danger' | 'info'> = {
   Pending: 'warning',
-  Confirmed: 'success',
+  Confirmed: 'info',
+  Arrived: 'info',
+  Complete: 'success',
   Rejected: 'danger',
-  Cancelled: 'danger',
-  Converted: 'info',
-  NoShow: 'default',
+  NoShow: 'danger',
+  Cancelled: 'default',
 };
 
 export default function AppointmentDetailPage() {

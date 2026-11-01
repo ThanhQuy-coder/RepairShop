@@ -71,6 +71,9 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<Guid?>("ParentTicketId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -94,6 +97,13 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("TimeSlotId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasDefaultValue("Repair");
+
                     b.Property<uint>("xmin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -110,6 +120,8 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("LookupTokenHash")
                         .IsUnique();
+
+                    b.HasIndex("ParentTicketId");
 
                     b.HasIndex("Phone");
 
@@ -1765,6 +1777,11 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.HasOne("RepairShop.Domain.Modules.Identity.User", null)
                         .WithMany()
                         .HasForeignKey("HandledByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("RepairShop.Domain.Modules.Tickets.RepairTicket", null)
+                        .WithMany()
+                        .HasForeignKey("ParentTicketId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("RepairShop.Domain.Modules.Appointments.TimeSlotConfig", null)

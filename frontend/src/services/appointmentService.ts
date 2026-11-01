@@ -22,6 +22,8 @@ export interface AppointmentResponse {
   slotStart: string;
   slotEnd: string;
   status: string;
+  type: 'Repair' | 'Pickup' | 'WarrantyRevisit';
+  parentTicketId?: string | null;
   createdAt: string;
   lookupToken?: string;
 }
@@ -62,7 +64,7 @@ export const appointmentService = {
       .patch<AppointmentResponse>(`/appointments/${id}/reject`, { rejectionReason })
       .then((res) => res.data),
 
-  convertToTicket: (id: string, customerId: string, deviceId: string) =>
+  convertToTicket: (id: string, customerId?: string, deviceId?: string) =>
     apiClient
       .post(`/appointments/${id}/convert-to-ticket`, { customerId, deviceId })
       .then((res) => res.data),
@@ -85,6 +87,8 @@ export const appointmentService = {
     appointmentDate: string;
     timeSlotId: string;
     customerId?: string | null;
+    type?: 'Repair' | 'Pickup' | 'WarrantyRevisit';
+    parentTicketId?: string | null;
   }) => apiClient.post<AppointmentResponse>('/appointments', payload).then((res) => res.data),
 
   noShow: (id: string) =>

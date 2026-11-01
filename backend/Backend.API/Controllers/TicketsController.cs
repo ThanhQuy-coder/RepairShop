@@ -252,13 +252,14 @@ public class TicketsController : ControllerBase
         return Ok(result);
     }
 
-    public record WarrantyClaimBody(string IssueReported);
+    public record WarrantyClaimBody(string IssueReported, DateOnly AppointmentDate, Guid TimeSlotId);
 
     [HttpPost("{id:guid}/warranty-claim")]
     [Authorize(Roles = "Customer,Receptionist,Admin")]
     public async Task<IActionResult> CreateWarrantyClaim(Guid id, WarrantyClaimBody body)
     {
-        var result = await _mediator.Send(new CreateWarrantyClaimCommand(id, body.IssueReported));
+        var result = await _mediator.Send(new CreateWarrantyClaimCommand(
+            id, body.IssueReported, body.AppointmentDate, body.TimeSlotId));
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 

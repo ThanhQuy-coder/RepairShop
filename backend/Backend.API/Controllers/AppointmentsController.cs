@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using RepairShop.Domain.Common;
 using System.Collections.Concurrent;
 using RepairShop.Domain.Modules.Appointments;
+using RepairShop.Domain.Modules.Appointments.Enums;
 
 namespace RepairShop.API.Controllers;
 
@@ -37,15 +38,22 @@ public class AppointmentsController : ControllerBase
     public record DeviceInfoBody(string? DeviceType, string? Brand, string? Model, string? IssueDescription, string? serial);
 
     public record CreateAppointmentBody(
-        string FullName, string Phone, DeviceInfoBody? DeviceInfo, DateOnly AppointmentDate, Guid TimeSlotId, Guid? CustomerId);
+        string FullName, string Phone, DeviceInfoBody? DeviceInfo, DateOnly AppointmentDate, Guid TimeSlotId, Guid? CustomerId,
+        string? Type = "Repair", Guid? ParentTicketId = null);
 
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Create(CreateAppointmentBody body, CancellationToken cancellationToken)
     {
+        if (!Enum.TryParse<AppointmentType>(body.Type, ignoreCase: true, out var appointmentType))
+            return BadRequest(new { message = "Loại cuộc hẹn không hợp lệ." });
+
+        if (appointmentType == AppointmentType.WarrantyRevisit)
+            return BadRequest(new { message = "Lịch hẹn bảo hành phải được tạo từ quy trình yêu cầu bảo hành." });
         var result = await _mediator.Send(new CreateAppointmentCommand(
             body.FullName, body.Phone, body.AppointmentDate, body.TimeSlotId, body.CustomerId,
-            body.DeviceInfo?.DeviceType, body.DeviceInfo?.Brand, body.DeviceInfo?.Model, body.DeviceInfo?.IssueDescription, body.DeviceInfo?.serial), cancellationToken);
+            body.DeviceInfo?.DeviceType, body.DeviceInfo?.Brand, body.DeviceInfo?.Model, body.DeviceInfo?.IssueDescription, body.DeviceInfo?.serial,
+            appointmentType, body.ParentTicketId), cancellationToken);
         return CreatedAtAction(nameof(GetAvailableSlots), result);
     }
 
@@ -114,7 +122,7 @@ public class AppointmentsController : ControllerBase
     public async Task<IActionResult> MarkNoShow(Guid id)
         => Ok(await _mediator.Send(new MarkNoShowAppointmentCommand(id)));
 
-    public record ConvertBody(Guid CustomerId, Guid DeviceId);
+    public record ConvertBody(Guid? CustomerId, Guid? DeviceId);
 
     [HttpPost("{id:guid}/convert-to-ticket")]
     [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]

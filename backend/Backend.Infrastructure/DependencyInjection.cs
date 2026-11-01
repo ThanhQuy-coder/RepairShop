@@ -13,6 +13,7 @@ using RepairShop.Infrastructure.ExternalServices;
 using RepairShop.Infrastructure.AI;
 using RepairShop.Infrastructure.Notifications;
 using RepairShop.Infrastructure.SLA;
+using RepairShop.Infrastructure.Appointments;
 using RepairShop.Infrastructure.Time;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Infrastructure.Persistence.Seeders;
@@ -81,6 +82,7 @@ public static class DependencyInjection
         services.AddScoped<ISlaPolicyRepository, SlaPolicyRepository>();
         services.AddScoped<ISlaQueryService, SlaQueryService>();
         services.AddHostedService<SlaMonitoringWorker>();
+        services.AddHostedService<AppointmentNoShowWorker>();
         services.AddScoped<ApplicationDbContextInitialiser>();
 
         foreach (var seederType in typeof(IDataSeeder).Assembly.GetTypes()

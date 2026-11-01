@@ -24,6 +24,8 @@ public static class AppointmentMappingExtensions
             appointment.AppointmentDate,
             appointment.TimeSlotId,
             appointment.Status.ToString(),
+            appointment.Type.ToString(),
+            appointment.ParentTicketId,
             appointment.CreatedAt,
             includeLookupToken ? lookupToken : null);
 

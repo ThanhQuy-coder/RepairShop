@@ -140,9 +140,17 @@ public class RepairTicketRepository : IRepairTicketRepository
     {
         return _context.RepairTickets
             .Where(t => t.DeviceId == deviceId)
+            .Include(t => t.Status)
+            .Where(t => t.Status.Code != RepairStatusCodes.Delivered &&
+                        t.Status.Code != RepairStatusCodes.ClosedRejected)
             .AsNoTracking()
             .FirstOrDefaultAsync();
     }
+
+    public Task<RepairTicket?> GetWarrantyChildByParentTicketIdAsync(Guid parentTicketId)
+        => _context.RepairTickets
+            .AsNoTracking()
+            .FirstOrDefaultAsync(t => t.ParentTicketId == parentTicketId);
 
     public async Task<HashSet<Guid>> GetDeviceIdsWithActiveTicketAsync(
         IEnumerable<Guid> deviceIds,

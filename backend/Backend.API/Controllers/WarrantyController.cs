@@ -2,6 +2,7 @@ using RepairShop.Application.Modules.Warranty.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RepairShop.Infrastructure.Identity;
 
 namespace RepairShop.API.Controllers;
 
@@ -19,4 +20,10 @@ public class WarrantyController : ControllerBase
         var result = await _mediator.Send(new GetMyWarrantiesQuery());
         return Ok(result);
     }
+
+    [HttpGet("staff/search")]
+    [Authorize(Policy = AuthorizationPolicies.ReceptionistOrAdmin)]
+    public async Task<IActionResult> SearchForStaff(
+        [FromQuery] string? phone, [FromQuery] string? warrantyCode, CancellationToken cancellationToken)
+        => Ok(await _mediator.Send(new SearchWarrantyForStaffQuery(phone, warrantyCode), cancellationToken));
 }

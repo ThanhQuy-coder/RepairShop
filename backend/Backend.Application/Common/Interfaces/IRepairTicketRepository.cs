@@ -31,6 +31,7 @@ public interface IRepairTicketRepository
     void TrackNewReview(Review review);
 
     Task<RepairTicket?> GetActiveTicketByDeviceIdAsync(Guid deviceId);
+    Task<RepairTicket?> GetWarrantyChildByParentTicketIdAsync(Guid parentTicketId);
 
     Task<HashSet<Guid>> GetDeviceIdsWithActiveTicketAsync(
         IEnumerable<Guid> deviceIds,

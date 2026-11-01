@@ -43,6 +43,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Phiếu sửa chữa', path: '/tickets', end: true },
     { label: 'Báo giá', path: '/tickets/quotes' },
     { label: 'Lịch hẹn', path: '/staff/appointments' },
+    { label: 'Tra cứu bảo hành', path: '/staff/warranty-lookup' },
   ],
   Technician: [
     { label: 'Công việc của tôi', path: '/technician/tickets', end: true },

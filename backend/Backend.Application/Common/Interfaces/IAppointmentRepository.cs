@@ -6,6 +6,9 @@ namespace RepairShop.Application.Common.Interfaces;
 public interface IAppointmentRepository
 {
     Task<Appointment?> GetByIdAsync(Guid id);
+    Task<RepairShop.Domain.Modules.Tickets.RepairTicket?> GetParentTicketAsync(Guid id);
+    Task AcquireConversionLockAsync(Guid appointmentId, CancellationToken cancellationToken);
+    Task<bool> HasOpenWarrantyAppointmentAsync(Guid parentTicketId);
     Task<AppointmentDetailResponse?> GetDetailByIdAsync(Guid id);
     Task<AppointmentDetailResponse?> GetByLookupAsync(string lookupTokenHash, string phone);
     Task<List<Appointment>> GetForStaffAsync();

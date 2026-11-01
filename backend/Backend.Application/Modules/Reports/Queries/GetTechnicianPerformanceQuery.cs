@@ -1,4 +1,5 @@
 using MediatR;
+using RepairShop.Application.Common.Interfaces;
 
 namespace RepairShop.Application.Modules.Reports.Queries;
 
@@ -7,7 +8,7 @@ public record GetTechnicianPerformanceQuery(DateTime? FromDate, DateTime? ToDate
 
 public class GetTechnicianPerformanceQueryHandler : IRequestHandler<GetTechnicianPerformanceQuery, List<TechnicianSummaryItem>>
 {
-    private readonly RepairShop.Application.Common.Interfaces.IReportsQueryService _reportsQueryService;
+    private readonly IReportsQueryService _reportsQueryService;
     public GetTechnicianPerformanceQueryHandler(RepairShop.Application.Common.Interfaces.IReportsQueryService reportsQueryService) =>
         _reportsQueryService = reportsQueryService;
 

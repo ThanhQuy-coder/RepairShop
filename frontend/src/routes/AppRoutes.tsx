@@ -29,7 +29,7 @@ import PartsListPage from '../pages/inventory/PartsListPage';
 import InventoryTransactionsPage from '../pages/inventory/InventoryTransactionsPage';
 import RevenueReportPage from '../pages/reports/RevenueReportPage';
 import TechnicianPerformancePage from '../pages/reports/TechnicianPerformancePage';
-import MyWarrantyPage from '../pages/customers/MyWarrantyPage';
+import MyWarrantyPage from '../pages/warranty/MyWarrantyPage';
 import ServicesPage from '../pages/website/ServicesPage';
 import ArticlesPage from '../pages/website/ArticlesPage';
 import ReviewsAdminPage from '../pages/admin/ReviewsAdminPage';
@@ -47,6 +47,7 @@ import ProfitReportPage from '../pages/reports/ProfitReportPage';
 import AppointmentDetailPage from '../pages/appointments/AppointmentDetailPage';
 import AppointmentLookupPage from '../pages/website/AppointmentLookupPage';
 import AppointmentManagementPage from '../pages/appointments/AppointmentManagementPage';
+import StaffWarrantyLookupPage from '../pages/appointments/StaffWarrantyLookupPage';
 import AppointmentSettingsPage from '../pages/admin/AppointmentSettingsPage';
 import DiagnosisSymptomsAdminPage from '../pages/admin/DiagnosisSymptomsAdminPage';
 import WarrantyPackagesAdminPage from '../pages/admin/WarrantyPackagesAdminPage';
@@ -89,6 +90,7 @@ export default function AppRoutes() {
             <Route path="customers/:id" element={<CustomerDetailPage />} />
             <Route path="staff/appointments/:id" element={<AppointmentDetailPage />} />
             <Route path="staff/appointments" element={<AppointmentManagementPage />} />
+            <Route path="staff/warranty-lookup" element={<StaffWarrantyLookupPage />} />
           </Route>
         </Route>
 

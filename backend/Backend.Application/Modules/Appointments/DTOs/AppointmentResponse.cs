@@ -10,6 +10,8 @@ public record AppointmentResponse(
     DateOnly AppointmentDate,
     Guid TimeSlotId,
     string Status,
+    string Type,
+    Guid? ParentTicketId,
     DateTime CreatedAt,
     string? LookupToken = null);
 
@@ -28,4 +30,6 @@ public sealed record AppointmentDetailResponse(
     TimeOnly SlotEnd,
     string Status,
     string? RejectionReason,
-    DateTime CreatedAt);
+    DateTime CreatedAt,
+    string Type = "Repair",
+    Guid? ParentTicketId = null);

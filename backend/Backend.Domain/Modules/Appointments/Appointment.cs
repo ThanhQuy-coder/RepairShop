@@ -8,6 +8,7 @@ public class Appointment
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
     public Guid? CustomerId { get; private set; }
+    public Guid? ParentTicketId { get; private set; }
     public string FullName { get; private set; } = default!;
     public string Phone { get; private set; } = default!;
     public string? DeviceType { get; private set; }
@@ -18,6 +19,7 @@ public class Appointment
     public DateOnly AppointmentDate { get; private set; }
     public Guid TimeSlotId { get; private set; }
     public AppointmentStatus Status { get; private set; } = AppointmentStatus.Pending;
+    public AppointmentType Type { get; private set; } = AppointmentType.Repair;
     public string? RejectionReason { get; private set; } = string.Empty;
     public Guid? ConfirmedByUserId { get; private set; }
     public Guid? HandledByUserId { get; private set; }
@@ -36,7 +38,9 @@ public class Appointment
         string? model = null,
         string? serialNumber = null,
         string? issueDescription = null,
-        string? lookupTokenHash = null)
+        string? lookupTokenHash = null,
+        AppointmentType type = AppointmentType.Repair,
+        Guid? parentTicketId = null)
     {
         if (string.IsNullOrWhiteSpace(fullName)) throw new DomainException("Họ tên không được để trống.");
         if (string.IsNullOrWhiteSpace(phone)) throw new DomainException("Số điện thoại không được để trống.");
@@ -48,6 +52,8 @@ public class Appointment
         AppointmentDate = appointmentDate;
         TimeSlotId = timeSlotId;
         CustomerId = customerId;
+        Type = type;
+        ParentTicketId = parentTicketId;
         DeviceType = deviceType;
         Brand = brand;
         Model = model;
@@ -107,8 +113,8 @@ public class Appointment
 
     public void MarkNoShow()
     {
-        if (Status != AppointmentStatus.Confirmed)
-            throw new DomainException("Chỉ đánh dấu No-show cho lịch hẹn đã CONFIRMED.");
+        if (Status is not (AppointmentStatus.Pending or AppointmentStatus.Confirmed))
+            throw new DomainException("Chỉ đánh dấu No-show cho lịch hẹn đang chờ hoặc đã xác nhận.");
 
         Status = AppointmentStatus.NoShow;
     }

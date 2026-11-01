@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { appointmentService, type AppointmentResponse } from '../../services/appointmentService';
 import { Button, ErrorMessage } from '../../components/common';
 import { extractApiError } from '../../utils/apiError';
@@ -47,6 +48,7 @@ const formatDateTime = (iso: string) => {
 };
 
 export default function MyAppointmentsPage() {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState<AppointmentResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,13 +77,21 @@ export default function MyAppointmentsPage() {
   return (
     <section className={styles.page}>
       <header className={styles.header}>
-        <h1 className={styles.title}>Lịch hẹn của tôi</h1>
-        <p className={styles.subtitle}>Quản lý và theo dõi các lịch hẹn khám của bạn.</p>
+        <div>
+          <h1 className={styles.title}>Lịch hẹn của tôi</h1>
+          <p className={styles.subtitle}>Quản lý và theo dõi các lịch hẹn của bạn.</p>
+        </div>
+        <Button onClick={() => navigate('/book')}>Đặt lịch mới</Button>
       </header>
 
       {error && <ErrorMessage message={error} onRetry={() => void load()} />}
 
-      {appointments.length === 0 && !error && <p className={styles.empty}>Chưa có lịch hẹn.</p>}
+      {appointments.length === 0 && !error && (
+        <div className={styles.empty}>
+          <p>Chưa có lịch hẹn.</p>
+          <Button variant="secondary" onClick={() => navigate('/book')}>Đặt lịch sửa chữa</Button>
+        </div>
+      )}
 
       <div className={styles.list}>
         {appointments.map((appointment) => (

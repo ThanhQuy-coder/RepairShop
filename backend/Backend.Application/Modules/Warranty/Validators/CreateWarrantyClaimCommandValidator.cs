@@ -9,5 +9,7 @@ public class CreateWarrantyClaimCommandValidator : AbstractValidator<CreateWarra
     {
         RuleFor(x => x.ParentTicketId).NotEmpty();
         RuleFor(x => x.IssueReported).NotEmpty().WithMessage("Vui lòng mô tả vấn đề gặp phải.").MaximumLength(1000);
+        RuleFor(x => x.AppointmentDate).GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.UtcNow));
+        RuleFor(x => x.TimeSlotId).NotEmpty();
     }
 }

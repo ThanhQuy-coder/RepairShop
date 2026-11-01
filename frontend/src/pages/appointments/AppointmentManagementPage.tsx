@@ -12,15 +12,21 @@ import {
 import { extractApiError } from '../../utils/apiError';
 import type { AppointmentIntakeData } from '../../store/ticketIntakeStore';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../hooks/useToast';
 
 const statusLabels: Record<string, string> = {
   Pending: 'Chờ xác nhận',
   Confirmed: 'Đã xác nhận',
   Rejected: 'Đã từ chối',
   Cancelled: 'Đã hủy',
-  Arrived: 'Đã chuyển ticket',
+  Arrived: 'Khách đã đến',
   Complete: 'Hoàn thành',
   NoShow: 'Không đến',
+};
+const typeLabels: Record<string, string> = {
+  Repair: 'Sửa chữa',
+  Pickup: 'Nhận thiết bị',
+  WarrantyRevisit: 'Bảo hành lại',
 };
 
 export default function AppointmentManagementPage() {
@@ -38,6 +44,9 @@ export default function AppointmentManagementPage() {
     null
   );
   const [isCompleting, setIsCompleting] = useState(false);
+  const [typeFilter, setTypeFilter] = useState('');
+  const [processingWarrantyId, setProcessingWarrantyId] = useState<string | null>(null);
+  const { showSuccess, showError } = useToast();
 
   const handleCreateTicket = async (data: AppointmentResponse) => {
     try {
@@ -132,8 +141,27 @@ export default function AppointmentManagementPage() {
     }
   };
 
+  const handleReceiveWarranty = async (appointmentId: string) => {
+    setProcessingWarrantyId(appointmentId);
+    try {
+      await appointmentService.convertToTicket(appointmentId);
+      showSuccess('Đã tiếp nhận bảo hành và tạo phiếu sửa chữa thành công.');
+      await load();
+    } catch (err) {
+      showError(extractApiError(err).message);
+      setError(extractApiError(err).message);
+    } finally {
+      setProcessingWarrantyId(null);
+    }
+  };
+
   const columns: TableColumn<AppointmentResponse>[] = [
     { key: 'date', header: 'Ngày hẹn', render: (a) => a.appointmentDate },
+    {
+      key: 'type',
+      header: 'Loại hẹn',
+      render: (a) => typeLabels[a.type] ?? a.type,
+    },
     {
       key: 'name',
       header: 'Khách hàng',
@@ -199,12 +227,25 @@ export default function AppointmentManagementPage() {
           {a.status === 'Arrived' &&
             (a.handledByUserId === currentUser?.id || a.handledByUserId === null) && (
               <>
-                <Button size="sm" onClick={() => handleCreateTicket(a)}>
-                  Chuyển thành ticket
-                </Button>
-                <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
-                  Hoàn thành
-                </Button>
+                {a.type === 'WarrantyRevisit' ? (
+                  <Button
+                    size="sm"
+                    onClick={() => void handleReceiveWarranty(a.id)}
+                    disabled={processingWarrantyId === a.id}
+                    isLoading={processingWarrantyId === a.id}
+                  >
+                    Tiếp nhận bảo hành
+                  </Button>
+                ) : (
+                  <>
+                    <Button size="sm" onClick={() => void handleCreateTicket(a)}>
+                      Chuyển thành ticket
+                    </Button>
+                    <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
+                      Hoàn thành
+                    </Button>
+                  </>
+                )}
               </>
             )}{' '}
         </div>
@@ -222,9 +263,21 @@ export default function AppointmentManagementPage() {
         </p>
       </div>
       {error && <ErrorMessage message={error} onRetry={() => void load()} />}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          aria-label="Lọc loại cuộc hẹn"
+        >
+          <option value="">Tất cả loại hẹn</option>
+          <option value="Repair">Sửa chữa</option>
+          <option value="Pickup">Nhận thiết bị</option>
+          <option value="WarrantyRevisit">Bảo hành lại</option>
+        </select>
+      </div>
       <Table
         columns={columns}
-        data={appointments}
+        data={typeFilter ? appointments.filter((a) => a.type === typeFilter) : appointments}
         keyExtractor={(a) => a.id}
         isLoading={isLoading}
         emptyMessage="Chưa có lịch hẹn."

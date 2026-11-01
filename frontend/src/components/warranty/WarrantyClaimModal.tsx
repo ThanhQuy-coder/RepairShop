@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Button, ErrorMessage } from '../common';
 import { warrantyService } from '../../services/warrantyService';
 import { extractApiError } from '../../utils/apiError';
 import { useToast } from '../../hooks/useToast';
+import { appointmentService, type AvailableSlot } from '../../services/appointmentService';
 
 interface Props {
   isOpen: boolean;
@@ -16,6 +17,13 @@ export default function WarrantyClaimModal({ isOpen, ticketId, onClose, onDone }
   const [issueReported, setIssueReported] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [appointmentDate, setAppointmentDate] = useState(new Date().toISOString().slice(0, 10));
+  const [timeSlotId, setTimeSlotId] = useState('');
+  const [slots, setSlots] = useState<AvailableSlot[]>([]);
+
+  useEffect(() => {
+    void appointmentService.getAvailableSlots(appointmentDate).then(setSlots);
+  }, []);
 
   const handleSubmit = async () => {
     if (!issueReported.trim()) {
@@ -24,8 +32,12 @@ export default function WarrantyClaimModal({ isOpen, ticketId, onClose, onDone }
     }
     setErrorMessage(null);
     setIsSaving(true);
+    if (!timeSlotId) {
+      setErrorMessage('Vui lòng chọn ngày và khung giờ nhận thiết bị.');
+      return;
+    }
     try {
-      await warrantyService.createClaim(ticketId, issueReported);
+      await warrantyService.createClaim(ticketId, issueReported, appointmentDate, timeSlotId);
       showSuccess('Đã tạo yêu cầu bảo hành. Vui lòng mang thiết bị đến cửa hàng.');
       onDone();
     } catch (err) {
@@ -67,6 +79,20 @@ export default function WarrantyClaimModal({ isOpen, ticketId, onClose, onDone }
         onChange={(e) => setIssueReported(e.target.value)}
         placeholder="VD: Máy lại bị tình trạng pin tụt nhanh như lần trước..."
       />
+      <label style={{ display: 'block', marginTop: 12 }}>Ngày đến bảo hành</label>
+      <input type="date" min={new Date().toISOString().slice(0, 10)} value={appointmentDate}
+        onChange={(e) => {
+          setAppointmentDate(e.target.value);
+          setTimeSlotId('');
+          void appointmentService.getAvailableSlots(e.target.value).then(setSlots);
+        }} />
+      <label style={{ display: 'block', marginTop: 12 }}>Khung giờ</label>
+      <select value={timeSlotId} onChange={(e) => setTimeSlotId(e.target.value)} style={{ width: '100%', padding: 8 }}>
+        <option value="">Chọn khung giờ</option>
+        {slots.filter((slot) => !slot.isFull).map((slot) => (
+          <option key={slot.timeSlotId} value={slot.timeSlotId}>{slot.slotStart} - {slot.slotEnd}</option>
+        ))}
+      </select>
     </Modal>
   );
 }

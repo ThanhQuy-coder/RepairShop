@@ -10,4 +10,5 @@ public record CreateTicketCommand(
     string? Notes,
     string? ConditionNotes,
     string? RiskWarning,
-    decimal DiagnosticDeposit = 0) : IRequest<TicketResponse>;
+    decimal DiagnosticDeposit = 0,
+    Guid? ParentTicketId = null) : IRequest<TicketResponse>;

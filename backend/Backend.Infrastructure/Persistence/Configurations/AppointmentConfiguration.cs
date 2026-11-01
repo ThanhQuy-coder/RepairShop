@@ -25,6 +25,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.Property(a => a.IssueDescription).HasMaxLength(500);
         builder.Property(a => a.Status).HasConversion<string>().HasMaxLength(20).HasDefaultValue(
             AppointmentStatus.Pending);
+        builder.Property(a => a.Type).HasConversion<string>().HasMaxLength(30).HasDefaultValue(AppointmentType.Repair);
         builder.Property(a => a.RejectionReason).HasMaxLength(500);
         builder.Property(a => a.ConfirmedByUserId).IsRequired(false);
         builder.Property(a => a.HandledByUserId).IsRequired(false);
@@ -42,5 +43,7 @@ public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
         builder.HasIndex(a => new { a.AppointmentDate, a.TimeSlotId });
         builder.HasIndex(a => a.Phone);
         builder.HasIndex(a => a.HandledByUserId);
+        builder.HasIndex(a => a.ParentTicketId);
+        builder.HasOne<RepairTicket>().WithMany().HasForeignKey(a => a.ParentTicketId).OnDelete(DeleteBehavior.Restrict);
     }
 }

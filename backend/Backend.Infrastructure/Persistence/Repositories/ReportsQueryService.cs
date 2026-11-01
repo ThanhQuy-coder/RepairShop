@@ -111,39 +111,91 @@ public class ReportsQueryService : IReportsQueryService
         return new RevenueReportResponse(items, totalRevenue, totalInvoices, paidInvoices.Count, unpaidInvoices);
     }
 
-    public async Task<List<TechnicianSummaryItem>> GetTechnicianPerformanceAsync(DateTime? fromDate, DateTime? toDate)
+
+    public async Task<List<TechnicianSummaryItem>> GetTechnicianPerformanceAsync(
+        DateTime? fromDate,
+        DateTime? toDate)
     {
+        var from = ToUtc(fromDate);
+        var to = ToUtc(toDate);
+
+        // 1. Get active technicians
         var technicians = await _context.Users
+            .AsNoTracking()
             .Where(u => u.Role.Name == Roles.Technician && u.IsActive)
+            .Select(u => new
+            {
+                u.Id,
+                u.FullName
+            })
             .ToListAsync();
 
-        var result = new List<TechnicianSummaryItem>();
+        if (technicians.Count == 0)
+            return [];
 
-        foreach (var tech in technicians)
-        {
-            var deliveredQuery = _context.RepairTickets
-                .Where(t => t.TechnicianId == tech.Id && t.Status.Code == RepairStatusCodes.Delivered && t.DeliveredAt != null);
+        var technicianIds = technicians.Select(t => t.Id).ToList();
 
-            var from = ToUtc(fromDate);
-            var to = ToUtc(toDate);
+        // 2. Aggregate delivered tickets
+        var deliveredQuery = _context.RepairTickets
+            .AsNoTracking()
+            .Where(t =>
+                t.TechnicianId.HasValue &&
+                technicianIds.Contains(t.TechnicianId.Value) &&
+                t.Status.Code == RepairStatusCodes.Delivered &&
+                t.DeliveredAt != null);
 
-            if (from is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt >= from);
-            if (to is not null) deliveredQuery = deliveredQuery.Where(t => t.DeliveredAt <= to);
+        if (from.HasValue)
+            deliveredQuery = deliveredQuery
+                .Where(t => t.DeliveredAt >= from.Value);
 
-            var delivered = await deliveredQuery.Select(t => new { t.ReceivedAt, t.DeliveredAt }).ToListAsync();
+        if (to.HasValue)
+            deliveredQuery = deliveredQuery
+                .Where(t => t.DeliveredAt <= to.Value);
 
-            var inProgress = await _context.RepairTickets
-                .CountAsync(t => t.TechnicianId == tech.Id && InRepairCodes.Contains(t.Status.Code));
+        var deliveredStats = await deliveredQuery
+            .GroupBy(t => t.TechnicianId)
+            .Select(g => new
+            {
+                TechnicianId = g.Key!.Value,
+                Completed = g.Count(),
+                AverageHours = g.Average(t =>
+                    (t.DeliveredAt!.Value - t.ReceivedAt).TotalHours)
+            })
+            .ToDictionaryAsync(x => x.TechnicianId);
 
-            double? avgHours = delivered.Count > 0
-                ? delivered.Average(t => (t.DeliveredAt!.Value - t.ReceivedAt).TotalHours)
-                : null;
+        // 3. Aggregate in-progress tickets
+        var inProgressStats = await _context.RepairTickets
+            .AsNoTracking()
+            .Where(t =>
+                t.TechnicianId.HasValue &&
+                technicianIds.Contains(t.TechnicianId.Value) &&
+                InRepairCodes.Contains(t.Status.Code))
+            .GroupBy(t => t.TechnicianId)
+            .Select(g => new
+            {
+                TechnicianId = g.Key!.Value,
+                InProgress = g.Count()
+            })
+            .ToDictionaryAsync(x => x.TechnicianId);
 
-            result.Add(new TechnicianSummaryItem(tech.FullName, delivered.Count, inProgress, avgHours));
-        }
+        // 4. Combine results
+        return technicians
+            .Select(tech =>
+            {
+                deliveredStats.TryGetValue(tech.Id, out var delivered);
+                inProgressStats.TryGetValue(tech.Id, out var inProgress);
 
-        return result.OrderByDescending(t => t.Completed).ToList();
+                return new TechnicianSummaryItem(
+                    tech.FullName,
+                    delivered?.Completed ?? 0,
+                    inProgress?.InProgress ?? 0,
+                    delivered?.AverageHours
+                );
+            })
+            .OrderByDescending(x => x.Completed)
+            .ToList();
     }
+
 
     public async Task<ProfitReportResponse> GetProfitReportAsync(
         DateTime? fromDate, DateTime? toDate)
@@ -204,8 +256,6 @@ public class ReportsQueryService : IReportsQueryService
 
     public async Task<List<StatusBreakdownItem>> GetStatusBreakdownAsync()
     {
-        // GROUP BY thật ở tầng SQL — đúng nguyên tắc "Frontend chỉ aggregate dữ liệu từ Backend"
-        // (Task 7.13), không kéo hết ticket về đếm tay như giải pháp tạm Task 5.15 đã bỏ.
         var grouped = await _context.RepairTickets
             .GroupBy(t => t.Status.Code)
             .Select(g => new { StatusCode = g.Key, Count = g.Count() })

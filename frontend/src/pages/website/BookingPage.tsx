@@ -33,6 +33,7 @@ export default function BookingPage() {
   const [model, setModel] = useState('');
   const [serial, setSerial] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
+  const [appointmentType, setAppointmentType] = useState<'Repair' | 'Pickup'>('Repair');
   const [result, setResult] = useState<AppointmentResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoadingSlots, setIsLoadingSlots] = useState(true);
@@ -62,6 +63,7 @@ export default function BookingPage() {
         timeSlotId: selectedSlot,
         customerId: null,
         deviceInfo: { deviceType, brand, model, issueDescription, serial },
+        type: appointmentType,
       });
       if (created.lookupToken) {
         try {
@@ -166,6 +168,18 @@ export default function BookingPage() {
         </div>
         <div className={styles.formSection}>
           <h2>2. Thông tin liên hệ</h2>
+          <label>
+            <Select
+              label="Loại cuộc hẹn"
+              options={[
+                { value: 'Repair', label: 'Sửa chữa thiết bị' },
+                { value: 'Pickup', label: 'Nhận thiết bị' },
+                { value: 'WarrantyRevisit', label: 'Bảo hành lại' },
+              ]}
+              value={appointmentType}
+              onChange={(event) => setAppointmentType(event.target.value as 'Repair' | 'Pickup')}
+            />
+          </label>
           <div className={styles.twoColumns}>
             <Input
               label="Họ và tên (Bắt buộc)"

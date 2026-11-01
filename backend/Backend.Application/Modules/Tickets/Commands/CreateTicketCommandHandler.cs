@@ -37,10 +37,10 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
         _logger = logger;
     }
 
-    private Task<bool> IsDeviceConvertedToTicket(Guid deviceId, CancellationToken cancellationToken)
+    private async Task<RepairTicket?> GetActiveTicketForDevice(
+        Guid deviceId, CancellationToken cancellationToken)
     {
-        var query = _ticketRepository.GetActiveTicketByDeviceIdAsync(deviceId);
-        return query.ContinueWith(t => t.Result != null, cancellationToken);
+        return await _ticketRepository.GetActiveTicketByDeviceIdAsync(deviceId);
     }
 
     public async Task<TicketResponse> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
@@ -58,7 +58,8 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             throw new DeviceOwnershipMismatchException(device.Id, customer.Id);
 
         // Chặn tạo Ticket mới nếu Device đã có Ticket đang mở (CHECKED_IN, DIAGNOSING, REPAIRING, AWAITING_PARTS)
-        if (await IsDeviceConvertedToTicket(device.Id, cancellationToken))
+        var activeTicket = await GetActiveTicketForDevice(device.Id, cancellationToken);
+        if (activeTicket is not null && activeTicket.Id != request.ParentTicketId)
             throw new DeviceAlreadyHasActiveTicketException(device.Id);
 
         // 4. Sinh Ticket Code (đã tự kiểm tra trùng bên trong TicketCodeGenerator)
@@ -76,7 +77,7 @@ public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, T
             device.Id,
             receptionistId,
             request.IssueDescription,
-            checkedInStatus, request.DiagnosticDeposit);
+            checkedInStatus, request.DiagnosticDeposit, request.ParentTicketId);
 
         if (!string.IsNullOrWhiteSpace(request.ConditionNotes) || !string.IsNullOrWhiteSpace(request.RiskWarning))
             ticket.RecordIntakeCondition(request.ConditionNotes, request.RiskWarning);

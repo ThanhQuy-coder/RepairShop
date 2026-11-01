@@ -14,6 +14,18 @@ public class AppointmentRepository : IAppointmentRepository
 
     public Task<Appointment?> GetByIdAsync(Guid id)
         => _context.Appointments.FirstOrDefaultAsync(a => a.Id == id);
+    public Task<RepairShop.Domain.Modules.Tickets.RepairTicket?> GetParentTicketAsync(Guid id)
+        => _context.RepairTickets.FirstOrDefaultAsync(t => t.Id == id);
+    public async Task AcquireConversionLockAsync(Guid appointmentId, CancellationToken cancellationToken)
+    {
+        await _context.Database.ExecuteSqlInterpolatedAsync(
+            $"SELECT pg_advisory_xact_lock(hashtext({appointmentId.ToString()}))",
+            cancellationToken);
+    }
+    public Task<bool> HasOpenWarrantyAppointmentAsync(Guid parentTicketId)
+        => _context.Appointments.AnyAsync(a => a.ParentTicketId == parentTicketId &&
+            (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed ||
+             a.Status == AppointmentStatus.Arrived));
 
     public async Task<AppointmentDetailResponse?> GetDetailByIdAsync(Guid id)
     {
@@ -36,7 +48,9 @@ public class AppointmentRepository : IAppointmentRepository
                 ts.SlotEnd,
                 a.Status.ToString(),
                 a.RejectionReason,
-                a.CreatedAt
+                a.CreatedAt,
+                a.Type.ToString(),
+                a.ParentTicketId
             )
         ).FirstOrDefaultAsync();
     }
@@ -63,7 +77,9 @@ public class AppointmentRepository : IAppointmentRepository
                 ts.SlotEnd,
                 a.Status.ToString(),
                 a.RejectionReason,
-                a.CreatedAt
+                a.CreatedAt,
+                a.Type.ToString(),
+                a.ParentTicketId
             )
         ).FirstOrDefaultAsync();
     }

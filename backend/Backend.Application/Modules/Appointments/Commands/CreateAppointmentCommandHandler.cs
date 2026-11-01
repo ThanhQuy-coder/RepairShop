@@ -71,7 +71,15 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
             // 7. Tạo Appointment PENDING (mặc định trong constructor)
             var normalizedPhone = new string(request.Phone.Where(char.IsDigit).ToArray());
             appointment = new Appointment(request.FullName, normalizedPhone, request.AppointmentDate, request.TimeSlotId,
-                request.CustomerId, request.DeviceType, request.Brand, request.Model, request.IssueDescription, request.Serial, lookupHash);
+                request.CustomerId,
+                deviceType: request.DeviceType,
+                brand: request.Brand,
+                model: request.Model,
+                serialNumber: request.Serial,
+                issueDescription: request.IssueDescription,
+                lookupTokenHash: lookupHash,
+                type: request.Type,
+                parentTicketId: request.ParentTicketId);
 
             await _appointmentRepo.AddAsync(appointment);
 
