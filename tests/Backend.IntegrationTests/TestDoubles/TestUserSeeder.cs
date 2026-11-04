@@ -42,7 +42,8 @@ public static class TestUserSeeder
             customerId = customer.Id;
         }
 
-        var token = jwtGenerator.GenerateAccessToken(user, roleName, user.Phone!);
+        var token = jwtGenerator.GenerateAccessToken(
+            user, roleName, user.Phone ?? $"09{Random.Shared.Next(10000000, 99999999)}");
         return new SeededUser(user.Id, email, token, customerId);
     }
 

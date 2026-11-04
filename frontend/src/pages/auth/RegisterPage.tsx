@@ -43,7 +43,7 @@ export default function RegisterPage() {
       });
 
       // FR-007: Customer tự đăng ký -> Backend gán role Customer mặc định (RegisterCommandHandler, Task 6)
-      login(result.accessToken, result.role as UserRole, result.email);
+      login(result.accessToken, result.role as UserRole, result.email, result.userId);
       navigate('/customer/home', { replace: true });
     } catch (err) {
       const e2 = extractApiError(err);

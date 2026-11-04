@@ -1,0 +1,8 @@
+.countdown { margin: 0.25rem 0; font-weight: 600; }
+.filters { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem; margin: 1rem 0; }
+.filters > input { min-height: 2.4rem; border: 1px solid var(--color-border, #cbd5e1); border-radius: var(--radius-sm, 6px); padding: 0 .65rem; }
+:global(.sla-progress) { height: 7px; background: var(--color-bg-subtle, #e5e7eb); border-radius: 999px; overflow: hidden; min-width: 90px; }
+:global(.sla-progress span) { display: block; height: 100%; background: var(--color-primary, #2563eb); transition: width .2s ease; }
+:global(.sla-progress-duesoon span) { background: #b7791f; }
+:global(.sla-progress-overdue span) { background: var(--color-danger, #dc2626); }
+:global(.sla-progress-completed span) { background: #64748b; }

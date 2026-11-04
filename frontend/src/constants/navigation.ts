@@ -34,6 +34,7 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Báo cáo doanh thu', path: '/admin/reports/revenue' },
     { label: 'Hiệu suất KTV', path: '/admin/reports/technicians' },
     { label: 'Giám sát SLA', path: '/admin/reports/sla' },
+    { label: 'Cấu hình SLA', path: '/admin/sla-policies' },
     { label: 'Profit Dashboard', path: '/admin/reports/profit' },
   ],
   Receptionist: [
@@ -44,9 +45,11 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Báo giá', path: '/tickets/quotes' },
     { label: 'Lịch hẹn', path: '/staff/appointments' },
     { label: 'Tra cứu bảo hành', path: '/staff/warranty-lookup' },
+    { label: 'SLA của tôi', path: '/staff/reports/sla' },
   ],
   Technician: [
     { label: 'Công việc của tôi', path: '/technician/tickets', end: true },
+    { label: 'SLA của tôi', path: '/technician/sla' },
   ],
   Customer: [
     { label: 'Trang chủ', path: '/customer/home' },
@@ -87,7 +90,7 @@ const ADMIN_GROUP_DEFINITIONS: Array<{ key: string; label: string; paths: string
   {
     key: 'analytics',
     label: 'Phân tích',
-    paths: ['/admin/reports/revenue', '/admin/reports/technicians', '/admin/reports/sla', '/admin/reports/profit'],
+    paths: ['/admin/reports/revenue', '/admin/reports/technicians', '/admin/reports/sla', '/admin/sla-policies', '/admin/reports/profit'],
   },
   {
     key: 'content',

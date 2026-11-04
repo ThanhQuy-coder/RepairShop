@@ -52,12 +52,17 @@ public sealed class TicketSLA : BaseEntity
             OverdueNotifiedAt = null;
     }
 
-    public void RefreshStatus(DateTime now)
+    public void RefreshStatus(DateTime now, double dueSoonThresholdPercent = 20)
     {
         if (Status == SLAStatus.Completed) return;
+        if (dueSoonThresholdPercent is <= 0 or > 100)
+            dueSoonThresholdPercent = 20;
+
+        var dueSoonAt = DueAt.AddMinutes(
+            -(DueAt - StartedAt).TotalMinutes * (dueSoonThresholdPercent / 100));
         Status = now >= DueAt
             ? SLAStatus.Overdue
-            : now >= DueAt.AddMinutes(-(DueAt - StartedAt).TotalMinutes * 0.2)
+            : now >= dueSoonAt
                 ? SLAStatus.DueSoon
                 : SLAStatus.OnTrack;
         MarkUpdated();

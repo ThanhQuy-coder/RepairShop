@@ -42,7 +42,10 @@ import HomePage from '../pages/website/HomePage';
 import ServiceDetailPage from '../pages/website/ServiceDetailPage';
 import ArticleDetailPage from '../pages/website/ArticleDetailPage';
 import BookingPage from '../pages/website/BookingPage';
-import SlaDashboardPage from '../pages/reports/SlaDashboardPage';
+import AdminSlaDashboardPage from '../pages/reports/AdminSlaDashboardPage';
+import ReceptionistSlaDashboardPage from '../pages/reports/ReceptionistSlaDashboardPage';
+import TechnicianSlaDashboardPage from '../pages/reports/TechnicianSlaDashboardPage';
+import SlaPoliciesAdminPage from '../pages/admin/SlaPoliciesAdminPage';
 import ProfitReportPage from '../pages/reports/ProfitReportPage';
 import AppointmentDetailPage from '../pages/appointments/AppointmentDetailPage';
 import AppointmentLookupPage from '../pages/website/AppointmentLookupPage';
@@ -94,6 +97,12 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
+        <Route element={<RoleGuard allowedRoles={['Receptionist']} />}>
+          <Route element={<StaffLayout />}>
+            <Route path="staff/reports/sla" element={<ReceptionistSlaDashboardPage />} />
+          </Route>
+        </Route>
+
         {/* ===== Staff + Customer: xem chi tiết ticket với layout tương ứng ===== */}
         <Route
           element={<RoleGuard allowedRoles={['Receptionist', 'Admin', 'Technician', 'Customer']} />}
@@ -107,6 +116,7 @@ export default function AppRoutes() {
         <Route element={<RoleGuard allowedRoles={['Technician']} />}>
           <Route element={<StaffLayout />}>
             <Route path="technician/tickets" element={<TechnicianDashboardPage />} />
+            <Route path="technician/sla" element={<TechnicianSlaDashboardPage />} />
           </Route>
         </Route>
 
@@ -128,7 +138,8 @@ export default function AppRoutes() {
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
             <Route path="admin/reports/revenue" element={<RevenueReportPage />} />
             <Route path="admin/reports/technicians" element={<TechnicianPerformancePage />} />
-            <Route path="admin/reports/sla" element={<SlaDashboardPage />} />
+            <Route path="admin/reports/sla" element={<AdminSlaDashboardPage />} />
+            <Route path="admin/sla-policies" element={<SlaPoliciesAdminPage />} />
             <Route path="admin/reports/profit" element={<ProfitReportPage />} />
             <Route path="admin/reviews" element={<ReviewsAdminPage />} />
             <Route path="admin/appointments/settings" element={<AppointmentSettingsPage />} />

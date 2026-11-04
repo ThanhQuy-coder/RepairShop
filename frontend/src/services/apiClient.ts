@@ -24,11 +24,22 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config as typeof error.config & { _retry?: boolean };
     if (status === 401 && !originalRequest?._retry && !originalRequest?.url?.includes('/auth/')) {
       originalRequest._retry = true;
-      refreshPromise ??= apiClient.post<{ accessToken: string; role: string; email: string; expiresIn: number }>(
+      refreshPromise ??= apiClient.post<{
+        accessToken: string;
+        role: string;
+        email: string;
+        userId: string;
+        expiresIn: number;
+      }>(
         '/auth/refresh-token',
       ).then((response) => {
         const data = response.data;
-        useAuthStore.getState().login(data.accessToken, data.role as UserRole, data.email);
+        useAuthStore.getState().login(
+          data.accessToken,
+          data.role as UserRole,
+          data.email,
+          data.userId,
+        );
         return data.accessToken;
       }).finally(() => {
         refreshPromise = null;

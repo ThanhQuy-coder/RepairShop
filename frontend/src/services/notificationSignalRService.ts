@@ -14,6 +14,7 @@ const RECONNECT_DELAYS_MS = [0, 1000, 3000, 6000, 9000];
 
 class NotificationSignalRService {
   private connection: signalR.HubConnection | null = null;
+  private readonly notificationSubscribers = new Set<(type: string | undefined) => void>();
 
   /** Connect — idempotent, gọi nhiều lần không tạo nhiều kết nối song song. */
   connect(): void {
@@ -45,6 +46,7 @@ class NotificationSignalRService {
       const store = useNotificationStore.getState();
       store.setItems([payload, ...store.items]);
       store.setUnreadCount(store.unreadCount + 1);
+      this.notificationSubscribers.forEach((subscriber) => subscriber(payload.type));
     });
 
     this.connection.onreconnecting(() => {
@@ -72,6 +74,11 @@ class NotificationSignalRService {
 
   get isConnected(): boolean {
     return this.connection?.state === signalR.HubConnectionState.Connected;
+  }
+
+  subscribeToNotifications(handler: (type: string | undefined) => void): () => void {
+    this.notificationSubscribers.add(handler);
+    return () => this.notificationSubscribers.delete(handler);
   }
 }
 

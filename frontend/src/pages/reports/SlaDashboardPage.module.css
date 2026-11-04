@@ -51,6 +51,15 @@
   margin-top: 8px;
 }
 
+.insight {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
 /* ==========================================================
    RESPONSIVE ADDITIONS — append only
    ========================================================== */

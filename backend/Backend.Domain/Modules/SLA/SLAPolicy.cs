@@ -17,6 +17,8 @@ public sealed class SLAPolicy : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(statusCode))
             throw new DomainException("StatusCode không được để trống.");
+        if (!IsSupportedStatus(statusCode))
+            throw new DomainException("StatusCode không thuộc workflow phiếu sửa chữa.");
         if (durationMinutes <= 0)
             throw new DomainException("Thời lượng SLA phải lớn hơn 0.");
 
@@ -25,6 +27,18 @@ public sealed class SLAPolicy : BaseEntity
         DurationMinutes = durationMinutes;
         IsActive = true;
     }
+
+    private static bool IsSupportedStatus(string statusCode)
+        => statusCode.Trim().ToUpperInvariant() is
+            RepairStatusCodes.CheckedIn or
+            RepairStatusCodes.Assigned or
+            RepairStatusCodes.Diagnosing or
+            RepairStatusCodes.WaitingApproval or
+            RepairStatusCodes.OnHold or
+            RepairStatusCodes.WaitingParts or
+            RepairStatusCodes.InRepair or
+            RepairStatusCodes.QaTesting or
+            RepairStatusCodes.ReadyForPickup;
 
     public void Update(int durationMinutes, bool isActive)
     {

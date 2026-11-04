@@ -1,6 +1,7 @@
 using MediatR;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.SLA.DTOs;
+using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Modules.SLA;
 
 namespace RepairShop.Application.Modules.SLA.Commands;
@@ -12,7 +13,7 @@ public sealed class CreateSlaPolicyCommandHandler(ISlaPolicyRepository repositor
         CreateSlaPolicyCommand request, CancellationToken cancellationToken)
     {
         if (await repository.ExistsAsync(request.StatusCode, request.DeviceType, cancellationToken))
-            throw new InvalidOperationException("Đã tồn tại chính sách SLA cho tổ hợp này.");
+            throw new InvalidTicketOperationException("Đã tồn tại chính sách SLA cho tổ hợp này.");
 
         var policy = new SLAPolicy(request.StatusCode, request.DeviceType, request.DurationMinutes);
         await repository.AddAsync(policy, cancellationToken);

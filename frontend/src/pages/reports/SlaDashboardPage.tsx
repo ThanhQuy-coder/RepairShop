@@ -4,9 +4,11 @@ import { extractApiError } from '../../utils/apiError';
 import type { SlaSummary } from '../../types/reports.types';
 import { ErrorMessage, Loading } from '../../components/common';
 import SummaryCard from '../../components/dashboard/SummaryCard';
+import { useAuth } from '../../hooks/useAuth';
 import styles from './SlaDashboardPage.module.css';
 
 export default function SlaDashboardPage() {
+  const { role } = useAuth();
   const [summary, setSummary] = useState<SlaSummary | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -30,9 +32,11 @@ export default function SlaDashboardPage() {
       <div className={styles.header}>
         <div>
           <span className={styles.eyebrow}>THEO DÕI SLA</span>
-          <h1 className={styles.title}>Giám sát thời hạn xử lý</h1>
+          <h1 className={styles.title}>{role === 'Admin' ? 'Giám sát thời hạn xử lý' : 'SLA công việc của tôi'}</h1>
           <p className={styles.subtitle}>
-            Chỉ số lấy trực tiếp từ các SLA đang hoạt động của phiếu sửa chữa.
+          {role === 'Admin'
+            ? 'Tổng quan toàn hệ thống theo trạng thái SLA của các phiếu đang hoạt động.'
+            : 'Chỉ số chỉ gồm các phiếu được phân công hoặc tiếp nhận bởi tài khoản hiện tại.'}
           </p>
         </div>
       </div>
@@ -46,6 +50,16 @@ export default function SlaDashboardPage() {
         <section className={styles.empty}>
           <h2>Chưa có SLA đang hoạt động</h2>
           <p>Các SLA đã hoàn tất không được tính vào báo cáo này.</p>
+        </section>
+      )}
+      {summary && summary.activeTotal > 0 && (
+        <section className={styles.insight}>
+          <strong>Đọc nhanh:</strong>{' '}
+          {summary.overdue > 0
+            ? `${summary.overdue} phiếu đã quá hạn, cần ưu tiên xử lý ngay.`
+            : summary.dueSoon > 0
+              ? `${summary.dueSoon} phiếu sắp quá hạn, nên xử lý trước các phiếu đúng hạn.`
+              : 'Tất cả phiếu hiện đang trong thời hạn SLA.'}
         </section>
       )}
     </div>

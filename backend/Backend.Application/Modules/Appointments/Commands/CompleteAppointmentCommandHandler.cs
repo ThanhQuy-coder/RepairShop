@@ -11,12 +11,15 @@ public class CompleteAppointmentCommandHandler
     : IRequestHandler<CompleteAppointmentCommand, AppointmentResponse>
 {
     private readonly IAppointmentRepository _appointmentRepository;
+    private readonly ICustomerRepository _customerRepository;
     private readonly INotificationService _notificationService;
 
     public CompleteAppointmentCommandHandler(IAppointmentRepository appointmentRepository,
+        ICustomerRepository customerRepository,
         INotificationService notificationService)
     {
         _appointmentRepository = appointmentRepository;
+        _customerRepository = customerRepository;
         _notificationService = notificationService;
     }
 
@@ -38,10 +41,15 @@ public class CompleteAppointmentCommandHandler
 
         await _appointmentRepository.SaveChangesAsync();
 
-        await _notificationService.CreateAsync((Guid) appointment.CustomerId!, "AppointmentCompleted",
-            "Lịch hẹn đã hoàn tất",
-            $"Lịch hẹn của bạn vào ngày {appointment.AppointmentDate:dd/MM/yyyy} đã được hoàn tất.",
-            "Appointment", appointment.Id);
+        if (appointment.CustomerId is Guid customerId &&
+            await _customerRepository.GetUserIdByCustomerIdAsync(customerId, cancellationToken)
+                is Guid userId)
+        {
+            await _notificationService.CreateAsync(userId, "AppointmentCompleted",
+                "Lịch hẹn đã hoàn tất",
+                $"Lịch hẹn của bạn vào ngày {appointment.AppointmentDate:dd/MM/yyyy} đã được hoàn tất.",
+                "Appointment", appointment.Id);
+        }
 
         return appointment.ToResponse();
     }

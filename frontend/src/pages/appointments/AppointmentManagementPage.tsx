@@ -45,6 +45,7 @@ export default function AppointmentManagementPage() {
   );
   const [isCompleting, setIsCompleting] = useState(false);
   const [typeFilter, setTypeFilter] = useState('');
+  const [customerFilter, setCustomerFilter] = useState<'all' | 'account' | 'guest'>('all');
   const [processingWarrantyId, setProcessingWarrantyId] = useState<string | null>(null);
   const { showSuccess, showError } = useToast();
 
@@ -169,7 +170,7 @@ export default function AppointmentManagementPage() {
         <>
           <strong>{a.fullName}</strong>
           <br />
-          <small>{a.phone}</small>
+          <small>{a.phone} · {a.customerId ? 'Có tài khoản' : 'Guest'}</small>
         </>
       ),
     },
@@ -274,10 +275,25 @@ export default function AppointmentManagementPage() {
           <option value="Pickup">Nhận thiết bị</option>
           <option value="WarrantyRevisit">Bảo hành lại</option>
         </select>
+        <select
+          value={customerFilter}
+          onChange={(e) => setCustomerFilter(e.target.value as 'all' | 'account' | 'guest')}
+          aria-label="Lọc khách hàng"
+          style={{ marginLeft: 8 }}
+        >
+          <option value="all">Tất cả khách hàng</option>
+          <option value="account">Có tài khoản</option>
+          <option value="guest">Guest</option>
+        </select>
       </div>
       <Table
         columns={columns}
-        data={typeFilter ? appointments.filter((a) => a.type === typeFilter) : appointments}
+        data={appointments.filter((a) => {
+          const matchesType = !typeFilter || a.type === typeFilter;
+          const matchesCustomer = customerFilter === 'all' ||
+            (customerFilter === 'account' ? a.customerId !== null : a.customerId === null);
+          return matchesType && matchesCustomer;
+        })}
         keyExtractor={(a) => a.id}
         isLoading={isLoading}
         emptyMessage="Chưa có lịch hẹn."

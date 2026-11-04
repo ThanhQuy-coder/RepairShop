@@ -23,8 +23,15 @@ public sealed class SlaController(IMediator mediator) : ControllerBase
     public async Task<ActionResult<SlaPolicyResponse>> CreatePolicy(
         CreateSlaPolicyRequest request, CancellationToken cancellationToken)
     {
+        if (request.DeviceType is not null &&
+            !Enum.TryParse<DeviceType>(request.DeviceType, true, out var deviceType))
+            return BadRequest(new { message = "Loại thiết bị không hợp lệ." });
+        var parsedDeviceType = request.DeviceType is null
+            ? (DeviceType?)null
+            : Enum.Parse<DeviceType>(request.DeviceType, true);
+
         var response = await mediator.Send(new CreateSlaPolicyCommand(
-            request.StatusCode, request.DeviceType, request.DurationMinutes), cancellationToken);
+            request.StatusCode, parsedDeviceType, request.DurationMinutes), cancellationToken);
         return CreatedAtAction(nameof(GetPolicies), response);
     }
 
@@ -38,7 +45,7 @@ public sealed class SlaController(IMediator mediator) : ControllerBase
     }
 
     public sealed record CreateSlaPolicyRequest(
-        string StatusCode, DeviceType? DeviceType, int DurationMinutes);
+        string StatusCode, string? DeviceType, int DurationMinutes);
 
     public sealed record UpdateSlaPolicyRequest(int DurationMinutes, bool IsActive);
 }

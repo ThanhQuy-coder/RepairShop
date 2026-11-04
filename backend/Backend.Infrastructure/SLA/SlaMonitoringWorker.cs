@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Domain.Common;
 using RepairShop.Domain.Common.Enums;
@@ -11,6 +12,7 @@ namespace RepairShop.Infrastructure.SLA;
 
 public sealed class SlaMonitoringWorker(
     IServiceScopeFactory scopes,
+    IConfiguration configuration,
     ILogger<SlaMonitoringWorker> logger)
     : BackgroundService
 {
@@ -24,11 +26,14 @@ public sealed class SlaMonitoringWorker(
                 using var scope = scopes.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 var now = DateTime.UtcNow;
+                var dueSoonThresholdPercent = configuration.GetValue(
+                    "Sla:DueSoonThresholdPercent", 20d);
                 var notifications = scope.ServiceProvider.GetRequiredService<INotificationService>();
                 var records = await db.TicketSLAs
                     .Where(x => x.Status != SLAStatus.Completed)
                     .Include(x => x.RepairTicket)
                     .ThenInclude(ticket => ticket.Technician)
+                    .OrderBy(x => x.DueAt)
                     .Take(500).ToListAsync(stoppingToken);
                 foreach (var record in records)
                 {
@@ -37,7 +42,7 @@ public sealed class SlaMonitoringWorker(
                         var becameOverdue = now >= record.DueAt && record.MarkOverdue(now);
                         if (!becameOverdue)
                         {
-                            record.RefreshStatus(now);
+                            record.RefreshStatus(now, dueSoonThresholdPercent);
                             continue;
                         }
 

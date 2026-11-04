@@ -12,7 +12,7 @@ export interface AvailableSlot {
 
 export interface AppointmentResponse {
   id: string;
-  customerId: string;
+  customerId: string | null;
   confirmedByUserId: string;
   handledByUserId: string;
   fullName: string;

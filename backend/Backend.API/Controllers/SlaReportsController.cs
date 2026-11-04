@@ -9,7 +9,7 @@ namespace RepairShop.API.Controllers;
 
 [ApiController]
 [Route("api/reports/sla-summary")]
-[Authorize(Policy = AuthorizationPolicies.AdminOnly)]
+[Authorize(Policy = AuthorizationPolicies.StaffOnly)]
 public sealed class SlaReportsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]

@@ -71,6 +71,72 @@ export interface SlaSummary {
   activeTotal: number;
 }
 
+export type SlaStatus = 'OnTrack' | 'DueSoon' | 'Overdue' | 'Completed' | string;
+
+export interface SlaTicketItem {
+  ticketId: string;
+  ticketCode: string;
+  customerName: string;
+  deviceLabel: string;
+  statusCode: string;
+  statusLabel: string;
+  technicianName: string | null;
+  startedAt: string;
+  dueAt: string;
+  slaStatus: SlaStatus | number;
+  clockRunning: boolean;
+}
+
+export interface SlaTicketListResponse {
+  items: SlaTicketItem[];
+  total: number;
+}
+
+export interface SlaStepSummary {
+  statusCode: string;
+  label: string;
+  total: number;
+  overdue: number;
+}
+
+export interface SlaTechnicianSummary {
+  technicianName: string;
+  inProgress: number;
+  dueSoon: number;
+  overdue: number;
+  onTimeRate: number;
+}
+
+export interface SlaDeviceSummary {
+  deviceType: string;
+  total: number;
+  overdue: number;
+}
+
+export interface SlaAnalytics {
+  total: number;
+  onTrack: number;
+  dueSoon: number;
+  overdue: number;
+  complianceRate: number;
+  byStatusStep: SlaStepSummary[];
+  byTechnician: SlaTechnicianSummary[];
+  byDeviceType: SlaDeviceSummary[];
+}
+
+export interface SlaCompletedItem {
+  ticket: SlaTicketItem;
+  completedOnTime: boolean;
+}
+
+export interface SlaMyTicketsResponse {
+  overdue: number;
+  dueSoon: number;
+  onTrack: number;
+  items: SlaTicketItem[];
+  recentCompleted: SlaCompletedItem[];
+}
+
 export interface DashboardSummary {
   repair: RepairSummary;
   revenue: RevenueSummary;

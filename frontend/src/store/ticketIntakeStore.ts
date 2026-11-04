@@ -6,7 +6,7 @@ import type { Ticket } from '../types/ticket.types';
 
 export interface AppointmentIntakeData {
   id: string;
-  customerId: string;
+  customerId: string | null;
   fullName: string;
   phone: string;
   appointmentDate: string;
