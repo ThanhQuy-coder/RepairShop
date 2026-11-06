@@ -1,4 +1,3 @@
-using RepairShop.Application.Common.Exceptions;
 using RepairShop.Application.Modules.Content.Commands;
 using RepairShop.Application.Modules.Content.Queries;
 using RepairShop.Infrastructure.Identity;
@@ -26,7 +25,7 @@ public class ArticlesController : ControllerBase
 
     [HttpGet("admin")]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 50)
     {
         var result = await _mediator.Send(new GetArticlesQuery(null, page, pageSize));
         return Ok(result);
@@ -46,21 +45,23 @@ public class ArticlesController : ControllerBase
         return Ok(result);
     }
 
-    public record CreateArticleBody(string Title, string Content, string? ImageUrl);
+    public record UpsertArticleBody(string Title, string Content, string? ImageUrl, bool? IsPublished = null);
 
     [HttpPost]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
-    public async Task<IActionResult> Create(CreateArticleBody body)
+    public async Task<IActionResult> Create(UpsertArticleBody body)
     {
-        var result = await _mediator.Send(new CreateArticleCommand(body.Title, body.Content, body.ImageUrl));
+        var result = await _mediator.Send(
+            new CreateArticleCommand(body.Title, body.Content, body.ImageUrl, body.IsPublished ?? false));
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
     [HttpPut("{id:guid}")]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
-    public async Task<IActionResult> Update(Guid id, CreateArticleBody body)
+    public async Task<IActionResult> Update(Guid id, UpsertArticleBody body)
     {
-        var result = await _mediator.Send(new UpdateArticleCommand(id, body.Title, body.Content, body.ImageUrl));
+        var result = await _mediator.Send(
+            new UpdateArticleCommand(id, body.Title, body.Content, body.ImageUrl, body.IsPublished));
         return Ok(result);
     }
 
@@ -71,6 +72,14 @@ public class ArticlesController : ControllerBase
     public async Task<IActionResult> TogglePublish(Guid id, TogglePublishBody body)
     {
         await _mediator.Send(new ToggleArticlePublishCommand(id, body.Publish));
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        await _mediator.Send(new DeleteArticleCommand(id));
         return NoContent();
     }
 }

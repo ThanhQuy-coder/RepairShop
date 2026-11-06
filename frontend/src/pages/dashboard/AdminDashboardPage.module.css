@@ -1,5 +1,8 @@
 .container {
   max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header {
@@ -14,24 +17,25 @@
 .eyebrow {
   display: inline-block;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--color-primary, #185a4e);
   margin-bottom: 4px;
 }
 
 .title {
-  font-size: 24px;
+  font-size: clamp(20px, 4.5vw, 26px);
   font-weight: 800;
   color: var(--color-text, #1e293b);
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.25;
+  margin: 0;
 }
 
 .subtitle {
   font-size: var(--font-size-base, 14px);
   color: var(--color-text-muted, #64748b);
-  margin-top: 4px;
+  margin: 4px 0 0;
 }
 
 .shortcutRow {
@@ -44,6 +48,176 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
+  margin-bottom: 28px;
+}
+
+.sectionBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.blockTitle {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+  margin: 0;
+}
+
+.blockHint {
+  font-size: 12.5px;
+  color: var(--color-text-muted, #64748b);
+}
+
+.analyticsHubGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.analyticsCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: var(--shadow-xs);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.analyticsCard:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.analyticsCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.analyticsTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.analyticsIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--color-primary-subtle, #eef6f4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.analyticsKicker {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-primary, #185a4e);
+  margin-bottom: 2px;
+}
+
+.analyticsTitleWrap h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+}
+
+.analyticsDesc {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
+  line-height: 1.45;
+}
+
+.metricMiniGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border-subtle, #f1f5f9);
+  border-radius: 10px;
+}
+
+.metricMiniBox {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.metricMiniBox span {
+  font-size: 11px;
+  color: var(--color-text-muted, #64748b);
+  font-weight: 600;
+}
+
+.metricMiniBox strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.highlightValue {
+  color: var(--color-primary, #185a4e) !important;
+}
+
+.textSuccess {
+  color: var(--color-success, #16a34a) !important;
+}
+
+.textWarning {
+  color: var(--color-warning, #d97706) !important;
+}
+
+.textDanger {
+  color: var(--color-danger, #dc2626) !important;
+}
+
+.analyticsCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border-subtle, #f1f5f9);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary, #185a4e);
+}
+
+.arrowCue {
+  transition: transform 0.15s ease;
+}
+
+.analyticsCard:hover .arrowCue {
+  transform: translateX(4px);
+}
+
+.twoColSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-bottom: 24px;
 }
 
@@ -51,13 +225,18 @@
   background: #ffffff;
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-lg, 14px);
-  padding: 24px;
+  padding: 22px 24px;
   margin-bottom: 24px;
   box-shadow: var(--shadow-xs);
+  min-width: 0;
+}
+
+.twoColSection .section {
+  margin-bottom: 0;
 }
 
 .section h3 {
-  margin-bottom: 18px;
+  margin: 0;
   font-size: 16px;
   font-weight: 700;
   color: var(--color-text, #1e293b);
@@ -66,12 +245,9 @@
 .sectionHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
   margin-bottom: 18px;
-}
-
-.sectionHeader h3 {
-  margin-bottom: 0;
 }
 
 .statusList {
@@ -82,15 +258,18 @@
 
 .statusRow {
   display: grid;
-  grid-template-columns: 180px 1fr 50px;
+  grid-template-columns: 170px 1fr 72px;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .statusLabel {
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text-secondary, #475569);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .statusCount {
@@ -100,8 +279,13 @@
   color: var(--color-text, #1e293b);
 }
 
+.statusCount small {
+  color: var(--color-text-muted, #64748b);
+  font-weight: 500;
+}
+
 .statusBarTrack {
-  height: 10px;
+  height: 9px;
   background: var(--color-bg-subtle, #f1f5f9);
   border-radius: var(--radius-full, 9999px);
   overflow: hidden;
@@ -114,6 +298,10 @@
   transition: width 0.4s ease;
 }
 
+.tableWrap {
+  overflow-x: auto;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -121,9 +309,9 @@
 }
 
 .table th {
-  padding: 12px 14px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--color-text-muted, #64748b);
@@ -132,9 +320,9 @@
 }
 
 .table td {
-  padding: 14px;
+  padding: 12px;
   border-bottom: 1px solid var(--color-border-subtle, #f1f5f9);
-  font-size: var(--font-size-base, 14px);
+  font-size: 13.5px;
   color: var(--color-text, #1e293b);
 }
 
@@ -142,3 +330,99 @@
   border-bottom: none;
 }
 
+.quickCatalogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 14px;
+}
+
+.catalogShortcut {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.catalogShortcut:hover {
+  background: #ffffff;
+  border-color: var(--color-primary-border, #9ec5bc);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+.shortcutIconBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: var(--color-primary-subtle, #eef6f4);
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  color: var(--color-primary, #185a4e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.catalogShortcut:hover .shortcutIconBox {
+  background: var(--color-primary, #185a4e);
+  border-color: var(--color-primary, #185a4e);
+  color: #ffffff;
+}
+
+.shortcutContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.shortcutTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  line-height: 1.3;
+}
+
+.shortcutSub {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted, #64748b);
+  line-height: 1.35;
+}
+
+.shortcutArrow {
+  flex-shrink: 0;
+  color: var(--color-text-muted, #94a3b8);
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.catalogShortcut:hover .shortcutArrow {
+  transform: translateX(3px);
+  color: var(--color-primary, #185a4e);
+}
+
+@media (max-width: 960px) {
+  .analyticsHubGrid,
+  .twoColSection {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .metricMiniGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statusRow {
+    grid-template-columns: 120px 1fr 60px;
+  }
+}

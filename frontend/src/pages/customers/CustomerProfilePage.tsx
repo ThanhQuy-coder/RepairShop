@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Input } from '../../components/common';
 import { useAuth } from '../../hooks/useAuth';
 import { useToastStore } from '../../store/toastStore';
@@ -6,6 +7,7 @@ import { userService } from '../../services/userService';
 import styles from './CustomerProfilePage.module.css';
 
 export default function CustomerProfilePage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const addToast = useToastStore((state) => state.addToast);
 
@@ -29,7 +31,7 @@ export default function CustomerProfilePage() {
       }
     };
 
-    loadProfile();
+    void loadProfile();
   }, [addToast]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -57,7 +59,7 @@ export default function CustomerProfilePage() {
 
       setFullName(updated.fullName || '');
       setPhone(updated.phone || '');
-      addToast('success', 'Cập nhật hồ sơ thành công.');
+      addToast('success', 'Cập nhật hồ sơ Fixora thành công.');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Không thể cập nhật hồ sơ.';
       addToast('error', message);
@@ -72,10 +74,10 @@ export default function CustomerProfilePage() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <span className={styles.eyebrow}>TÀI KHOẢN CỦA BẠN</span>
+          <span className={styles.eyebrow}>HỒ SƠ THÀNH VIÊN — FIXORA</span>
           <h1 className={styles.title}>Hồ sơ người dùng</h1>
           <p className={styles.subtitle}>
-            Quản lý thông tin liên hệ để RepairShop dễ dàng cập nhật tiến độ cho bạn.
+            Quản lý thông tin liên hệ để Fixora dễ dàng đồng bộ phiếu sửa chữa, lịch hẹn và bảo hành điện tử cho bạn.
           </p>
         </div>
 
@@ -86,14 +88,51 @@ export default function CustomerProfilePage() {
         <aside className={styles.identityCard}>
           <div className={styles.largeAvatar}>{avatarLetter}</div>
 
-          <h2>{fullName || 'Khách hàng RepairShop'}</h2>
+          <h2>{fullName || 'Khách hàng Fixora'}</h2>
           <p>{user?.email}</p>
 
-          <span className={styles.accountTag}>Tài khoản khách hàng</span>
+          <span className={styles.accountTag}>✓ Thành viên Fixora Care</span>
+
+          <div className={styles.quickNavList}>
+            <button
+              type="button"
+              className={styles.quickNavBtn}
+              onClick={() => navigate('/customer/my-tickets')}
+            >
+              <span>📋 Phiếu sửa chữa của tôi</span>
+              <span>→</span>
+            </button>
+            <button
+              type="button"
+              className={styles.quickNavBtn}
+              onClick={() => navigate('/customer/appointments')}
+            >
+              <span>📅 Lịch hẹn của tôi</span>
+              <span>→</span>
+            </button>
+            <button
+              type="button"
+              className={styles.quickNavBtn}
+              onClick={() => navigate('/customer/warranty')}
+            >
+              <span>🛡️ Chứng nhận bảo hành</span>
+              <span>→</span>
+            </button>
+            <button
+              type="button"
+              className={styles.quickNavBtn}
+              onClick={() => navigate('/book')}
+            >
+              <span>🔧 Đặt lịch sửa mới</span>
+              <span>→</span>
+            </button>
+          </div>
 
           <div className={styles.identityNote}>
-            <strong>Bảo mật tài khoản</strong>
-            <span>Email đăng nhập được dùng để xác nhận các thông báo sửa chữa.</span>
+            <strong>🔒 Bảo mật &amp; Đồng bộ tự động</strong>
+            <span>
+              Số điện thoại và email của bạn được dùng để tự động liên kết lịch sử sửa chữa và kích hoạt bảo hành điện tử tại hệ thống Fixora.
+            </span>
           </div>
         </aside>
 
@@ -101,7 +140,7 @@ export default function CustomerProfilePage() {
           <div className={styles.formHeader}>
             <div>
               <span className={styles.sectionKicker}>THÔNG TIN CÁ NHÂN</span>
-              <h2>Thông tin liên hệ</h2>
+              <h2>Thông tin liên hệ &amp; Nhận thiết bị</h2>
             </div>
 
             <span className={styles.savedDot}>● Đang hoạt động</span>
@@ -109,45 +148,45 @@ export default function CustomerProfilePage() {
 
           <div className={styles.formGrid}>
             <Input
-              label="Họ và tên"
-              placeholder="Nhập họ và tên"
+              label="Họ và tên *"
+              placeholder="Nhập họ và tên đầy đủ"
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
               disabled={loading}
             />
 
             <Input
-              label="Số điện thoại"
-              placeholder="Nhập số điện thoại"
+              label="Số điện thoại liên hệ *"
+              placeholder="Nhập số điện thoại (VD: 0901234567)"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
               disabled={loading}
             />
 
             <div className={styles.fullWidth}>
-              <Input label="Email đăng nhập" value={user?.email || ''} disabled />
+              <Input label="Email đăng nhập (Định danh tài khoản)" value={user?.email || ''} disabled />
             </div>
 
             <div className={styles.fullWidth}>
               <label className={styles.label} htmlFor="address">
-                Địa chỉ
+                Địa chỉ liên hệ / Giao nhận thiết bị (Tùy chọn)
               </label>
 
               <textarea
                 id="address"
                 className={styles.textarea}
-                placeholder="Nhập địa chỉ nhận thiết bị"
+                placeholder="Nhập địa chỉ nhận thiết bị hoặc ghi chú liên hệ..."
                 value={address}
                 onChange={(event) => setAddress(event.target.value)}
-                rows={4}
+                rows={3}
               />
             </div>
           </div>
 
           <div className={styles.formFooter}>
-            <span>Thông tin hồ sơ được lấy từ tài khoản của bạn.</span>
+            <span>Thông tin hồ sơ được bảo mật theo chính sách khách hàng của Fixora.</span>
 
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" isLoading={loading} disabled={loading}>
               Lưu thay đổi
             </Button>
           </div>

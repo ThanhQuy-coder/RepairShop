@@ -470,3 +470,123 @@
     transform: none;
   }
 }
+
+
+/* =========================================================
+   ENHANCEMENTS: Customer Appointments KPI Tabs & Grid Info
+   ========================================================= */
+
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-primary, #185a4e);
+  margin-bottom: 4px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filterTabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filterTab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.16s ease;
+}
+
+.filterTab:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  transform: translateY(-1px);
+}
+
+.filterTabActive {
+  background: linear-gradient(135deg, #eef6f4 0%, #ffffff 100%);
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 2px rgba(24, 90, 78, 0.12);
+}
+
+.filterTab strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary, #185a4e);
+  line-height: 1.1;
+}
+
+.filterTab span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.dateBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.typePill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--color-primary-subtle, #eef6f4);
+  color: var(--color-primary, #185a4e);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cardBodyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.infoBox strong {
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.cancelHint {
+  font-size: 12.5px;
+  color: #64748b;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .filterTabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

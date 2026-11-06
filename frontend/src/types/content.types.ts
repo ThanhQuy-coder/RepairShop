@@ -15,6 +15,8 @@ export interface ArticleListItem {
   title: string;
   imageUrl: string | null;
   createdAt: string;
+  isPublished?: boolean;
+  summary?: string | null;
 }
 
 export interface ArticleDetail extends ArticleListItem {

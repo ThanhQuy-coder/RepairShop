@@ -675,3 +675,265 @@
     transform: none;
   }
 }
+
+
+/* =========================================================
+   ENHANCEMENTS: Interactive Workflow Pipeline & Kanban View
+   ========================================================= */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pipelineStrip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pipelineStep {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.pipelineStep:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.pipelineStepActive {
+  background: linear-gradient(135deg, #eef6f4 0%, #ffffff 100%);
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 2px rgba(24, 90, 78, 0.14);
+}
+
+.pipelineStepTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.pipelineStepBadge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary, #185a4e);
+}
+
+.pipelineStepCount {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+  line-height: 1;
+}
+
+.pipelineStepName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+}
+
+.pipelineStepHint {
+  font-size: 11.5px;
+  color: var(--color-text-muted, #64748b);
+  line-height: 1.35;
+}
+
+.secondaryStatsBar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 13px;
+}
+
+.secondaryStatItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary, #475569);
+}
+
+.secondaryStatItem strong {
+  color: var(--color-primary, #185a4e);
+  font-weight: 700;
+}
+
+.toggleCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+.viewSwitcher {
+  display: inline-flex;
+  background: var(--color-bg-subtle, #f1f5f9);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #e2e8f0);
+}
+
+.viewBtn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.viewBtnActive {
+  background: #ffffff;
+  color: var(--color-primary, #185a4e);
+  box-shadow: var(--shadow-xs);
+}
+
+.stageStepPill {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary, #185a4e);
+  background: var(--color-primary-subtle, #eef6f4);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.stageHintText {
+  font-size: 12.5px;
+  color: var(--color-text-muted, #64748b);
+}
+
+.issueBox {
+  padding: 8px 10px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+}
+
+.issueLabel {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #b45309;
+  margin-bottom: 2px;
+}
+
+.stepProgressWrap {
+  margin-top: 2px;
+}
+
+.stepProgressMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--color-text-muted, #64748b);
+  margin-bottom: 4px;
+}
+
+.stepProgressTrack {
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.stepProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #185a4e 0%, #228b78 100%);
+  border-radius: 999px;
+}
+
+.kanbanBoard {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(240px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.kanbanCol {
+  background: #f8fafc;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  max-height: 680px;
+}
+
+.kanbanColHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.kanbanStepNum {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--color-primary, #185a4e);
+  letter-spacing: 0.06em;
+}
+
+.kanbanColHeader h3 {
+  margin: 2px 0 0;
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
+}
+
+.kanbanColBody {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+@media (max-width: 1024px) {
+  .pipelineStrip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .pipelineStrip {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,5 +1,8 @@
 .container {
-  max-width: 1280px;
+  max-width: 1240px;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .header {
@@ -11,21 +14,28 @@
   flex-wrap: wrap;
 }
 
-.eyebrow {
+.headerButtons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.eyebrow,
+.sectionKicker {
   display: inline-block;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.08em;
   color: var(--color-primary, #185a4e);
   margin-bottom: 4px;
 }
 
 .title {
-  font-size: 24px;
+  font-size: clamp(20px, 4.5vw, 25px);
   font-weight: 800;
   color: var(--color-text, #1e293b);
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .subtitle {
@@ -34,332 +44,379 @@
   margin-top: 4px;
 }
 
+.lookupGrid {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
 .pickerBox {
-  max-width: 520px;
-  margin: 40px auto;
   background: #ffffff;
   border: 1px solid var(--color-border, #e2e8f0);
   border-radius: var(--radius-xl, 18px);
-  padding: 36px 32px;
-  text-align: center;
+  padding: 32px 28px;
   box-shadow: var(--shadow-sm);
 }
 
 .pickerIcon {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   background: var(--color-primary-subtle, #eef6f4);
   font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin-bottom: 16px;
 }
 
 .pickerBox h3 {
   font-size: 18px;
   font-weight: 700;
   color: var(--color-text, #1e293b);
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
 
 .pickerBox p {
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--color-text-muted, #64748b);
-  margin-bottom: 20px;
+  line-height: 1.5;
+  margin: 0 0 18px;
 }
 
 .pickerInputWrap {
   text-align: left;
 }
 
-.customerCard {
+.pickerTips {
+  margin-top: 18px;
+  padding: 12px 14px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border-radius: var(--radius-md, 10px);
+  font-size: 12.5px;
+  color: var(--color-text-secondary, #475569);
+  border: 1px solid var(--color-border-subtle, #f1f5f9);
+}
+
+.pickerTips span {
+  font-weight: 700;
+  color: var(--color-primary, #185a4e);
+}
+
+.recentCard {
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-xl, 18px);
+  padding: 24px;
+  box-shadow: var(--shadow-xs);
+}
+
+.recentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border-subtle, #f1f5f9);
+}
+
+.recentHeader h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+}
+
+.recentList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.recentCustomerBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-bg-subtle, #f8fafc);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.recentCustomerBtn:hover {
+  background: #ffffff;
+  border-color: var(--color-primary-border, #9ec5bc);
+  box-shadow: var(--shadow-xs);
+  transform: translateY(-1px);
+}
+
+.customerAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--color-primary, #185a4e);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.recentCustomerInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recentCustomerInfo strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentCustomerInfo span {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted, #64748b);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selectCue {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary, #185a4e);
+  white-space: nowrap;
+}
+
+.customerBanner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  background: #ffffff;
-  border: 1px solid var(--color-border, #e2e8f0);
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #ffffff 0%, #f4fbf9 100%);
+  border: 1px solid var(--color-primary-border, #9ec5bc);
   border-radius: var(--radius-lg, 14px);
   margin-bottom: 20px;
   box-shadow: var(--shadow-xs);
 }
 
+.customerBannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.bannerAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-primary, #185a4e);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .customerLabel {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--color-text-muted, #64748b);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--color-primary, #185a4e);
   display: block;
   margin-bottom: 2px;
 }
 
 .customerName {
-  font-size: 15px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text, #1e293b);
+  margin: 0 0 4px;
+}
+
+.customerMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--color-text-secondary, #475569);
+}
+
+.customerBannerRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.deviceCountBox {
+  padding: 8px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+  text-align: center;
+}
+
+.deviceCountBox strong {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-primary, #185a4e);
+  line-height: 1.1;
+}
+
+.deviceCountBox span {
+  font-size: 11px;
+  color: var(--color-text-muted, #64748b);
+}
+
+.filterToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+}
+
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 240px;
+  padding: 8px 12px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+}
+
+.searchField input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13.5px;
   color: var(--color-text, #1e293b);
 }
 
-/* ==========================================================
-   RESPONSIVE ADDITIONS — append only
-   ========================================================== */
-
-/* 1) Container: padding an toàn khi parent không có */
-.container {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: min(1280px, 100%);
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  margin-left: auto;
-  margin-right: auto;
+.typePills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-/* 2) Header + text: chống tràn */
-.header > * {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+.typePill {
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  color: var(--color-text-secondary, #475569);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.title {
-  font-size: clamp(20px, 4.5vw, 24px);
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.25;
+.typePill:hover {
+  border-color: var(--color-primary, #185a4e);
+  color: var(--color-primary, #185a4e);
 }
 
-.eyebrow,
-.subtitle {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.45;
-  max-width: 100%;
+.typePillActive {
+  background: var(--color-primary, #185a4e);
+  border-color: var(--color-primary, #185a4e);
+  color: #ffffff;
 }
 
-/* 3) PickerBox: box-sizing + không tràn */
-.pickerBox {
-  box-sizing: border-box;
-  max-width: min(520px, 100%);
-  width: 100%;
+.deviceCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* 4) PickerIcon: box-sizing + không shrink */
-.pickerIcon {
-  box-sizing: border-box;
+.deviceEmoji {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--color-primary-subtle, #eef6f4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
   flex-shrink: 0;
 }
 
-/* 5) PickerBox h3 + p: wrap an toàn */
-.pickerBox h3 {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.35;
+.deviceTitle {
+  display: block;
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
 }
 
-.pickerBox p {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.55;
+.deviceSub {
+  display: block;
+  font-size: 11.5px;
+  color: var(--color-text-muted, #64748b);
 }
 
-/* 6) PickerInputWrap: box-sizing + không tràn */
-.pickerInputWrap {
-  min-width: 0;
-  max-width: 100%;
-  box-sizing: border-box;
+.serialBadge {
+  padding: 3px 8px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text, #1e293b);
 }
 
-/* 7) FIX: customerCard flex space-between, không wrap, con không
-      min-width: 0 → customer name dài đẩy action ra ngoài.
-      Cho phép wrap + con co được. */
-.customerCard {
+.mutedText {
+  color: var(--color-text-muted, #64748b);
+  font-size: 13px;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 10px;
-  box-sizing: border-box;
-  max-width: 100%;
-  min-width: 0;
 }
 
-.customerCard > * {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+@media (max-width: 960px) {
+  .lookupGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* 8) CustomerLabel + CustomerName: wrap an toàn */
-.customerLabel,
-.customerName {
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  line-height: 1.4;
-}
-
-/* 9) Mobile: giảm padding pickerBox, margin, icon, font h3/p */
 @media (max-width: 640px) {
-  .header {
-    margin-bottom: 16px;
-    gap: 12px;
-  }
-
-  .subtitle {
-    font-size: var(--font-size-sm, 13px);
-  }
-
-  .pickerBox {
-    margin: 24px auto;
-    padding: 20px 16px;
-    border-radius: 12px;
-  }
-
-  .pickerIcon {
-    width: 48px;
-    height: 48px;
-    font-size: 22px;
-    margin-bottom: 12px;
-  }
-
-  .pickerBox h3 {
-    font-size: 16px;
-    margin-bottom: 6px;
-  }
-
-  .pickerBox p {
-    font-size: var(--font-size-sm, 13px);
-    margin-bottom: 16px;
-  }
-
-  .customerCard {
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    border-radius: 10px;
-    gap: 8px;
-  }
-
-  .customerLabel {
-    font-size: 11px;
-  }
-
-  .customerName {
-    font-size: var(--font-size-sm, 13px);
-  }
-}
-
-/* 10) Rất nhỏ (≤380px): thu thêm padding + icon, stack customerCard dọc */
-@media (max-width: 480px) {
-  .customerCard {
-    /* Khi customer name + action không vừa, action xuống dòng
-       và chiếm full-width */
+  .customerBanner {
     flex-direction: column;
     align-items: flex-start;
   }
-}
 
-@media (max-width: 380px) {
-  .title {
-    font-size: 18px;
-  }
-
-  .eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.06em;
-  }
-
-  .pickerBox {
-    margin: 16px auto;
-    padding: 16px 14px;
-  }
-
-  .pickerIcon {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-
-  .pickerBox h3 {
-    font-size: 15px;
-  }
-
-  .customerCard {
-    padding: 10px 12px;
-  }
-}
-
-/* 11) Landscape mobile: chiều cao khan hiếm — giảm margin + padding dọc */
-@media (max-height: 480px) and (orientation: landscape) {
-  .header {
-    margin-bottom: 12px;
-  }
-
-  .pickerBox {
-    margin: 12px auto;
-    padding: 16px 20px;
-  }
-
-  .pickerIcon {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  .pickerBox h3 {
-    margin-bottom: 4px;
-  }
-
-  .pickerBox p {
-    margin-bottom: 12px;
-  }
-
-  .customerCard {
-    padding: 10px 16px;
-    margin-bottom: 12px;
-  }
-}
-
-/* 12) Container query: page trong drawer / sidebar / modal hẹp
-      → pickerBox full-width, customerCard stack dù viewport rộng.
-      Parent cần container-type: inline-size — thêm ở layout. */
-@container (max-width: 480px) {
-  .pickerBox {
-    margin: 20px auto;
-    padding: 18px 16px;
-  }
-
-  .customerCard {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-}
-
-@container (max-width: 320px) {
-  .pickerBox {
-    margin: 14px auto;
-    padding: 14px 12px;
-    border-radius: 10px;
-  }
-
-  .pickerIcon {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-
-  .pickerBox h3 {
-    font-size: 15px;
-  }
-
-  .pickerBox p {
-    font-size: 12.5px;
-  }
-}
-
-/* 13) Tôn trọng reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  .pickerBox,
-  .customerCard {
-    transition: none !important;
+  .customerBannerRight {
+    width: 100%;
+    justify-content: space-between;
   }
 }

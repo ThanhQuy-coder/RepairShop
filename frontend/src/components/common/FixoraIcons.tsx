@@ -256,3 +256,48 @@ export const MapPin: React.FC<IconProps> = (props) => (
     <circle cx="12" cy="10" r="3" />
   </BaseSvg>
 );
+
+export const Trash2: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    <line x1="10" y1="11" x2="10" y2="17" />
+    <line x1="14" y1="11" x2="14" y2="17" />
+  </BaseSvg>
+);
+
+export const ChevronDown: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <polyline points="6 9 12 15 18 9" />
+  </BaseSvg>
+);
+
+export const ChevronRight: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <polyline points="9 18 15 12 9 6" />
+  </BaseSvg>
+);
+
+export const PanelLeftClose: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <path d="m16 15-3-3 3-3" />
+  </BaseSvg>
+);
+
+export const PanelLeftOpen: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+    <path d="m14 9 3 3-3 3" />
+  </BaseSvg>
+);
+
+export const ChevronsUpDown: React.FC<IconProps> = (props) => (
+  <BaseSvg {...props}>
+    <path d="m7 15 5 5 5-5" />
+    <path d="m7 9 5-5 5 5" />
+  </BaseSvg>
+);
+

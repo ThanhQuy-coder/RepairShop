@@ -452,3 +452,191 @@
     border-top: 1px solid var(--color-border-subtle, #f1f5f9);
   }
 }
+
+
+/* =========================================================
+   ENHANCEMENTS: Customer Tickets KPI, Filter & Progress Bar
+   ========================================================= */
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.kpiCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.16s ease;
+  box-shadow: var(--shadow-xs);
+}
+
+.kpiCard:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  transform: translateY(-1px);
+}
+
+.kpiCardActive {
+  background: linear-gradient(135deg, #eef6f4 0%, #ffffff 100%);
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 2px rgba(24, 90, 78, 0.12);
+}
+
+.kpiCardWarning {
+  border-color: #fde68a;
+  background: #fffdf7;
+}
+
+.kpiCard strong {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-primary, #185a4e);
+  line-height: 1.1;
+}
+
+.kpiCard span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+}
+
+.filterBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 220px;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+}
+
+.searchBox input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13.5px;
+  color: var(--color-text, #1e293b);
+}
+
+.filterPills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  color: var(--color-text-secondary, #475569);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.filterPillActive {
+  background: var(--color-primary, #185a4e);
+  border-color: var(--color-primary, #185a4e);
+  color: #ffffff;
+}
+
+.cardContentWrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.techTag {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-bg-subtle, #f1f5f9);
+  color: var(--color-text-secondary, #475569);
+}
+
+.attentionBanner {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.attentionBanner[data-tone='warning'] {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #b45309;
+}
+
+.attentionBanner[data-tone='success'] {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
+}
+
+.progressSection {
+  margin-top: 10px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--color-text-muted, #64748b);
+  margin-bottom: 4px;
+}
+
+.progressTrack {
+  height: 6px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #185a4e 0%, #228b78 100%);
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

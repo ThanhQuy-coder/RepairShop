@@ -1,8 +1,11 @@
 import { useAuth } from '../hooks/useAuth';
+import AdminLayout from '../layouts/AdminLayout';
 import CustomerLayout from '../layouts/CustomerLayout';
 import StaffLayout from '../layouts/StaffLayout';
 
 export default function TicketDetailRoute() {
   const { role } = useAuth();
-  return role === 'Customer' ? <CustomerLayout /> : <StaffLayout />;
+  if (role === 'Admin') return <AdminLayout />;
+  if (role === 'Customer') return <CustomerLayout />;
+  return <StaffLayout />;
 }

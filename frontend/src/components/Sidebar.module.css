@@ -1,32 +1,86 @@
 .sidebar {
-  width: 264px;
-  min-height: 100vh;
+  width: 268px;
+  height: 100vh;
+  max-height: 100vh;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  flex-shrink: 0;
   background: #173b36;
-  border-right: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   color: #e7efe8;
   display: flex;
   flex-direction: column;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 40;
+}
+
+.sidebarCollapsed {
+  width: 72px;
 }
 
 .brandRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 22px 22px;
-  border-bottom: 1px solid rgba(231, 239, 232, 0.16);
+  gap: 8px;
+  padding: 20px 16px 18px 20px;
+  border-bottom: 1px solid rgba(231, 239, 232, 0.14);
+  flex-shrink: 0;
+}
+
+.sidebarCollapsed .brandRow {
+  justify-content: center;
+  padding: 18px 10px;
 }
 
 .brand {
-  font-weight: 700;
+  font-weight: 800;
   font-size: 16px;
   letter-spacing: 0.02em;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brandActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.collapseToggleBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(231, 239, 232, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #d3e2dc;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.collapseToggleBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
 }
 
 .closeButton {
   display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 20px;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -34,16 +88,79 @@
   display: none;
 }
 
+/* Group Toolbar (Expand/Collapse All) */
+.groupToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 4px;
+  flex-shrink: 0;
+}
+
+.groupToolbarLabel {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #8ab0a4;
+  text-transform: uppercase;
+}
+
+.expandAllBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(231, 239, 232, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: #c6dad2;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.expandAllBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Scrollable Nav container inside Sticky Sidebar */
 .nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  padding: 18px 12px;
-  gap: 5px;
+  padding: 12px 12px 24px;
+  gap: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.nav::-webkit-scrollbar {
+  width: 5px;
+}
+
+.nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
 }
 
 .group {
-  display: grid;
-  gap: 3px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+
+.groupExpanded {
+  background: rgba(0, 0, 0, 0.12);
 }
 
 .groupButton {
@@ -51,82 +168,206 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 11px 14px;
-  border: 0;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
   background: transparent;
-  color: #b8cbc1;
+  color: #c4d6ce;
   font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
   text-align: left;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.groupButton:hover,
-.groupActive {
-  background: rgba(231, 239, 232, 0.1);
+.groupButton:hover {
+  background: rgba(231, 239, 232, 0.09);
   color: #fff;
 }
 
 .groupActive {
+  background: rgba(231, 239, 232, 0.12);
+  border-color: rgba(231, 239, 232, 0.16);
+  color: #fff;
   font-weight: 700;
 }
 
-.chevron {
-  font-size: 18px;
-  line-height: 1;
-  transition: transform 0.15s ease;
+.groupButtonCollapsed {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.collapsedGroupInitial {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.groupLabelWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.groupTitleText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.groupCountBadge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #b8cbc1;
+}
+
+.groupActive .groupCountBadge {
+  background: rgba(197, 107, 69, 0.35);
+  color: #fff;
+}
+
+.chevronBadge {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #b8cbc1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.groupButton:hover .chevronBadge {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
 }
 
 .chevronOpen {
-  transform: rotate(180deg);
+  transform: rotate(0deg);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
 }
 
-.submenu {
+/* Smooth CSS Grid Accordion for Submenu */
+.submenuWrapper {
   display: grid;
-  max-height: 0;
-  padding-left: 10px;
-  overflow: hidden;
+  grid-template-rows: 0fr;
   opacity: 0;
-  transition: max-height 0.2s ease, opacity 0.15s ease;
+  transition: grid-template-rows 0.22s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.18s ease;
 }
 
-.submenuOpen {
-  max-height: 500px;
+.submenuWrapperOpen {
+  grid-template-rows: 1fr;
   opacity: 1;
 }
 
-.submenu > .navItem {
-  min-height: 0;
+.submenu {
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-left: 16px;
+  padding-left: 10px;
+  border-left: 1.5px solid rgba(231, 239, 232, 0.16);
+}
+
+.submenuWrapperOpen .submenu {
+  padding-top: 4px;
+  padding-bottom: 8px;
 }
 
 .navItem {
-  padding: 11px 14px;
-  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 7px;
   color: #b8cbc1;
   text-decoration: none;
-  font-size: var(--font-size-base);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
+
 .navItem:hover {
   background: rgba(231, 239, 232, 0.1);
   color: #fff;
 }
+
+.itemDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(231, 239, 232, 0.35);
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.navItem:hover .itemDot {
+  background: #fff;
+}
+
 .active {
   background: #c56b45;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.active .itemDot {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+.navItemCollapsed {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.navItemCollapsed .itemDot {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e7efe8;
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.active.navItemCollapsed .itemDot {
+  background: transparent;
+  color: #fff;
+  transform: none;
+}
+
+.itemText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .overlay {
   display: none;
 }
 
-/* Responsive: dưới 768px (tablet/mobile theo NFR-019) — Sidebar chuyển thành drawer trượt vào */
+/* Responsive: dưới 768px — Sidebar chuyển thành drawer trượt vào */
 @media (max-width: 768px) {
   .hamburger {
     display: block;
@@ -148,6 +389,8 @@
     position: fixed;
     top: 0;
     left: 0;
+    width: 272px;
+    height: 100vh;
     z-index: 1200;
     transform: translateX(-100%);
     transition: transform 0.2s ease;
@@ -158,8 +401,14 @@
     transform: translateX(0);
   }
 
+  .collapseToggleBtn {
+    display: none;
+  }
+
   .closeButton {
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .overlay {

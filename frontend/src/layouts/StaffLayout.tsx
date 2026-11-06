@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { NAV_BY_ROLE } from '../constants/navigation';
+import AdminLayout from './AdminLayout';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import styles from './Layout.module.css';
@@ -8,7 +9,10 @@ import styles from './Layout.module.css';
 export default function StaffLayout() {
   const { role } = useAuth();
 
-  // role chắc chắn là Receptionist hoặc Technician tại đây — đã được RoleGuard chặn ở tầng route (Task 5.4)
+  if (role === 'Admin') {
+    return <AdminLayout />;
+  }
+
   const navItems = role ? NAV_BY_ROLE[role] : [];
 
   return (
@@ -17,7 +21,7 @@ export default function StaffLayout() {
       <div className={styles.main}>
         <Header />
         <div className={styles.content}>
-          <Outlet /> {/* page con render tại đây, theo đúng cấu trúc routes/pages Tuần 2 */}
+          <Outlet />
         </div>
       </div>
     </div>

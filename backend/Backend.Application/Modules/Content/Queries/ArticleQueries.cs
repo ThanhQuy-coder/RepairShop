@@ -15,7 +15,18 @@ public class GetArticlesQueryHandler : IRequestHandler<GetArticlesQuery, Article
     public async Task<ArticleListResponse> Handle(GetArticlesQuery request, CancellationToken cancellationToken)
     {
         var (items, total) = await _articleRepository.SearchAsync(request.Published, request.Page, request.PageSize);
-        var responses = items.Select(a => new ArticleListItemResponse(a.Id, a.Title, a.ImageUrl, a.CreatedAt)).ToList();
+        var responses = items.Select(a =>
+        {
+            var plain = (a.Content ?? string.Empty).Replace("\r", " ").Replace("\n", " ").Trim();
+            var summary = plain.Length > 160 ? plain[..160].TrimEnd() + "..." : plain;
+            return new ArticleListItemResponse(
+                a.Id,
+                a.Title,
+                a.ImageUrl,
+                a.CreatedAt,
+                a.IsPublished,
+                summary);
+        }).ToList();
         return new ArticleListResponse(responses, total);
     }
 }

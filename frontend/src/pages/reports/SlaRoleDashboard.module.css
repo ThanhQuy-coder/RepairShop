@@ -806,3 +806,340 @@
     margin-top: 0;
   }
 }
+
+
+/* =========================================================
+   ENHANCEMENTS: Staff SLA Overflow Protection & Tech SLA UI
+   ========================================================= */
+
+.staffColumn {
+  display: flex;
+  flex-direction: column;
+  max-height: 540px;
+}
+
+.staffTicketList {
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.staffTicketList::-webkit-scrollbar {
+  width: 6px;
+}
+
+.staffTicketList::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+.staffCustomerCell {
+  max-width: 240px;
+}
+
+.staffCustomerCell strong,
+.staffCustomerCell small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slaCellTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.workflowStepPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.techHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.compliancePill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  font-size: 0.84rem;
+}
+
+.clickableKpi {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clickableKpi:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.techToolbarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.techToolbarHeader .sectionHeading {
+  margin-bottom: 0;
+}
+
+.techFilterRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.techSearchBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 38px;
+  min-width: 240px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.techSearchBox input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.techFilterPills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.techFilterPill {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.techFilterPill:hover {
+  border-color: #176b5d;
+  color: #176b5d;
+}
+
+.techFilterPillActive {
+  background: #176b5d;
+  border-color: #176b5d;
+  color: #ffffff;
+}
+
+.techList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.techCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: all 0.18s ease;
+}
+
+.techCard:hover {
+  border-color: #9ec5bc;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+.techCardOverdue {
+  border-left: 4px solid #dc2626;
+  background: linear-gradient(180deg, #fffafa 0%, #ffffff 45%);
+}
+
+.techCardDueSoon {
+  border-left: 4px solid #f59e0b;
+  background: linear-gradient(180deg, #fffdf7 0%, #ffffff 45%);
+}
+
+.techCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.techCodeLink {
+  color: #176b5d;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.techCodeLink:hover {
+  text-decoration: underline;
+}
+
+.techCustomerName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.techDeviceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.techDevicePill {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.techCountdownBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #eef2f6;
+  border-radius: 8px;
+}
+
+.techTimerLabel {
+  display: block;
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.largeCountdown {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #102a43;
+}
+
+.clockStateTag {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.clockRunning {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.clockPaused {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.techCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.techDueTime {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.subCardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.subTicketRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.subTicketInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.subTicketTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.subTicketMeta {
+  font-size: 0.8rem;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subTicketRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.subCountdown {
+  font-size: 0.82rem;
+  color: #334155;
+}

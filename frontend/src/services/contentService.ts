@@ -115,30 +115,43 @@ export const contentService = {
   },
 
   // Articles
-  getPublicArticles: async () => {
-    const res = await apiClient.get<PagedResponse<ArticleListItem>>('/articles');
+  getPublicArticles: async (params?: { page?: number; pageSize?: number }) => {
+    const res = await apiClient.get<PagedResponse<ArticleListItem>>('/articles', { params });
     return res.data;
   },
-  getAdminArticles: async () => {
-    const res = await apiClient.get<PagedResponse<ArticleListItem>>('/articles/admin');
+  getAdminArticles: async (params?: { page?: number; pageSize?: number }) => {
+    const res = await apiClient.get<PagedResponse<ArticleListItem>>('/articles/admin', { params });
     return res.data;
   },
   getArticleById: async (id: string) => {
     const res = await apiClient.get<ArticleDetail>(`/articles/${id}`);
     return res.data;
   },
-  createArticle: async (payload: { title: string; content: string; imageUrl: string | null }) => {
+  createArticle: async (payload: {
+    title: string;
+    content: string;
+    imageUrl: string | null;
+    isPublished?: boolean;
+  }) => {
     const res = await apiClient.post<ArticleDetail>('/articles', payload);
     return res.data;
   },
   updateArticle: async (
     id: string,
-    payload: { title: string; content: string; imageUrl: string | null }
+    payload: {
+      title: string;
+      content: string;
+      imageUrl: string | null;
+      isPublished?: boolean;
+    }
   ) => {
     const res = await apiClient.put<ArticleDetail>(`/articles/${id}`, payload);
     return res.data;
   },
   toggleArticlePublish: async (id: string, publish: boolean) => {
     await apiClient.patch(`/articles/${id}/publish`, { publish });
+  },
+  deleteArticle: async (id: string) => {
+    await apiClient.delete(`/articles/${id}`);
   },
 };

@@ -56,6 +56,7 @@ import DiagnosisSymptomsAdminPage from '../pages/admin/DiagnosisSymptomsAdminPag
 import WarrantyPackagesAdminPage from '../pages/admin/WarrantyPackagesAdminPage';
 import DeviceCatalogAdminPage from '../pages/admin/DeviceCatalogAdminPage';
 import ServicesAdminPage from '../pages/admin/ServicesAdminPage';
+import ArticlesAdminPage from '../pages/admin/ArticlesAdminPage';
 
 export default function AppRoutes() {
   return (
@@ -137,7 +138,7 @@ export default function AppRoutes() {
             <Route path="admin/tickets/create" element={<CreateTicketPage />} />
             <Route path="admin/quotes" element={<QuotesPage />} />
             <Route path="admin/services" element={<ServicesAdminPage />} />
-            <Route path="admin/articles" element={<ArticlesPage />} />
+            <Route path="admin/articles" element={<ArticlesAdminPage />} />
             <Route path="admin/inventory" element={<PartsListPage />} />
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />
             <Route path="admin/reports/revenue" element={<RevenueReportPage />} />

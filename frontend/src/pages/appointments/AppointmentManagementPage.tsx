@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { appointmentService, type AppointmentResponse } from '../../services/appointmentService';
 import {
@@ -14,6 +14,7 @@ import { extractApiError } from '../../utils/apiError';
 import type { AppointmentIntakeData } from '../../store/ticketIntakeStore';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../hooks/useToast';
+import styles from './AppointmentManagementPage.module.css';
 
 const statusLabels: Record<string, string> = {
   Pending: 'Chờ xác nhận',
@@ -22,8 +23,11 @@ const statusLabels: Record<string, string> = {
   Cancelled: 'Đã hủy',
   Arrived: 'Khách đã đến',
   Complete: 'Hoàn thành',
+  Completed: 'Hoàn thành',
+  ConvertedToTicket: 'Đã tạo phiếu',
   NoShow: 'Không đến',
 };
+
 const typeLabels: Record<string, string> = {
   Repair: 'Sửa chữa',
   Pickup: 'Nhận thiết bị',
@@ -45,6 +49,9 @@ export default function AppointmentManagementPage() {
     null
   );
   const [isCompleting, setIsCompleting] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [customerFilter, setCustomerFilter] = useState<'all' | 'account' | 'guest'>('all');
   const [processingWarrantyId, setProcessingWarrantyId] = useState<string | null>(null);
@@ -69,7 +76,11 @@ export default function AppointmentManagementPage() {
         createdAt: detail.createdAt,
         lookupToken: detail.lookupToken,
         deviceType: detail.deviceType as
-          'Phone' | 'Laptop' | 'Electronics' | 'Tablet' | 'Smartwatch',
+          | 'Phone'
+          | 'Laptop'
+          | 'Electronics'
+          | 'Tablet'
+          | 'Smartwatch',
         brand: detail.brand,
         model: detail.model,
         serialNumber: detail.serialNumber,
@@ -78,8 +89,8 @@ export default function AppointmentManagementPage() {
       navigate('/tickets/create', {
         state: { appointment },
       });
-    } catch (error) {
-      console.error('Không thể lấy chi tiết lịch hẹn:', error);
+    } catch (err) {
+      showError(extractApiError(err).message);
     }
   };
 
@@ -101,15 +112,16 @@ export default function AppointmentManagementPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [typeFilter, customerFilter]);
+  }, [searchQuery, statusFilter, typeFilter, customerFilter]);
 
   const transition = async (
     id: string,
-    rejectionReason: string,
+    reason: string,
     action: 'confirm' | 'reject' | 'noShow' | 'markCompleted' | 'markArrived'
   ) => {
     try {
-      await appointmentService[action](id, rejectionReason);
+      await appointmentService[action](id, reason);
+      showSuccess('Cập nhật trạng thái lịch hẹn thành công.');
       await load();
     } catch (err) {
       setError(extractApiError(err).message);
@@ -163,22 +175,60 @@ export default function AppointmentManagementPage() {
     }
   };
 
+  const statusCounts = useMemo(() => {
+    return {
+      all: appointments.length,
+      Pending: appointments.filter((a) => a.status === 'Pending').length,
+      Confirmed: appointments.filter((a) => a.status === 'Confirmed').length,
+      Arrived: appointments.filter((a) => a.status === 'Arrived').length,
+      Completed: appointments.filter(
+        (a) =>
+          a.status === 'Completed' ||
+          a.status === 'Complete' ||
+          a.status === 'ConvertedToTicket'
+      ).length,
+    };
+  }, [appointments]);
+
   const columns: TableColumn<AppointmentResponse>[] = [
-    { key: 'date', header: 'Ngày hẹn', render: (a) => a.appointmentDate },
+    {
+      key: 'date',
+      header: 'Ngày & Khung giờ',
+      render: (a) => (
+        <div className={styles.dateCell}>
+          <span className={styles.dateMain}>
+            📅 {new Date(a.appointmentDate).toLocaleDateString('vi-VN')}
+          </span>
+          <span className={styles.slotSub}>
+            🕒 {a.slotStart} - {a.slotEnd}
+          </span>
+        </div>
+      ),
+    },
     {
       key: 'type',
       header: 'Loại hẹn',
-      render: (a) => typeLabels[a.type] ?? a.type,
+      render: (a) => (
+        <span className={styles.typeTag} data-type={a.type}>
+          {typeLabels[a.type] ?? a.type}
+        </span>
+      ),
     },
     {
       key: 'name',
       header: 'Khách hàng',
       render: (a) => (
-        <>
+        <div className={styles.customerCell}>
           <strong>{a.fullName}</strong>
-          <br />
-          <small>{a.phone} · {a.customerId ? 'Có tài khoản' : 'Guest'}</small>
-        </>
+          <div className={styles.customerSub}>
+            <span>📞 {a.phone}</span>
+            {a.customerId ? (
+              <span className={styles.accountPill}>Thành viên</span>
+            ) : (
+              <span className={styles.guestPill}>Khách vãng lai</span>
+            )}
+          </div>
+        </div>
       ),
     },
     {
@@ -189,9 +239,9 @@ export default function AppointmentManagementPage() {
           variant={
             a.status === 'Pending'
               ? 'warning'
-              : a.status === 'Rejected'
-                ? 'danger'
-                : a.status === 'NoShow'
+              : a.status === 'Confirmed' || a.status === 'Arrived'
+                ? 'info'
+                : a.status === 'Rejected' || a.status === 'NoShow' || a.status === 'Cancelled'
                   ? 'danger'
                   : 'success'
           }
@@ -202,33 +252,33 @@ export default function AppointmentManagementPage() {
     },
     {
       key: 'actions',
-      header: 'Thao tác',
+      header: 'Thao tác điều phối',
       render: (a) => (
         <div
-          style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}
+          className={styles.actionBtnGroup}
           onClick={(event) => event.stopPropagation()}
         >
           {a.status === 'Pending' && (
             <>
               <Button size="sm" onClick={() => void transition(a.id, '', 'confirm')}>
-                Xác nhận
+                ✓ Xác nhận
               </Button>
               <Button size="sm" variant="danger" onClick={() => handleOpenRejectModal(a)}>
-                Từ chối
+                ✕ Từ chối
               </Button>
             </>
           )}
           {a.status === 'Confirmed' && (
             <>
-              <Button size="sm" onClick={() => transition(a.id, '', 'markArrived')}>
-                Khách đã đến
+              <Button size="sm" onClick={() => void transition(a.id, '', 'markArrived')}>
+                📍 Khách đã đến
               </Button>
               <Button
                 size="sm"
                 variant="secondary"
-                onClick={() => transition(a.id, 'khách không đến', 'noShow')}
+                onClick={() => void transition(a.id, 'Khách không đến theo lịch hẹn', 'noShow')}
               >
-                Không đến
+                Vắng mặt
               </Button>
             </>
           )}
@@ -242,74 +292,206 @@ export default function AppointmentManagementPage() {
                     disabled={processingWarrantyId === a.id}
                     isLoading={processingWarrantyId === a.id}
                   >
-                    Tiếp nhận bảo hành
+                    🛡️ Tiếp nhận BH
                   </Button>
                 ) : (
                   <>
                     <Button size="sm" onClick={() => void handleCreateTicket(a)}>
-                      Chuyển thành ticket
+                      + Tạo phiếu sửa
                     </Button>
-                    <Button size="sm" variant="danger" onClick={() => handleOpenCompleteModal(a)}>
-                      Hoàn thành
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handleOpenCompleteModal(a)}
+                    >
+                      ✓ Hoàn thành
                     </Button>
                   </>
                 )}
               </>
-            )}{' '}
+            )}
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => navigate(`/staff/appointments/${a.id}`)}
+          >
+            Chi tiết →
+          </Button>
         </div>
       ),
     },
   ];
 
-  const filteredAppointments = appointments.filter((a) => {
-    const matchesType = !typeFilter || a.type === typeFilter;
-    const matchesCustomer = customerFilter === 'all' ||
-      (customerFilter === 'account' ? a.customerId !== null : a.customerId === null);
-    return matchesType && matchesCustomer;
-  });
+  const filteredAppointments = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return appointments.filter((a) => {
+      if (statusFilter) {
+        if (statusFilter === 'CompletedGroup') {
+          if (
+            a.status !== 'Completed' &&
+            a.status !== 'Complete' &&
+            a.status !== 'ConvertedToTicket'
+          ) {
+            return false;
+          }
+        } else if (a.status !== statusFilter) {
+          return false;
+        }
+      }
+      if (typeFilter && a.type !== typeFilter) return false;
+      if (customerFilter !== 'all') {
+        const hasAccount = a.customerId !== null;
+        if (customerFilter === 'account' && !hasAccount) return false;
+        if (customerFilter === 'guest' && hasAccount) return false;
+      }
+      if (q) {
+        const matchName = a.fullName.toLowerCase().includes(q);
+        const matchPhone = a.phone.toLowerCase().includes(q);
+        return matchName || matchPhone;
+      }
+      return true;
+    });
+  }, [appointments, searchQuery, statusFilter, typeFilter, customerFilter]);
+
   const pagedAppointments = filteredAppointments.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-      <div style={{ marginBottom: 24 }}>
-        <span style={{ color: '#64748b', fontSize: 12, letterSpacing: 1 }}>TIẾP NHẬN DỊCH VỤ</span>
-        <h1>Lịch hẹn khách hàng</h1>
-        <p style={{ color: '#64748b' }}>
-          Xác nhận, từ chối và chuyển lịch hẹn đã xác nhận thành phiếu sửa chữa.
-        </p>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div>
+          <span className={styles.eyebrow}>ĐIỀU PHỐI LỊCH HẸN — FIXORA</span>
+          <h1 className={styles.title}>Quản lý Lịch hẹn Khách hàng</h1>
+          <p className={styles.subtitle}>
+            Xác nhận lịch đặt trước, check-in khi khách đến cửa hàng và chuyển đổi nhanh thành phiếu sửa chữa.
+          </p>
+        </div>
+        <div className={styles.headerActions}>
+          <Button variant="secondary" size="md" onClick={() => void load()}>
+            ↻ Làm mới
+          </Button>
+          <Button size="md" onClick={() => navigate('/tickets/create')}>
+            + Tiếp nhận trực tiếp
+          </Button>
+        </div>
       </div>
+
+      {/* Thẻ KPI lọc nhanh theo trạng thái lịch hẹn */}
+      <div className={styles.statusTabs}>
+        <button
+          type="button"
+          className={`${styles.statusTab} ${statusFilter === '' ? styles.statusTabActive : ''}`}
+          onClick={() => setStatusFilter('')}
+        >
+          <strong>{statusCounts.all}</strong>
+          <span>Tất cả lịch hẹn</span>
+        </button>
+        <button
+          type="button"
+          className={`${styles.statusTab} ${
+            statusFilter === 'Pending' ? styles.statusTabActive : ''
+          }`}
+          onClick={() => setStatusFilter('Pending')}
+        >
+          <strong>{statusCounts.Pending}</strong>
+          <span>Chờ xác nhận</span>
+        </button>
+        <button
+          type="button"
+          className={`${styles.statusTab} ${
+            statusFilter === 'Confirmed' ? styles.statusTabActive : ''
+          }`}
+          onClick={() => setStatusFilter('Confirmed')}
+        >
+          <strong>{statusCounts.Confirmed}</strong>
+          <span>Đã xác nhận</span>
+        </button>
+        <button
+          type="button"
+          className={`${styles.statusTab} ${
+            statusFilter === 'Arrived' ? styles.statusTabActive : ''
+          }`}
+          onClick={() => setStatusFilter('Arrived')}
+        >
+          <strong>{statusCounts.Arrived}</strong>
+          <span>Khách đã đến</span>
+        </button>
+        <button
+          type="button"
+          className={`${styles.statusTab} ${
+            statusFilter === 'CompletedGroup' ? styles.statusTabActive : ''
+          }`}
+          onClick={() => setStatusFilter('CompletedGroup')}
+        >
+          <strong>{statusCounts.Completed}</strong>
+          <span>Đã hoàn thành / Tạo phiếu</span>
+        </button>
+      </div>
+
       {error && <ErrorMessage message={error} onRetry={() => void load()} />}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-        <select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          aria-label="Lọc loại cuộc hẹn"
-        >
-          <option value="">Tất cả loại hẹn</option>
-          <option value="Repair">Sửa chữa</option>
-          <option value="Pickup">Nhận thiết bị</option>
-          <option value="WarrantyRevisit">Bảo hành lại</option>
-        </select>
-        <select
-          value={customerFilter}
-          onChange={(e) => setCustomerFilter(e.target.value as 'all' | 'account' | 'guest')}
-          aria-label="Lọc khách hàng"
-          style={{ marginLeft: 8 }}
-        >
-          <option value="all">Tất cả khách hàng</option>
-          <option value="account">Có tài khoản</option>
-          <option value="guest">Guest</option>
-        </select>
+
+      <div className={styles.filterCard}>
+        <div className={styles.searchWrap}>
+          <span>🔎</span>
+          <input
+            type="text"
+            placeholder="Tìm theo tên khách hàng hoặc số điện thoại..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className={styles.selectGroup}>
+          <select
+            className={styles.filterSelect}
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            aria-label="Lọc loại cuộc hẹn"
+          >
+            <option value="">Tất cả loại hẹn</option>
+            <option value="Repair">Sửa chữa</option>
+            <option value="Pickup">Nhận thiết bị</option>
+            <option value="WarrantyRevisit">Bảo hành lại</option>
+          </select>
+          <select
+            className={styles.filterSelect}
+            value={customerFilter}
+            onChange={(e) => setCustomerFilter(e.target.value as 'all' | 'account' | 'guest')}
+            aria-label="Lọc khách hàng"
+          >
+            <option value="all">Tất cả khách hàng</option>
+            <option value="account">Khách có tài khoản</option>
+            <option value="guest">Khách vãng lai (Guest)</option>
+          </select>
+          {(searchQuery || statusFilter || typeFilter || customerFilter !== 'all') && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setSearchQuery('');
+                setStatusFilter('');
+                setTypeFilter('');
+                setCustomerFilter('all');
+              }}
+            >
+              Xóa lọc
+            </Button>
+          )}
+        </div>
       </div>
+
       <Table
         columns={columns}
         data={pagedAppointments}
         keyExtractor={(a) => a.id}
         isLoading={isLoading}
-        emptyMessage="Chưa có lịch hẹn."
+        emptyMessage="Không có lịch hẹn nào phù hợp với bộ lọc hiện tại."
         onRowClick={(a) => navigate(`/staff/appointments/${a.id}`)}
       />
-      <Pagination page={page} pageSize={PAGE_SIZE} total={filteredAppointments.length} onPageChange={setPage} />
+      <Pagination
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={filteredAppointments.length}
+        onPageChange={setPage}
+      />
 
       {/* Modal nhập lý do từ chối */}
       <Modal
@@ -319,35 +501,24 @@ export default function AppointmentManagementPage() {
       >
         <p>Bạn có chắc chắn muốn từ chối lịch hẹn này? Vui lòng nhập lý do bên dưới.</p>
 
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', marginBottom: 6, fontWeight: 500 }}>
-            Lý do từ chối <span style={{ color: '#ef4444' }}>*</span>
+        <div className={styles.modalField}>
+          <label className={styles.modalLabel}>
+            Lý do từ chối <span className={styles.requiredMark}>*</span>
           </label>
           <textarea
             rows={3}
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              borderRadius: 6,
-              border: `1px solid ${reasonError ? '#ef4444' : '#cbd5e1'}`,
-              outline: 'none',
-              resize: 'vertical',
-            }}
+            className={`${styles.modalTextarea} ${reasonError ? styles.modalTextareaError : ''}`}
             placeholder="Nhập lý do từ chối (vd: Hết linh kiện, Kỹ thuật viên bận...)"
             value={rejectionReason}
             onChange={(e) => {
               setRejectionReason(e.target.value);
-              if (reasonError) setReasonError(null); // Clear error khi gõ
+              if (reasonError) setReasonError(null);
             }}
           />
-          {reasonError && (
-            <span style={{ color: '#ef4444', fontSize: 13, marginTop: 4, display: 'block' }}>
-              {reasonError}
-            </span>
-          )}
+          {reasonError && <span className={styles.fieldError}>{reasonError}</span>}
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+        <div className={styles.modalFooter}>
           <Button variant="secondary" onClick={() => setRejectingAppointment(null)}>
             Hủy
           </Button>
@@ -370,29 +541,23 @@ export default function AppointmentManagementPage() {
           Bạn có chắc chắn muốn đánh dấu lịch hẹn này là <strong>Hoàn thành</strong>?
         </p>
         {completingAppointment && (
-          <div
-            style={{
-              background: '#f8fafc',
-              border: '1px solid #e2e8f0',
-              borderRadius: 6,
-              padding: '10px 12px',
-              marginTop: 8,
-              fontSize: 14,
-              color: '#334155',
-            }}
-          >
+          <div className={styles.summaryBox}>
             <div>
               Khách hàng: <strong>{completingAppointment.fullName}</strong>
             </div>
             <div>Số điện thoại: {completingAppointment.phone}</div>
-            <div>Ngày hẹn: {completingAppointment.appointmentDate}</div>
+            <div>
+              Ngày hẹn:{' '}
+              {new Date(completingAppointment.appointmentDate).toLocaleDateString('vi-VN')} (
+              {completingAppointment.slotStart} - {completingAppointment.slotEnd})
+            </div>
           </div>
         )}
-        <p style={{ color: '#64748b', fontSize: 13, marginTop: 12 }}>
-          Sau khi hoàn thành, lịch hẹn sẽ không thể thay đổi trạng thái.
+        <p className={styles.modalHint}>
+          Sau khi hoàn thành, lịch hẹn sẽ được lưu vào lịch sử phục vụ.
         </p>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 16 }}>
+        <div className={styles.modalFooter}>
           <Button
             variant="secondary"
             onClick={() => setCompletingAppointment(null)}

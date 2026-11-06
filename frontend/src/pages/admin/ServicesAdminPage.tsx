@@ -33,10 +33,18 @@ import { extractApiError } from '../../utils/apiError';
 import { useToast } from '../../hooks/useToast';
 import styles from './ServicesAdminPage.module.css';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 12;
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5MB
+
+const DEVICE_ICONS: Record<string, string> = {
+  Phone: '📱',
+  Laptop: '💻',
+  Tablet: '📟',
+  Smartwatch: '⌚',
+  Electronics: '🔌',
+};
 
 export default function ServicesAdminPage() {
   const { showSuccess, showError } = useToast();
@@ -49,6 +57,7 @@ export default function ServicesAdminPage() {
   const [search, setSearch] = useState('');
   const [filterDeviceType, setFilterDeviceType] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
   const [page, setPage] = useState(1);
 
   // Modal state
@@ -90,6 +99,23 @@ export default function ServicesAdminPage() {
     };
   }, [filePreviewUrl]);
 
+  const stats = useMemo(() => {
+    const activeCount = services.filter((s) => s.isActive).length;
+    const inactiveCount = services.length - activeCount;
+    const ratedServices = services.filter((s) => (s.reviewCount ?? 0) > 0);
+    const totalReviews = services.reduce((acc, s) => acc + (s.reviewCount ?? 0), 0);
+    const avgRating =
+      ratedServices.length > 0
+        ? (
+            ratedServices.reduce(
+              (acc, s) => acc + (s.averageRating ?? 0) * (s.reviewCount ?? 0),
+              0
+            ) / Math.max(1, totalReviews)
+          ).toFixed(1)
+        : '—';
+    return { total: services.length, activeCount, inactiveCount, totalReviews, avgRating };
+  }, [services]);
+
   const filteredServices = useMemo(() => {
     const q = search.trim().toLowerCase();
     return services.filter((s) => {
@@ -118,7 +144,7 @@ export default function ServicesAdminPage() {
   const openCreateModal = () => {
     setEditingService(null);
     setName('');
-    setDeviceType('Phone');
+    setDeviceType(filterDeviceType || 'Phone');
     setBasePrice('');
     setDescription('');
     setImageUrlInput('');
@@ -270,15 +296,111 @@ export default function ServicesAdminPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <div>
-          <span className={styles.eyebrow}>Fixora Service Catalog</span>
+          <span className={styles.eyebrow}>DANH MỤC DỊCH VỤ — FIXORA</span>
           <h1 className={styles.title}>Quản lý Dịch vụ Sửa chữa</h1>
           <p className={styles.subtitle}>
-            Quản lý danh mục dịch vụ, bảng giá tham khảo, phân loại thiết bị và hình ảnh hiển thị trên trang chủ Fixora.
+            Quản lý danh mục dịch vụ, bảng giá tham khảo, phân loại thiết bị và hình ảnh hiển thị trên website Fixora.
           </p>
         </div>
         <Button onClick={openCreateModal}>
           <Plus size={16} /> Thêm dịch vụ mới
         </Button>
+      </div>
+
+      {/* 4 Thẻ KPI tổng quan danh mục dịch vụ */}
+      <div className={styles.kpiGrid}>
+        <div
+          className={`${styles.kpiCard} ${filterStatus === '' ? styles.kpiCardActive : ''}`}
+          onClick={() => {
+            setFilterStatus('');
+            setPage(1);
+          }}
+        >
+          <span className={styles.kpiIcon}>🛠️</span>
+          <div>
+            <strong>{stats.total}</strong>
+            <span>Tổng dịch vụ hệ thống</span>
+          </div>
+        </div>
+        <div
+          className={`${styles.kpiCard} ${
+            filterStatus === 'active' ? styles.kpiCardActive : ''
+          }`}
+          onClick={() => {
+            setFilterStatus(filterStatus === 'active' ? '' : 'active');
+            setPage(1);
+          }}
+        >
+          <span className={styles.kpiIcon}>👁️</span>
+          <div>
+            <strong>{stats.activeCount}</strong>
+            <span>Đang hiển thị trên web</span>
+          </div>
+        </div>
+        <div
+          className={`${styles.kpiCard} ${
+            filterStatus === 'inactive' ? styles.kpiCardActive : ''
+          }`}
+          onClick={() => {
+            setFilterStatus(filterStatus === 'inactive' ? '' : 'inactive');
+            setPage(1);
+          }}
+        >
+          <span className={styles.kpiIcon}>⏸️</span>
+          <div>
+            <strong>{stats.inactiveCount}</strong>
+            <span>Đang tạm ẩn</span>
+          </div>
+        </div>
+        <div className={styles.kpiCard}>
+          <span className={styles.kpiIcon}>⭐</span>
+          <div>
+            <strong>
+              {stats.avgRating} <small>({stats.totalReviews} ĐG)</small>
+            </strong>
+            <span>Đánh giá dịch vụ TB</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Thanh pill chọn nhanh theo loại thiết bị */}
+      <div className={styles.deviceTabsBar}>
+        <button
+          type="button"
+          className={`${styles.deviceTab} ${
+            filterDeviceType === '' ? styles.deviceTabActive : ''
+          }`}
+          onClick={() => {
+            setFilterDeviceType('');
+            setPage(1);
+          }}
+        >
+          <span>Tất cả thiết bị</span>
+          <strong>{services.length}</strong>
+        </button>
+        {DEVICE_TYPE_OPTIONS.map((opt) => {
+          const count = services.filter(
+            (s) => (s.deviceType || '').toLowerCase() === opt.value.toLowerCase()
+          ).length;
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              className={`${styles.deviceTab} ${
+                filterDeviceType === opt.value ? styles.deviceTabActive : ''
+              }`}
+              onClick={() => {
+                setFilterDeviceType(filterDeviceType === opt.value ? '' : opt.value);
+                setPage(1);
+              }}
+            >
+              <span>
+                {DEVICE_ICONS[opt.value] ?? '📱'} {DEVICE_TYPE_LABELS[opt.value]}
+              </span>
+              <strong>{count}</strong>
+            </button>
+          );
+        })}
       </div>
 
       <div className={styles.toolbarCard}>
@@ -288,7 +410,7 @@ export default function ServicesAdminPage() {
             <input
               type="text"
               className={styles.searchInput}
-              placeholder="Tìm theo tên dịch vụ hoặc mô tả..."
+              placeholder="Tìm nhanh theo tên dịch vụ hoặc nội dung mô tả..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -297,17 +419,6 @@ export default function ServicesAdminPage() {
             />
           </div>
           <div className={styles.filters}>
-            <Select
-              value={filterDeviceType}
-              onChange={(e) => {
-                setFilterDeviceType(e.target.value);
-                setPage(1);
-              }}
-              options={[
-                { value: '', label: 'Tất cả loại thiết bị' },
-                ...DEVICE_TYPE_OPTIONS,
-              ]}
-            />
             <Select
               value={filterStatus}
               onChange={(e) => {
@@ -320,6 +431,22 @@ export default function ServicesAdminPage() {
                 { value: 'inactive', label: 'Đang tạm ẩn' },
               ]}
             />
+            <div className={styles.viewToggle}>
+              <button
+                type="button"
+                className={`${styles.viewBtn} ${viewMode === 'table' ? styles.viewBtnActive : ''}`}
+                onClick={() => setViewMode('table')}
+              >
+                ☰ Bảng
+              </button>
+              <button
+                type="button"
+                className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewBtnActive : ''}`}
+                onClick={() => setViewMode('grid')}
+              >
+                ▦ Thẻ ảnh
+              </button>
+            </div>
           </div>
         </div>
 
@@ -331,6 +458,85 @@ export default function ServicesAdminPage() {
           </div>
         ) : paginatedServices.length === 0 ? (
           <EmptyState message="Chưa tìm thấy dịch vụ phù hợp. Thử thay đổi bộ lọc hoặc thêm dịch vụ mới." />
+        ) : viewMode === 'grid' ? (
+          <>
+            <div className={styles.serviceCardGrid}>
+              {paginatedServices.map((service) => (
+                <article key={service.id} className={styles.serviceCard}>
+                  <div className={styles.cardThumbWrap}>
+                    <img
+                      src={resolveServiceImageUrl(service.imageUrl, service.deviceType)}
+                      alt={service.name}
+                      className={styles.cardThumbImg}
+                      onError={handleServiceImageError}
+                    />
+                    <div className={styles.cardTopBadges}>
+                      <Badge variant="info">
+                        {service.deviceType
+                          ? DEVICE_TYPE_LABELS[service.deviceType] || service.deviceType
+                          : 'Đa thiết bị'}
+                      </Badge>
+                      <Badge variant={service.isActive ? 'success' : 'default'}>
+                        {service.isActive ? 'Hiển thị' : 'Tạm ẩn'}
+                      </Badge>
+                    </div>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.cardTitle}>{service.name}</h3>
+                    <p className={styles.cardDesc}>{service.description}</p>
+                    <div className={styles.cardPriceRow}>
+                      <span className={styles.priceText}>
+                        {service.basePrice !== null
+                          ? `${service.basePrice.toLocaleString('vi-VN')}đ`
+                          : 'Liên hệ báo giá'}
+                      </span>
+                      {service.reviewCount && service.reviewCount > 0 ? (
+                        <div className={styles.ratingBadge}>
+                          <Star size={14} className={styles.starIcon} />
+                          <strong>{(service.averageRating ?? 0).toFixed(1)}</strong>
+                          <span>({service.reviewCount})</span>
+                        </div>
+                      ) : (
+                        <span className={styles.noRating}>Chưa có ĐG</span>
+                      )}
+                    </div>
+                    <div className={styles.cardFooterActions}>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => openEditModal(service)}
+                      >
+                        <Edit3 size={14} /> Chỉnh sửa
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleToggleStatus(service)}
+                      >
+                        {service.isActive ? (
+                          <>
+                            <EyeOff size={14} /> Ẩn
+                          </>
+                        ) : (
+                          <>
+                            <Eye size={14} /> Hiện
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className={styles.paginationWrap}>
+              <Pagination
+                page={page}
+                pageSize={PAGE_SIZE}
+                total={filteredServices.length}
+                onPageChange={setPage}
+              />
+            </div>
+          </>
         ) : (
           <>
             <div className={styles.tableWrapper}>
@@ -338,7 +544,7 @@ export default function ServicesAdminPage() {
                 <thead>
                   <tr>
                     <th>Hình ảnh</th>
-                    <th>Tên dịch vụ & Mô tả</th>
+                    <th>Tên dịch vụ &amp; Mô tả</th>
                     <th>Thiết bị</th>
                     <th>Giá tham khảo</th>
                     <th>Đánh giá</th>
