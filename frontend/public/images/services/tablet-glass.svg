@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8F7F2"/>
+      <stop offset="100%" stop-color="#E6F2EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <circle cx="560" cy="64" r="110" fill="#185A4E" fill-opacity="0.06"/>
+  <circle cx="84" cy="340" r="120" fill="#C56B45" fill-opacity="0.08"/>
+  <rect x="24" y="22" width="148" height="28" rx="14" fill="#185A4E" fill-opacity="0.1"/>
+  <text x="98" y="40" text-anchor="middle" fill="#185A4E" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800" letter-spacing="1.5">TOUCH GLASS</text>
+  <text x="612" y="40" text-anchor="end" fill="#185A4E" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="800" letter-spacing="2">FIXORA</text>
+  
+      <rect x="236" y="64" width="144" height="156" rx="16" fill="#FFFFFF" stroke="#185A4E" stroke-width="4"/>
+      <rect x="260" y="52" width="144" height="156" rx="16" fill="#EEF6F4" fill-opacity="0.86" stroke="#C56B45" stroke-width="3" stroke-dasharray="7 5"/>
+      <circle cx="332" cy="130" r="24" fill="#185A4E" fill-opacity="0.12"/>
+      <path d="M322 130L329 137L343 123" stroke="#185A4E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    
+  <text x="320" y="294" text-anchor="middle" fill="#1E293B" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800">Ép Kính Cảm Ứng Tablet</text>
+  <text x="320" y="324" text-anchor="middle" fill="#475569" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">Trong Suốt Tuyệt Đối • Giữ Màn Hình Gốc</text>
+</svg>

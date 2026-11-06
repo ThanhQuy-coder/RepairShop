@@ -4,15 +4,10 @@ import { useAuth } from '../../hooks/useAuth';
 import { aiAdvisoryService } from '../../services/aiAdvisoryService';
 import { extractApiError } from '../../utils/apiError';
 import type { AIAdviceResponse } from '../../types/aiAdvisory.types';
-import type { DeviceType } from '../../types/device.types';
+import { DEVICE_TYPE_OPTIONS, type DeviceType } from '../../types/device.types';
+import { useDeviceCatalogCascade } from '../../hooks/useDeviceCatalogCascade';
 import { Button, Input, Select, ErrorMessage } from '../../components/common';
 import styles from './AIEstimatePage.module.css';
-
-const DEVICE_TYPE_OPTIONS = [
-  { value: 'Phone', label: 'Điện thoại' },
-  { value: 'Laptop', label: 'Laptop' },
-  { value: 'Electronics', label: 'Thiết bị điện tử khác' },
-];
 
 const DRAFT_STORAGE_KEY = 'ai-estimate-draft';
 
@@ -21,12 +16,21 @@ export default function AIEstimatePage() {
   const { isAuthenticated, role } = useAuth();
 
   const [deviceType, setDeviceType] = useState<DeviceType>('Phone');
+  const [brandId, setBrandId] = useState('');
+  const [deviceModelId, setDeviceModelId] = useState('');
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [issueDescription, setIssueDescription] = useState('');
   const [advice, setAdvice] = useState<AIAdviceResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const {
+    brands,
+    models,
+    loadingBrands: isLoadingBrands,
+    loadingModels: isLoadingModels,
+  } = useDeviceCatalogCascade(deviceType, brandId);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -53,13 +57,37 @@ export default function AIEstimatePage() {
     }
   }, [isAuthenticated]);
 
-  const canUseAI = isAuthenticated && (role === 'Customer' || role === 'Receptionist');
+  const canUseAI = isAuthenticated && (role === 'Customer' || role === 'Receptionist' || role === 'Admin');
+
+  const handleDeviceTypeChange = (nextType: DeviceType) => {
+    setDeviceType(nextType);
+    setBrandId('');
+    setDeviceModelId('');
+    setBrand('');
+    setModel('');
+  };
+
+  const handleBrandSelect = (nextBrandId: string) => {
+    setBrandId(nextBrandId);
+    setDeviceModelId('');
+    const found = brands.find((b) => b.id === nextBrandId);
+    setBrand(found ? found.name : '');
+    setModel('');
+  };
+
+  const handleModelSelect = (nextModelId: string) => {
+    setDeviceModelId(nextModelId);
+    const found = models.find((m) => m.id === nextModelId);
+    if (found) {
+      setModel(found.modelName);
+    }
+  };
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     if (!brand.trim() || !model.trim() || !issueDescription.trim()) {
-      setErrorMessage('Vui lòng điền đầy đủ thông tin thiết bị và mô tả tình trạng.');
+      setErrorMessage('Vui lòng chọn hoặc điền đầy đủ thông tin thiết bị và mô tả tình trạng.');
       return;
     }
 
@@ -95,42 +123,75 @@ export default function AIEstimatePage() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.intro}>
-        <h2>Tư vấn giá sửa chữa bằng AI</h2>
-        <p>Mô tả thiết bị và tình trạng để nhận gợi ý trước khi mang máy đến cửa hàng.</p>
+        <h2>Tư vấn & Dự toán chi phí sửa chữa bằng AI — Fixora</h2>
+        <p>Chọn dòng thiết bị và mô tả triệu chứng để nhận gợi ý dịch vụ cùng chi phí tham khảo trước khi mang máy đến Fixora.</p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <Select
-          label="Loại thiết bị"
+          label="1. Loại thiết bị"
           options={DEVICE_TYPE_OPTIONS}
           value={deviceType}
-          onChange={(event) => setDeviceType(event.target.value as DeviceType)}
+          onChange={(event) => handleDeviceTypeChange(event.target.value as DeviceType)}
         />
 
         <div className={styles.row}>
+          <Select
+            label="2. Hãng sản xuất"
+            value={brandId}
+            onChange={(event) => handleBrandSelect(event.target.value)}
+            disabled={isLoadingBrands}
+            options={[
+              {
+                value: '',
+                label: isLoadingBrands ? 'Đang tải hãng...' : '-- Chọn hãng sản xuất --',
+              },
+              ...brands.map((b) => ({ value: b.id, label: b.name })),
+            ]}
+          />
+          <Select
+            label="3. Dòng máy (Model)"
+            value={deviceModelId}
+            onChange={(event) => handleModelSelect(event.target.value)}
+            disabled={!brandId || isLoadingModels}
+            options={[
+              {
+                value: '',
+                label: !brandId
+                  ? '-- Chọn hãng trước --'
+                  : isLoadingModels
+                  ? 'Đang tải dòng máy...'
+                  : '-- Chọn dòng máy --',
+              },
+              ...models.map((m) => ({ value: m.id, label: m.modelName })),
+            ]}
+          />
+        </div>
+
+        <div className={styles.row}>
           <Input
-            label="Hãng"
+            label="Hoặc nhập tên Hãng"
             value={brand}
             onChange={(event) => setBrand(event.target.value)}
-            placeholder="VD: iPhone"
+            placeholder="VD: Apple, Samsung, Dell..."
           />
           <Input
-            label="Model"
+            label="Hoặc nhập tên Dòng máy"
             value={model}
             onChange={(event) => setModel(event.target.value)}
-            placeholder="VD: 13"
+            placeholder="VD: iPhone 15 Pro Max, MacBook Air M2..."
           />
         </div>
 
         <div className={styles.field}>
-          <label className={styles.label}>Mô tả tình trạng</label>
+          <label className={styles.label}>Mô tả tình trạng lỗi</label>
           <textarea
             className={styles.textarea}
             rows={4}
             maxLength={500}
             value={issueDescription}
             onChange={(event) => setIssueDescription(event.target.value)}
-            placeholder="VD: Pin tụt nhanh, máy nóng khi sạc..."
+            placeholder="VD: Màn hình bị sọc xanh, pin tụt nhanh và nóng máy khi sạc..."
           />
           <span className={styles.charCount}>{issueDescription.length}/500</span>
         </div>
@@ -138,7 +199,7 @@ export default function AIEstimatePage() {
         {errorMessage && <ErrorMessage message={errorMessage} />}
 
         <Button type="submit" isLoading={isLoading} className={styles.submitButton}>
-          {canUseAI ? '🤖 Nhận tư vấn AI' : 'Đăng nhập để xem gợi ý'}
+          {canUseAI ? '🤖 Nhận tư vấn AI từ Fixora' : 'Đăng nhập để xem gợi ý'}
         </Button>
 
         {!isAuthenticated && (
@@ -151,7 +212,7 @@ export default function AIEstimatePage() {
       {isLoading && (
         <div className={styles.loadingBox}>
           <div className={styles.spinner} />
-          <span>AI đang phân tích...</span>
+          <span>AI Fixora đang phân tích triệu chứng...</span>
         </div>
       )}
 
@@ -169,7 +230,7 @@ function AIEstimateResult({ advice }: { advice: AIAdviceResponse }) {
     return (
       <div className={styles.noMatchBox}>
         {advice.message ??
-          'AI chưa đủ dữ liệu để tư vấn, vui lòng mang máy đến kiểm tra trực tiếp.'}
+          'AI chưa đủ dữ liệu để tư vấn, vui lòng mang máy đến Fixora để kiểm tra trực tiếp miễn phí.'}
       </div>
     );
   }
@@ -183,7 +244,7 @@ function AIEstimateResult({ advice }: { advice: AIAdviceResponse }) {
 
   return (
     <div className={styles.resultBox}>
-      <h4>🤖 Gợi ý tham khảo</h4>
+      <h4>🤖 Gợi ý tham khảo từ Fixora AI</h4>
 
       {advice.suggestedServices.length > 0 && (
         <div className={styles.resultSection}>
@@ -218,7 +279,7 @@ function AIEstimateResult({ advice }: { advice: AIAdviceResponse }) {
 
       {advice.explanation && (
         <div className={styles.resultSection}>
-          <span className={styles.resultLabel}>Lý do:</span>
+          <span className={styles.resultLabel}>Lý do chẩn đoán:</span>
           <p>{advice.explanation}</p>
         </div>
       )}

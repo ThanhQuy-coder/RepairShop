@@ -56,7 +56,7 @@ export default function RegisterPage() {
   return (
     <div className={styles.wrapper}>
       <form className={styles.card} onSubmit={handleSubmit} noValidate>
-        <h2 className={styles.title}>Đăng ký tài khoản</h2>
+        <h2 className={styles.title}>Đăng ký tài khoản Fixora</h2>
 
         {apiError && <ErrorMessage message={apiError.message} errors={apiError.errors} />}
 

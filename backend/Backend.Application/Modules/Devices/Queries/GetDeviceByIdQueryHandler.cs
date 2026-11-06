@@ -18,7 +18,15 @@ public class GetDeviceByIdQueryHandler : IRequestHandler<GetDeviceByIdQuery, Dev
         var device = await _deviceRepository.GetByIdAsync(request.Id)
             ?? throw new KeyNotFoundException($"Không tìm thấy thiết bị với Id '{request.Id}'.");
 
-        return new DeviceResponse(device.Id, device.CustomerId, device.DeviceType.ToString(),
-            device.Brand, device.Model, device.SerialNumber, device.CreatedAt, false);
+        return new DeviceResponse(
+            device.Id,
+            device.CustomerId,
+            device.DeviceType.ToString(),
+            device.Brand,
+            device.Model,
+            device.SerialNumber,
+            device.CreatedAt,
+            false,
+            device.DeviceModelId);
     }
 }

@@ -25,6 +25,8 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<DeviceModel> DeviceModels => Set<DeviceModel>();
     public DbSet<Device> Devices => Set<Device>();
     public DbSet<RepairStatus> RepairStatuses => Set<RepairStatus>();
     public DbSet<RepairTicket> RepairTickets => Set<RepairTicket>();

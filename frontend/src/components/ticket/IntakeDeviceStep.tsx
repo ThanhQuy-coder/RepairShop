@@ -2,18 +2,15 @@ import { type FormEvent, useEffect, useState } from 'react';
 import { Button, Input, Select, ErrorMessage, Loading } from '../common';
 import { deviceService } from '../../services/deviceService';
 import { extractApiError } from '../../utils/apiError';
-import type { Device, DeviceType } from '../../types/device.types';
+import { DEVICE_TYPE_OPTIONS, type Device, type DeviceType } from '../../types/device.types';
 import styles from './IntakeStep.module.css';
 import { useTicketIntakeStore, type WizardStep } from '../../store/ticketIntakeStore';
 import { useToastStore } from '../../store/toastStore';
+import { useDeviceCatalogCascade } from '../../hooks/useDeviceCatalogCascade';
 
-const DEVICE_TYPE_OPTIONS = [
-  { value: '', label: 'Chọn loại thiết bị' },
-  { value: 'Tablet', label: 'Máy tính bảng' },
-  { value: 'Smartwatch', label: 'Đồng hồ thông minh' },
-  { value: 'Phone', label: 'Điện thoại' },
-  { value: 'Laptop', label: 'Laptop' },
-  { value: 'Electronics', label: 'Thiết bị điện tử khác' },
+const INTAKE_DEVICE_TYPE_OPTIONS = [
+  { value: '', label: '-- Chọn loại thiết bị --' },
+  ...DEVICE_TYPE_OPTIONS,
 ];
 
 export default function IntakeDeviceStep() {
@@ -43,8 +40,14 @@ export default function IntakeDeviceStep() {
     deviceType: (appointmentData?.deviceType ?? 'Phone') as DeviceType,
     brand: appointmentData?.brand ?? '',
     model: appointmentData?.model ?? '',
+    deviceModelId: '',
     serialNumber: appointmentData?.serialNumber ?? '',
   });
+
+  const { brands, models, loadingBrands, loadingModels } = useDeviceCatalogCascade(
+    form.deviceType,
+    form.brand
+  );
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -58,16 +61,13 @@ export default function IntakeDeviceStep() {
     }
 
     let cancelled = false;
-
     setIsLoadingDevices(true);
 
     deviceService
       .getByCustomerId(customer.id)
       .then((devices) => {
         if (cancelled) return;
-
         setExistingDevices(devices);
-
         if (devices.length > 0) {
           setMode('existing');
         } else {
@@ -90,6 +90,34 @@ export default function IntakeDeviceStep() {
     };
   }, [customer?.id]);
 
+  const handleDeviceTypeChange = (nextType: DeviceType) => {
+    setForm((prev) => ({
+      ...prev,
+      deviceType: nextType,
+      brand: '',
+      model: '',
+      deviceModelId: '',
+    }));
+  };
+
+  const handleBrandChange = (nextBrand: string) => {
+    setForm((prev) => ({
+      ...prev,
+      brand: nextBrand,
+      model: '',
+      deviceModelId: '',
+    }));
+  };
+
+  const handleModelChange = (nextModel: string) => {
+    const matched = models.find((m) => m.modelName === nextModel);
+    setForm((prev) => ({
+      ...prev,
+      model: nextModel,
+      deviceModelId: matched?.id ?? '',
+    }));
+  };
+
   const handleCreateNew = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -103,7 +131,7 @@ export default function IntakeDeviceStep() {
 
     try {
       if (form.deviceType.trim() === '' || form.brand.trim() === '' || form.model.trim() === '') {
-        addToast('error', 'Vui lòng điền đầy đủ thông tin thiết bị.');
+        addToast('error', 'Vui lòng chọn đầy đủ Loại thiết bị, Hãng và Model.');
         return;
       }
       const device = await deviceService.create({
@@ -112,6 +140,7 @@ export default function IntakeDeviceStep() {
         brand: form.brand,
         model: form.model,
         serialNumber: form.serialNumber.trim() || undefined,
+        deviceModelId: form.deviceModelId || null,
       });
       addToast('success', `Đã lưu thiết bị ${device.brand} ${device.model} thành công.`);
       setDevice(device);
@@ -123,7 +152,6 @@ export default function IntakeDeviceStep() {
     }
   };
 
-  // Phòng trường hợp store chưa có khách hàng.
   if (!customer) {
     return (
       <div>
@@ -136,6 +164,35 @@ export default function IntakeDeviceStep() {
       </div>
     );
   }
+
+  const brandOptions = [
+    {
+      value: '',
+      label: loadingBrands ? 'Đang tải hãng sản xuất...' : '-- Chọn hãng sản xuất --',
+    },
+    ...brands.map((b) => ({ value: b.name, label: b.name })),
+    ...(form.brand && !brands.some((b) => b.name === form.brand)
+      ? [{ value: form.brand, label: `${form.brand} (Từ lịch hẹn)` }]
+      : []),
+  ];
+
+  const modelOptions = [
+    {
+      value: '',
+      label: !form.brand
+        ? '-- Chọn hãng trước --'
+        : loadingModels
+          ? 'Đang tải dòng máy...'
+          : '-- Chọn dòng máy (Model) --',
+    },
+    ...models.map((m) => ({
+      value: m.modelName,
+      label: m.modelNumber ? `${m.modelName} (${m.modelNumber})` : m.modelName,
+    })),
+    ...(form.model && !models.some((m) => m.modelName === form.model)
+      ? [{ value: form.model, label: `${form.model} (Từ lịch hẹn)` }]
+      : []),
+  ];
 
   return (
     <div>
@@ -209,33 +266,31 @@ export default function IntakeDeviceStep() {
               {errorMessage && <ErrorMessage message={errorMessage} />}
 
               <Select
-                label="Loại thiết bị"
-                options={DEVICE_TYPE_OPTIONS}
+                label="1. Loại thiết bị"
+                options={INTAKE_DEVICE_TYPE_OPTIONS}
                 value={form.deviceType}
-                onChange={(e) =>
-                  setForm({
-                    ...form,
-                    deviceType: e.target.value as DeviceType,
-                  })
-                }
+                onChange={(e) => handleDeviceTypeChange(e.target.value as DeviceType)}
               />
 
-              <Input
-                label="Hãng"
-                required
+              <Select
+                label="2. Hãng sản xuất"
+                options={brandOptions}
                 value={form.brand}
-                onChange={(e) => setForm({ ...form, brand: e.target.value })}
+                disabled={!form.deviceType || loadingBrands}
+                onChange={(e) => handleBrandChange(e.target.value)}
               />
 
-              <Input
-                label="Model"
-                required
+              <Select
+                label="3. Dòng máy (Model)"
+                options={modelOptions}
                 value={form.model}
-                onChange={(e) => setForm({ ...form, model: e.target.value })}
+                disabled={!form.brand || loadingModels}
+                onChange={(e) => handleModelChange(e.target.value)}
               />
 
               <Input
                 label="Số Serial/IMEI"
+                placeholder="Nhập Serial hoặc IMEI (nếu có)"
                 value={form.serialNumber}
                 onChange={(e) => setForm({ ...form, serialNumber: e.target.value })}
               />

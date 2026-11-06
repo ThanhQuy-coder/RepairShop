@@ -8,27 +8,26 @@ import {
 } from '../../services/appointmentService';
 import { extractApiError } from '../../utils/apiError';
 import styles from './BookingPage.module.css';
-import type { DeviceType } from '../../types/device.types';
+import { DEVICE_TYPE_OPTIONS, type DeviceType } from '../../types/device.types';
+import { useDeviceCatalogCascade } from '../../hooks/useDeviceCatalogCascade';
 
 const today = new Date().toISOString().slice(0, 10);
 
-const DEVICE_TYPE_OPTIONS = [
-  { value: '', label: 'Chọn loại thiết bị' },
-  { value: 'Tablet', label: 'Máy tính bảng' },
-  { value: 'Smartwatch', label: 'Đồng hồ thông minh' },
-  { value: 'Phone', label: 'Điện thoại' },
-  { value: 'Laptop', label: 'Laptop' },
-  { value: 'Electronics', label: 'Thiết bị điện tử khác' },
+const BOOKING_DEVICE_TYPE_OPTIONS = [
+  { value: '', label: '-- Chọn loại thiết bị --' },
+  ...DEVICE_TYPE_OPTIONS,
 ];
 
 export default function BookingPage() {
   const [searchParams] = useSearchParams();
+  const initialDeviceType = searchParams.get('deviceType') ?? '';
+
   const [date, setDate] = useState(today);
   const [slots, setSlots] = useState<AvailableSlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const [deviceType, setDeviceType] = useState('');
+  const [deviceType, setDeviceType] = useState(initialDeviceType);
   const [brand, setBrand] = useState('');
   const [model, setModel] = useState('');
   const [serial, setSerial] = useState('');
@@ -39,6 +38,11 @@ export default function BookingPage() {
   const [isLoadingSlots, setIsLoadingSlots] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { brands, models, loadingBrands, loadingModels } = useDeviceCatalogCascade(
+    deviceType,
+    brand
+  );
+
   useEffect(() => {
     appointmentService
       .getAvailableSlots(date)
@@ -46,6 +50,17 @@ export default function BookingPage() {
       .catch((error) => setErrorMessage(extractApiError(error).message))
       .finally(() => setIsLoadingSlots(false));
   }, [date]);
+
+  const handleDeviceTypeChange = (nextType: string) => {
+    setDeviceType(nextType as DeviceType);
+    setBrand('');
+    setModel('');
+  };
+
+  const handleBrandChange = (nextBrand: string) => {
+    setBrand(nextBrand);
+    setModel('');
+  };
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -91,9 +106,9 @@ export default function BookingPage() {
       <main className={styles.page}>
         <section className={styles.success}>
           <span className={styles.successIcon}>✓</span>
-          <span className={styles.kicker}>ĐẶT LỊCH THÀNH CÔNG</span>
+          <span className={styles.kicker}>FIXORA • ĐẶT LỊCH THÀNH CÔNG</span>
           <h1>Đã ghi nhận lịch hẹn của bạn.</h1>
-          <p>Vui lòng lưu mã tra cứu để kiểm tra lịch hẹn sau này.</p>
+          <p>Vui lòng lưu mã tra cứu để kiểm tra hoặc quản lý lịch hẹn trên hệ thống Fixora.</p>
           <div className={styles.confirmation}>
             <span>Mã tra cứu lịch hẹn</span>
             <strong>{result.lookupToken}</strong>
@@ -104,7 +119,7 @@ export default function BookingPage() {
           </div>
           <div className={styles.actions}>
             <Link to="/">
-              <Button>Về trang chủ</Button>
+              <Button>Về trang chủ Fixora</Button>
             </Link>
             <Link to="/appointments/lookup" className={styles.secondary}>
               Tra cứu lịch hẹn
@@ -114,14 +129,41 @@ export default function BookingPage() {
       </main>
     );
 
+  const brandOptions = [
+    {
+      value: '',
+      label: !deviceType
+        ? '-- Chọn loại thiết bị trước --'
+        : loadingBrands
+          ? 'Đang tải hãng sản xuất...'
+          : '-- Chọn hãng sản xuất --',
+    },
+    ...brands.map((b) => ({ value: b.name, label: b.name })),
+  ];
+
+  const modelOptions = [
+    {
+      value: '',
+      label: !brand
+        ? '-- Chọn hãng sản xuất trước --'
+        : loadingModels
+          ? 'Đang tải dòng máy...'
+          : '-- Chọn dòng máy (Model) --',
+    },
+    ...models.map((m) => ({
+      value: m.modelName,
+      label: m.modelNumber ? `${m.modelName} (${m.modelNumber})` : m.modelName,
+    })),
+  ];
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <span className={styles.kicker}>ĐẶT LỊCH SỬA CHỮA</span>
+        <span className={styles.kicker}>FIXORA • ĐẶT LỊCH SỬA CHỮA</span>
         <h1>Chọn thời gian thuận tiện cho bạn.</h1>
-        <p>Đặt lịch trước giúp đội ngũ chuẩn bị tốt hơn cho thiết bị của bạn.</p>
+        <p>Đặt lịch trước giúp đội ngũ kỹ thuật viên Fixora chuẩn bị sẵn linh kiện và ưu tiên tiếp nhận thiết bị của bạn.</p>
         {searchParams.get('serviceId') && (
-          <small>Dịch vụ đã chọn sẽ được xác nhận khi tiếp nhận thiết bị.</small>
+          <small>Dịch vụ đã chọn sẽ được xác nhận khi tiếp nhận thiết bị tại cửa hàng.</small>
         )}
         <Link to="/appointments/lookup" className={styles.secondary}>
           Đã có lịch hẹn? Tra cứu ngay →
@@ -167,7 +209,7 @@ export default function BookingPage() {
           )}
         </div>
         <div className={styles.formSection}>
-          <h2>2. Thông tin liên hệ</h2>
+          <h2>2. Thông tin khách hàng & thiết bị</h2>
           <label>
             <Select
               label="Loại cuộc hẹn"
@@ -198,16 +240,29 @@ export default function BookingPage() {
           <div className={styles.twoColumns}>
             <Select
               label="Loại thiết bị"
-              options={DEVICE_TYPE_OPTIONS}
+              options={BOOKING_DEVICE_TYPE_OPTIONS}
               value={deviceType}
-              onChange={(event) => setDeviceType(event.target.value as DeviceType)}
+              onChange={(event) => handleDeviceTypeChange(event.target.value)}
             />
-            <Input label="Hãng" value={brand} onChange={(event) => setBrand(event.target.value)} />
-            <Input label="Model" value={model} onChange={(event) => setModel(event.target.value)} />
+            <Select
+              label="Hãng sản xuất"
+              options={brandOptions}
+              value={brand}
+              disabled={!deviceType || loadingBrands}
+              onChange={(event) => handleBrandChange(event.target.value)}
+            />
+            <Select
+              label="Dòng máy (Model)"
+              options={modelOptions}
+              value={model}
+              disabled={!brand || loadingModels}
+              onChange={(event) => setModel(event.target.value)}
+            />
             <Input
-              label="Số serial/IME"
+              label="Số Serial / IMEI (Nếu có)"
               value={serial}
               onChange={(event) => setSerial(event.target.value)}
+              placeholder="Ví dụ: C02X..."
             />
           </div>
           <label>
@@ -216,12 +271,12 @@ export default function BookingPage() {
               value={issueDescription}
               onChange={(event) => setIssueDescription(event.target.value)}
               rows={4}
-              placeholder="Mô tả ngắn vấn đề thiết bị đang gặp phải"
+              placeholder="Mô tả ngắn vấn đề thiết bị đang gặp phải (ví dụ: Pin tụt nhanh, màn hình bị sọc, máy nóng...)"
             />
           </label>
         </div>
         <Button type="submit" size="lg" isLoading={isSubmitting}>
-          Xác nhận đặt lịch
+          Xác nhận đặt lịch tại Fixora
         </Button>
       </form>
     </main>

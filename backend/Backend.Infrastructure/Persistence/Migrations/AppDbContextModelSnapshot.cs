@@ -365,6 +365,10 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -392,6 +396,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thay pin chính hãng/OEM cho các dòng điện thoại phổ biến, bảo hành pin 6 tháng.",
                             DeviceType = "Phone",
+                            ImageUrl = "/images/services/phone-battery.svg",
                             IsActive = true,
                             Name = "Thay pin điện thoại"
                         },
@@ -402,6 +407,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 5, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thay màn hình mới cho máy bị vỡ, sọc, cảm ứng liệt. Giá tùy dòng máy.",
                             DeviceType = "Phone",
+                            ImageUrl = "/images/services/phone-screen.svg",
                             IsActive = true,
                             Name = "Thay màn hình điện thoại"
                         },
@@ -412,6 +418,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Ép lại kính nứt vỡ mà không cần thay nguyên cụm màn hình, tiết kiệm chi phí.",
                             DeviceType = "Phone",
+                            ImageUrl = "/images/services/phone-glass.svg",
                             IsActive = true,
                             Name = "Ép kính, thay mặt kính điện thoại"
                         },
@@ -422,6 +429,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 6, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Vệ sinh bụi bẩn bên trong, tra keo tản nhiệt mới giúp máy mát hơn, giảm tiếng quạt.",
                             DeviceType = "Laptop",
+                            ImageUrl = "/images/services/laptop-cleaning.svg",
                             IsActive = true,
                             Name = "Vệ sinh máy, tra keo tản nhiệt laptop"
                         },
@@ -432,6 +440,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thay bàn phím mới cho máy bị liệt phím, vào nước, mất chữ.",
                             DeviceType = "Laptop",
+                            ImageUrl = "/images/services/laptop-keyboard.svg",
                             IsActive = true,
                             Name = "Thay bàn phím laptop"
                         },
@@ -442,6 +451,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 7, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Thay pin chính hãng cho laptop bị chai pin, sụt dung lượng nhanh.",
                             DeviceType = "Laptop",
+                            ImageUrl = "/images/services/laptop-battery.svg",
                             IsActive = true,
                             Name = "Thay pin laptop"
                         },
@@ -452,6 +462,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             CreatedAt = new DateTime(2026, 1, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Kiểm tra, vệ sinh mainboard cho thiết bị điện tử bị vào nước, chập cháy nhẹ.",
                             DeviceType = "Electronics",
+                            ImageUrl = "/images/services/electronics-mainboard.svg",
                             IsActive = true,
                             Name = "Kiểm tra và vệ sinh mainboard"
                         },
@@ -461,6 +472,7 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                             BasePrice = 150000m,
                             CreatedAt = new DateTime(2026, 1, 8, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cài lại hệ điều hành, phần mềm cần thiết, quét và diệt virus. Áp dụng cho mọi loại thiết bị.",
+                            ImageUrl = "/images/services/software-install.svg",
                             IsActive = true,
                             Name = "Cài đặt phần mềm, xử lý virus"
                         });
@@ -518,6 +530,58 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.ToTable("Customers", (string)null);
                 });
 
+            modelBuilder.Entity("RepairShop.Domain.Modules.Devices.Brand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("LogoUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Brands", (string)null);
+                });
+
             modelBuilder.Entity("RepairShop.Domain.Modules.Devices.Device", b =>
                 {
                     b.Property<Guid>("Id")
@@ -540,6 +604,9 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("DeviceModelId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("DeviceType")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -561,10 +628,66 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("DeviceModelId");
+
                     b.HasIndex("SerialNumber")
                         .IsUnique();
 
                     b.ToTable("Devices", (string)null);
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Devices.DeviceModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DeviceType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("ModelName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("ModelNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("ReleaseYear")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviceType");
+
+                    b.HasIndex("BrandId", "DeviceType");
+
+                    b.HasIndex("BrandId", "DeviceType", "ModelName")
+                        .IsUnique();
+
+                    b.ToTable("DeviceModels", (string)null);
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Diagnostics.DiagnosisSymptom", b =>
@@ -1838,7 +1961,25 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RepairShop.Domain.Modules.Devices.DeviceModel", "DeviceModel")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceModelId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Customer");
+
+                    b.Navigation("DeviceModel");
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Devices.DeviceModel", b =>
+                {
+                    b.HasOne("RepairShop.Domain.Modules.Devices.Brand", "Brand")
+                        .WithMany("DeviceModels")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Identity.RefreshToken", b =>
@@ -2118,9 +2259,19 @@ namespace RepairShop.Infrastructure.Persistence.Migrations
                     b.Navigation("RepairTickets");
                 });
 
+            modelBuilder.Entity("RepairShop.Domain.Modules.Devices.Brand", b =>
+                {
+                    b.Navigation("DeviceModels");
+                });
+
             modelBuilder.Entity("RepairShop.Domain.Modules.Devices.Device", b =>
                 {
                     b.Navigation("RepairTickets");
+                });
+
+            modelBuilder.Entity("RepairShop.Domain.Modules.Devices.DeviceModel", b =>
+                {
+                    b.Navigation("Devices");
                 });
 
             modelBuilder.Entity("RepairShop.Domain.Modules.Identity.User", b =>

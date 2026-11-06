@@ -1,7 +1,6 @@
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Devices.DTOs;
 using MediatR;
-using RepairShop.Domain.Modules.Tickets;
 
 namespace RepairShop.Application.Modules.Devices.Queries;
 
@@ -24,8 +23,15 @@ public class GetDevicesByCustomerQueryHandler : IRequestHandler<GetDevicesByCust
         var lockedIds = await _ticketRepository
             .GetDeviceIdsWithActiveTicketAsync(devices.Select(d => d.Id), cancellationToken);
 
-        return devices.Select(d => new DeviceResponse(d.Id, d.CustomerId, d.DeviceType.ToString(),
-            d.Brand, d.Model, d.SerialNumber, d.CreatedAt, 
-            IsConvertTicket: lockedIds.Contains(d.Id))).ToList();
+        return devices.Select(d => new DeviceResponse(
+            d.Id,
+            d.CustomerId,
+            d.DeviceType.ToString(),
+            d.Brand,
+            d.Model,
+            d.SerialNumber,
+            d.CreatedAt,
+            IsConvertTicket: lockedIds.Contains(d.Id),
+            DeviceModelId: d.DeviceModelId)).ToList();
     }
 }

@@ -134,7 +134,7 @@ export default function LoginPage() {
       )}
 
       <form className={styles.card} onSubmit={handleSubmit} noValidate>
-        <h2 className={styles.title}>Đăng nhập</h2>
+        <h2 className={styles.title}>Đăng nhập Fixora</h2>
 
         {apiErrorMessage && <ErrorMessage message={apiErrorMessage} />}
 

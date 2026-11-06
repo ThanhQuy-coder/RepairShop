@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="640" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EEF6F4"/>
+      <stop offset="100%" stop-color="#E2EFEA"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#bg)"/>
+  <circle cx="540" cy="70" r="110" fill="#185A4E" fill-opacity="0.06"/>
+  <circle cx="95" cy="330" r="130" fill="#C56B45" fill-opacity="0.07"/>
+  <rect x="210" y="76" width="220" height="176" rx="22" fill="#FFFFFF" stroke="#9EC5BC" stroke-width="2"/>
+  <rect x="255" y="108" width="130" height="84" rx="12" fill="#EEF6F4" stroke="#185A4E" stroke-width="2.5"/>
+  <path d="M302 150L315 163L342 136" stroke="#C56B45" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="290" y="210" width="60" height="8" rx="4" fill="#9EC5BC"/>
+  <text x="320" y="294" text-anchor="middle" fill="#185A4E" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" letter-spacing="3">FIXORA CARE</text>
+  <text x="320" y="322" text-anchor="middle" fill="#475569" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500">Your Devices. Our Care.</text>
+</svg>

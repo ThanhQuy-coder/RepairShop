@@ -7,7 +7,7 @@ import styles from './Layout.module.css';
 export default function AdminLayout() {
   return (
     <div className={styles.container}>
-      <Sidebar groups={NAV_GROUPS_BY_ROLE.Admin} title="RepairShop — Quản trị" />
+      <Sidebar groups={NAV_GROUPS_BY_ROLE.Admin} title="Fixora — Quản trị" />
       <div className={styles.main}>
         <Header />
         <div className={styles.content}>

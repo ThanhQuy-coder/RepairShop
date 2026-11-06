@@ -13,7 +13,7 @@ export default function StaffLayout() {
 
   return (
     <div className={styles.container}>
-      <Sidebar items={navItems} title="RepairShop — Nhân viên" />
+      <Sidebar items={navItems} title="Fixora — Nhân viên" />
       <div className={styles.main}>
         <Header />
         <div className={styles.content}>

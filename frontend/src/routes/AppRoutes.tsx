@@ -54,6 +54,8 @@ import StaffWarrantyLookupPage from '../pages/appointments/StaffWarrantyLookupPa
 import AppointmentSettingsPage from '../pages/admin/AppointmentSettingsPage';
 import DiagnosisSymptomsAdminPage from '../pages/admin/DiagnosisSymptomsAdminPage';
 import WarrantyPackagesAdminPage from '../pages/admin/WarrantyPackagesAdminPage';
+import DeviceCatalogAdminPage from '../pages/admin/DeviceCatalogAdminPage';
+import ServicesAdminPage from '../pages/admin/ServicesAdminPage';
 
 export default function AppRoutes() {
   return (
@@ -129,10 +131,12 @@ export default function AppRoutes() {
             <Route path="admin/customers/:id" element={<CustomerDetailPage />} />
             <Route path="admin/devices" element={<DevicesPage />} />
             <Route path="admin/devices/:id" element={<DeviceDetailPage />} />
+            <Route path="admin/brands" element={<DeviceCatalogAdminPage />} />
+            <Route path="admin/device-models" element={<DeviceCatalogAdminPage />} />
             <Route path="admin/tickets" element={<TicketListPage />} />
             <Route path="admin/tickets/create" element={<CreateTicketPage />} />
             <Route path="admin/quotes" element={<QuotesPage />} />
-            <Route path="admin/services" element={<ServicesPage />} />
+            <Route path="admin/services" element={<ServicesAdminPage />} />
             <Route path="admin/articles" element={<ArticlesPage />} />
             <Route path="admin/inventory" element={<PartsListPage />} />
             <Route path="admin/inventory-transactions" element={<InventoryTransactionsPage />} />

@@ -22,6 +22,17 @@ public class ReviewsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("by-service/{serviceId:guid}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetReviewsByService(
+        Guid serviceId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
+    {
+        var result = await _mediator.Send(new GetServiceReviewsQuery(serviceId, page, pageSize));
+        return Ok(result);
+    }
+
     [HttpGet("admin")]
     [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
     public async Task<IActionResult> GetAllReviews([FromQuery] int page = 1, [FromQuery] int pageSize = 20)

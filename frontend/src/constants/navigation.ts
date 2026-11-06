@@ -21,6 +21,8 @@ export const NAV_BY_ROLE: Record<UserRole, NavItem[]> = {
     { label: 'Người dùng', path: '/admin/users' },
     { label: 'Khách hàng', path: '/admin/customers' },
     { label: 'Thiết bị', path: '/admin/devices' },
+    { label: 'Hãng sản xuất', path: '/admin/brands' },
+    { label: 'Dòng thiết bị', path: '/admin/device-models' },
     { label: 'Phiếu sửa chữa', path: '/admin/tickets' },
     { label: 'Báo giá', path: '/admin/quotes' },
     { label: 'Cấu hình lịch hẹn', path: '/admin/appointments/settings' },
@@ -80,7 +82,15 @@ const ADMIN_GROUP_DEFINITIONS: Array<{ key: string; label: string; paths: string
   {
     key: 'catalog',
     label: 'Danh mục',
-    paths: ['/admin/customers', '/admin/devices', '/admin/services', '/admin/warranty-packages', '/admin/diagnosis-symptoms'],
+    paths: [
+      '/admin/customers',
+      '/admin/devices',
+      '/admin/brands',
+      '/admin/device-models',
+      '/admin/services',
+      '/admin/warranty-packages',
+      '/admin/diagnosis-symptoms',
+    ],
   },
   {
     key: 'inventory',
@@ -90,7 +100,13 @@ const ADMIN_GROUP_DEFINITIONS: Array<{ key: string; label: string; paths: string
   {
     key: 'analytics',
     label: 'Phân tích',
-    paths: ['/admin/reports/revenue', '/admin/reports/technicians', '/admin/reports/sla', '/admin/sla-policies', '/admin/reports/profit'],
+    paths: [
+      '/admin/reports/revenue',
+      '/admin/reports/technicians',
+      '/admin/reports/sla',
+      '/admin/sla-policies',
+      '/admin/reports/profit',
+    ],
   },
   {
     key: 'content',

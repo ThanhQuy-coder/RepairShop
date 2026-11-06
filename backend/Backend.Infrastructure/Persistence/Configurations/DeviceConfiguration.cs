@@ -26,6 +26,12 @@ public class DeviceConfiguration : IEntityTypeConfiguration<Device>
 
         // Index hỗ trợ "xem lịch sử sửa chữa của thiết bị" — query theo CustomerId rất thường xuyên
         builder.HasIndex(d => d.CustomerId);
+        builder.HasIndex(d => d.DeviceModelId);
+
+        builder.HasOne(d => d.DeviceModel)
+            .WithMany(m => m.Devices)
+            .HasForeignKey(d => d.DeviceModelId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Association: Device (1) -> RepairTicket (N) — không cascade, lý do giống Customer ở trên
         builder.HasMany(d => d.RepairTickets)

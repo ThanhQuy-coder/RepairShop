@@ -33,7 +33,7 @@ export default function ArticleDetailPage() {
     <Link to="/articles" className={styles.back}>← Tất cả bài viết</Link>
     <article className={styles.article}>
       {article.imageUrl && <img src={article.imageUrl} alt="" className={styles.image} />}
-      <span className={styles.kicker}>REPAIRSHOP JOURNAL</span>
+      <span className={styles.kicker}>FIXORA JOURNAL</span>
       <h1>{article.title}</h1>
       <time dateTime={article.createdAt}>{new Date(article.createdAt).toLocaleDateString('vi-VN')}</time>
       <div className={styles.share}><Button variant="secondary" size="sm" onClick={copyLink}>Sao chép liên kết</Button></div>
