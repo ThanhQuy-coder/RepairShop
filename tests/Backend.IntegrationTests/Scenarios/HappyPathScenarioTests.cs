@@ -29,19 +29,6 @@ public class HappyPathScenarioTests
 
         // 1. Create Customer (Receptionist tạo hồ sơ walk-in khách hàng)
         client.AuthorizeAs(receptionist.Token);
-        // var createCustomerRes = await client.PostAsJsonAsync("/api/customers", new
-        // {
-        //     fullName = "Nguyen Van A",
-        //     phone = $"09{Random.Shared.Next(10000000, 99999999)}",
-        //     email = "customer@gmail.com",
-        //     address = "TP.HCM",
-        //     userId = customer.UserId
-        // });
-        // createCustomerRes.StatusCode.Should().Be(HttpStatusCode.Created);
-        // var customerJson = await createCustomerRes.ReadAsAsync<JsonElement>();
-        // var customerId = customerJson.GetProperty("id").GetGuid();
-
-        // Khởi tạo scope để đọc Database
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
@@ -109,14 +96,14 @@ public class HappyPathScenarioTests
             description = "Báo giá thay pin",
             items = new object[]
             {
-                new { itemType = "Service", description = "Công thay pin", quantity = 1, unitPrice = 100000m, partId = (Guid?)null },
-                new { itemType = "Part", description = "Pin iPhone 13", quantity = 1, unitPrice = 350000m, partId }
+                new { itemType = "Service", quantity = 1, partId = (Guid?)null, serviceId = (Guid?)new Guid("00000000-0000-0000-0000-000000000101") },
+                new { itemType = "Part", quantity = 1, partId = (Guid?)partId, serviceId = (Guid?)null }
             }
         });
         createQuoteRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var quote = await createQuoteRes.ReadAsAsync<JsonElement>();
         var quoteId = quote.GetProperty("id").GetGuid();
-        quote.GetProperty("totalAmount").GetDecimal().Should().Be(450000m);
+        quote.GetProperty("totalAmount").GetDecimal().Should().Be(700000m);
 
         // 8. Approve Quote — WAITING_APPROVAL -> IN_REPAIR
         client.AuthorizeAs(customer.Token);
@@ -149,6 +136,8 @@ public class HappyPathScenarioTests
         startQaRes.StatusCode.Should().Be(HttpStatusCode.OK);
         (await startQaRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("QA_TESTING");
 
+        await WorkflowHelpers.CompleteInspectionsForQaAsync(client, ticketId);
+
         var qaPassRes = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         {
             functionalCheckNotes = "Sạc/xả pin bình thường, không nóng máy",
@@ -172,7 +161,7 @@ public class HappyPathScenarioTests
         (await deliverRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("DELIVERED");
 
         // 12. Warranty
-        var warrantyRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyMonths = 6, terms = "Bảo hành lỗi pin/linh kiện đã thay" });
+        var warrantyRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyPackageId = new Guid("00000000-0000-0000-0000-000000000203") });
         warrantyRes.StatusCode.Should().Be(HttpStatusCode.OK);
         var warranty = await warrantyRes.ReadAsAsync<JsonElement>();
         warranty.GetProperty("warrantyCode").GetString().Should().StartWith("WR-");

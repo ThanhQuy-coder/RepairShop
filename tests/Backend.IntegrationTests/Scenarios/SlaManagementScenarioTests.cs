@@ -26,14 +26,14 @@ public sealed class SlaManagementScenarioTests
         var response = await client.PostAsJsonAsync("/api/sla/policies", new
         {
             statusCode,
-            deviceType = "Phone",
+            deviceType = "Tablet",
             durationMinutes = 90
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.Created);
         var created = await response.ReadAsAsync<JsonElement>();
         created.GetProperty("statusCode").GetString().Should().Be(statusCode);
-        created.GetProperty("deviceType").GetInt32().Should().Be(0);
+        created.GetProperty("deviceType").GetInt32().Should().Be(3);
         created.GetProperty("durationMinutes").GetInt32().Should().Be(90);
         created.GetProperty("isActive").GetBoolean().Should().BeTrue();
 
@@ -53,7 +53,7 @@ public sealed class SlaManagementScenarioTests
         var payload = new
         {
             statusCode = "ASSIGNED",
-            deviceType = "Laptop",
+            deviceType = "Tablet",
             durationMinutes = 120
         };
 

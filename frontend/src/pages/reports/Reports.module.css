@@ -104,6 +104,45 @@
   flex-shrink: 0;
 }
 
+.breakdownCard {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-lg, 14px);
+  box-shadow: var(--shadow-xs);
+}
+
+.breakdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.sectionTitle {
+  margin: 0;
+  color: var(--color-text, #1e293b);
+  font-size: 18px;
+}
+
+.sectionSubtitle {
+  margin: 5px 0 0;
+  color: var(--color-text-muted, #64748b);
+  font-size: 13px;
+}
+
+.paidOnlyBadge {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--color-primary-subtle, #eef6f4);
+  color: var(--color-primary, #185a4e);
+  font-size: 12px;
+  font-weight: 700;
+}
+
 /* ==========================================================
    RESPONSIVE ADDITIONS — append only
    ========================================================== */
@@ -245,6 +284,16 @@
   .summaryGrid {
     gap: 12px;
     margin-bottom: 16px;
+  }
+
+  .breakdownCard {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .breakdownHeader {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .techAvatar {

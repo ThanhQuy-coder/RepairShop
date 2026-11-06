@@ -15,6 +15,8 @@ export const warrantyService = {
     apiClient.get<AvailableSlot[]>('/appointments/available-slots', { params: { date } }).then((res) => res.data),
   searchForStaff: (params: { phone?: string; warrantyCode?: string }) =>
     apiClient.get<StaffWarrantyLookup[]>('/warranty/staff/search', { params }).then((res) => res.data),
+  getByTicket: (ticketId: string) =>
+    apiClient.get<WarrantyDetail>(`/tickets/${ticketId}/warranty`).then((res) => res.data),
 };
 
 export interface StaffWarrantyLookup {
@@ -29,4 +31,15 @@ export interface StaffWarrantyLookup {
   startDate: string;
   endDate: string;
   status: string;
+}
+
+export interface WarrantyDetail {
+  warrantyCode: string;
+  ticketId: string;
+  startDate: string;
+  endDate: string;
+  terms: string | null;
+  status: string;
+  isExpired: boolean;
+  warrantyPackageId: string | null;
 }

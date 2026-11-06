@@ -213,6 +213,17 @@ public class ReportsQueryService : IReportsQueryService
             .Include(ticket => ticket.TicketParts)
             .ToDictionaryAsync(ticket => ticket.Id);
 
+        var quoteIds = invoices
+            .Where(invoice => invoice.QuoteId.HasValue)
+            .Select(invoice => invoice.QuoteId!.Value)
+            .Distinct()
+            .ToList();
+        var quotes = await _context.Quotes
+            .Where(quote => quoteIds.Contains(quote.Id))
+            .Include(quote => quote.Items)
+                .ThenInclude(item => item.Service)
+            .ToDictionaryAsync(quote => quote.Id);
+
         var items = invoices.Select(invoice =>
         {
             var revenue = invoice.TotalAmount;
@@ -223,11 +234,66 @@ public class ReportsQueryService : IReportsQueryService
                 tickets[invoice.RepairTicketId].TicketCode, revenue, cost, profit, margin);
         }).ToList();
 
+        var serviceRows = new List<(string Name, Guid? ServiceId, Guid TicketId, decimal Revenue)>();
+        foreach (var invoice in invoices)
+        {
+            var ticket = tickets[invoice.RepairTicketId];
+            var cost = ticket.TicketParts.Sum(part => part.CostSubtotal);
+            var serviceRevenue = quotes.TryGetValue(invoice.QuoteId ?? Guid.Empty, out var quote)
+                ? quote.Items
+                    .Where(item => item.ServiceId.HasValue)
+                    .GroupBy(item => new { item.ServiceId, Name = item.Service?.Name ?? item.Description })
+                    .Select(group => (Name: group.Key.Name, ServiceId: group.Key.ServiceId, Revenue: group.Sum(item => item.Subtotal)))
+                    .ToList()
+                : [];
+
+            var totalServiceRevenue = serviceRevenue.Sum(row => row.Revenue);
+            foreach (var row in serviceRevenue)
+                serviceRows.Add((row.Name, row.ServiceId, invoice.RepairTicketId, row.Revenue));
+
+            var otherRevenue = invoice.TotalAmount - totalServiceRevenue;
+            if (otherRevenue > 0)
+                serviceRows.Add(("Khác / linh kiện", null, invoice.RepairTicketId, otherRevenue));
+
+            // Legacy invoices may not have a linked quote. Keep them visible instead of
+            // silently dropping paid revenue from the service breakdown.
+            if (serviceRevenue.Count == 0 && otherRevenue <= 0)
+                serviceRows.Add(("Chưa phân loại", null, invoice.RepairTicketId, invoice.TotalAmount));
+        }
+
+        var byService = serviceRows
+            .GroupBy(row => row.Name)
+            .Select(group =>
+            {
+                var revenue = group.Sum(row => row.Revenue);
+                var groupCost = group
+                    .GroupBy(row => row.TicketId)
+                    .Sum(ticketRows =>
+                    {
+                        var ticketCost = tickets[ticketRows.Key].TicketParts.Sum(part => part.CostSubtotal);
+                        var ticketRevenue = ticketRows.Sum(row => row.Revenue);
+                        var invoiceRevenue = invoices
+                            .Where(invoice => invoice.RepairTicketId == ticketRows.Key)
+                            .Sum(invoice => invoice.TotalAmount);
+                        return invoiceRevenue == 0 ? 0 : ticketCost * ticketRevenue / invoiceRevenue;
+                    });
+                var grossProfit = revenue - groupCost;
+                return new ProfitByServiceItem(
+                    group.Key,
+                    group.Select(row => row.TicketId).Distinct().Count(),
+                    revenue,
+                    groupCost,
+                    grossProfit,
+                    revenue == 0 ? 0 : grossProfit / revenue * 100);
+            })
+            .OrderByDescending(item => item.GrossProfit)
+            .ToList();
+
         var totalRevenue = items.Sum(item => item.Revenue);
         var totalCost = items.Sum(item => item.Cost);
         var grossProfit = items.Sum(item => item.GrossProfit);
         var marginPercent = totalRevenue == 0 ? 0 : grossProfit / totalRevenue * 100;
-        return new ProfitReportResponse(items, totalRevenue, totalCost, grossProfit, marginPercent);
+        return new ProfitReportResponse(items, totalRevenue, totalCost, grossProfit, marginPercent, byService);
     }
 
     private static DateTime? ToUtc(DateTime? value)

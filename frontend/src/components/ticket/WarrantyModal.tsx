@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal, Button, ErrorMessage, Loading } from '../common';
 import { ticketService } from '../../services/ticketService';
 import { warrantyPackageService } from '../../services/warrantyPackageService';
+import { warrantyService, type WarrantyDetail } from '../../services/warrantyService';
 import { extractApiError } from '../../utils/apiError';
 import { useToast } from '../../hooks/useToast';
 import type { WarrantyPackage } from '../../types/warrantyPackage.types';
@@ -19,6 +20,7 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [existingWarranty, setExistingWarranty] = useState<WarrantyDetail | null>(null);
   const { showSuccess } = useToast();
   const selected = useMemo(() => packages.find((item) => item.id === selectedId), [packages, selectedId]);
 
@@ -26,6 +28,7 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
     if (!isOpen) return;
     setIsLoading(true);
     setErrorMessage(null);
+    setExistingWarranty(null);
     warrantyPackageService.listActive()
       .then((items) => {
         setPackages(items);
@@ -33,6 +36,12 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
       })
       .catch((err) => setErrorMessage(extractApiError(err).message))
       .finally(() => setIsLoading(false));
+    warrantyService.getByTicket(ticketId)
+      .then(setExistingWarranty)
+      .catch((err) => {
+        if ((err as { response?: { status?: number } }).response?.status !== 404)
+          setErrorMessage(extractApiError(err).message);
+      });
   }, [isOpen]);
 
   const handleSubmit = async () => {
@@ -55,9 +64,15 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Cấp gói bảo hành"
-      footer={<><Button variant="secondary" onClick={onClose}>Hủy</Button><Button onClick={handleSubmit} isLoading={isSaving}>Cấp bảo hành</Button></>}>
+      footer={<><Button variant="secondary" onClick={onClose}>Đóng</Button>{!existingWarranty && <Button onClick={handleSubmit} isLoading={isSaving}>Cấp bảo hành</Button>}</>}>
       {errorMessage && <ErrorMessage message={errorMessage} />}
-      {isLoading ? <Loading /> : packages.length === 0 ? <p>Chưa có gói bảo hành đang hoạt động.</p> : (
+      {existingWarranty && <div style={{ padding: 12, background: '#fef2f2', borderRadius: 8, marginBottom: 12 }}>
+        <strong>Ticket đã có bảo hành</strong>
+        <p>Mã: {existingWarranty.warrantyCode}</p>
+        <p>Thời hạn: {existingWarranty.startDate} - {existingWarranty.endDate}</p>
+        <p>Không thể cấp thêm bảo hành cho ticket này.</p>
+      </div>}
+      {!existingWarranty && (isLoading ? <Loading /> : packages.length === 0 ? <p>Chưa có gói bảo hành đang hoạt động.</p> : (
         <>
           <label style={{ fontSize: 13, fontWeight: 500, display: 'block', marginBottom: 8 }}>
             Gói bảo hành
@@ -73,7 +88,7 @@ export default function WarrantyModal({ isOpen, ticketId, onClose, onDone }: Pro
             <small>Ngày bắt đầu là ngày bàn giao thực tế; ngày kết thúc được hệ thống tự tính.</small>
           </div>}
         </>
-      )}
+      ))}
     </Modal>
   );
 }

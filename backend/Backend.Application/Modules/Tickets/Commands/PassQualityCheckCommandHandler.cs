@@ -6,6 +6,7 @@ using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.Tickets;
 using RepairShop.Application.Modules.Tickets.DTOs;
 using RepairShop.Domain.Common;
+using RepairShop.Domain.Common.Exceptions;
 using RepairShop.Domain.Modules.Inspections;
 
 public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCommand, TicketResponse>
@@ -79,10 +80,10 @@ public class PassQualityCheckCommandHandler : IRequestHandler<PassQualityCheckCo
         var appearance = await _inspectionRepository.GetResultAsync(ticketId, InspectionType.Appearance);
         var verification = await _inspectionRepository.GetResultAsync(ticketId, InspectionType.RepairVerification);
         if (functional is null || appearance is null || verification is null)
-            throw new InvalidOperationException("Vui lòng hoàn tất đủ 3 checklist trước khi QA đạt.");
+            throw new DomainException("Vui lòng hoàn tất đủ 3 checklist trước khi QA đạt.");
         if (functional.Items.Any(x => x.Status is "Fail" or "NotTested") ||
             appearance.Items.Any(x => x.Status == "Unknown") ||
             verification.Items.Any(x => x.Status != "Fixed"))
-            throw new InvalidOperationException("Checklist còn mục chưa đạt hoặc chưa xác nhận, không thể QA đạt.");
+            throw new DomainException("Checklist còn mục chưa đạt hoặc chưa xác nhận, không thể QA đạt.");
     }
 }

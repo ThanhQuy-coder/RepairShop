@@ -29,14 +29,22 @@ export default function ProfitReportPage() {
 
   const columns: TableColumn<ProfitReportData['items'][number]>[] = [
     { key: 'ticketCode', header: 'Phiếu', render: (item) => <strong>{item.ticketCode}</strong> },
-    { key: 'revenue', header: 'Doanh thu', render: (item) => `${item.revenue.toLocaleString('vi-VN')}đ` },
+    {
+      key: 'revenue',
+      header: 'Doanh thu',
+      render: (item) => `${item.revenue.toLocaleString('vi-VN')}đ`,
+    },
     { key: 'cost', header: 'Giá vốn', render: (item) => `${item.cost.toLocaleString('vi-VN')}đ` },
     {
       key: 'grossProfit',
       header: 'Lợi nhuận gộp',
       render: (item) => `${item.grossProfit.toLocaleString('vi-VN')}đ`,
     },
-    { key: 'marginPercent', header: 'Biên lợi nhuận', render: (item) => `${item.marginPercent.toFixed(2)}%` },
+    {
+      key: 'marginPercent',
+      header: 'Biên lợi nhuận',
+      render: (item) => `${item.marginPercent.toFixed(2)}%`,
+    },
   ];
 
   return (
@@ -51,11 +59,21 @@ export default function ProfitReportPage() {
       <div className={styles.filterCard}>
         <div className={styles.dateField}>
           <label className={styles.dateLabel}>Từ ngày</label>
-          <input className={styles.dateInput} type="date" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+          <input
+            className={styles.dateInput}
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+          />
         </div>
         <div className={styles.dateField}>
           <label className={styles.dateLabel}>Đến ngày</label>
-          <input className={styles.dateInput} type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} />
+          <input
+            className={styles.dateInput}
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+          />
         </div>
       </div>
       {isLoading && <Loading />}
@@ -68,8 +86,56 @@ export default function ProfitReportPage() {
             <SummaryCard icon="📈" label="Lợi nhuận gộp" value={report.grossProfit} isEmphasized />
             <SummaryCard icon="%" label="Biên lợi nhuận (%)" value={report.marginPercent} />
           </div>
-          <Table columns={columns} data={report.items} keyExtractor={(item) => item.ticketCode}
-            emptyMessage="Không có hóa đơn đã thanh toán trong khoảng thời gian này." />
+          <section className={styles.breakdownCard}>
+            <div className={styles.breakdownHeader}>
+              <div>
+                <h2 className={styles.sectionTitle}>Lợi nhuận theo dịch vụ</h2>
+                <p className={styles.sectionSubtitle}>
+                  Phân bổ giá vốn linh kiện theo tỷ trọng doanh thu của từng dịch vụ.
+                </p>
+              </div>
+              <span className={styles.paidOnlyBadge}>Chỉ hóa đơn đã thanh toán</span>
+            </div>
+            <Table
+              columns={[
+                {
+                  key: 'serviceName',
+                  header: 'Dịch vụ / nhóm',
+                  render: (item) => <strong>{item.serviceName}</strong>,
+                },
+                { key: 'ticketCount', header: 'Số ticket', render: (item) => item.ticketCount },
+                {
+                  key: 'revenue',
+                  header: 'Doanh thu',
+                  render: (item) => `${item.revenue.toLocaleString('vi-VN')}đ`,
+                },
+                {
+                  key: 'cost',
+                  header: 'Giá vốn',
+                  render: (item) => `${item.cost.toLocaleString('vi-VN')}đ`,
+                },
+                {
+                  key: 'grossProfit',
+                  header: 'Lợi nhuận gộp',
+                  render: (item) => `${item.grossProfit.toLocaleString('vi-VN')}đ`,
+                },
+                {
+                  key: 'marginPercent',
+                  header: 'Biên lợi nhuận',
+                  render: (item) => `${item.marginPercent.toFixed(2)}%`,
+                },
+              ]}
+              data={report.byService}
+              keyExtractor={(item) => item.serviceName}
+              emptyMessage="Chưa có dữ liệu dịch vụ trong khoảng thời gian này."
+            />
+          </section>
+          <Table
+            columns={columns}
+            data={report.items}
+            keyExtractor={(item) => item.ticketCode}
+            emptyMessage="Không có hóa đơn đã thanh toán trong khoảng thời gian này."
+          />
         </>
       )}
     </div>

@@ -63,9 +63,7 @@ public class AppointmentNotificationScenarioTests
         var slotId = (await slotRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
         client.AuthorizeAs(receptionist.Token);
-        var custRes = await client.PostAsJsonAsync("/api/customers", new
-        { fullName = "Test Notif Customer", phone = "0944444444", email = (string?)null, address = (string?)null, userId = customer.UserId });
-        var customerId = (await custRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
+        var customerId = customer.CustomerId!.Value;
 
         var apptRes = await client.PostAsJsonAsync("/api/appointments", new
         {

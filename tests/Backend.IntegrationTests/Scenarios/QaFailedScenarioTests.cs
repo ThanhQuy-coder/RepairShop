@@ -42,6 +42,8 @@ public class QaFailedScenarioTests
         var startQa2 = await client.PatchAsync($"/api/tickets/{ticketId}/start-qa", null);
         startQa2.StatusCode.Should().Be(HttpStatusCode.OK);
 
+        await WorkflowHelpers.CompleteInspectionsForQaAsync(client, ticketId);
+
         // PASS lần 2 — BR-19 vẫn thoả vì ticket ĐÃ TỪNG ở IN_REPAIR (nhiều lần), không quan trọng lần thứ mấy
         var passRes = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         {

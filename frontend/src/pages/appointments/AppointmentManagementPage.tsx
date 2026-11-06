@@ -6,6 +6,7 @@ import {
   Button,
   ErrorMessage,
   Modal,
+  Pagination,
   Table,
   type TableColumn,
 } from '../../components/common';
@@ -47,6 +48,8 @@ export default function AppointmentManagementPage() {
   const [typeFilter, setTypeFilter] = useState('');
   const [customerFilter, setCustomerFilter] = useState<'all' | 'account' | 'guest'>('all');
   const [processingWarrantyId, setProcessingWarrantyId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
   const { showSuccess, showError } = useToast();
 
   const handleCreateTicket = async (data: AppointmentResponse) => {
@@ -95,6 +98,10 @@ export default function AppointmentManagementPage() {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [typeFilter, customerFilter]);
 
   const transition = async (
     id: string,
@@ -254,6 +261,14 @@ export default function AppointmentManagementPage() {
     },
   ];
 
+  const filteredAppointments = appointments.filter((a) => {
+    const matchesType = !typeFilter || a.type === typeFilter;
+    const matchesCustomer = customerFilter === 'all' ||
+      (customerFilter === 'account' ? a.customerId !== null : a.customerId === null);
+    return matchesType && matchesCustomer;
+  });
+  const pagedAppointments = filteredAppointments.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
@@ -288,17 +303,13 @@ export default function AppointmentManagementPage() {
       </div>
       <Table
         columns={columns}
-        data={appointments.filter((a) => {
-          const matchesType = !typeFilter || a.type === typeFilter;
-          const matchesCustomer = customerFilter === 'all' ||
-            (customerFilter === 'account' ? a.customerId !== null : a.customerId === null);
-          return matchesType && matchesCustomer;
-        })}
+        data={pagedAppointments}
         keyExtractor={(a) => a.id}
         isLoading={isLoading}
         emptyMessage="Chưa có lịch hẹn."
         onRowClick={(a) => navigate(`/staff/appointments/${a.id}`)}
       />
+      <Pagination page={page} pageSize={PAGE_SIZE} total={filteredAppointments.length} onPageChange={setPage} />
 
       {/* Modal nhập lý do từ chối */}
       <Modal

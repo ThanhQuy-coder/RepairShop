@@ -19,12 +19,21 @@ public record ProfitReportItem(
     decimal GrossProfit,
     decimal MarginPercent);
 
+public record ProfitByServiceItem(
+    string ServiceName,
+    int TicketCount,
+    decimal Revenue,
+    decimal Cost,
+    decimal GrossProfit,
+    decimal MarginPercent);
+
 public record ProfitReportResponse(
     List<ProfitReportItem> Items,
     decimal TotalRevenue,
     decimal TotalCost,
     decimal GrossProfit,
-    decimal MarginPercent);
+    decimal MarginPercent,
+    List<ProfitByServiceItem> ByService);
 
 public record GetProfitReportQuery(DateTime? FromDate, DateTime? ToDate)
     : IRequest<ProfitReportResponse>;

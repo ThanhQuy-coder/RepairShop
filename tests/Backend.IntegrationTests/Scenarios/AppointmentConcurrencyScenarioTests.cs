@@ -49,6 +49,16 @@ public class AppointmentConcurrencyScenarioTests
 
         successCount.Should().Be(2); // ĐÚNG bằng capacity, không hơn, dù 5 request bắn đồng thời
         fullCount.Should().Be(3);
+
+        var availableResponse = await client.GetAsync(
+            $"/api/appointments/available-slots?date={date:yyyy-MM-dd}");
+        availableResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        var slots = await availableResponse.ReadAsAsync<JsonElement>();
+        var createdSlot = slots.EnumerateArray()
+            .Single(slot => slot.GetProperty("timeSlotId").GetGuid() == slotId);
+        createdSlot.GetProperty("booked").GetInt32().Should().Be(2);
+        createdSlot.GetProperty("available").GetInt32().Should().Be(0);
+        createdSlot.GetProperty("isFull").GetBoolean().Should().BeTrue();
     }
 
     [Fact]
@@ -99,11 +109,11 @@ public class AppointmentConcurrencyScenarioTests
         });
         var appointmentId = (await apptRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
-        (await client.PatchAsync($"/api/appointments/{appointmentId}/reject", null)).StatusCode.Should().Be(HttpStatusCode.OK);
+        (await client.PatchAsJsonAsync($"/api/appointments/{appointmentId}/reject", new { rejectionReason = "Không nhận sửa dòng máy này" })).StatusCode.Should().Be(HttpStatusCode.OK);
 
         // Thử Confirm sau khi đã Reject — phải bị chặn (checklist: "không confirm appointment đã Cancelled/Rejected")
         var confirmRes = await client.PatchAsync($"/api/appointments/{appointmentId}/confirm", null);
-        confirmRes.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        confirmRes.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
 
     [Fact]
@@ -138,6 +148,7 @@ public class AppointmentConcurrencyScenarioTests
         var appointmentId = (await apptRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
         await client.PatchAsync($"/api/appointments/{appointmentId}/confirm", null);
+        await client.PatchAsync($"/api/appointments/{appointmentId}/mark-arrived", null);
 
         var firstConvert = await client.PostAsJsonAsync($"/api/appointments/{appointmentId}/convert-to-ticket",
             new { customerId, deviceId });

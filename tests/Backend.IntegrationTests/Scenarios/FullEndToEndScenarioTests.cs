@@ -70,7 +70,7 @@ public class FullEndToEndScenarioTests
         var quoteRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/quotes", new
         {
             description = "Báo giá thay pin",
-            items = new[] { new { itemType = "Part", description = "Pin iPhone 13", quantity = 1, unitPrice = 350000m, partId } },
+            items = new[] { new { itemType = "Part", quantity = 1, partId = (Guid?)partId, serviceId = (Guid?)null } },
         });
         quoteRes.StatusCode.Should().Be(HttpStatusCode.Created);
         var quoteId = (await quoteRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
@@ -91,6 +91,7 @@ public class FullEndToEndScenarioTests
 
         // 11. QA Pass
         (await client.PatchAsync($"/api/tickets/{ticketId}/start-qa", null)).StatusCode.Should().Be(HttpStatusCode.OK);
+        await WorkflowHelpers.CompleteInspectionsForQaAsync(client, ticketId);
         var qaRes = await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         { functionalCheckNotes = "Sạc/xả bình thường", cosmeticCheckNotes = "Không trầy mới", originalIssueResolvedNotes = "Đã khắc phục" });
         qaRes.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -111,7 +112,7 @@ public class FullEndToEndScenarioTests
         (await deliverRes.ReadAsAsync<JsonElement>()).GetProperty("status").GetString().Should().Be("DELIVERED");
 
         // 15. Warranty Created
-        var warrantyRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyMonths = 6, terms = "Bảo hành pin 6 tháng" });
+        var warrantyRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyPackageId = new Guid("00000000-0000-0000-0000-000000000203") });
         warrantyRes.StatusCode.Should().Be(HttpStatusCode.OK);
 
         // 16. Customer views Warranty

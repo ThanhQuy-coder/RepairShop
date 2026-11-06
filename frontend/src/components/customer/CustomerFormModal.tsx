@@ -98,8 +98,10 @@ export default function CustomerFormModal({
           label="Số điện thoại"
           required
           value={form.phone}
+          disabled={!!editingCustomer}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
+        {editingCustomer && <small>Số điện thoại không thể chỉnh sửa.</small>}
 
         <Input
           label="Email"

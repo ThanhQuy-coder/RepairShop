@@ -17,6 +17,19 @@ public class WarrantyClaimScenarioTests
     private readonly CustomWebApplicationFactory _factory;
     public WarrantyClaimScenarioTests(CustomWebApplicationFactory factory) => _factory = factory;
 
+    private async Task<Guid> EnsureActiveTimeSlotAsync()
+    {
+        using var scope = _factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var existing = await db.TimeSlotConfigs.FirstOrDefaultAsync(s => s.IsActive && s.DayOfWeek == null);
+        if (existing is not null) return existing.Id;
+
+        var slot = new Domain.Modules.Appointments.TimeSlotConfig(new TimeOnly(9, 0), new TimeOnly(10, 0), 50);
+        db.TimeSlotConfigs.Add(slot);
+        await db.SaveChangesAsync();
+        return slot.Id;
+    }
+
     /// <summary>Chạy đủ Happy Path tới DELIVERED + tạo Warranty — dùng chung cho các test case dưới.</summary>
     private async Task<(HttpClient Client, Guid TicketId, SeededUser Receptionist, SeededUser Customer)> SetupDeliveredTicketWithWarranty(int warrantyMonths = 6)
     {
@@ -49,7 +62,7 @@ public class WarrantyClaimScenarioTests
         var quoteRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/quotes", new
         {
             description = "Báo giá",
-            items = new[] { new { itemType = "Part", description = "Pin", quantity = 1, unitPrice = 350000m, partId } },
+            items = new[] { new { itemType = "Part", quantity = 1, partId = (Guid?)partId, serviceId = (Guid?)null } },
         });
         var quoteId = (await quoteRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
@@ -60,6 +73,7 @@ public class WarrantyClaimScenarioTests
         await client.PostAsJsonAsync($"/api/tickets/{ticketId}/parts", new { partId, quantity = 1 });
         await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/completion-notes", new { completionNotes = "Đã thay pin" });
         await client.PatchAsync($"/api/tickets/{ticketId}/start-qa", null);
+        await WorkflowHelpers.CompleteInspectionsForQaAsync(client, ticketId);
         await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         { functionalCheckNotes = "OK", cosmeticCheckNotes = "OK", originalIssueResolvedNotes = "OK" });
 
@@ -69,7 +83,7 @@ public class WarrantyClaimScenarioTests
         await client.PatchAsJsonAsync($"/api/invoices/{invoiceId}/pay", new { paidAt = (DateTime?)null });
         await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/deliver", new { deliveryNote = (string?)null });
 
-        await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyMonths, terms = "Bảo hành pin" });
+        await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty", new { warrantyPackageId = new Guid("00000000-0000-0000-0000-000000000203") });
 
         return (client, ticketId, receptionist, customer);
     }
@@ -105,7 +119,7 @@ public class WarrantyClaimScenarioTests
         var quoteRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/quotes", new
         {
             description = "Báo giá",
-            items = new[] { new { itemType = "Part", description = "Pin", quantity = 1, unitPrice = 350000m, partId } },
+            items = new[] { new { itemType = "Part", quantity = 1, partId = (Guid?)partId, serviceId = (Guid?)null } },
         });
         var quoteId = (await quoteRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
@@ -116,6 +130,7 @@ public class WarrantyClaimScenarioTests
         await client.PostAsJsonAsync($"/api/tickets/{ticketId}/parts", new { partId, quantity = 1 });
         await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/completion-notes", new { completionNotes = "Đã thay pin" });
         await client.PatchAsync($"/api/tickets/{ticketId}/start-qa", null);
+        await WorkflowHelpers.CompleteInspectionsForQaAsync(client, ticketId);
         await client.PatchAsJsonAsync($"/api/tickets/{ticketId}/qa-pass", new
         { functionalCheckNotes = "OK", cosmeticCheckNotes = "OK", originalIssueResolvedNotes = "OK" });
 
@@ -128,9 +143,15 @@ public class WarrantyClaimScenarioTests
         return (client, ticketId, receptionist, customer);
     }
 
-    private static async Task AssertClaimRejectedAsync(HttpClient client, Guid ticketId, string issueReported, string expectedFragment, params HttpStatusCode[] allowedStatusCodes)
+    private async Task AssertClaimRejectedAsync(HttpClient client, Guid ticketId, string issueReported, string expectedFragment, params HttpStatusCode[] allowedStatusCodes)
     {
-        var claimRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new { issueReported });
+        var slotId = await EnsureActiveTimeSlotAsync();
+        var claimRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new
+        {
+            issueReported,
+            appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+            timeSlotId = slotId
+        });
 
         claimRes.StatusCode.Should().BeOneOf(allowedStatusCodes);
         var body = await claimRes.ReadAsAsync<JsonElement>();
@@ -210,11 +231,17 @@ public class WarrantyClaimScenarioTests
     public async Task NonExistentTicket_ClaimReturns404()
     {
         var receptionist = await TestUserSeeder.SeedUserAsync(_factory.Services, "Receptionist", "recep3");
+        var slotId = await EnsureActiveTimeSlotAsync();
         var client = _factory.CreateClient();
         client.AuthorizeAs(receptionist.Token);
 
         var res = await client.PostAsJsonAsync(
-            $"/api/tickets/{Guid.NewGuid()}/warranty-claim", new { issueReported = "test" });
+            $"/api/tickets/{Guid.NewGuid()}/warranty-claim", new
+            {
+                issueReported = "test",
+                appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                timeSlotId = slotId
+            });
 
         res.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
@@ -225,17 +252,28 @@ public class WarrantyClaimScenarioTests
     public async Task DuplicateOpenClaim_IsRejected()
     {
         var (client, ticketId, receptionist, _) = await SetupDeliveredTicketWithWarranty();
+        var slotId = await EnsureActiveTimeSlotAsync();
         client.AuthorizeAs(receptionist.Token);
 
-        var firstClaim = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new { issueReported = "Lần 1" });
+        var firstClaim = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new
+        {
+            issueReported = "Lần 1",
+            appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+            timeSlotId = slotId
+        });
         firstClaim.StatusCode.Should().Be(HttpStatusCode.Created);
 
-        // Claim thứ 2 khi claim thứ 1 vẫn đang mở (CHECKED_IN, chưa Delivered) -> phải reject
-        var secondClaim = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new { issueReported = "Lần 2" });
+        // Claim thứ 2 khi claim thứ 1 vẫn đang mở -> phải reject
+        var secondClaim = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new
+        {
+            issueReported = "Lần 2",
+            appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+            timeSlotId = slotId
+        });
 
         secondClaim.StatusCode.Should().BeOneOf(HttpStatusCode.BadRequest, HttpStatusCode.Conflict);
         var body = await secondClaim.ReadAsAsync<JsonElement>();
-        body.GetProperty("message").GetString().Should().Contain("đang được xử lý");
+        body.GetProperty("message").GetString().Should().Contain("đang xử lý");
     }
 
     // ───────────────────────── Claim successfully created (Eligible) ─────────────────────────
@@ -244,16 +282,21 @@ public class WarrantyClaimScenarioTests
     public async Task ActiveWarranty_ClaimCreatedSuccessfully()
     {
         var (client, ticketId, receptionist, _) = await SetupDeliveredTicketWithWarranty(warrantyMonths: 6);
+        var slotId = await EnsureActiveTimeSlotAsync();
         client.AuthorizeAs(receptionist.Token);
 
-        var claimRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new { issueReported = "Pin lại tụt nhanh như cũ" });
+        var claimRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/warranty-claim", new
+        {
+            issueReported = "Pin lại tụt nhanh như cũ",
+            appointmentDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+            timeSlotId = slotId
+        });
 
         claimRes.StatusCode.Should().Be(HttpStatusCode.Created);
-        var claimTicket = await claimRes.ReadAsAsync<JsonElement>();
-        claimTicket.GetProperty("status").GetString().Should().Be("CHECKED_IN");
-
-        // Xác nhận Ticket Code KHÁC ticket gốc, nhưng liên kết đúng CustomerId/DeviceId (BR-12)
-        claimTicket.GetProperty("ticketCode").GetString().Should().NotBe(ticketId.ToString());
-        claimTicket.GetProperty("customerId").GetGuid().Should().NotBeEmpty();
+        var claimAppointment = await claimRes.ReadAsAsync<JsonElement>();
+        claimAppointment.GetProperty("status").GetString().Should().Be("Pending");
+        claimAppointment.GetProperty("type").GetString().Should().Be("WarrantyRevisit");
+        claimAppointment.GetProperty("parentTicketId").GetGuid().Should().Be(ticketId);
+        claimAppointment.GetProperty("customerId").GetGuid().Should().NotBeEmpty();
     }
 }

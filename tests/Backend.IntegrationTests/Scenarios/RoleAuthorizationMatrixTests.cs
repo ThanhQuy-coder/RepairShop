@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using RepairShop.IntegrationTests.TestDoubles;
 using FluentAssertions;
 using Xunit;
@@ -88,11 +89,26 @@ public class RoleAuthorizationMatrixTests
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
+    [Fact]
+    public async Task Admin_CanReadProfitReportWithServiceBreakdown()
+    {
+        var admin = await TestUserSeeder.SeedUserAsync(_factory.Services, "Admin", "profit-admin");
+        var client = _factory.CreateClient();
+        client.AuthorizeAs(admin.Token);
+
+        var response = await client.GetAsync("/api/reports/profit");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>();
+        body.TryGetProperty("byService", out var byService).Should().BeTrue();
+        byService.ValueKind.Should().Be(JsonValueKind.Array);
+    }
+
     [Theory]
-    [InlineData("Receptionist")]
-    [InlineData("Technician")]
-    [InlineData("Customer")]
-    public async Task NonAdmin_CannotAccessSlaEndpoints(string role)
+    [InlineData("Receptionist", HttpStatusCode.OK)]
+    [InlineData("Technician", HttpStatusCode.OK)]
+    [InlineData("Customer", HttpStatusCode.Forbidden)]
+    public async Task NonAdmin_CannotAccessSlaEndpoints(string role, HttpStatusCode expectedSummaryStatus)
     {
         var user = await TestUserSeeder.SeedUserAsync(_factory.Services, role, $"sla-{role}");
         var client = _factory.CreateClient();
@@ -102,7 +118,7 @@ public class RoleAuthorizationMatrixTests
         var summary = await client.GetAsync("/api/reports/sla-summary");
 
         policies.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-        summary.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+        summary.StatusCode.Should().Be(expectedSummaryStatus);
     }
 
     [Fact]

@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using RepairShop.IntegrationTests.TestDoubles;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using Xunit;
 
@@ -23,7 +24,17 @@ public class SignalRRealtimeScenarioTests
         var httpClient = _factory.CreateClient();
         var hubConnection = new HubConnectionBuilder()
             .WithUrl($"{httpClient.BaseAddress}hubs/notifications?access_token={technician.Token}",
-                options => options.HttpMessageHandlerFactory = _ => _factory.Server.CreateHandler())
+                options =>
+                {
+                    options.HttpMessageHandlerFactory = _ => _factory.Server.CreateHandler();
+                    options.Transports = HttpTransportType.WebSockets;
+                    options.SkipNegotiation = true;
+                    options.WebSocketFactory = async (context, cancellationToken) =>
+                    {
+                        var wsClient = _factory.Server.CreateWebSocketClient();
+                        return await wsClient.ConnectAsync(context.Uri, cancellationToken);
+                    };
+                })
             .Build();
 
         TaskCompletionSource<JsonElement> receivedTcs = new();

@@ -45,7 +45,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         }
 
         Guid? linkedUserId = request.UserId;
-        string emailUser = string.Empty;
+        string? emailUser = request.Email;
         if (linkedUserId is null)
         {
             var userWithSamePhone = await _userRepository.GetByPhoneAsync(request.Phone);

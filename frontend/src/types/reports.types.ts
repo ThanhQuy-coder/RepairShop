@@ -50,12 +50,22 @@ export interface ProfitReportItem {
   marginPercent: number;
 }
 
+export interface ProfitByServiceItem {
+  serviceName: string;
+  ticketCount: number;
+  revenue: number;
+  cost: number;
+  grossProfit: number;
+  marginPercent: number;
+}
+
 export interface ProfitReport {
   items: ProfitReportItem[];
   totalRevenue: number;
   totalCost: number;
   grossProfit: number;
   marginPercent: number;
+  byService: ProfitByServiceItem[];
 }
 
 export interface StatusBreakdownItem {

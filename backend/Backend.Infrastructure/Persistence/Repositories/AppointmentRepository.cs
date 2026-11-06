@@ -124,11 +124,6 @@ public class AppointmentRepository : IAppointmentRepository
                     cancellationToken
                 );
 
-            if (affectedRows == 0)
-            {
-                throw new DomainException("Không tìm thấy cuộc hẹn nào phù hợp cho Phone: {Phone}");
-            }
-
             return affectedRows;
         }
         catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)

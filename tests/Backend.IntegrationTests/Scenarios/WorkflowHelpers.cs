@@ -53,10 +53,50 @@ internal static class WorkflowHelpers
         var quoteRes = await client.PostAsJsonAsync($"/api/tickets/{ticketId}/quotes", new
         {
             description = "Báo giá thay màn hình",
-            items = new[] { new { itemType = "Service", description = "Công thay màn hình", quantity = 1, unitPrice = 200000m, partId = (Guid?)null } }
+            items = new[] { new { itemType = "Service", quantity = 1, partId = (Guid?)null, serviceId = (Guid?)new Guid("00000000-0000-0000-0000-000000000102") } }
         });
         var quoteId = (await quoteRes.ReadAsAsync<JsonElement>()).GetProperty("id").GetGuid();
 
         return (ticketId, quoteId);
+    }
+
+    /// <summary>Hoàn tất đủ 3 checklist kiểm tra kỹ thuật (Functional, Appearance, RepairVerification) trước khi gọi qa-pass.</summary>
+    public static async Task CompleteInspectionsForQaAsync(HttpClient technicianClient, Guid ticketId)
+    {
+        var funcTemplates = await (await technicianClient.GetAsync($"/api/tickets/{ticketId}/inspection-templates/Functional"))
+            .ReadAsAsync<JsonElement>();
+        var funcItems = funcTemplates.EnumerateArray().Select(t => new
+        {
+            templateId = (Guid?)t.GetProperty("id").GetGuid(),
+            itemName = t.GetProperty("name").GetString()!,
+            status = "Pass",
+            note = (string?)null
+        }).ToList();
+        await technicianClient.PutAsJsonAsync($"/api/tickets/{ticketId}/inspections/Functional", new { items = funcItems });
+
+        var appTemplates = await (await technicianClient.GetAsync($"/api/tickets/{ticketId}/inspection-templates/Appearance"))
+            .ReadAsAsync<JsonElement>();
+        var appItems = appTemplates.EnumerateArray().Select(t => new
+        {
+            templateId = (Guid?)t.GetProperty("id").GetGuid(),
+            itemName = t.GetProperty("name").GetString()!,
+            status = "Normal",
+            note = (string?)null
+        }).ToList();
+        await technicianClient.PutAsJsonAsync($"/api/tickets/{ticketId}/inspections/Appearance", new { items = appItems });
+
+        await technicianClient.PutAsJsonAsync($"/api/tickets/{ticketId}/inspections/RepairVerification", new
+        {
+            items = new[]
+            {
+                new
+                {
+                    templateId = (Guid?)null,
+                    itemName = "Xác nhận khắc phục lỗi ban đầu",
+                    status = "Fixed",
+                    note = (string?)null
+                }
+            }
+        });
     }
 }

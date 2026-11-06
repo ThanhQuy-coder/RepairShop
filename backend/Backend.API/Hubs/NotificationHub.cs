@@ -20,7 +20,8 @@ public class NotificationHub : Hub
 
         // Group theo Role — có thể mở rộng sau cho thông báo broadcast tới cả 1 nhóm vai trò
         // (VD: cảnh báo tồn kho thấp gửi mọi Admin cùng lúc) mà không cần lặp qua từng userId.
-        var role = Context.User?.FindFirstValue(ClaimTypes.Role);
+        var role = Context.User?.FindFirstValue("role")
+            ?? Context.User?.FindFirstValue(ClaimTypes.Role);
         if (!string.IsNullOrEmpty(role))
             await Groups.AddToGroupAsync(Context.ConnectionId, GroupNameForRole(role));
 
@@ -39,7 +40,8 @@ public class NotificationHub : Hub
     private Guid? GetUserId()
     {
         // Khớp đúng claim "sub" đã dùng khi sinh JWT (JwtTokenGenerator, Task 6 Tuần 3)
-        var sub = Context.User?.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub);
+        var sub = Context.User?.FindFirstValue(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)
+            ?? Context.User?.FindFirstValue(ClaimTypes.NameIdentifier);
         return Guid.TryParse(sub, out var id) ? id : null;
     }
 
