@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import logging
 
+from pydantic import ValidationError  # type: ignore
+
+from app.core.text import contains_term, normalize_text
 from app.llm.llm_client import LLMClient, LLMResponseError, LLMTimeoutError, llm_client
 from app.prompts.advisory_prompt import build_user_prompt
 from app.prompts.system_prompt import SYSTEM_PROMPT
@@ -26,6 +29,7 @@ _OFF_TOPIC_MARKERS = (
     "code",
     "lập trình",
     "nấu ăn",
+    "nấu",
     "công thức",
     "dịch thuật",
     "toán",
@@ -35,15 +39,71 @@ _OFF_TOPIC_MARKERS = (
     "tư vấn tâm lý",
 )
 
+# Tín hiệu sửa chữa thiết bị — nếu có, câu chứa "code"/"toán"... vẫn được coi là TRONG phạm vi
+# (sửa D-01: "máy báo error code 404" từng bị chặn nhầm).
+_REPAIR_SIGNALS = (
+    "pin",
+    "màn hình",
+    "cảm ứng",
+    "sạc",
+    "chân sạc",
+    "cổng sạc",
+    "nguồn",
+    "bàn phím",
+    "phím",
+    "loa",
+    "mic",
+    "micro",
+    "camera",
+    "nóng",
+    "quạt",
+    "tản nhiệt",
+    "nước",
+    "vô nước",
+    "rơi",
+    "hỏng",
+    "lỗi",
+    "máy",
+    "điện thoại",
+    "laptop",
+    "ipad",
+    "tablet",
+    "tự tắt",
+    "tắt nguồn",
+    "treo",
+    "chậm",
+    "giật",
+    "vỡ",
+    "nứt",
+    "sọc",
+    "âm thanh",
+    "wifi",
+    "sóng",
+    "rung",
+    "chuông",
+    "bản lề",
+    "vân tay",
+    "face id",
+    "cảm biến",
+    "bụi",
+    "mực",
+)
+
 
 def _looks_off_topic(issue_description: str) -> bool:
     """
-    Lưới an toàn THỨ HAI (bên cạnh System Prompt) — nếu mô tả rõ ràng không liên quan sửa chữa
-    thiết bị (không có candidate nào match VÀ chứa từ khóa ngoài phạm vi), tự trả OUT_OF_SCOPE
-    ngay tại Application, không cần đợi LLM tự nhận diện đúng 100% lần nào cũng vậy.
+    Lưới an toàn THỨ HAI (bên cạnh System Prompt).
+
+    Task 2.2 sửa D-01: dùng khớp theo RANH GIỚI TỪ và CHỈ chặn khi câu không có bất kỳ
+    tín hiệu sửa chữa nào — tránh false positive với "error code 404", "thanh toán",
+    "QR code" (những câu hoàn toàn hợp lệ trong ngữ cảnh sửa máy).
     """
-    lowered = issue_description.lower()
-    return any(marker in lowered for marker in _OFF_TOPIC_MARKERS)
+    text = normalize_text(issue_description)
+
+    if any(contains_term(text, signal) for signal in _REPAIR_SIGNALS):
+        return False
+
+    return any(contains_term(text, marker) for marker in _OFF_TOPIC_MARKERS)
 
 
 class AdvisoryService:
@@ -80,7 +140,15 @@ class AdvisoryService:
             logger.error("LLM error for requestId=%s", request.request_id)
             raise
 
-        llm_output = LLMAdvisoryOutput.model_validate(raw_output)
+        try:
+            llm_output = LLMAdvisoryOutput.model_validate(raw_output)
+        except ValidationError as exc:
+            # Sửa D-03: output LLM sai schema phải thành lỗi có kiểm soát (500 AI_INTERNAL_ERROR
+            # ở tầng API), không để FastAPI văng unhandled exception.
+            logger.error("LLM output không đúng schema cho requestId=%s: %s",
+                         request.request_id, exc)
+            raise LLMResponseError("LLM output không đúng schema.") from exc
+
 
         # Bước 3 — LLM tự báo out-of-scope (đúng System Prompt Task 6.8)
         if llm_output.out_of_scope:

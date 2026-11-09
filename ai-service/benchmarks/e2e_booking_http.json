@@ -1,0 +1,138 @@
+{
+  "consult": {
+    "http": 200,
+    "latencyMs": 3542.7,
+    "body": {
+      "aiAvailable": true,
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "diagnosis": {
+        "possibleCauses": [
+          {
+            "name": "Pin chai hoặc hư hỏng",
+            "confidence": "HIGH"
+          },
+          {
+            "name": "Lỗi phần mềm hoặc ứng dụng chạy ngầm",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "suggestedServices": [
+          {
+            "serviceId": "00000000-0000-0000-0000-000000000101",
+            "serviceName": "Thay pin điện thoại",
+            "confidence": "HIGH"
+          },
+          {
+            "serviceId": "00000000-0000-0000-0000-000000000108",
+            "serviceName": "Cài đặt phần mềm, xử lý virus",
+            "confidence": "HIGH"
+          }
+        ],
+        "suggestedParts": [
+          {
+            "partId": "680f5dcf-5084-4d04-8099-3a9a81b6e394",
+            "partName": "Pin iPhone 13",
+            "confidence": "MEDIUM"
+          }
+        ],
+        "missingInformation": [],
+        "explanation": "Thiết bị có thể gặp vấn đề về pin hoặc phần mềm gây nóng máy và tụt pin nhanh khi sử dụng."
+      },
+      "quotation": {
+        "items": [
+          {
+            "itemId": "00000000-0000-0000-0000-000000000101",
+            "itemType": "SERVICE",
+            "name": "Thay pin điện thoại",
+            "unitPrice": 350000.0,
+            "lineTotal": 350000.0
+          },
+          {
+            "itemId": "00000000-0000-0000-0000-000000000108",
+            "itemType": "SERVICE",
+            "name": "Cài đặt phần mềm, xử lý virus",
+            "unitPrice": 150000.0,
+            "lineTotal": 150000.0
+          },
+          {
+            "itemId": "680f5dcf-5084-4d04-8099-3a9a81b6e394",
+            "itemType": "PART",
+            "name": "Pin iPhone 13",
+            "unitPrice": 650000.0,
+            "lineTotal": 650000.0
+          }
+        ],
+        "estimatedTotal": 1150000.0,
+        "currency": "VND",
+        "assumptions": [
+          "Giá dịch vụ và giá linh kiện có thể trùng một phần công thợ; nhân viên sẽ chốt khi kiểm tra máy."
+        ],
+        "explanation": "Báo giá tham khảo gồm 3 hạng mục theo bảng giá hiện hành. Đây không phải báo giá chính thức."
+      },
+      "appointment": {
+        "suggestedSlots": [
+          {
+            "timeSlotId": "30000000-0000-0000-0000-000000000001",
+            "slotStart": "09:00",
+            "slotEnd": "10:00",
+            "appointmentDate": "2026-11-10",
+            "available": 5
+          },
+          {
+            "timeSlotId": "30000000-0000-0000-0000-000000000002",
+            "slotStart": "10:00",
+            "slotEnd": "11:00",
+            "appointmentDate": "2026-11-10",
+            "available": 5
+          },
+          {
+            "timeSlotId": "30000000-0000-0000-0000-000000000003",
+            "slotStart": "14:00",
+            "slotEnd": "15:00",
+            "appointmentDate": "2026-11-10",
+            "available": 5
+          }
+        ],
+        "bookingDraft": {
+          "fullName": null,
+          "phone": null,
+          "appointmentDate": null,
+          "timeSlotId": null,
+          "deviceType": "Phone",
+          "brand": "iPhone",
+          "model": "13",
+          "issueDescription": "Pin tụt nhanh, máy nóng khi sạc. Muốn báo giá và đặt lịch."
+        },
+        "missingInformation": [
+          "fullName",
+          "phone",
+          "timeSlotId"
+        ],
+        "requiresUserConfirmation": true,
+        "explanation": "Ngày 10/11/2026 còn 4 khung giờ trống. Vui lòng chọn một khung."
+      },
+      "message": "Thiết bị có thể gặp vấn đề về pin hoặc phần mềm gây nóng máy và tụt pin nhanh khi sử dụng. Giá tham khảo: 1,150,000 VND cho 3 hạng mục. Còn 3 khung giờ trống, gần nhất 09:00–10:00 ngày 10/11/2026.",
+      "disclaimer": "Đây là thông tin tư vấn tham khảo. Kỹ thuật viên sẽ kiểm tra và xác nhận phương án sửa chữa thực tế.",
+      "aiRequestId": "801a9a04-f990-4023-baef-a1e1a1dcc727"
+    }
+  },
+  "booking": {
+    "http": 201,
+    "latencyMs": 534.8,
+    "id": "2749c63a-c185-47fc-b8ec-66bb60a2f5e7",
+    "status": "Pending",
+    "hasLookupToken": true,
+    "date": "2026-11-10",
+    "slotId": "30000000-0000-0000-0000-000000000001"
+  },
+  "cancel": {
+    "http": 200,
+    "status": "Cancelled"
+  }
+}

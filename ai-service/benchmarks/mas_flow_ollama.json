@@ -1,0 +1,87 @@
+{
+  "label": "ollama",
+  "generatedAt": "2026-11-09T14:48:47+00:00",
+  "llm": {
+    "mode": "hosted",
+    "baseUrlHost": "127.0.0.1:11434",
+    "model": "qwen2.5:1.5b-instruct-q4_K_M"
+  },
+  "fixedToday": "2026-11-09",
+  "message": "Pin chai rồi, báo giá và đặt lịch mai 3h chiều",
+  "runs": [
+    {
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "latencyMs": 2378.1,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "services": [
+        "svc-pin"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "quotationTotal": 750000.0,
+      "quotationItems": 2,
+      "suggestedSlots": [
+        "slot-1500"
+      ],
+      "bookingDraft": {
+        "date": "2026-11-10",
+        "slot": "slot-1500",
+        "missing": [
+          "fullName",
+          "phone"
+        ]
+      },
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn. Giá tham khảo: 750,000 VND cho 2 hạng mục. Còn 1 khung giờ trống, gần nhất 15:00–16:00 ngày 10/11/2026."
+    },
+    {
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "latencyMs": 1284.7,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "services": [
+        "svc-pin"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "quotationTotal": 750000.0,
+      "quotationItems": 2,
+      "suggestedSlots": [
+        "slot-1500"
+      ],
+      "bookingDraft": {
+        "date": "2026-11-10",
+        "slot": "slot-1500",
+        "missing": [
+          "fullName",
+          "phone"
+        ]
+      },
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn. Giá tham khảo: 750,000 VND cho 2 hạng mục. Còn 1 khung giờ trống, gần nhất 15:00–16:00 ngày 10/11/2026."
+    }
+  ],
+  "summary": {
+    "n": 2,
+    "medianMs": 1831.4,
+    "minMs": 1284.7,
+    "maxMs": 2378.1,
+    "statusCounts": {
+      "SUCCESS": 2
+    },
+    "fallbackCount": 0
+  }
+}

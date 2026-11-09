@@ -1,0 +1,121 @@
+{
+  "label": "hosted",
+  "generatedAt": "2026-11-09T14:48:33+00:00",
+  "llm": {
+    "mode": "hosted",
+    "baseUrlHost": "generativelanguage.googleapis.com",
+    "model": "gemini-3.5-flash-lite"
+  },
+  "fixedToday": "2026-11-09",
+  "message": "Pin chai rồi, báo giá và đặt lịch mai 3h chiều",
+  "runs": [
+    {
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "latencyMs": 2561.8,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "services": [
+        "svc-pin",
+        "svc-sac"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "quotationTotal": 1000000.0,
+      "quotationItems": 3,
+      "suggestedSlots": [
+        "slot-1500"
+      ],
+      "bookingDraft": {
+        "date": "2026-11-10",
+        "slot": "slot-1500",
+        "missing": [
+          "fullName",
+          "phone"
+        ]
+      },
+      "reason": "Thiết bị có thể gặp tình trạng hao pin hoặc lỗi linh kiện liên quan đến sạc, cần kiểm tra thêm tình trạng thực tế. Giá tham khảo: 1,000,000 VND cho 3 hạng mục. Còn 1 khung giờ trống, gần nhất 15:00–16:00 ngày 10/11/2026."
+    },
+    {
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "latencyMs": 1598.5,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "services": [
+        "svc-pin",
+        "svc-sac"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "quotationTotal": 1000000.0,
+      "quotationItems": 3,
+      "suggestedSlots": [
+        "slot-1500"
+      ],
+      "bookingDraft": {
+        "date": "2026-11-10",
+        "slot": "slot-1500",
+        "missing": [
+          "fullName",
+          "phone"
+        ]
+      },
+      "reason": "Hiện tượng pin giảm dung lượng và thiết bị ấm lên khi nạp năng lượng có thể liên quan đến tình trạng linh kiện nguồn điện hoặc bộ lưu trữ. Giá tham khảo: 1,000,000 VND cho 3 hạng mục. Còn 1 khung giờ trống, gần nhất 15:00–16:00 ngày 10/11/2026."
+    },
+    {
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS",
+        "QUOTATION",
+        "APPOINTMENT"
+      ],
+      "latencyMs": 2090.1,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "services": [
+        "svc-pin"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "quotationTotal": 750000.0,
+      "quotationItems": 2,
+      "suggestedSlots": [
+        "slot-1500"
+      ],
+      "bookingDraft": {
+        "date": "2026-11-10",
+        "slot": "slot-1500",
+        "missing": [
+          "fullName",
+          "phone"
+        ]
+      },
+      "reason": "Hiện tượng pin chai và nóng máy có thể do linh kiện pin suy giảm khả năng hoạt động sau thời gian dài sử dụng. Giá tham khảo: 750,000 VND cho 2 hạng mục. Còn 1 khung giờ trống, gần nhất 15:00–16:00 ngày 10/11/2026."
+    }
+  ],
+  "summary": {
+    "n": 3,
+    "medianMs": 2090.1,
+    "minMs": 1598.5,
+    "maxMs": 2561.8,
+    "statusCounts": {
+      "SUCCESS": 3
+    },
+    "fallbackCount": 0
+  }
+}

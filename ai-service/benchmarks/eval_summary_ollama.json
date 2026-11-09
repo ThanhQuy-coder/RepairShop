@@ -1,0 +1,106 @@
+{
+  "label": "ollama",
+  "generatedAt": "2026-11-09T15:05:54+00:00",
+  "llm": {
+    "mode": "hosted",
+    "model": "qwen2.5:1.5b-instruct-q4_K_M",
+    "baseUrlHost": "127.0.0.1:11434"
+  },
+  "fixedToday": "2026-11-09",
+  "results": {
+    "dev:mas": {
+      "n": 24,
+      "nQuality": 24,
+      "fallbackRate": 0.0,
+      "intentAccuracy": 1.0,
+      "intentAccuracyAllRows": 1.0,
+      "serviceHit1": 0.8182,
+      "serviceHit3": 1.0,
+      "serviceMrr": 0.9091,
+      "serviceEvaluated": 11,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 16,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 646.8,
+      "latencyP95Ms": 5883.7,
+      "latencyMinMs": 4.3,
+      "latencyMaxMs": 16729.9,
+      "statusCounts": {
+        "SUCCESS": 24
+      },
+      "fallbackCount": 0,
+      "avgLlmCalls": 0.5
+    },
+    "dev:baseline": {
+      "n": 24,
+      "nQuality": 21,
+      "fallbackRate": 0.125,
+      "intentAccuracy": 1.0,
+      "intentAccuracyAllRows": 1.0,
+      "serviceHit1": 0.9,
+      "serviceHit3": 1.0,
+      "serviceMrr": 0.95,
+      "serviceEvaluated": 10,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 16,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 2729.4,
+      "latencyP95Ms": 3844.2,
+      "latencyMinMs": 1.9,
+      "latencyMaxMs": 8301.3,
+      "statusCounts": {
+        "SUCCESS": 21,
+        "PARTIAL": 3
+      },
+      "fallbackCount": 3,
+      "avgLlmCalls": 0.667
+    },
+    "holdout:mas": {
+      "n": 17,
+      "nQuality": 17,
+      "fallbackRate": 0.0,
+      "intentAccuracy": 1.0,
+      "intentAccuracyAllRows": 1.0,
+      "serviceHit1": 0.8889,
+      "serviceHit3": 1.0,
+      "serviceMrr": 0.9444,
+      "serviceEvaluated": 9,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 10,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 19.1,
+      "latencyP95Ms": 1803.6,
+      "latencyMinMs": 10.1,
+      "latencyMaxMs": 1838.7,
+      "statusCounts": {
+        "SUCCESS": 17
+      },
+      "fallbackCount": 0,
+      "avgLlmCalls": 0.353
+    },
+    "holdout:baseline": {
+      "n": 17,
+      "nQuality": 15,
+      "fallbackRate": 0.1176,
+      "intentAccuracy": 1.0,
+      "intentAccuracyAllRows": 1.0,
+      "serviceHit1": 1.0,
+      "serviceHit3": 1.0,
+      "serviceMrr": 1.0,
+      "serviceEvaluated": 8,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 11,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 2711.7,
+      "latencyP95Ms": 4201.5,
+      "latencyMinMs": 0.9,
+      "latencyMaxMs": 4530.7,
+      "statusCounts": {
+        "SUCCESS": 15,
+        "PARTIAL": 2
+      },
+      "fallbackCount": 2,
+      "avgLlmCalls": 0.647
+    }
+  }
+}

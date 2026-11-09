@@ -66,6 +66,16 @@ try
                     Window = TimeSpan.FromMinutes(1),
                     QueueLimit = 0
                 }));
+        // Task 4.1: endpoint tư vấn MAS mở cho Guest nhưng phải chặn lạm dụng (mỗi IP 10 req/phút).
+        options.AddPolicy("PublicAiConsultPolicy", context =>
+            RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 10,
+                    Window = TimeSpan.FromMinutes(1),
+                    QueueLimit = 0
+                }));
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     });
 

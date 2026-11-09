@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from './common';
+import { Wrench } from './common/FixoraIcons';
 import styles from './Header.module.css';
 import NotificationBell from './notification/NotificationBell';
 
@@ -29,6 +30,11 @@ export default function Header({ showAuthActions = true }: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.leftArea}>
+        <Link to="/" className={styles.homeLink} title="Về trang chủ Fixora">
+          <Wrench size={15} />
+          <span>FIXORA</span>
+        </Link>
+        <span className={styles.dividerDot} aria-hidden="true" />
         <span className={styles.systemStatusDot} title="Hệ thống hoạt động bình thường" />
         <span className={styles.systemStatusText}>Hệ thống vận hành</span>
       </div>

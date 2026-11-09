@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator # type: ignore
@@ -46,6 +46,12 @@ class AvailablePart(BaseModel):
     part_id: str = Field(..., alias="partId", min_length=1)
     name: str = Field(..., min_length=1, max_length=150)
     unit_price: float = Field(..., alias="unitPrice", ge=0)
+    # Task 3.1: hai field optional do Backend mới gửi kèm để lọc linh kiện không tương thích /
+    # đã hết hàng. Legacy /v1/advisory không gửi => mặc định None/True (giữ nguyên hành vi cũ).
+    compatible_device_type: Optional[str] = Field(
+        default=None, alias="compatibleDeviceType", max_length=50
+    )
+    in_stock: bool = Field(default=True, alias="inStock")
 
     class Config:
         populate_by_name = True

@@ -1,0 +1,142 @@
+{
+  "label": "hosted",
+  "generatedAt": "2026-11-09T13:44:06+00:00",
+  "llm": {
+    "mode": "hosted",
+    "baseUrlHost": "generativelanguage.googleapis.com",
+    "model": "gemini-3.5-flash-lite"
+  },
+  "coldStartGraphImportMs": 2437.0,
+  "runs": 3,
+  "cases": [
+    {
+      "caseId": "R1",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 2736.3,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-pin",
+        "svc-sac"
+      ],
+      "partIds": [
+        "part-pin-ip13"
+      ],
+      "causeCount": 2,
+      "explanationLength": 160,
+      "reason": "Hiện tượng pin tụt nhanh và nóng máy khi sạc thường liên quan đến vấn đề về pin hoặc hệ thống sạc. Kỹ thuật viên cần kiểm tra trực tiếp để xác định nguyên nhân."
+    },
+    {
+      "caseId": "R2",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1204.0,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-tan-nhiet"
+      ],
+      "partIds": [],
+      "causeCount": 2,
+      "explanationLength": 126,
+      "reason": "Triệu chứng máy nóng và quạt kêu to thường do bụi bẩn tích tụ hoặc keo tản nhiệt giảm hiệu quả, cần kiểm tra hệ thống làm mát."
+    },
+    {
+      "caseId": "R1",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1004.4,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-pin",
+        "svc-sac"
+      ],
+      "partIds": [
+        "part-pin-ip13"
+      ],
+      "causeCount": 2,
+      "explanationLength": 130,
+      "reason": "Thiết bị có thể gặp tình trạng pin hao hụt nhanh hoặc quá nhiệt trong quá trình sạc do linh kiện nguồn hoặc pin cần được kiểm tra."
+    },
+    {
+      "caseId": "R2",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1087.0,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-tan-nhiet"
+      ],
+      "partIds": [],
+      "causeCount": 2,
+      "explanationLength": 154,
+      "reason": "Triệu chứng máy nóng và quạt kêu lớn thường xuất phát từ việc hệ thống tản nhiệt bám bụi hoặc keo tản nhiệt giảm hiệu quả, cần được kiểm tra và bảo dưỡng."
+    },
+    {
+      "caseId": "R1",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 919.9,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-pin"
+      ],
+      "partIds": [
+        "part-pin-ip13"
+      ],
+      "causeCount": 2,
+      "explanationLength": 123,
+      "reason": "Hiện tượng hao pin và nóng máy khi sạc thường liên quan đến tình trạng pin đã suy giảm hoặc phần cứng bên trong gặp vấn đề."
+    },
+    {
+      "caseId": "R2",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1195.2,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-tan-nhiet"
+      ],
+      "partIds": [],
+      "causeCount": 3,
+      "explanationLength": 170,
+      "reason": "Triệu chứng máy nóng và quạt kêu to thường do hệ thống tản nhiệt bám bụi hoặc keo tản nhiệt giảm tác dụng. Dịch vụ vệ sinh tản nhiệt có thể giúp cải thiện tình trạng này."
+    }
+  ],
+  "summary": {
+    "n": 6,
+    "medianMs": 1141.1,
+    "minMs": 919.9,
+    "maxMs": 2736.3,
+    "statusCounts": {
+      "SUCCESS": 6
+    },
+    "fallbackCount": 0,
+    "llmCallCounts": {
+      "1": 6
+    }
+  }
+}

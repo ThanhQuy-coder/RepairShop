@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import type { NavGroup, NavItem } from '../constants/navigation';
 import {
   ChevronDown,
@@ -126,7 +126,20 @@ export default function Sidebar({ items = [], groups = [], title }: SidebarProps
         }`}
       >
         <div className={styles.brandRow}>
-          {!isCollapsed && <div className={styles.brand}>{title}</div>}
+          <Link
+            to="/"
+            className={styles.brandLink}
+            title="Về trang chủ Fixora"
+            aria-label="Về trang chủ Fixora"
+          >
+            {isCollapsed ? (
+              <span className={styles.brandMark} aria-hidden="true">
+                F
+              </span>
+            ) : (
+              <span className={styles.brand}>{title}</span>
+            )}
+          </Link>
 
           <div className={styles.brandActions}>
             <button

@@ -1,8 +1,10 @@
 using RepairShop.Application.Modules.AIAdvisory.Commands.GetAIAdvice;
+using RepairShop.Application.Modules.AIAdvisory.Commands.GetConsultation;
 using RepairShop.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace RepairShop.API.Controllers;
 
@@ -23,6 +25,21 @@ public class AIAdvisoryController : ControllerBase
     public async Task<IActionResult> GetAdvice(GetAIAdviceCommand command)
     {
         var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Task 4.1 — Tư vấn MAS cho Guest/Customer: Backend dựng context, gọi FastAPI,
+    /// hậu kiểm rồi trả kết quả có cấu trúc. Không lộ lỗi kỹ thuật ra ngoài.
+    /// </summary>
+    [HttpPost("consult")]
+    [AllowAnonymous]
+    [EnableRateLimiting("PublicAiConsultPolicy")]
+    public async Task<IActionResult> Consult(
+        GetConsultationCommand command,
+        CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
         return Ok(result);
     }
 }

@@ -1,0 +1,95 @@
+{
+  "label": "hosted",
+  "generatedAt": "2026-11-09T15:04:27+00:00",
+  "llm": {
+    "mode": "hosted",
+    "model": "gemini-3.5-flash-lite",
+    "baseUrlHost": "generativelanguage.googleapis.com"
+  },
+  "fixedToday": "2026-11-09",
+  "results": {
+    "dev:mas": {
+      "n": 24,
+      "intentAccuracy": 1.0,
+      "serviceHit1": 0.9091,
+      "serviceHit3": 0.9091,
+      "serviceMrr": 1.0,
+      "serviceEvaluated": 11,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 16,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 462.6,
+      "latencyP95Ms": 5488.9,
+      "latencyMinMs": 4.5,
+      "latencyMaxMs": 6760.7,
+      "statusCounts": {
+        "SUCCESS": 24
+      },
+      "fallbackCount": 1,
+      "avgLlmCalls": 0.5
+    },
+    "dev:baseline": {
+      "n": 24,
+      "intentAccuracy": 1.0,
+      "serviceHit1": 0.9091,
+      "serviceHit3": 1.0,
+      "serviceMrr": 0.9394,
+      "serviceEvaluated": 11,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 19,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 287.1,
+      "latencyP95Ms": 2474.6,
+      "latencyMinMs": 0.9,
+      "latencyMaxMs": 3619.2,
+      "statusCounts": {
+        "PARTIAL": 13,
+        "SUCCESS": 11
+      },
+      "fallbackCount": 13,
+      "avgLlmCalls": 0.25
+    },
+    "holdout:mas": {
+      "n": 17,
+      "intentAccuracy": 1.0,
+      "serviceHit1": 0.4444,
+      "serviceHit3": 0.5556,
+      "serviceMrr": 0.9,
+      "serviceEvaluated": 9,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 10,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 20.1,
+      "latencyP95Ms": 342.1,
+      "latencyMinMs": 10.0,
+      "latencyMaxMs": 350.4,
+      "statusCounts": {
+        "PARTIAL": 6,
+        "SUCCESS": 11
+      },
+      "fallbackCount": 6,
+      "avgLlmCalls": 0.0
+    },
+    "holdout:baseline": {
+      "n": 17,
+      "intentAccuracy": 1.0,
+      "serviceHit1": 0.8889,
+      "serviceHit3": 1.0,
+      "serviceMrr": 0.9444,
+      "serviceEvaluated": 9,
+      "quotationIntegrity": 1.0,
+      "quotationEvaluated": 12,
+      "slotValidity": 1.0,
+      "latencyMedianMs": 274.7,
+      "latencyP95Ms": 1954.7,
+      "latencyMinMs": 0.8,
+      "latencyMaxMs": 4828.7,
+      "statusCounts": {
+        "PARTIAL": 11,
+        "SUCCESS": 6
+      },
+      "fallbackCount": 11,
+      "avgLlmCalls": 0.118
+    }
+  }
+}

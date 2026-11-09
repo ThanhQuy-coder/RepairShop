@@ -1,0 +1,110 @@
+{
+  "label": "ollama",
+  "generatedAt": "2026-11-09T13:44:30+00:00",
+  "llm": {
+    "mode": "hosted",
+    "baseUrlHost": "127.0.0.1:11434",
+    "model": "qwen2.5:1.5b-instruct-q4_K_M"
+  },
+  "coldStartGraphImportMs": 2216.9,
+  "runs": 2,
+  "cases": [
+    {
+      "caseId": "R1",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 2445.4,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-pin"
+      ],
+      "partIds": [
+        "part-pin-ip13"
+      ],
+      "causeCount": 3,
+      "explanationLength": 55,
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn."
+    },
+    {
+      "caseId": "R2",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1479.9,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-tan-nhiet",
+        "svc-pin-laptop"
+      ],
+      "partIds": [
+        "part-pin-dell",
+        "part-pin-ip13"
+      ],
+      "causeCount": 3,
+      "explanationLength": 55,
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn."
+    },
+    {
+      "caseId": "R1",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1477.2,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-pin"
+      ],
+      "partIds": [
+        "part-pin-ip13"
+      ],
+      "causeCount": 3,
+      "explanationLength": 55,
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn."
+    },
+    {
+      "caseId": "R2",
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "latencyMs": 1541.6,
+      "llmCalls": 1,
+      "fallbackUsed": false,
+      "serviceIds": [
+        "svc-tan-nhiet",
+        "svc-pin-laptop"
+      ],
+      "partIds": [
+        "part-pin-dell",
+        "part-pin-ip13"
+      ],
+      "causeCount": 3,
+      "explanationLength": 55,
+      "reason": "Chưa có mô tả tình trạng, cần thêm thông tin để tư vấn."
+    }
+  ],
+  "summary": {
+    "n": 4,
+    "medianMs": 1510.8,
+    "minMs": 1477.2,
+    "maxMs": 2445.4,
+    "statusCounts": {
+      "SUCCESS": 4
+    },
+    "fallbackCount": 0,
+    "llmCallCounts": {
+      "1": 4
+    }
+  }
+}

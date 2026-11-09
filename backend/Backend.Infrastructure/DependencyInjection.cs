@@ -153,7 +153,7 @@ public static class DependencyInjection
                 policy.RequireRole(Roles.Technician, Roles.Admin));
 
             options.AddPolicy(AuthorizationPolicies.CustomerOrReceptionist, policy =>
-                policy.RequireRole(Roles.Customer, Roles.Receptionist));
+                policy.RequireRole(Roles.Customer, Roles.Receptionist, Roles.Admin));
         });
 
         services.Configure<CloudinarySettings>(configuration.GetSection(CloudinarySettings.SectionName));
@@ -175,6 +175,17 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IAICircuitBreaker, AICircuitBreaker>();
+
+        // Task 4.1 — MAS consultation: timeout riêng (mặc định 20s) vì có 1 LLM call + context lớn.
+        services.AddHttpClient<IAIConsultationService, AIConsultationClient>(client =>
+        {
+            client.BaseAddress = new Uri(aiSettings.BaseUrl);
+            var consultTimeout = aiSettings.ConsultTimeoutSeconds > 0
+                ? aiSettings.ConsultTimeoutSeconds
+                : aiSettings.TimeoutSeconds;
+            client.Timeout = TimeSpan.FromSeconds(consultTimeout);
+            client.DefaultRequestHeaders.Add("X-Internal-Api-Key", internalApiKey);
+        });
 
         return services;
     }

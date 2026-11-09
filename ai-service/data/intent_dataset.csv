@@ -1,0 +1,157 @@
+text,label
+"Điện thoại của tôi bị tụt pin rất nhanh",DIAGNOSIS
+"iPhone 13 sạc không vào, cắm sạc không báo gì",DIAGNOSIS
+"Màn hình laptop bị sọc dọc, nhìn rất khó chịu",DIAGNOSIS
+"Máy bị vỡ màn hình sau khi rơi xuống đất",DIAGNOSIS
+"Bàn phím laptop gõ không ăn, có phím bị liệt",DIAGNOSIS
+"Máy nóng ran khi sạc, sờ vào thấy bỏng tay",DIAGNOSIS
+"Loa ngoài bị rè khi mở nhạc to",DIAGNOSIS
+"Camera sau chụp bị mờ, không lấy nét được",DIAGNOSIS
+"Máy tự tắt nguồn dù pin còn 40%",DIAGNOSIS
+"Điện thoại bị vô nước, giờ không lên nguồn",DIAGNOSIS
+"Máy chạy chậm, mở ứng dụng nào cũng giật",DIAGNOSIS
+"Cảm ứng màn hình chập chờn, lúc ăn lúc không",DIAGNOSIS
+"Tai nghe trong máy không nghe được, chỉ nghe loa ngoài",DIAGNOSIS
+"Máy báo lỗi error code 404 khi mở ứng dụng",DIAGNOSIS
+"Màn hình điện thoại bị đốm mực đen lan rộng",DIAGNOSIS
+"Laptop quạt kêu to bất thường và rất nóng",DIAGNOSIS
+"Chân sạc bị lỏng, phải giữ dây mới sạc được",DIAGNOSIS
+"Máy bị treo logo, khởi động mãi không lên",DIAGNOSIS
+"Ống kính camera bị trầy, ảnh chụp bị mờ",DIAGNOSIS
+"Pin điện thoại bị phồng, mặt lưng bị hở",DIAGNOSIS
+"Máy rơi xuống đất, giờ màn hình bị nứt góc",DIAGNOSIS
+"Điện thoại không nhận sim, mất sóng hoàn toàn",DIAGNOSIS
+"Wifi trên laptop tự ngắt liên tục",DIAGNOSIS
+"Nút nguồn bị liệt, không bấm được",DIAGNOSIS
+"Máy nghe gọi nhỏ, bên kia không nghe rõ",DIAGNOSIS
+"Bản lề laptop bị gãy, màn hình lung lay",DIAGNOSIS
+"Vân tay không nhận, đăng ký lại cũng không được",DIAGNOSIS
+"Máy sạc pin rất chậm, cả đêm chỉ được 30%",DIAGNOSIS
+"Màn hình laptop bị ám vàng ở góc dưới",DIAGNOSIS
+"Điện thoại bị đơ khi chụp ảnh",DIAGNOSIS
+"Máy ảnh bị đen khi quay video ban đêm",DIAGNOSIS
+"Loa thoại bị rè, gọi điện nghe rất khó",DIAGNOSIS
+"Máy không kết nối được bluetooth với tai nghe",DIAGNOSIS
+"Chuông điện thoại không kêu dù đã bật âm lượng",DIAGNOSIS
+"Máy bị mất rung khi có thông báo",DIAGNOSIS
+"Laptop không lên màn hình, đèn nguồn vẫn sáng",DIAGNOSIS
+"Điện thoại sạc pin bị giật, chạm vào vỏ thấy tê",DIAGNOSIS
+"Máy bị nước vào loa, giờ nghe rất nhỏ",DIAGNOSIS
+"Màn hình bị sọc xanh sau khi cập nhật phần mềm",DIAGNOSIS
+"Máy đọc mã QR code bị mờ, không quét được",DIAGNOSIS
+"Bàn phím không gõ được nút thanh toán trên màn hình",DIAGNOSIS
+"Báo giá giúp tôi dịch vụ thay màn hình laptop là bao nhiêu",QUOTATION
+"Chi phí thay pin laptop Dell khoảng bao nhiêu tiền",QUOTATION
+"Thay màn hình điện thoại hết bao nhiêu tiền vậy",QUOTATION
+"Cho tôi hỏi giá dịch vụ sửa chữa là bao nhiêu",QUOTATION
+"Bảng giá dịch vụ bên mình có không, cho tôi xin",QUOTATION
+"Tôi muốn biết chi phí thay loa là bao nhiêu",QUOTATION
+"Thay camera sau giá bao nhiêu vậy bạn",QUOTATION
+"Sửa màn hình với thay pin cái nào rẻ hơn, giá bao nhiêu",QUOTATION
+"Dự toán giúp tôi chi phí sửa laptop là bao nhiêu",QUOTATION
+"Tổng tiền thay pin và màn hình là bao nhiêu",QUOTATION
+"Tư vấn giúp giá tham khảo dịch vụ vệ sinh máy",QUOTATION
+"Gói thay màn hình giá sao bạn, báo giá giúp mình",QUOTATION
+"Báo giá thay bàn phím laptop giúp tôi với",QUOTATION
+"Chi phí kiểm tra máy có mất phí không, cho tôi biết",QUOTATION
+"Giá thay pin chính hãng là bao nhiêu",QUOTATION
+"Thay cảm ứng màn hình giá bao nhiêu tiền",QUOTATION
+"Cho xin bảng giá sửa chữa điện thoại với",QUOTATION
+"Chi phí thay màn hình iPhone 13 ước tính bao nhiêu",QUOTATION
+"Giá dịch vụ thay pin laptop Dell là bao nhiêu",QUOTATION
+"Sửa chữa màn hình hết bao nhiêu tiền vậy",QUOTATION
+"Thay linh kiện camera giá bao nhiêu, báo giá giúp",QUOTATION
+"Báo giá giúp mình gói thay pin dung lượng cao nhé",QUOTATION
+"Phí vệ sinh tản nhiệt laptop là bao nhiêu",QUOTATION
+"Tôi cần biết giá thay màn hình trước khi quyết định",QUOTATION
+"Giá thay pin với thay màn hình chênh nhau bao nhiêu",QUOTATION
+"Tính tiền giúp tôi nếu thay cả màn và pin",QUOTATION
+"Cho hỏi chi phí thay bàn phím máy Dell bao nhiêu",QUOTATION
+"Giá thay loa thoại bao nhiêu tiền bạn",QUOTATION
+"Khoảng bao nhiêu tiền để sửa chân sạc vậy",QUOTATION
+"Báo giá tổng thể giúp tôi trước khi tôi quyết định",QUOTATION
+"Tôi muốn đặt lịch sửa máy vào ngày mai",APPOINTMENT
+"Mai 3h chiều còn chỗ không bạn",APPOINTMENT
+"Đặt hẹn giúp tôi lúc 9h sáng thứ bảy",APPOINTMENT
+"Cuối tuần này còn khung giờ nào trống không",APPOINTMENT
+"Tôi muốn mang máy đến kiểm tra vào sáng mai",APPOINTMENT
+"Còn slot nào chiều nay không bạn",APPOINTMENT
+"Đặt lịch hẹn kiểm tra máy cho tôi với",APPOINTMENT
+"Ngày mai lúc mấy giờ cửa hàng còn nhận máy",APPOINTMENT
+"Tôi muốn hẹn lịch vào 14h ngày 12/11",APPOINTMENT
+"Sáng chủ nhật có còn chỗ không",APPOINTMENT
+"Book giúp tôi một lịch sửa laptop",APPOINTMENT
+"Chiều mai còn chỗ cho tôi đặt không",APPOINTMENT
+"Tôi cần đặt lịch gấp trong hôm nay",APPOINTMENT
+"Còn khung giờ nào trống vào ngày kia không",APPOINTMENT
+"Đặt lịch hẹn kiểm tra máy giúp tôi nhé",APPOINTMENT
+"Thứ hai tuần sau tôi muốn mang máy qua",APPOINTMENT
+"Mấy giờ thì cửa hàng còn nhận khách",APPOINTMENT
+"Tôi muốn hẹn lúc 10h sáng ngày mai",APPOINTMENT
+"Còn chỗ nào trống buổi chiều nay không",APPOINTMENT
+"Đặt lịch thay màn hình vào 15h giúp mình",APPOINTMENT
+"Mai cửa hàng mở cửa lúc mấy giờ",APPOINTMENT
+"Tôi muốn đến kiểm tra máy vào ngày mai được không",APPOINTMENT
+"Còn giờ nào trống trong sáng nay không bạn",APPOINTMENT
+"Hẹn giúp tôi lịch vào chiều thứ sáu",APPOINTMENT
+"Ngày mai 2h chiều còn nhận máy không",APPOINTMENT
+"Tôi muốn đặt lịch kiểm tra máy Dell",APPOINTMENT
+"Slot nào còn trống vào ngày mai vậy",APPOINTMENT
+"Đặt hẹn lúc 8h sáng thứ hai giúp tôi",APPOINTMENT
+"Còn khung giờ trống nào ngày mai không bạn",APPOINTMENT
+"Chiều nay tôi qua kiểm tra máy, còn chỗ không",APPOINTMENT
+"Tra cứu giúp tôi mã đơn RS-123",TRACKING
+"Mã phiếu của tôi là RS-456, kiểm tra giúp tiến độ",TRACKING
+"Tình trạng sửa máy của tôi tới đâu rồi",TRACKING
+"Đơn hàng của tôi sửa xong chưa",TRACKING
+"Cho tôi hỏi tiến độ sửa máy với",TRACKING
+"Phiếu sửa của tôi bao giờ xong vậy",TRACKING
+"Tôi muốn tra cứu mã phiếu sửa chữa",TRACKING
+"Kiểm tra đơn giúp tôi với mã RS-789",TRACKING
+"Máy của tôi sửa đến đâu rồi bạn",TRACKING
+"Tra cứu trạng thái phiếu sửa chữa giúp tôi",TRACKING
+"Đơn sửa của tôi đang ở bước nào",TRACKING
+"Mã tra cứu của tôi không dùng được",TRACKING
+"Tôi muốn theo dõi tiến độ sửa điện thoại",TRACKING
+"Bao giờ thì máy tôi sửa xong",TRACKING
+"Kiểm tra giúp đơn RS-321 đã xong chưa",TRACKING
+"Tình trạng ticket của tôi thế nào",TRACKING
+"Tôi đánh mất mã đơn, tra cứu giúp tôi",TRACKING
+"Phiếu sửa RS-555 đến đâu rồi",TRACKING
+"Tra cứu mã số phiếu sửa chữa giúp tôi",TRACKING
+"Đơn của tôi có đang sửa không",TRACKING
+"Cho tôi xin tiến độ của phiếu sửa",TRACKING
+"Máy của tôi đã sửa xong chưa ạ",TRACKING
+"Tra cứu đơn hàng sửa chữa giúp tôi",TRACKING
+"Mã phiếu RS-222 hiện trạng thái gì",TRACKING
+"Tôi muốn kiểm tra đơn sửa chữa",TRACKING
+"Xin chào",UNKNOWN
+"Bạn là ai",UNKNOWN
+"Kể cho tôi một câu chuyện cười",UNKNOWN
+"Trời hôm nay có mưa không",UNKNOWN
+"Viết giúp tôi một bài thơ về mùa thu",UNKNOWN
+"Bạn thích ăn gì",UNKNOWN
+"Tư vấn giúp tôi chuyện tình cảm",UNKNOWN
+"1 + 1 bằng mấy",UNKNOWN
+"Dịch giúp tôi câu này sang tiếng Anh",UNKNOWN
+"Bạn có khỏe không",UNKNOWN
+"Kể tên các loài động vật có vú",UNKNOWN
+"Làm sao để nấu phở ngon",UNKNOWN
+"Bạn nghĩ gì về phim mới",UNKNOWN
+"Hướng dẫn tôi học lập trình Python",UNKNOWN
+"Bạn có thể hát cho tôi nghe không",UNKNOWN
+"Cho tôi mượn sách được không",UNKNOWN
+"Bạn ơi",UNKNOWN
+"Hello",UNKNOWN
+"Cảm ơn bạn",UNKNOWN
+"Tạm biệt",UNKNOWN
+"Bạn có biết bóng đá không",UNKNOWN
+"Giúp tôi viết email xin việc",UNKNOWN
+"Những hành tinh nào có sự sống",UNKNOWN
+"Bạn thấy tôi nên mua xe gì",UNKNOWN
+"Chúc mừng năm mới",UNKNOWN
+"Bạn có thể chơi cờ không",UNKNOWN
+"Giải thích giúp tôi về blockchain",UNKNOWN
+"Tôi đang buồn",UNKNOWN
+"Cho tôi một lời khuyên",UNKNOWN
+"Bạn rảnh không",UNKNOWN

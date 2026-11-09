@@ -1,0 +1,170 @@
+{
+  "generatedAt": "2026-11-09",
+  "datasetSize": 96,
+  "labelDistribution": {
+    "ban_phim": 12,
+    "camera": 12,
+    "khac": 12,
+    "loa": 12,
+    "man_hinh": 12,
+    "pin": 12,
+    "sac": 12,
+    "tan_nhiet": 12
+  },
+  "crossValidation5Fold": {
+    "folds": [
+      0.9,
+      0.8421,
+      0.8421,
+      0.7895,
+      0.7895
+    ],
+    "meanAccuracy": 0.8326,
+    "std": 0.0411,
+    "macroF1": 0.8385,
+    "perClass": {
+      "ban_phim": {
+        "precision": 1.0,
+        "recall": 0.9167,
+        "f1": 0.9565,
+        "support": 12
+      },
+      "camera": {
+        "precision": 1.0,
+        "recall": 0.8333,
+        "f1": 0.9091,
+        "support": 12
+      },
+      "khac": {
+        "precision": 0.7143,
+        "recall": 0.8333,
+        "f1": 0.7692,
+        "support": 12
+      },
+      "loa": {
+        "precision": 1.0,
+        "recall": 0.9167,
+        "f1": 0.9565,
+        "support": 12
+      },
+      "man_hinh": {
+        "precision": 1.0,
+        "recall": 0.9167,
+        "f1": 0.9565,
+        "support": 12
+      },
+      "pin": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1": 0.75,
+        "support": 12
+      },
+      "sac": {
+        "precision": 0.7273,
+        "recall": 0.6667,
+        "f1": 0.6957,
+        "support": 12
+      },
+      "tan_nhiet": {
+        "precision": 0.625,
+        "recall": 0.8333,
+        "f1": 0.7143,
+        "support": 12
+      }
+    },
+    "confusionMatrix": [
+      [
+        11,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        10,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        0,
+        0,
+        10,
+        0,
+        0,
+        0,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        1,
+        11,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        11,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        9,
+        2,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        3,
+        8,
+        1
+      ],
+      [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        10
+      ]
+    ],
+    "labelsOrder": [
+      "ban_phim",
+      "camera",
+      "khac",
+      "loa",
+      "man_hinh",
+      "pin",
+      "sac",
+      "tan_nhiet"
+    ]
+  },
+  "model": "TfidfVectorizer(char_wb 2-4) + LogisticRegression(C=10, balanced)",
+  "caveat": "Nhãn do nhóm tự gán (96 dòng), không phải dữ liệu thu thập thực tế."
+}

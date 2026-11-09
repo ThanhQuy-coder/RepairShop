@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "description": "Bộ case đánh giá end-to-end cho MAS (Task 2.3). Nhãn do nhóm tự xây dựng dựa trên context mẫu trong tests/fixtures/context.py — KHÔNG dùng để train. Dùng cho test_intent_quality, test_diagnosis_agent và (Task 4.3) đo Hit@1/Hit@3.",
+  "cases": [
+    {
+      "id": "C01",
+      "message": "iPhone 13 của tôi pin tụt nhanh, sạc rất chậm",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Pin tụt nhanh, sạc chậm",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-pin"],
+      "notes": "Case chuẩn: pin chai"
+    },
+    {
+      "id": "C02",
+      "message": "Laptop Dell bị nóng, quạt kêu to bất thường",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "Máy nóng, quạt kêu to",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-tan-nhiet"],
+      "notes": "Tản nhiệt"
+    },
+    {
+      "id": "C03",
+      "message": "Điện thoại bị vỡ màn hình sau khi rơi",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Vỡ màn hình",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-man-hinh"],
+      "notes": "Màn hình"
+    },
+    {
+      "id": "C04",
+      "message": "Bàn phím laptop bị liệt mấy phím, gõ không ăn",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "Bàn phím liệt phím",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-ban-phim"],
+      "notes": "Bàn phím"
+    },
+    {
+      "id": "C05",
+      "message": "Máy sạc không vào, cắm sạc không báo gì",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Sạc không vào",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-sac", "svc-pin"],
+      "notes": "Chân sạc / pin"
+    },
+    {
+      "id": "C06",
+      "message": "Máy hiện lỗi error code 404 khi mở ứng dụng",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Lỗi error code 404",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": [],
+      "notes": "Chống false positive của off-topic guard (D-01)"
+    },
+    {
+      "id": "C07",
+      "message": "Bàn phím không gõ được nút thanh toán trên màn hình",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Bàn phím không gõ được",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-man-hinh", "svc-cam-ung"],
+      "notes": "Từ 'thanh toán' không được coi là ngoài phạm vi"
+    },
+    {
+      "id": "C08",
+      "message": "Camera bị mờ, quét mã QR code không được",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Camera mờ, không quét QR",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-camera"],
+      "notes": "Từ 'code' không được chặn nhầm"
+    },
+    {
+      "id": "C09",
+      "message": "Cho tôi hỏi giá thay pin iPhone 13 là bao nhiêu",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": ["svc-pin"],
+      "notes": "Hỏi giá"
+    },
+    {
+      "id": "C10",
+      "message": "Báo giá giúp tôi dịch vụ thay màn hình laptop là bao nhiêu",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": [],
+      "notes": "Hỏi giá dịch vụ"
+    },
+    {
+      "id": "C11",
+      "message": "Chi phí vệ sinh máy là bao nhiêu tiền",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": [],
+      "notes": "Hỏi chi phí"
+    },
+    {
+      "id": "C12",
+      "message": "Mai 3h chiều còn chỗ không, tôi muốn đặt lịch",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": [],
+      "notes": "Đặt lịch"
+    },
+    {
+      "id": "C13",
+      "message": "Chiều nay còn khung giờ nào trống không bạn",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": [],
+      "notes": "Hỏi khung giờ"
+    },
+    {
+      "id": "C14",
+      "message": "Tra cứu giúp tôi mã đơn RS-123",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": [],
+      "notes": "Tra cứu"
+    },
+    {
+      "id": "C15",
+      "message": "Tiến độ sửa máy của tôi tới đâu rồi",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": [],
+      "notes": "Tiến độ"
+    },
+    {
+      "id": "C16",
+      "message": "Kể cho tôi một câu chuyện cười",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": [],
+      "notes": "Ngoài phạm vi"
+    },
+    {
+      "id": "C17",
+      "message": "Viết giúp tôi một bài thơ về mùa thu",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": [],
+      "notes": "Ngoài phạm vi"
+    },
+    {
+      "id": "C18",
+      "message": "Xin chào",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": [],
+      "notes": "Câu chào"
+    },
+    {
+      "id": "C19",
+      "message": "Pin chai rồi, cho tôi báo giá và đặt lịch mai 3h chiều",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Pin chai",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-pin"],
+      "notes": "Đa mục đích: intent chính vẫn là chẩn đoán, plan sẽ gồm Q/A nếu được phép"
+    },
+    {
+      "id": "C20",
+      "message": "Laptop Dell không lên nguồn, đèn nguồn vẫn sáng",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "Không lên nguồn",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": [],
+      "notes": "Nguồn"
+    },
+    {
+      "id": "C21",
+      "message": "Màn hình cảm ứng chập chờn, lúc ăn lúc không",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Cảm ứng chập chờn",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-cam-ung", "svc-man-hinh"],
+      "notes": "Kiểm tra khớp cụm 'cảm ứng' (D-07)"
+    },
+    {
+      "id": "C22",
+      "message": "Máy bị vô nước, giờ loa nghe rất nhỏ",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Vô nước, loa nhỏ",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-ve-sinh", "svc-loa"],
+      "notes": "Khớp cụm 'vô nước'"
+    },
+    {
+      "id": "C23",
+      "message": "Báo giá giúp tôi dịch vụ sửa chữa trước khi mang máy qua",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": [],
+      "notes": "Hỏi giá không nêu dịch vụ cụ thể"
+    },
+    {
+      "id": "C24",
+      "message": "Ngày mai lúc mấy giờ cửa hàng còn nhận máy",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": [],
+      "notes": "Hỏi giờ nhận máy"
+    }
+  ]
+}

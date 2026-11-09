@@ -1,0 +1,85 @@
+{
+  "healthDeep": {
+    "status": "ok",
+    "graphCompiled": true,
+    "classifierLoaded": true,
+    "versions": {
+      "python": "3.12.0",
+      "langgraph": "1.2.20",
+      "scikit-learn": "1.9.1",
+      "fastapi": "0.115.0",
+      "pydantic": "2.13.5",
+      "httpx": "0.28.1"
+    }
+  },
+  "agentCases": [
+    {
+      "case": "pin",
+      "http": 200,
+      "latencyMs": 2818.7,
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "services": [
+        "svc-pin",
+        "svc-sac"
+      ],
+      "parts": [
+        "part-pin-ip13"
+      ],
+      "llmCalls": 1,
+      "fallback": false,
+      "reasonLen": 164,
+      "hasDisclaimer": true
+    },
+    {
+      "case": "laptop",
+      "http": 200,
+      "latencyMs": 2562.9,
+      "status": "SUCCESS",
+      "intent": "DIAGNOSIS",
+      "executedAgents": [
+        "DIAGNOSIS"
+      ],
+      "services": [
+        "svc-tan-nhiet"
+      ],
+      "parts": [],
+      "llmCalls": 1,
+      "fallback": false,
+      "reasonLen": 109,
+      "hasDisclaimer": true
+    }
+  ],
+  "missingKeyStatus": 422,
+  "wrongKeyStatus": 401,
+  "costPriceStatus": 422,
+  "badSlotStatus": 422,
+  "warmAgentCalls": [
+    {
+      "http": 200,
+      "latencyMs": 5128.0,
+      "status": "SUCCESS"
+    },
+    {
+      "http": 200,
+      "latencyMs": 1790.3,
+      "status": "SUCCESS"
+    },
+    {
+      "http": 200,
+      "latencyMs": 1961.6,
+      "status": "SUCCESS"
+    }
+  ],
+  "quoteOnlyCase": {
+    "http": 200,
+    "status": "ERROR",
+    "executedAgents": [
+      "QUOTATION"
+    ],
+    "reason": "Không thể xử lý yêu cầu tư vấn lúc này. Vui lòng thử lại sau."
+  }
+}

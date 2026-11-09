@@ -1,0 +1,75 @@
+{
+  "serverPid": 1592,
+  "serverRssMb": 66.0,
+  "serverVmsMb": 54.0,
+  "cases": [
+    {
+      "case": "battery_with_context",
+      "http": 200,
+      "status": "SUCCESS",
+      "runsMs": [
+        2218.6,
+        1956.9,
+        1846.5
+      ],
+      "medianMs": 1956.9,
+      "minMs": 1846.5,
+      "maxMs": 2218.6,
+      "suggestedServiceIds": [
+        "svc-1"
+      ],
+      "priceRange": {
+        "min": 750000.0,
+        "max": 900000.0,
+        "currency": "VND"
+      }
+    },
+    {
+      "case": "off_topic",
+      "http": 200,
+      "status": "OUT_OF_SCOPE",
+      "runsMs": [
+        517.0,
+        467.4,
+        467.4
+      ],
+      "medianMs": 467.4,
+      "minMs": 467.4,
+      "maxMs": 517.0,
+      "suggestedServiceIds": [],
+      "priceRange": null
+    },
+    {
+      "case": "empty_context",
+      "http": 200,
+      "status": "NO_MATCH",
+      "runsMs": [
+        467.5,
+        499.4,
+        469.7
+      ],
+      "medianMs": 469.7,
+      "minMs": 467.5,
+      "maxMs": 499.4,
+      "suggestedServiceIds": [],
+      "priceRange": null
+    }
+  ],
+  "transport": {
+    "newConnectionMs": [
+      534.8,
+      388.4,
+      376.7
+    ],
+    "keepAliveHealthMs": [
+      3.8,
+      2.2,
+      2.6
+    ],
+    "keepAliveHealthDeepMs": [
+      18.9,
+      14.9,
+      17.1
+    ]
+  }
+}

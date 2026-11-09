@@ -1,0 +1,122 @@
+{
+  "call1": {
+    "http": 200,
+    "latencyMs": 8236.1,
+    "status": "SUCCESS",
+    "agents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "79b4af66-2628-48a4-aaad-1ef91e3c77fa",
+      "34edef79-e672-4e11-b100-d4d379faa0f7",
+      "00000000-0000-0000-0000-000000000108"
+    ],
+    "uniqueServices": true,
+    "quoteItems": [
+      [
+        "79b4af66-2628-48a4-aaad-1ef91e3c77fa",
+        300000.0
+      ],
+      [
+        "34edef79-e672-4e11-b100-d4d379faa0f7",
+        150000.0
+      ],
+      [
+        "00000000-0000-0000-0000-000000000108",
+        150000.0
+      ],
+      [
+        "680f5dcf-5084-4d04-8099-3a9a81b6e394",
+        650000.0
+      ],
+      [
+        "78ff05e5-9ce8-4846-ba42-8fcd19b23425",
+        350000.0
+      ]
+    ],
+    "quoteTotal": 1600000.0,
+    "slots": 1
+  },
+  "call2": {
+    "http": 200,
+    "latencyMs": 3570.2,
+    "status": "SUCCESS",
+    "agents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "34edef79-e672-4e11-b100-d4d379faa0f7",
+      "00000000-0000-0000-0000-000000000108",
+      "00000000-0000-0000-0000-000000000101"
+    ],
+    "uniqueServices": true,
+    "quoteItems": [
+      [
+        "34edef79-e672-4e11-b100-d4d379faa0f7",
+        150000.0
+      ],
+      [
+        "00000000-0000-0000-0000-000000000108",
+        150000.0
+      ],
+      [
+        "00000000-0000-0000-0000-000000000101",
+        350000.0
+      ],
+      [
+        "78ff05e5-9ce8-4846-ba42-8fcd19b23425",
+        350000.0
+      ],
+      [
+        "595f54a0-86ae-4a87-83e6-aaf69beacc69",
+        450000.0
+      ]
+    ],
+    "quoteTotal": 1450000.0,
+    "slots": 1
+  },
+  "call3": {
+    "http": 200,
+    "latencyMs": 2281.2,
+    "status": "SUCCESS",
+    "agents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "79b4af66-2628-48a4-aaad-1ef91e3c77fa",
+      "34edef79-e672-4e11-b100-d4d379faa0f7",
+      "00000000-0000-0000-0000-000000000108"
+    ],
+    "uniqueServices": true,
+    "quoteItems": [
+      [
+        "79b4af66-2628-48a4-aaad-1ef91e3c77fa",
+        300000.0
+      ],
+      [
+        "34edef79-e672-4e11-b100-d4d379faa0f7",
+        150000.0
+      ],
+      [
+        "00000000-0000-0000-0000-000000000108",
+        150000.0
+      ],
+      [
+        "680f5dcf-5084-4d04-8099-3a9a81b6e394",
+        650000.0
+      ],
+      [
+        "78ff05e5-9ce8-4846-ba42-8fcd19b23425",
+        350000.0
+      ]
+    ],
+    "quoteTotal": 1600000.0,
+    "slots": 1
+  }
+}

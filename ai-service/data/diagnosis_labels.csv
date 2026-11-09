@@ -1,0 +1,97 @@
+text,label
+"pin tụt nhanh",pin
+"máy sập nguồn khi còn pin",pin
+"pin chai sạc không đầy",pin
+"hao pin qua đêm",pin
+"pin bị phồng",pin
+"sạc pin rất chậm",pin
+"pin tụt 20% trong 10 phút",pin
+"máy nóng khi sạc pin",pin
+"pin yếu tự tắt",pin
+"thay pin mới vẫn tụt",pin
+"pin chai còn 80%",pin
+"máy báo pin không xác định",pin
+"màn hình sọc dọc",man_hinh
+"vỡ màn hình",man_hinh
+"màn hình có đốm mực",man_hinh
+"cảm ứng không nhận",man_hinh
+"màn hình ám vàng",man_hinh
+"màn hình chớp tắt",man_hinh
+"nứt kính màn hình",man_hinh
+"màn hình đen thui",man_hinh
+"cảm ứng bị loạn",man_hinh
+"màn hình hiển thị sai màu",man_hinh
+"màn hình có vệt xanh",man_hinh
+"kính màn hình trầy xước",man_hinh
+"bàn phím liệt phím",ban_phim
+"gõ phím không ăn",ban_phim
+"bàn phím dính nước",ban_phim
+"phím space bị hỏng",ban_phim
+"bàn phím gõ sai ký tự",ban_phim
+"đèn bàn phím không sáng",ban_phim
+"bàn phím laptop bong tróc",ban_phim
+"phím nguồn không bấm được",ban_phim
+"bàn phím bị kẹt",ban_phim
+"gõ chữ bị nhảy",ban_phim
+"bàn phím không nhận",ban_phim
+"phím bị lún",ban_phim
+"sạc không vào",sac
+"cắm sạc không báo gì",sac
+"chân sạc lỏng",sac
+"sạc chập chờn",sac
+"cáp sạc nóng",sac
+"sạc pin rất chậm",sac
+"phải giữ dây mới sạc được",sac
+"cổng sạc bị bụi",sac
+"sạc không nhận củ",sac
+"sạc pin bị giật",sac
+"đầu sạc bị gãy",sac
+"sạc qua đêm không đầy",sac
+"máy nóng ran",tan_nhiet
+"quạt kêu to",tan_nhiet
+"laptop nóng khi chạy",tan_nhiet
+"nóng khi sạc",tan_nhiet
+"quạt không quay",tan_nhiet
+"máy bị bỏng tay",tan_nhiet
+"nóng và tự tắt",tan_nhiet
+"bụi bám tản nhiệt",tan_nhiet
+"keo tản nhiệt khô",tan_nhiet
+"quạt bị rung",tan_nhiet
+"nhiệt độ cao báo lỗi",tan_nhiet
+"laptop nóng khi chơi game",tan_nhiet
+"loa bị rè",loa
+"loa mất tiếng",loa
+"âm thanh nhỏ",loa
+"loa thoại rè",loa
+"mic không thu",loa
+"nghe gọi nhỏ",loa
+"loa ngoài rè",loa
+"không nghe được nhạc",loa
+"mic thu âm rè",loa
+"loa bị đứt",loa
+"âm thanh rè khi mở to",loa
+"tai nghe không nhận",loa
+"camera mờ",camera
+"camera đen",camera
+"camera không lấy nét",camera
+"camera trước mờ",camera
+"camera bị rung",camera
+"chụp ảnh bị mờ",camera
+"camera báo lỗi",camera
+"ống kính trầy",camera
+"camera không mở được",camera
+"ảnh chụp bị đốm",camera
+"quay video bị rung",camera
+"camera sau đen",camera
+"máy chạy chậm",khac
+"máy treo logo",khac
+"máy tự khởi động lại",khac
+"không kết nối wifi",khac
+"mất sóng",khac
+"bluetooth không nhận",khac
+"vân tay không nhận",khac
+"máy rơi hỏng",khac
+"máy bị đơ khi mở app",khac
+"máy không lên nguồn",khac
+"chuông không kêu",khac
+"không nhận sim",khac

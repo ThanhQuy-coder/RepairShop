@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "description": "Hold-out MỚI (Task 4.3) — viết sau khi đã đóng băng rule/model, KHÔNG dùng để tinh chỉnh. Dùng đo công bằng MAS vs Single-Agent baseline.",
+  "cases": [
+    {
+      "id": "H01",
+      "message": "Điện thoại Samsung bị sọc màn hình sau khi rơi",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "S23" },
+      "issueDescription": "Sọc màn hình sau khi rơi",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-man-hinh"]
+    },
+    {
+      "id": "H02",
+      "message": "Laptop Asus quạt kêu rất to và nóng",
+      "device": { "deviceType": "laptop", "brand": "Asus", "model": "Vivobook" },
+      "issueDescription": "Quạt kêu to, máy nóng",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-tan-nhiet"]
+    },
+    {
+      "id": "H03",
+      "message": "Máy bị chai pin, sạc đầy rất lâu",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Chai pin, sạc lâu đầy",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-pin"]
+    },
+    {
+      "id": "H04",
+      "message": "Bàn phím laptop gõ bị nhảy chữ",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "Bàn phím gõ nhảy chữ",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-ban-phim"]
+    },
+    {
+      "id": "H05",
+      "message": "Điện thoại không lên nguồn dù đã sạc",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Không lên nguồn",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H06",
+      "message": "Camera trước chụp bị mờ",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "Camera trước mờ",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": ["svc-camera"]
+    },
+    {
+      "id": "H07",
+      "message": "Báo giá giúp tôi thay pin iPhone 13 là bao nhiêu",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": ["svc-pin"]
+    },
+    {
+      "id": "H08",
+      "message": "Chi phí thay màn hình điện thoại bao nhiêu tiền",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": ["svc-man-hinh"]
+    },
+    {
+      "id": "H09",
+      "message": "Giá dịch vụ vệ sinh tản nhiệt laptop thế nào",
+      "device": { "deviceType": "laptop", "brand": "Asus", "model": "Vivobook" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": ["svc-tan-nhiet"]
+    },
+    {
+      "id": "H10",
+      "message": "Báo giá thay bàn phím laptop giúp tôi",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": ["svc-ban-phim"]
+    },
+    {
+      "id": "H11",
+      "message": "Thứ bảy này 9h sáng còn chỗ không",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H12",
+      "message": "Ngày mai lúc 2h chiều còn nhận máy không",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H13",
+      "message": "Còn khung giờ nào trống chiều nay không",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H14",
+      "message": "Mã phiếu RS-777 sửa đến đâu rồi",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H15",
+      "message": "Tra cứu tiến độ đơn giúp tôi",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H16",
+      "message": "Hướng dẫn tôi nấu phở",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H17",
+      "message": "Bạn có biết lập trình Python không",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    }
+  ]
+}

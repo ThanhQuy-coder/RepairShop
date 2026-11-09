@@ -1,7 +1,8 @@
 from fastapi import FastAPI # type: ignore
 
-from app.api import advisory
+from app.api import advisory, agents, baseline
 from app.core.config import settings
+from app.core.health import build_health_report
 
 app = FastAPI(
     title="RepairShop AI Advisory Service",
@@ -23,4 +24,16 @@ def health_check():
     return {"status": "healthy"}
 
 
+@app.get("/health/deep", tags=["Health"])
+def health_check_deep(probe: bool = False):
+    """
+    Task 1.3 — health check chi tiết cho lớp MAS: LangGraph, scikit-learn, model intent, LLM.
+    Mặc định không gọi mạng; `?probe=true` mới kiểm tra kết nối LLM provider (cache 30s).
+    Luôn trả HTTP 200 khi tiến trình còn phục vụ — trạng thái nằm trong field `status`.
+    """
+    return build_health_report(probe=probe)
+
+
 app.include_router(advisory.router, prefix="/v1", tags=["Advisory"])
+app.include_router(agents.router, prefix="/v1", tags=["Agents"])
+app.include_router(baseline.router, prefix="/v1", tags=["Baseline"])

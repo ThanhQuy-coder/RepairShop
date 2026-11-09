@@ -1,0 +1,41 @@
+# requirements-mas.txt
+# Task 1.3 (Day 1) — bổ sung dependency cho lớp Multi-Agent System.
+#
+# QUAN TRỌNG:
+# - File này KHÔNG thay thế requirements.txt. requirements.txt vẫn giữ nguyên pin cũ
+#   (fastapi/uvicorn/pydantic/pydantic-settings/python-dotenv/httpx) và là nền của AI Service hiện tại.
+# - Cài đặt:  .\venv\Scripts\python.exe -m pip install -r requirements-mas.txt
+#   (nếu pip resolver cũ chạy chậm, dùng: uv pip install --python .\venv\Scripts\python.exe -r requirements-mas.txt)
+# - Sinh ngày 2026-11-09 từ venv ai-service (Python 3.12.0, Windows 11) bằng cách đọc
+#   importlib.metadata sau khi cài thật — không phải version "dự kiến".
+#
+# Lưu ý khi nâng cấp:
+# - langgraph 1.x kéo theo langchain-core 1.x; đổi phiên bản langgraph phải chạy lại
+#   `pytest tests -q` cho cả 33 test legacy và test MAS.
+# - Không nâng fastapi/pydantic/httpx trong 4 ngày để tránh regression ngoài phạm vi.
+
+# ── Dependency trực tiếp cho MAS ─────────────────────────────────────────────
+langgraph==1.2.20
+scikit-learn==1.9.1
+psutil==7.2.2
+
+# ── Transitive quan trọng (pin để tái lập môi trường) ────────────────────────
+langgraph-checkpoint==4.3.1
+langgraph-prebuilt==1.1.1
+langgraph-sdk==0.4.14
+langchain-core==1.7.6
+langsmith==0.14.17
+numpy==2.5.4
+scipy==1.18.1
+joblib==1.6.0
+threadpoolctl==3.8.0
+
+# ── Nền hiện có (không đổi — chỉ ghi lại để đối chiếu) ──────────────────────
+# fastapi==0.115.0
+# uvicorn[standard]==0.32.0
+# pydantic==2.13.5
+# pydantic-settings==2.6.0
+# httpx==0.28.1
+# python-dotenv==1.0.1
+# pytest==9.1.1
+# pytest-asyncio==1.4.0

@@ -44,6 +44,40 @@
   text-overflow: ellipsis;
 }
 
+/* Logo trong sidebar là link về trang chủ (sau đăng nhập vẫn quay ra được index) */
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border-radius: var(--radius-sm, 6px);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease;
+}
+
+.brandLink:hover,
+.brandLink:focus-visible {
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.brandMark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
 .brandActions {
   display: flex;
   align-items: center;

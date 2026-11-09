@@ -19,6 +19,34 @@
   gap: 8px;
 }
 
+/* Logo FIXORA trong header (đã đăng nhập) trỏ về trang chủ public */
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm, 6px);
+  color: var(--color-primary, #185a4e);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.homeLink:hover,
+.homeLink:focus-visible {
+  background: var(--color-primary-subtle, #eef6f4);
+  outline: none;
+}
+
+.dividerDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-border, #e2e8f0);
+}
+
 .systemStatusDot {
   width: 8px;
   height: 8px;

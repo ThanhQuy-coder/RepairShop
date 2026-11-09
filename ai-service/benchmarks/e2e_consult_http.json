@@ -1,0 +1,62 @@
+{
+  "call1": {
+    "http": 200,
+    "latencyMs": 7714.4,
+    "status": "SUCCESS",
+    "intent": "DIAGNOSIS",
+    "executedAgents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "00000000-0000-0000-0000-000000000101",
+      "00000000-0000-0000-0000-000000000108"
+    ],
+    "quoteItems": 3,
+    "quoteTotal": 1150000.0,
+    "slots": [
+      "30000000-0000-0000-0000-000000000004"
+    ]
+  },
+  "call2": {
+    "http": 200,
+    "latencyMs": 2219.4,
+    "status": "SUCCESS",
+    "intent": "DIAGNOSIS",
+    "executedAgents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "00000000-0000-0000-0000-000000000101",
+      "00000000-0000-0000-0000-000000000108"
+    ],
+    "quoteItems": 3,
+    "quoteTotal": 1150000.0,
+    "slots": [
+      "30000000-0000-0000-0000-000000000004"
+    ]
+  },
+  "call3": {
+    "http": 200,
+    "latencyMs": 1768.9,
+    "status": "SUCCESS",
+    "intent": "DIAGNOSIS",
+    "executedAgents": [
+      "DIAGNOSIS",
+      "QUOTATION",
+      "APPOINTMENT"
+    ],
+    "services": [
+      "00000000-0000-0000-0000-000000000101",
+      "00000000-0000-0000-0000-000000000108"
+    ],
+    "quoteItems": 3,
+    "quoteTotal": 1150000.0,
+    "slots": [
+      "30000000-0000-0000-0000-000000000004"
+    ]
+  }
+}

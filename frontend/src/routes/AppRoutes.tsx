@@ -38,6 +38,7 @@ import CustomerHomePage from '../pages/customers/CustomerHomePage';
 import CustomerProfilePage from '../pages/customers/CustomerProfilePage';
 import MyAppointmentsPage from '../pages/customers/MyAppointmentsPage';
 import AIEstimatePage from '../pages/website/AIEstimatePage';
+import ConsultationPage from '../pages/website/ConsultationPage';
 import HomePage from '../pages/website/HomePage';
 import ServiceDetailPage from '../pages/website/ServiceDetailPage';
 import ArticleDetailPage from '../pages/website/ArticleDetailPage';
@@ -62,12 +63,13 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<App />}>
-        {/* ===== Public — không cần đăng nhập ===== */}
+        {/* ===== Public â€” khÃ´ng cáº§n Ä‘Äƒng nháº­p ===== */}
         <Route element={<PublicLayout />}>
           <Route index element={<HomePage />} />
           <Route path="services" element={<ServicesPage />} />
           <Route path="services/:id" element={<ServiceDetailPage />} />
           <Route path="estimate" element={<AIEstimatePage />} />
+          <Route path="consult" element={<ConsultationPage />} />
           <Route path="articles" element={<ArticlesPage />} />
           <Route path="articles/:id" element={<ArticleDetailPage />} />
           <Route path="book" element={<BookingPage />} />
@@ -79,10 +81,10 @@ export default function AppRoutes() {
           <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
 
-        {/* ===== /dashboard — điểm trung chuyển sau login ===== */}
+        {/* ===== /dashboard â€” Ä‘iá»ƒm trung chuyá»ƒn sau login ===== */}
         <Route path="dashboard" element={<DashboardRedirect />} />
 
-        {/* ===== Staff: Receptionist + Admin — nghiệp vụ Customer/Device/Ticket/Quote ===== */}
+        {/* ===== Staff: Receptionist + Admin â€” nghiá»‡p vá»¥ Customer/Device/Ticket/Quote ===== */}
         <Route element={<RoleGuard allowedRoles={['Receptionist', 'Admin']} />}>
           <Route element={<StaffLayout />}>
             <Route path="staff/dashboard" element={<StaffDashboardPage />} />{' '}
@@ -106,7 +108,7 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* ===== Staff + Customer: xem chi tiết ticket với layout tương ứng ===== */}
+        {/* ===== Staff + Customer: xem chi tiáº¿t ticket vá»›i layout tÆ°Æ¡ng á»©ng ===== */}
         <Route
           element={<RoleGuard allowedRoles={['Receptionist', 'Admin', 'Technician', 'Customer']} />}
         >
@@ -115,7 +117,7 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* ===== Staff: riêng Technician ===== */}
+        {/* ===== Staff: riÃªng Technician ===== */}
         <Route element={<RoleGuard allowedRoles={['Technician']} />}>
           <Route element={<StaffLayout />}>
             <Route path="technician/tickets" element={<TechnicianDashboardPage />} />
@@ -170,3 +172,4 @@ export default function AppRoutes() {
     </Routes>
   );
 }
+
