@@ -24,8 +24,9 @@ public class ServiceCatalogQueryService : IServiceCatalogQueryService
 
     public async Task<List<CatalogServiceItem>> GetAvailableServicesAsync(string deviceType)
     {
+        var normalizedType = (deviceType ?? string.Empty).Trim().ToLowerInvariant();
         var services = await _context.Services
-            .Where(s => s.IsActive && (s.DeviceType == null || s.DeviceType == deviceType))
+            .Where(s => s.IsActive && (s.DeviceType == null || s.DeviceType.ToLower() == normalizedType))
             .OrderBy(s => s.Name)
             .AsNoTracking()
             .Take(MasCatalogLimit)

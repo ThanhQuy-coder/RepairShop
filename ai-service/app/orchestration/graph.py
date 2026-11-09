@@ -93,6 +93,7 @@ def _initial_state(request: AgentRequest) -> Dict[str, Any]:
         ],
         "options": request.options.model_dump(by_alias=True),
         "customer_info": request.customer_info.model_dump(by_alias=True),
+        "reference_date": request.reference_date,
         "executed_agents": [],
         "errors": [],
         "timings": {},

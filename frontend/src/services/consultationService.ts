@@ -7,8 +7,10 @@ import type {
 } from '../types/consultation.types';
 
 export const consultationService = {
-  consult: (payload: ConsultationRequest) =>
-    apiClient.post<ConsultationResponse>('/ai/consult', payload).then((res) => res.data),
+  consult: (payload: ConsultationRequest, signal?: AbortSignal) =>
+    apiClient
+      .post<ConsultationResponse>('/ai/consult', payload, { signal })
+      .then((res) => res.data),
 
   /**
    * Đặt lịch CHỈ sau khi người dùng xác nhận. Backend tạo Appointment ở trạng thái Pending

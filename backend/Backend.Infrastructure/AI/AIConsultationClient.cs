@@ -1,6 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Extensions.Logging;
 using RepairShop.Application.Common.Interfaces;
 using RepairShop.Application.Modules.AIAdvisory.DTOs;
@@ -12,8 +14,8 @@ namespace RepairShop.Infrastructure.AI;
 ///
 /// Trách nhiệm:
 /// 1. Dựng context THẬT từ PostgreSQL (services/parts/slots) — AI không truy cập DB.
-/// 2. Gọi FastAPI bằng `X-Internal-Api-Key`, timeout cấu hình riêng.
-/// 3. Hậu kiểm: ID phải thuộc context, giá lấy từ catalog, slot phải còn chỗ.
+/// 2. Gọi FastAPI bằng `X-Internal-Api-Key`, timeout cấu hình riêng, bảo vệ bằng Circuit Breaker + giới hạn đồng thời.
+/// 3. Hậu kiểm: requestId khớp, ID phải thuộc context, giá lấy từ catalog, slot phải còn chỗ, lọc văn bản AI.
 /// 4. Không throw: mọi lỗi AI => `AiAvailable=false` + thông điệp thân thiện (fallback).
 /// </summary>
 public class AIConsultationClient : IAIConsultationService
@@ -23,13 +25,29 @@ public class AIConsultationClient : IAIConsultationService
         PropertyNameCaseInsensitive = true
     };
 
-    private const int MaxSlotDaysAhead = 3;
+    private const int MaxSlotDaysAhead = 7;
+    private const int MaxSlotsInContext = 60;
+    private const int MaxServiceDescriptionLength = 1000;
+    private const int MaxCauseNameLength = 200;
+    private const int MaxExplanationLength = 600;
+
+    // Giới hạn tối đa 2 request đồng thời tới Ollama local để tránh hàng đợi 60s.
+    private static readonly SemaphoreSlim ConsultConcurrencyGate = new(2, 2);
+
+    private static readonly Regex PriceLeakPattern = new(
+        @"\b\d[\d.,]*\s*(đ|₫|vnd|vnđ|nghìn|ngàn|triệu|k\b)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static readonly Regex CertaintyWordPattern = new(
+        @"\b(chắc chắn|100%|cam kết|bắt buộc phải thay|chính thức)\b",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private readonly HttpClient _httpClient;
     private readonly IServiceCatalogQueryService _serviceCatalog;
     private readonly ITimeSlotConfigRepository _slotRepository;
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IBusinessClock _clock;
+    private readonly IAICircuitBreaker? _circuitBreaker;
     private readonly ILogger<AIConsultationClient> _logger;
 
     public AIConsultationClient(
@@ -38,7 +56,8 @@ public class AIConsultationClient : IAIConsultationService
         ITimeSlotConfigRepository slotRepository,
         IAppointmentRepository appointmentRepository,
         IBusinessClock clock,
-        ILogger<AIConsultationClient> logger)
+        ILogger<AIConsultationClient> logger,
+        IAICircuitBreaker? circuitBreaker = null)
     {
         _httpClient = httpClient;
         _serviceCatalog = serviceCatalog;
@@ -46,6 +65,7 @@ public class AIConsultationClient : IAIConsultationService
         _appointmentRepository = appointmentRepository;
         _clock = clock;
         _logger = logger;
+        _circuitBreaker = circuitBreaker;
     }
 
     public async Task<ConsultationResponse> GetConsultationAsync(
@@ -58,20 +78,39 @@ public class AIConsultationClient : IAIConsultationService
             return NoMatch("Ngày hẹn đã qua. Vui lòng chọn ngày khác.");
         }
 
+        if (_circuitBreaker is not null && !_circuitBreaker.CanExecute())
+        {
+            _logger.LogWarning("AI Circuit Breaker đang OPEN — bỏ qua gọi AI consult.");
+            return Unavailable();
+        }
+
+        var acquired = await ConsultConcurrencyGate.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
+        if (!acquired)
+        {
+            _logger.LogWarning("Hệ thống tư vấn AI đang xử lý tối đa số yêu cầu đồng thời.");
+            return Unavailable();
+        }
+
         try
         {
             var services = await _serviceCatalog.GetAvailableServicesAsync(request.DeviceType);
             var parts = await _serviceCatalog.GetAvailablePartsAsync(request.DeviceType);
             var (slotDate, slots) = await BuildSlotsAsync(request.RequestedDate, today, cancellationToken);
 
+            var requestId = Guid.NewGuid();
+            var actorType = string.Equals(request.ActorType, "CUSTOMER", StringComparison.OrdinalIgnoreCase)
+                ? "CUSTOMER"
+                : "GUEST";
+
             var payload = new
             {
-                requestId = Guid.NewGuid(),
-                actorType = "GUEST",
+                requestId,
+                actorType,
+                referenceDate = today.ToString("yyyy-MM-dd"),
                 message = request.IssueDescription.Trim(),
                 device = new
                 {
-                    deviceType = request.DeviceType.ToLowerInvariant(),
+                    deviceType = request.DeviceType.Trim().ToLowerInvariant(),
                     brand = request.Brand.Trim(),
                     model = request.Model.Trim()
                 },
@@ -81,19 +120,19 @@ public class AIConsultationClient : IAIConsultationService
                     availableServices = services.Select(service => new
                     {
                         serviceId = service.ServiceId,
-                        name = service.Name,
-                        description = service.Description,
+                        name = Truncate(service.Name, 150) ?? service.ServiceId,
+                        description = Truncate(service.Description, MaxServiceDescriptionLength),
                         deviceType = string.IsNullOrWhiteSpace(service.DeviceType)
-                            ? request.DeviceType.ToLowerInvariant()
-                            : service.DeviceType.ToLowerInvariant(),
+                            ? request.DeviceType.Trim().ToLowerInvariant()
+                            : service.DeviceType.Trim().ToLowerInvariant(),
                         basePrice = service.BasePrice
                     }),
                     availableParts = parts.Select(part => new
                     {
                         partId = part.PartId,
-                        name = part.Name,
+                        name = Truncate(part.Name, 150) ?? part.PartId,
                         unitPrice = part.UnitPrice,
-                        compatibleDeviceType = part.CompatibleDeviceType?.ToLowerInvariant(),
+                        compatibleDeviceType = part.CompatibleDeviceType?.Trim().ToLowerInvariant(),
                         inStock = part.InStock
                     }),
                     availableSlots = slots.Select(slot => new
@@ -131,6 +170,7 @@ public class AIConsultationClient : IAIConsultationService
                     (int)httpResponse.StatusCode,
                     request.DeviceType,
                     request.Brand);
+                _circuitBreaker?.RecordFailure();
                 return Unavailable();
             }
 
@@ -140,25 +180,45 @@ public class AIConsultationClient : IAIConsultationService
             if (body is null)
             {
                 _logger.LogError("AI consult trả body rỗng.");
+                _circuitBreaker?.RecordFailure();
                 return Unavailable();
             }
 
-            return MapResponse(request, body, services, parts, slots, slotDate);
+            // Luật hậu kiểm 1 (MAS §5.3): requestId phản hồi phải khớp requestId đã gửi (nếu AI có trả).
+            if (body.RequestId is { } respId && respId != Guid.Empty && respId != requestId)
+            {
+                _logger.LogWarning(
+                    "AI consult trả requestId {ResponseRequestId} không khớp {ExpectedRequestId} — từ chối.",
+                    respId,
+                    requestId);
+                _circuitBreaker?.RecordFailure();
+                return Unavailable();
+            }
+
+            _circuitBreaker?.RecordSuccess();
+            return MapResponse(request, body, services, parts, slots, slotDate, requestId);
         }
         catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogWarning(ex, "AI consult timeout.");
+            _circuitBreaker?.RecordFailure();
             return Unavailable();
         }
         catch (HttpRequestException ex)
         {
             _logger.LogError(ex, "Không kết nối được AI Service cho consult.");
+            _circuitBreaker?.RecordFailure();
             return Unavailable();
         }
         catch (JsonException ex)
         {
             _logger.LogError(ex, "AI consult trả JSON không hợp lệ.");
+            _circuitBreaker?.RecordFailure();
             return Unavailable();
+        }
+        finally
+        {
+            ConsultConcurrencyGate.Release();
         }
     }
 
@@ -182,27 +242,51 @@ public class AIConsultationClient : IAIConsultationService
             }
         }
 
+        // Gom truy vấn đếm lịch hẹn theo lô nếu repository hỗ trợ, fallback về CountBookedAsync cho từng slot.
+        var batchBooked = await _appointmentRepository.CountBookedBatchAsync(dates, cancellationToken);
+        var allSlots = new List<SlotContext>();
+        DateOnly? firstDateWithAvailable = null;
+
         foreach (var date in dates)
         {
-            var slots = new List<SlotContext>();
             foreach (var config in configurations
                          .Where(config => config.IsActive && config.AppliesTo(date))
                          .OrderBy(config => config.SlotStart))
             {
-                var booked = await _appointmentRepository.CountBookedAsync(date, config.Id);
+                if (allSlots.Count >= MaxSlotsInContext)
+                {
+                    break;
+                }
+
+                int booked;
+                if (batchBooked.Count > 0)
+                {
+                    booked = batchBooked.GetValueOrDefault((date, config.Id), 0);
+                }
+                else
+                {
+                    booked = await _appointmentRepository.CountBookedAsync(date, config.Id);
+                }
+
                 var available = Math.Max(0, config.MaxCapacity - booked);
-                slots.Add(new SlotContext(
+                allSlots.Add(new SlotContext(
                     config.Id, date, config.SlotStart, config.SlotEnd,
                     config.MaxCapacity, booked, available));
+
+                if (available > 0 && firstDateWithAvailable is null)
+                {
+                    firstDateWithAvailable = date;
+                }
             }
 
-            if (slots.Count > 0 || requestedDate is not null)
+            if (requestedDate is not null || allSlots.Count >= MaxSlotsInContext)
             {
-                return (date, slots);
+                break;
             }
         }
 
-        return (today.AddDays(1), []);
+        var defaultDate = requestedDate ?? firstDateWithAvailable ?? today.AddDays(1);
+        return (defaultDate, allSlots);
     }
 
     private ConsultationResponse MapResponse(
@@ -211,10 +295,12 @@ public class AIConsultationClient : IAIConsultationService
         List<CatalogServiceItem> services,
         List<CatalogPartItem> parts,
         List<SlotContext> slots,
-        DateOnly slotDate)
+        DateOnly slotDate,
+        Guid expectedRequestId)
     {
         var status = (body.Status ?? "ERROR").Trim().ToUpperInvariant();
         var intent = (body.Intent ?? "UNKNOWN").Trim().ToUpperInvariant();
+        var resolvedRequestId = (body.RequestId ?? expectedRequestId).ToString();
 
         if (status is "ERROR" or "UNAVAILABLE")
         {
@@ -224,17 +310,23 @@ public class AIConsultationClient : IAIConsultationService
                 null, null, null,
                 body.Reason ?? "Tính năng tư vấn AI tạm thời không khả dụng, vui lòng thử lại sau.",
                 body.Disclaimer ?? ConsultationResponse.DefaultDisclaimer,
-                body.RequestId?.ToString());
+                resolvedRequestId);
         }
 
         var serviceById = services.ToDictionary(item => item.ServiceId);
         var partById = parts.ToDictionary(item => item.PartId);
-        var slotById = slots.ToDictionary(item => item.TimeSlotId.ToString());
+        // Nhiều ngày có thể dùng cùng TimeSlotId cấu hình — tạo dictionary theo key (TimeSlotId, Date) và fallback theo TimeSlotId.
+        var slotByIdAndDate = slots
+            .GroupBy(item => (Id: item.TimeSlotId.ToString(), Date: item.Date.ToString("yyyy-MM-dd")))
+            .ToDictionary(g => g.Key, g => g.First());
+        var slotById = slots
+            .GroupBy(item => item.TimeSlotId.ToString())
+            .ToDictionary(g => g.Key, g => g.OrderByDescending(s => s.Available).First());
 
         var diagnosis = MapDiagnosis(body.Diagnosis, serviceById, partById);
         var quotation = MapQuotation(body.Quotation, serviceById, partById);
         var appointment = MapAppointment(
-            body.Appointment, slotById, request, slotDate);
+            body.Appointment, slotByIdAndDate, slotById, request, slotDate);
 
         if (status == "SUCCESS")
         {
@@ -243,13 +335,14 @@ public class AIConsultationClient : IAIConsultationService
             var hasQuotation = quotation is not null && quotation.Items.Count > 0;
             var hasAppointment = appointment is not null && appointment.SuggestedSlots.Count > 0;
 
-            if (!hasDiagnosis && !hasQuotation && !hasAppointment)
+            if (!hasDiagnosis && !hasQuotation && !hasAppointment &&
+                intent is not ("UNKNOWN" or "TRACKING"))
             {
                 status = "NO_MATCH";
             }
         }
 
-        var message = body.Reason;
+        var message = SanitizeReasonText(body.Reason);
         if (string.IsNullOrWhiteSpace(message))
         {
             message = status switch
@@ -270,7 +363,7 @@ public class AIConsultationClient : IAIConsultationService
             appointment,
             message,
             body.Disclaimer ?? ConsultationResponse.DefaultDisclaimer,
-            body.RequestId?.ToString());
+            resolvedRequestId);
     }
 
     private static ConsultationDiagnosis? MapDiagnosis(
@@ -287,7 +380,8 @@ public class AIConsultationClient : IAIConsultationService
             .Where(cause => !string.IsNullOrWhiteSpace(cause.Name))
             .Take(3)
             .Select(cause => new ConsultationPossibleCause(
-                cause.Name!.Trim(), NormalizeConfidence(cause.Confidence)))
+                SanitizeCauseName(cause.Name!), NormalizeConfidence(cause.Confidence)))
+            .Where(cause => !string.IsNullOrWhiteSpace(cause.Name))
             .ToList();
 
         var suggestedServices = (source.SuggestedServices ?? [])
@@ -306,12 +400,20 @@ public class AIConsultationClient : IAIConsultationService
                 NormalizeConfidence(item.Confidence)))
             .ToList();
 
+        var missing = (source.MissingInformation ?? [])
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Take(5)
+            .Select(item => Truncate(item.Trim(), 120)!)
+            .ToList();
+
+        var explanation = SanitizeDiagnosisExplanation(source.Explanation, causes);
+
         return new ConsultationDiagnosis(
             causes,
             suggestedServices,
             suggestedParts,
-            (source.MissingInformation ?? []).Take(5).ToList(),
-            source.Explanation ?? string.Empty);
+            missing,
+            explanation);
     }
 
     private static ConsultationQuotation? MapQuotation(
@@ -366,12 +468,13 @@ public class AIConsultationClient : IAIConsultationService
             items,
             total,
             source.Currency ?? "VND",
-            source.Assumptions ?? [],
-            source.Explanation ?? string.Empty);
+            (source.Assumptions ?? []).Take(5).Select(a => Truncate(a.Trim(), 200)!).ToList(),
+            Truncate(source.Explanation?.Trim(), MaxExplanationLength) ?? string.Empty);
     }
 
     private static ConsultationAppointment? MapAppointment(
         AiAppointmentDto? source,
+        Dictionary<(string Id, string Date), SlotContext> slotByIdAndDate,
         Dictionary<string, SlotContext> slotById,
         ConsultationRequest request,
         DateOnly slotDate)
@@ -384,14 +487,27 @@ public class AIConsultationClient : IAIConsultationService
         var suggested = new List<ConsultationSlot>();
         foreach (var slot in source.SuggestedSlots ?? [])
         {
-            if (slot.TimeSlotId is null || !slotById.TryGetValue(slot.TimeSlotId, out var context))
+            if (slot.TimeSlotId is null)
             {
-                continue; // slot lạ
+                continue;
             }
-            if (context.Available <= 0)
+
+            SlotContext? context = null;
+            if (!string.IsNullOrWhiteSpace(slot.AppointmentDate) &&
+                slotByIdAndDate.TryGetValue((slot.TimeSlotId, slot.AppointmentDate!), out var datedSlot))
             {
-                continue; // hết chỗ
+                context = datedSlot;
             }
+            else if (slotById.TryGetValue(slot.TimeSlotId, out var fallbackSlot))
+            {
+                context = fallbackSlot;
+            }
+
+            if (context is null || context.Available <= 0)
+            {
+                continue; // slot lạ hoặc hết chỗ
+            }
+
             suggested.Add(new ConsultationSlot(
                 context.TimeSlotId.ToString(),
                 context.SlotStart.ToString("HH:mm"),
@@ -402,23 +518,43 @@ public class AIConsultationClient : IAIConsultationService
 
         var draft = source.BookingDraft;
         string? slotId = draft?.TimeSlotId;
-        if (slotId is not null &&
-            (!slotById.TryGetValue(slotId, out var chosen) || chosen.Available <= 0))
+        SlotContext? chosenContext = null;
+        if (slotId is not null)
         {
-            slotId = null;
+            if (!string.IsNullOrWhiteSpace(draft?.AppointmentDate) &&
+                slotByIdAndDate.TryGetValue((slotId, draft!.AppointmentDate!), out var datedChosen))
+            {
+                chosenContext = datedChosen;
+            }
+            else if (slotById.TryGetValue(slotId, out var fallbackChosen))
+            {
+                chosenContext = fallbackChosen;
+            }
+
+            if (chosenContext is null || chosenContext.Available <= 0)
+            {
+                slotId = null;
+                chosenContext = null;
+            }
+        }
+
+        DateOnly? resolvedDraftDate = chosenContext?.Date;
+        if (resolvedDraftDate is null &&
+            !string.IsNullOrWhiteSpace(draft?.AppointmentDate) &&
+            DateOnly.TryParse(draft!.AppointmentDate, out var parsedDraftDate))
+        {
+            resolvedDraftDate = parsedDraftDate;
         }
 
         var bookingDraft = new ConsultationBookingDraft(
-            draft?.FullName ?? request.FullName,
-            draft?.Phone ?? request.Phone,
-            slotId is not null && slotById.TryGetValue(slotId, out var draftSlot)
-                ? draftSlot.Date
-                : null,
+            Truncate(draft?.FullName ?? request.FullName, 100),
+            Truncate(draft?.Phone ?? request.Phone, 20),
+            resolvedDraftDate,
             slotId,
             request.DeviceType,
             request.Brand,
             request.Model,
-            draft?.IssueDescription ?? request.IssueDescription);
+            Truncate(draft?.IssueDescription ?? request.IssueDescription, 500));
 
         var missing = (source.MissingInformation ?? []).ToList();
         if (slotId is null && !missing.Contains("timeSlotId"))
@@ -439,7 +575,61 @@ public class AIConsultationClient : IAIConsultationService
             bookingDraft,
             missing,
             true,
-            source.Explanation ?? string.Empty);
+            Truncate(source.Explanation?.Trim(), MaxExplanationLength) ?? string.Empty);
+    }
+
+    private static string SanitizeCauseName(string raw)
+    {
+        var cleaned = raw.Trim();
+        if (PriceLeakPattern.IsMatch(cleaned))
+        {
+            cleaned = PriceLeakPattern.Replace(cleaned, "").Trim();
+        }
+        if (CertaintyWordPattern.IsMatch(cleaned))
+        {
+            cleaned = CertaintyWordPattern.Replace(cleaned, "có khả năng").Trim();
+        }
+        return Truncate(cleaned, MaxCauseNameLength) ?? string.Empty;
+    }
+
+    private static string SanitizeDiagnosisExplanation(
+        string? raw,
+        IReadOnlyCollection<ConsultationPossibleCause> causes)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return string.Empty;
+        }
+
+        var cleaned = raw.Trim();
+        // Nếu LLM chèn giá tự bịa hoặc từ khẳng định tuyệt đối vào phần giải thích chẩn đoán => thay thế an toàn.
+        if (PriceLeakPattern.IsMatch(cleaned) || CertaintyWordPattern.IsMatch(cleaned))
+        {
+            return causes.Count > 0
+                ? $"Triệu chứng mô tả có thể liên quan đến: {string.Join(", ", causes.Select(c => c.Name))}. Kỹ thuật viên cần kiểm tra trực tiếp để kết luận chính xác."
+                : "Đây là nhận định sơ bộ từ mô tả triệu chứng. Kỹ thuật viên sẽ kiểm tra thực tế tại cửa hàng.";
+        }
+
+        return Truncate(cleaned, MaxExplanationLength) ?? string.Empty;
+    }
+
+    private static string? SanitizeReasonText(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return null;
+        }
+        var cleaned = CertaintyWordPattern.Replace(raw.Trim(), "có khả năng");
+        return Truncate(cleaned, 500);
+    }
+
+    private static string? Truncate(string? value, int maxLength)
+    {
+        if (value is null)
+        {
+            return null;
+        }
+        return value.Length <= maxLength ? value : value[..maxLength];
     }
 
     private static string NormalizeConfidence(string? value)
@@ -513,11 +703,13 @@ public class AIConsultationClient : IAIConsultationService
         [property: JsonPropertyName("explanation")] string? Explanation);
 
     private sealed record AiSlotDto(
-        [property: JsonPropertyName("timeSlotId")] string? TimeSlotId);
+        [property: JsonPropertyName("timeSlotId")] string? TimeSlotId,
+        [property: JsonPropertyName("appointmentDate")] string? AppointmentDate);
 
     private sealed record AiBookingDraftDto(
         [property: JsonPropertyName("fullName")] string? FullName,
         [property: JsonPropertyName("phone")] string? Phone,
+        [property: JsonPropertyName("appointmentDate")] string? AppointmentDate,
         [property: JsonPropertyName("timeSlotId")] string? TimeSlotId,
         [property: JsonPropertyName("issueDescription")] string? IssueDescription);
 }

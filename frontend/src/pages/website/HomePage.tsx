@@ -378,8 +378,8 @@ export default function HomePage() {
                 <Link to="/track" className={styles.deskQuickBtn}>
                   <FileSearch size={15} /> Tra cứu phiếu sửa
                 </Link>
-                <Link to="/estimate" className={styles.deskQuickBtn}>
-                  <Sparkles size={15} /> Chẩn đoán giá AI
+                <Link to="/consult" className={styles.deskQuickBtn}>
+                  <Sparkles size={15} /> Trợ lý AI tư vấn
                 </Link>
               </div>
             </div>
@@ -648,14 +648,14 @@ export default function HomePage() {
                 </div>
               </Link>
 
-              <Link to="/estimate" className={styles.lookupActionCard}>
+              <Link to="/consult" className={styles.lookupActionCard}>
                 <div className={styles.lookupCardIcon}>
                   <Sparkles size={22} />
                 </div>
                 <div>
-                  <h3>Tư vấn & Báo giá AI</h3>
-                  <p>Mô tả triệu chứng lỗi thiết bị để nhận chẩn đoán sơ bộ và chi phí dự kiến.</p>
-                  <span>Thử chẩn đoán AI →</span>
+                  <h3>Trợ lý AI: Chẩn đoán, Báo giá & Đặt lịch</h3>
+                  <p>Mô tả triệu chứng lỗi thiết bị để nhận chẩn đoán sơ bộ, chi phí dự kiến và gợi ý khung giờ.</p>
+                  <span>Thử trợ lý AI →</span>
                 </div>
               </Link>
 

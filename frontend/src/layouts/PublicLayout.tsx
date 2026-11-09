@@ -204,7 +204,10 @@ export default function PublicLayout() {
                 <Link to="/appointments/lookup">Tra cứu lịch hẹn trực tuyến</Link>
               </li>
               <li>
-                <Link to="/estimate">Chẩn đoán lỗi & Báo giá AI</Link>
+                <Link to="/consult">Trợ lý AI: Chẩn đoán, Báo giá & Đặt lịch</Link>
+              </li>
+              <li>
+                <Link to="/estimate">Dự toán chi phí AI (cơ bản)</Link>
               </li>
               <li>
                 <Link to="/articles">Cẩm nang kỹ thuật & Bảo hành</Link>

@@ -112,7 +112,14 @@ class AppointmentAgent:
 
     async def run(self, state: AgentState) -> Dict[str, object]:
         started = time.perf_counter()
-        today = self._today()
+        ref_date_str = state.get("reference_date")
+        if ref_date_str and self._today is date.today:
+            try:
+                today = date.fromisoformat(ref_date_str)
+            except ValueError:
+                today = self._today()
+        else:
+            today = self._today()
 
         text = " ".join(
             part

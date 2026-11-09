@@ -2,7 +2,7 @@
   "label": "ollama",
   "generatedAt": "2026-11-09T15:05:54+00:00",
   "llm": {
-    "mode": "hosted",
+    "mode": "ollama",
     "model": "qwen2.5:1.5b-instruct-q4_K_M",
     "baseUrlHost": "127.0.0.1:11434"
   },
@@ -25,6 +25,8 @@
       "latencyP95Ms": 5883.7,
       "latencyMinMs": 4.3,
       "latencyMaxMs": 16729.9,
+      "latencyLlmMedianMs": 1630.8,
+      "latencyNonLlmMedianMs": 7.6,
       "statusCounts": {
         "SUCCESS": 24
       },
@@ -48,6 +50,8 @@
       "latencyP95Ms": 3844.2,
       "latencyMinMs": 1.9,
       "latencyMaxMs": 8301.3,
+      "latencyLlmMedianMs": 2756.7,
+      "latencyNonLlmMedianMs": 11.9,
       "statusCounts": {
         "SUCCESS": 21,
         "PARTIAL": 3
@@ -72,6 +76,8 @@
       "latencyP95Ms": 1803.6,
       "latencyMinMs": 10.1,
       "latencyMaxMs": 1838.7,
+      "latencyLlmMedianMs": 1680.1,
+      "latencyNonLlmMedianMs": 16.1,
       "statusCounts": {
         "SUCCESS": 17
       },
@@ -95,6 +101,8 @@
       "latencyP95Ms": 4201.5,
       "latencyMinMs": 0.9,
       "latencyMaxMs": 4530.7,
+      "latencyLlmMedianMs": 2716.3,
+      "latencyNonLlmMedianMs": 3.1,
       "statusCounts": {
         "SUCCESS": 15,
         "PARTIAL": 2

@@ -1,5 +1,5 @@
 import { type FormEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { aiAdvisoryService } from '../../services/aiAdvisoryService';
 import { extractApiError } from '../../utils/apiError';
@@ -124,7 +124,12 @@ export default function AIEstimatePage() {
     <div className={styles.wrapper}>
       <div className={styles.intro}>
         <h2>Tư vấn & Dự toán chi phí sửa chữa bằng AI — Fixora</h2>
-        <p>Chọn dòng thiết bị và mô tả triệu chứng để nhận gợi ý dịch vụ cùng chi phí tham khảo trước khi mang máy đến Fixora.</p>
+        <p>
+          Chọn dòng thiết bị và mô tả triệu chứng để nhận gợi ý dịch vụ cùng chi phí tham khảo trước khi mang máy đến Fixora.{' '}
+          <Link to="/consult">
+            Chuyển sang Trợ lý AI MAS mới (Chẩn đoán, Báo giá & Đặt lịch không cần đăng nhập) →
+          </Link>
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className={styles.form}>

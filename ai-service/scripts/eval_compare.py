@@ -223,6 +223,16 @@ def metrics(rows: List[dict]) -> Dict[str, Any]:
         "latencyP95Ms": round(percentile(latencies, 0.95), 1),
         "latencyMinMs": round(min(latencies), 1) if latencies else 0,
         "latencyMaxMs": round(max(latencies), 1) if latencies else 0,
+        "latencyLlmMedianMs": round(
+            statistics.median([row["latency_ms"] for row in rows if row["llm_calls"] > 0]), 1
+        )
+        if any(row["llm_calls"] > 0 for row in rows)
+        else 0,
+        "latencyNonLlmMedianMs": round(
+            statistics.median([row["latency_ms"] for row in rows if row["llm_calls"] == 0]), 1
+        )
+        if any(row["llm_calls"] == 0 for row in rows)
+        else 0,
         "statusCounts": status_counts,
         "fallbackCount": sum(1 for row in rows if row["fallback"]),
         "avgLlmCalls": round(statistics.fmean([row["llm_calls"] for row in rows]), 3),

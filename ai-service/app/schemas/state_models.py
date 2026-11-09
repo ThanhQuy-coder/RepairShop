@@ -52,6 +52,7 @@ class AgentState(TypedDict, total=False):
     available_slots: List[Dict[str, Any]]
     options: Dict[str, bool]
     customer_info: Dict[str, Optional[str]]
+    reference_date: Optional[str]
 
     # ── Coordinator ──
     intent: str

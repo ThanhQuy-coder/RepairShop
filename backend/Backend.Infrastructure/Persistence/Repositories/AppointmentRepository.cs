@@ -98,6 +98,24 @@ public class AppointmentRepository : IAppointmentRepository
             a.AppointmentDate == date && a.TimeSlotId == timeSlotId &&
             (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed));
 
+    public async Task<Dictionary<(DateOnly Date, Guid TimeSlotId), int>> CountBookedBatchAsync(
+        IReadOnlyCollection<DateOnly> dates,
+        CancellationToken cancellationToken = default)
+    {
+        if (dates.Count == 0)
+            return [];
+
+        var grouped = await _context.Appointments
+            .AsNoTracking()
+            .Where(a => dates.Contains(a.AppointmentDate) &&
+                (a.Status == AppointmentStatus.Pending || a.Status == AppointmentStatus.Confirmed))
+            .GroupBy(a => new { a.AppointmentDate, a.TimeSlotId })
+            .Select(g => new { g.Key.AppointmentDate, g.Key.TimeSlotId, Count = g.Count() })
+            .ToListAsync(cancellationToken);
+
+        return grouped.ToDictionary(x => (x.AppointmentDate, x.TimeSlotId), x => x.Count);
+    }
+
     public async Task AddAsync(Appointment appointment) 
         => await _context.Appointments.AddAsync(appointment);
     public void Update(Appointment appointment) => _context.Appointments.Update(appointment);

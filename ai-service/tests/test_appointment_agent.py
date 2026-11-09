@@ -154,3 +154,17 @@ async def test_phone_with_invalid_length_is_treated_as_missing():
 
     assert draft.phone is None
     assert "phone" in result["appointment_result"].missing_information
+
+
+@pytest.mark.asyncio
+async def test_reference_date_from_request_overrides_system_today():
+    payload = build_agent_payload("Mai 3h chiều còn chỗ không")
+    payload["referenceDate"] = "2026-11-09"
+    state = _initial_state(AgentRequest.model_validate(payload))
+
+    # Dùng default AppointmentAgent() (không truyền today_provider) để chứng minh referenceDate có tác dụng.
+    result = await AppointmentAgent().run(state)
+    appointment = result["appointment_result"]
+
+    assert [slot.time_slot_id for slot in appointment.suggested_slots] == ["slot-1500"]
+    assert appointment.booking_draft.appointment_date == "2026-11-10"

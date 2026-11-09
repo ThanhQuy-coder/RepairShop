@@ -13,7 +13,8 @@ public record ConsultationRequest(
     bool AllowQuotation = true,
     bool AllowAppointment = true,
     string? FullName = null,
-    string? Phone = null);
+    string? Phone = null,
+    string ActorType = "GUEST");
 
 public record ConsultationPossibleCause(string Name, string Confidence);
 

@@ -9,14 +9,17 @@ public class GetConsultationCommandHandler
     : IRequestHandler<GetConsultationCommand, ConsultationResponse>
 {
     private readonly IAIConsultationService _consultationService;
+    private readonly ICurrentUserService? _currentUser;
     private readonly ILogger<GetConsultationCommandHandler> _logger;
 
     public GetConsultationCommandHandler(
         IAIConsultationService consultationService,
-        ILogger<GetConsultationCommandHandler> logger)
+        ILogger<GetConsultationCommandHandler> logger,
+        ICurrentUserService? currentUser = null)
     {
         _consultationService = consultationService;
         _logger = logger;
+        _currentUser = currentUser;
     }
 
     public async Task<ConsultationResponse> Handle(
@@ -25,6 +28,11 @@ public class GetConsultationCommandHandler
     {
         try
         {
+            var actorType = _currentUser?.UserId is not null ? "CUSTOMER" : "GUEST";
+            var phone = string.IsNullOrWhiteSpace(request.Phone)
+                ? _currentUser?.Phone
+                : request.Phone;
+
             return await _consultationService.GetConsultationAsync(
                 new ConsultationRequest(
                     request.DeviceType,
@@ -35,7 +43,8 @@ public class GetConsultationCommandHandler
                     request.AllowQuotation,
                     request.AllowAppointment,
                     request.FullName,
-                    request.Phone),
+                    phone,
+                    actorType),
                 cancellationToken);
         }
         catch (Exception ex)

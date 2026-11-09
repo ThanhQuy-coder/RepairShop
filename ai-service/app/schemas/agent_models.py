@@ -203,6 +203,16 @@ class AgentRequest(BaseModel):
     context: MasContext = Field(default_factory=MasContext)
     options: AgentOptions = Field(default_factory=AgentOptions)
     customer_info: CustomerInfo = Field(default_factory=CustomerInfo, alias="customerInfo")
+    reference_date: Optional[str] = Field(default=None, alias="referenceDate")
+
+    @field_validator("reference_date")
+    @classmethod
+    def validate_reference_date(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        if not _DATE_PATTERN.match(value):
+            raise ValueError("referenceDate phải có định dạng YYYY-MM-DD.")
+        return value
 
     @field_validator("message")
     @classmethod

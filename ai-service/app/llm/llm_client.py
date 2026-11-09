@@ -94,9 +94,16 @@ class LLMClient:
         except httpx.TimeoutException as exc:
             logger.warning("LLM timeout sau %ss (model=%s)", self._timeout, self._model)
             raise LLMTimeoutError("LLM provider did not respond within timeout.") from exc
-        except httpx.HTTPError as exc:
-            logger.error("Lỗi HTTP khi gọi LLM: %s", type(exc).__name__)
-            raise LLMResponseError(f"HTTP error calling LLM provider: {exc}") from exc
+        except httpx.HTTPError as first_exc:
+            logger.warning("Lỗi HTTP tạm thời khi gọi LLM (%s) — thử lại 1 lần.", type(first_exc).__name__)
+            try:
+                response = await self._get_client().post(url, json=payload, headers=headers)
+            except httpx.TimeoutException as exc:
+                logger.warning("LLM timeout sau %ss (model=%s)", self._timeout, self._model)
+                raise LLMTimeoutError("LLM provider did not respond within timeout.") from exc
+            except httpx.HTTPError as exc:
+                logger.error("Lỗi HTTP khi gọi LLM: %s", type(exc).__name__)
+                raise LLMResponseError(f"HTTP error calling LLM provider: {exc}") from exc
 
         if response.status_code >= 400:
             logger.warning(

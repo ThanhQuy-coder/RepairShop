@@ -18,7 +18,8 @@ public class AIConsultationClientTests
         List<CatalogServiceItem>? services = null,
         List<CatalogPartItem>? parts = null,
         List<TimeSlotConfig>? slots = null,
-        int booked = 0)
+        int booked = 0,
+        IAICircuitBreaker? circuitBreaker = null)
     {
         var httpClient = new HttpClient(new FakeHttpMessageHandler(response))
         {
@@ -39,6 +40,11 @@ public class AIConsultationClientTests
         appointmentRepository
             .Setup(r => r.CountBookedAsync(It.IsAny<DateOnly>(), It.IsAny<Guid>()))
             .ReturnsAsync(booked);
+        appointmentRepository
+            .Setup(r => r.CountBookedBatchAsync(
+                It.IsAny<IReadOnlyCollection<DateOnly>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
 
         var clock = new Mock<IBusinessClock>();
         clock.SetupGet(c => c.Now)
@@ -50,17 +56,18 @@ public class AIConsultationClientTests
             slotRepository.Object,
             appointmentRepository.Object,
             clock.Object,
-            NullLogger<AIConsultationClient>.Instance);
+            NullLogger<AIConsultationClient>.Instance,
+            circuitBreaker);
     }
 
     private static TimeSlotConfig CreateSlot()
         => new(new TimeOnly(9, 0), new TimeOnly(10, 0), maxCapacity: 3);
 
-    private static object SuccessBody(TimeSlotConfig slot, string? serviceId = "svc-1")
+    private static object SuccessBody(TimeSlotConfig slot, string? serviceId = "svc-1", Guid? requestId = null)
     {
         return new
         {
-            requestId = Guid.NewGuid(),
+            requestId,
             status = "SUCCESS",
             intent = "DIAGNOSIS",
             executedAgents = new[] { "DIAGNOSIS", "QUOTATION", "APPOINTMENT" },
@@ -230,5 +237,78 @@ public class AIConsultationClientTests
 
         Assert.True(result.AiAvailable);
         Assert.Equal("OUT_OF_SCOPE", result.Status);
+    }
+
+    [Fact]
+    public async Task GetConsultationAsync_WhenRequestIdMismatches_ReturnsUnavailable()
+    {
+        var slot = CreateSlot();
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = JsonContent.Create(SuccessBody(slot, requestId: Guid.NewGuid()))
+        };
+        var client = CreateClient(response, [new("svc-1", "Thay pin", "Phone", 400_000m)], [], [slot]);
+
+        var result = await client.GetConsultationAsync(new ConsultationRequest(
+            "Phone", "iPhone", "13", "Pin tụt nhanh", Tomorrow));
+
+        Assert.False(result.AiAvailable);
+        Assert.Equal("ERROR", result.Status);
+    }
+
+    [Fact]
+    public async Task GetConsultationAsync_SanitizesPriceAndCertaintyInExplanation()
+    {
+        var slot = CreateSlot();
+        var body = new
+        {
+            status = "SUCCESS",
+            intent = "DIAGNOSIS",
+            executedAgents = new[] { "DIAGNOSIS" },
+            diagnosis = new
+            {
+                possibleCauses = new[] { new { name = "Chắc chắn hỏng pin giá 500k", confidence = "HIGH" } },
+                suggestedServices = new[] { new { serviceId = "svc-1", confidence = "HIGH" } },
+                suggestedParts = Array.Empty<object>(),
+                missingInformation = Array.Empty<string>(),
+                explanation = "Máy chắc chắn 100% hỏng pin, chi phí thay là 999.000đ."
+            },
+            reason = "Đã tư vấn chắc chắn.",
+            disclaimer = "Tham khảo."
+        };
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = JsonContent.Create(body)
+        };
+        var client = CreateClient(response, [new("svc-1", "Thay pin", "Phone", 400_000m)], [], [slot]);
+
+        var result = await client.GetConsultationAsync(new ConsultationRequest(
+            "Phone", "iPhone", "13", "Pin tụt nhanh", Tomorrow));
+
+        Assert.True(result.AiAvailable);
+        Assert.NotNull(result.Diagnosis);
+        Assert.DoesNotContain("999.000", result.Diagnosis!.Explanation);
+        Assert.DoesNotContain("100%", result.Diagnosis.Explanation);
+        Assert.DoesNotContain("500k", result.Diagnosis.PossibleCauses.Single().Name, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("chắc chắn", result.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetConsultationAsync_WhenCircuitBreakerOpen_SkipsHttpCall()
+    {
+        var breaker = new Mock<IAICircuitBreaker>();
+        breaker.Setup(b => b.CanExecute()).Returns(false);
+
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = JsonContent.Create(SuccessBody(CreateSlot()))
+        };
+        var client = CreateClient(response, circuitBreaker: breaker.Object);
+
+        var result = await client.GetConsultationAsync(new ConsultationRequest(
+            "Phone", "iPhone", "13", "Pin tụt nhanh", Tomorrow));
+
+        Assert.False(result.AiAvailable);
+        Assert.Equal("ERROR", result.Status);
     }
 }

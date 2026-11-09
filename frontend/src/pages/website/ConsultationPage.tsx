@@ -1,4 +1,4 @@
-import { type FormEvent, type ReactNode, useState } from 'react';
+import { type FormEvent, type ReactNode, useRef, useState } from 'react';
 import { Button, ErrorMessage, Input, Select } from '../../components/common';
 import {
   ArrowRight,
@@ -27,6 +27,17 @@ const CONFIDENCE_LABEL: Record<string, string> = {
   MEDIUM: 'Trung bình',
   LOW: 'Thấp',
 };
+
+const MISSING_INFO_LABEL: Record<string, string> = {
+  fullName: 'Họ và tên',
+  phone: 'Số điện thoại',
+  timeSlotId: 'Khung giờ hẹn',
+  appointmentDate: 'Ngày hẹn',
+};
+
+function formatMissingItem(item: string): string {
+  return MISSING_INFO_LABEL[item] ?? item;
+}
 
 const STATUS_META: Record<
   string,
@@ -73,10 +84,17 @@ export default function ConsultationPage() {
   const [isBooking, setIsBooking] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [bookingMessage, setBookingMessage] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const { brands, loadingBrands } = useDeviceCatalogCascade(deviceType, brandId);
 
   const today = new Date().toISOString().slice(0, 10);
+
+  const handleCancelConsult = () => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    setIsLoading(false);
+  };
 
   const handleDeviceTypeChange = (nextType: DeviceType) => {
     setDeviceType(nextType);
@@ -105,26 +123,57 @@ export default function ConsultationPage() {
       return;
     }
 
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setIsLoading(true);
     try {
-      const response = await consultationService.consult({
-        deviceType,
-        brand: brand.trim(),
-        model: model.trim(),
-        issueDescription: issueDescription.trim(),
-        requestedDate: requestedDate || undefined,
-        allowQuotation: true,
-        allowAppointment: true,
-        fullName: fullName.trim() || undefined,
-        phone: phone.trim() || undefined,
-      });
+      const response = await consultationService.consult(
+        {
+          deviceType,
+          brand: brand.trim(),
+          model: model.trim(),
+          issueDescription: issueDescription.trim(),
+          requestedDate: requestedDate || undefined,
+          allowQuotation: true,
+          allowAppointment: true,
+          fullName: fullName.trim() || undefined,
+          phone: phone.trim() || undefined,
+        },
+        controller.signal,
+      );
       setResult(response);
-      setSelectedSlot(null);
+
+      const draft = response.appointment?.bookingDraft;
+      const suggested = response.appointment?.suggestedSlots ?? [];
+      if (draft?.fullName && !fullName.trim()) {
+        setFullName(draft.fullName);
+      }
+      if (draft?.phone && !phone.trim()) {
+        setPhone(draft.phone);
+      }
+      if (draft?.timeSlotId) {
+        const matched = suggested.find(
+          (slot) =>
+            slot.timeSlotId === draft.timeSlotId &&
+            (!draft.appointmentDate || slot.appointmentDate === draft.appointmentDate),
+        );
+        setSelectedSlot(matched ?? null);
+      } else {
+        setSelectedSlot(null);
+      }
     } catch (error) {
+      if (controller.signal.aborted) {
+        return;
+      }
       setErrorMessage(extractApiError(error).message);
       setResult(null);
     } finally {
-      setIsLoading(false);
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null;
+        setIsLoading(false);
+      }
     }
   };
 
@@ -190,7 +239,7 @@ export default function ConsultationPage() {
         </p>
         <div className={styles.heroChips}>
           <span>
-            <Clock size={15} /> Phản hồi trong vài giây
+            <Clock size={15} /> Phản hồi nhanh (1–10 giây)
           </span>
           <span>
             <ShieldCheck size={15} /> Không tự chốt giá
@@ -348,7 +397,8 @@ export default function ConsultationPage() {
               <div>
                 <h2 className={styles.cardTitle}>Đang phân tích yêu cầu…</h2>
                 <p className={styles.cardSub}>
-                  Hệ thống đang tra cứu dịch vụ, bảng giá và khung giờ còn trống.
+                  Hệ thống đang tra cứu dịch vụ, bảng giá và khung giờ còn trống (lần chạy đầu của
+                  mô hình local có thể mất 8–10 giây).
                 </p>
               </div>
               <div className={styles.skeleton}>
@@ -356,6 +406,14 @@ export default function ConsultationPage() {
                 <span />
                 <span />
               </div>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={handleCancelConsult}
+              >
+                Hủy yêu cầu
+              </Button>
             </div>
           )}
 
@@ -500,30 +558,36 @@ export default function ConsultationPage() {
                   </p>
 
                   <div className={styles.slotGrid}>
-                    {slots.map((slot) => (
-                      <label
-                        key={slot.timeSlotId}
-                        className={
-                          selectedSlot?.timeSlotId === slot.timeSlotId
-                            ? `${styles.slotCard} ${styles.slotCardActive}`
-                            : styles.slotCard
-                        }
-                      >
-                        <input
-                          type="radio"
-                          name="slot"
-                          checked={selectedSlot?.timeSlotId === slot.timeSlotId}
-                          onChange={() => setSelectedSlot(slot)}
-                        />
-                        <span className={styles.slotTime}>
-                          {slot.slotStart}–{slot.slotEnd}
-                        </span>
-                        <span className={styles.slotDate}>
-                          {formatDate(slot.appointmentDate)}
-                        </span>
-                        <span className={styles.slotSeats}>Còn {slot.available} chỗ</span>
-                      </label>
-                    ))}
+                    {slots.map((slot) => {
+                      const slotKey = `${slot.timeSlotId}-${slot.appointmentDate}`;
+                      const isSelected =
+                        selectedSlot?.timeSlotId === slot.timeSlotId &&
+                        selectedSlot?.appointmentDate === slot.appointmentDate;
+                      return (
+                        <label
+                          key={slotKey}
+                          className={
+                            isSelected
+                              ? `${styles.slotCard} ${styles.slotCardActive}`
+                              : styles.slotCard
+                          }
+                        >
+                          <input
+                            type="radio"
+                            name="slot"
+                            checked={isSelected}
+                            onChange={() => setSelectedSlot(slot)}
+                          />
+                          <span className={styles.slotTime}>
+                            {slot.slotStart}–{slot.slotEnd}
+                          </span>
+                          <span className={styles.slotDate}>
+                            {formatDate(slot.appointmentDate)}
+                          </span>
+                          <span className={styles.slotSeats}>Còn {slot.available} chỗ</span>
+                        </label>
+                      );
+                    })}
                   </div>
 
                   <div className={styles.bookingGrid}>
@@ -544,7 +608,7 @@ export default function ConsultationPage() {
 
                   {appointment.missingInformation.length > 0 && (
                     <p className={styles.sectionNote}>
-                      Còn thiếu: {appointment.missingInformation.join(', ')}
+                      Còn thiếu: {appointment.missingInformation.map(formatMissingItem).join(', ')}
                     </p>
                   )}
 

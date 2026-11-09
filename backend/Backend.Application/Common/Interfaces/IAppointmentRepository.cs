@@ -15,6 +15,9 @@ public interface IAppointmentRepository
     Task<List<Appointment>> GetByCustomerIdAsync(Guid customerId);
     Task<List<Appointment>> GetByPhoneAsync(string phone);
     Task<int> CountBookedAsync(DateOnly date, Guid timeSlotId); // PENDING + CONFIRMED
+    Task<Dictionary<(DateOnly Date, Guid TimeSlotId), int>> CountBookedBatchAsync(
+        IReadOnlyCollection<DateOnly> dates,
+        CancellationToken cancellationToken = default) => Task.FromResult(new Dictionary<(DateOnly Date, Guid TimeSlotId), int>());
     Task AddAsync(Appointment appointment);
     void Update(Appointment appointment);
     Task<int> UpdateCustomerIdAsync(string phone, Guid customerId,

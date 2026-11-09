@@ -69,4 +69,37 @@ public class GetConsultationCommandHandlerTests
         Assert.Equal("ERROR", result.Status);
         Assert.Contains("không khả dụng", result.Message);
     }
+
+    [Fact]
+    public async Task Handle_WhenAuthenticatedUser_SetsActorTypeCustomerAndDefaultPhone()
+    {
+        var serviceMock = new Mock<IAIConsultationService>();
+        serviceMock
+            .Setup(s => s.GetConsultationAsync(
+                It.IsAny<ConsultationRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ConsultationResponse(
+                true, "SUCCESS", "DIAGNOSIS", ["DIAGNOSIS"],
+                null, null, null, "ok", "disclaimer", null));
+
+        var currentUser = new Mock<ICurrentUserService>();
+        currentUser.SetupGet(u => u.UserId).Returns(Guid.NewGuid());
+        currentUser.SetupGet(u => u.Phone).Returns("0912345678");
+
+        var handler = new GetConsultationCommandHandler(
+            serviceMock.Object,
+            NullLogger<GetConsultationCommandHandler>.Instance,
+            currentUser.Object);
+
+        await handler.Handle(
+            new GetConsultationCommand("Phone", "iPhone", "13", "Pin tụt nhanh"),
+            CancellationToken.None);
+
+        serviceMock.Verify(
+            s => s.GetConsultationAsync(
+                It.Is<ConsultationRequest>(r =>
+                    r.ActorType == "CUSTOMER" &&
+                    r.Phone == "0912345678"),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 }
