@@ -18,7 +18,7 @@ public class GetConsultationCommandValidatorTests
     }
 
     [Theory]
-    [InlineData("Tablet", "iPhone", "13", "Pin tụt nhanh", "DeviceType")]
+    [InlineData("Refrigerator", "LG", "Inverter", "Không làm lạnh", "DeviceType")]
     [InlineData("Phone", "", "13", "Pin tụt nhanh", "Brand")]
     [InlineData("Phone", "iPhone", "", "Pin tụt nhanh", "Model")]
     [InlineData("Phone", "iPhone", "13", "", "IssueDescription")]
@@ -28,6 +28,19 @@ public class GetConsultationCommandValidatorTests
         var command = new GetConsultationCommand(deviceType, brand, model, issue);
 
         Assert.False(_validator.Validate(command).IsValid);
+    }
+
+    [Theory]
+    [InlineData("Phone")]
+    [InlineData("Laptop")]
+    [InlineData("Electronics")]
+    [InlineData("Tablet")]
+    [InlineData("Smartwatch")]
+    public void AllFiveDeviceTypes_Pass(string deviceType)
+    {
+        var command = new GetConsultationCommand(deviceType, "Apple", "Pro", "Pin tụt nhanh");
+
+        Assert.True(_validator.Validate(command).IsValid);
     }
 
     [Fact]

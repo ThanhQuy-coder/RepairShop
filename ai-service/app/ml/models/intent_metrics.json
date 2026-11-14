@@ -1,101 +1,1248 @@
 {
-  "generatedAt": "2026-11-09",
-  "datasetSize": 156,
-  "labelDistribution": {
-    "APPOINTMENT": 30,
-    "DIAGNOSIS": 41,
-    "QUOTATION": 30,
-    "TRACKING": 25,
-    "UNKNOWN": 30
+  "modelType": "TfidfVectorizer(char_wb, 2..5) + LogisticRegression(balanced, C=8.0)",
+  "datasetSize": 660,
+  "trainSize": 528,
+  "testSplitSize": 132,
+  "labelCounts": {
+    "DIAGNOSIS": 110,
+    "QUOTATION": 110,
+    "APPOINTMENT": 110,
+    "WARRANTY": 110,
+    "TRACKING": 110,
+    "UNKNOWN": 110
   },
-  "holdout": {
-    "size": 32,
-    "accuracy": 0.9375,
-    "macroF1": 0.938,
-    "weightedF1": 0.9369,
-    "perClass": {
-      "DIAGNOSIS": {
-        "precision": 0.9,
-        "recall": 1.0,
-        "f1": 0.9474,
-        "support": 9
+  "sourceCounts": {
+    "manual_curated": 175,
+    "natural_variant_reviewed": 271,
+    "typo_no_accent_reviewed": 104,
+    "multi_intent_reviewed": 25,
+    "out_of_scope_reviewed": 85
+  },
+  "labels": [
+    "DIAGNOSIS",
+    "QUOTATION",
+    "APPOINTMENT",
+    "WARRANTY",
+    "TRACKING",
+    "UNKNOWN"
+  ],
+  "cv5MacroF1Mean": 0.9449,
+  "cv5MacroF1Std": 0.0088,
+  "testSplitBenchmark": {
+    "ModelA_RuleBased": {
+      "model": "ModelA_RuleBased",
+      "sampleCount": 132,
+      "accuracy": 0.8409,
+      "macroF1": 0.8427,
+      "weightedF1": 0.8427,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 0.7692,
+          "recall": 0.4545,
+          "f1": 0.5714,
+          "support": 22
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 0.8636,
+          "f1": 0.9268,
+          "support": 22
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 0.7727,
+          "f1": 0.8718,
+          "support": 22
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 0.9545,
+          "f1": 0.9767,
+          "support": 22
+        },
+        "UNKNOWN": {
+          "precision": 0.55,
+          "recall": 1.0,
+          "f1": 0.7097,
+          "support": 22
+        }
       },
-      "QUOTATION": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "support": 6
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            10,
+            0,
+            0,
+            0,
+            0,
+            12
+          ],
+          [
+            2,
+            19,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            17,
+            0,
+            0,
+            4
+          ],
+          [
+            0,
+            0,
+            0,
+            22,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            21,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            22
+          ]
+        ]
       },
-      "APPOINTMENT": {
-        "precision": 1.0,
-        "recall": 0.8333,
-        "f1": 0.9091,
-        "support": 6
+      "latencyMs": {
+        "mean": 1.6545,
+        "p95": 3.1058,
+        "max": 4.1068
       },
-      "TRACKING": {
-        "precision": 1.0,
-        "recall": 1.0,
-        "f1": 1.0,
-        "support": 5
-      },
-      "UNKNOWN": {
-        "precision": 0.8333,
-        "recall": 0.8333,
-        "f1": 0.8333,
-        "support": 6
-      }
-    },
-    "confusionMatrix": [
-      [
-        9,
-        0,
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        6,
-        0,
-        0,
-        0
-      ],
-      [
-        0,
-        0,
-        5,
-        0,
-        1
-      ],
-      [
-        0,
-        0,
-        0,
-        5,
-        0
-      ],
-      [
-        1,
-        0,
-        0,
-        0,
-        5
+      "mismatches": [
+        {
+          "text": "mai 3h chiều còn chỗ không bạn",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "wifi trên laptop tự ngắt liên tục",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "máy không kết nối được bluetooth với tai nghe",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "khay sim bị kẹt cứng bên trong không lấy ra được",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "máy sạc pin rất chậm, cả đêm chỉ được 30%",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "mai cửa hàng mở cửa lúc mấy giờ",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "đơn của tôi có đang sửa không",
+          "expected": "TRACKING",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "nintendo switch cắm dock không xuất được hình lên tivi",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "sửa ic nguồn điện thoại bị chập hết tầm mấy trăm nghìn ạ",
+          "expected": "QUOTATION",
+          "predicted": "DIAGNOSIS"
+        },
+        {
+          "text": "điện thoại sạc pin bị giật, chạm vào vỏ thấy tê",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "sac khog vao pin tut am am du ko dung",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "thay camera sau ip13 gia bnh v",
+          "expected": "QUOTATION",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "máy bị mất rung khi có thông báo",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "bàn phím laptop gõ không ăn, có phím bị liệt",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "chuông điện thoại không kêu dù đã bật âm lượng",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "tôi muốn đến kiểm tra máy vào ngày mai được không",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "laptop keu ro ro nhu may cay khi mo trinh duyet",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "hẹn giúp tôi lịch vào chiều thứ sáu",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "cho mình đặt suất 10h15 ngày mai qua kiểm tra tai nghe sony bị rè",
+          "expected": "APPOINTMENT",
+          "predicted": "DIAGNOSIS"
+        },
+        {
+          "text": "thay man hinh ipad pro ton khoang may trieu",
+          "expected": "QUOTATION",
+          "predicted": "DIAGNOSIS"
+        },
+        {
+          "text": "chân tai nghe 3.5mm nghe bên to bên nhỏ phải xoay jack",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        }
       ]
-    ]
+    },
+    "ModelB_MLClassifier": {
+      "model": "ModelB_MLClassifier",
+      "sampleCount": 132,
+      "accuracy": 0.9697,
+      "macroF1": 0.9695,
+      "weightedF1": 0.9695,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 0.9545,
+          "recall": 0.9545,
+          "f1": 0.9545,
+          "support": 22
+        },
+        "QUOTATION": {
+          "precision": 0.9524,
+          "recall": 0.9091,
+          "f1": 0.9302,
+          "support": 22
+        },
+        "APPOINTMENT": {
+          "precision": 0.9565,
+          "recall": 1.0,
+          "f1": 0.9778,
+          "support": 22
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        },
+        "TRACKING": {
+          "precision": 0.9545,
+          "recall": 0.9545,
+          "f1": 0.9545,
+          "support": 22
+        },
+        "UNKNOWN": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            21,
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            20,
+            0,
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            22,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            22,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            21,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            22
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 2.361,
+        "p95": 2.5463,
+        "max": 128.9735
+      },
+      "mismatches": [
+        {
+          "text": "may toi dem sua 3 ngay r chua thay alo",
+          "expected": "TRACKING",
+          "predicted": "APPOINTMENT"
+        },
+        {
+          "text": "may bi roi nuoc gio man hinh chop nhay lien tuc",
+          "expected": "DIAGNOSIS",
+          "predicted": "QUOTATION"
+        },
+        {
+          "text": "sua chan sac iphone 11 gia sao ad",
+          "expected": "QUOTATION",
+          "predicted": "DIAGNOSIS"
+        },
+        {
+          "text": "phi ktra may tinh co mat tien ko shop",
+          "expected": "QUOTATION",
+          "predicted": "TRACKING"
+        }
+      ]
+    },
+    "ModelC_Hybrid": {
+      "model": "ModelC_Hybrid",
+      "sampleCount": 132,
+      "accuracy": 0.9848,
+      "macroF1": 0.9848,
+      "weightedF1": 0.9848,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 0.9565,
+          "recall": 1.0,
+          "f1": 0.9778,
+          "support": 22
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 0.9545,
+          "f1": 0.9767,
+          "support": 22
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 0.9545,
+          "f1": 0.9767,
+          "support": 22
+        },
+        "UNKNOWN": {
+          "precision": 0.9565,
+          "recall": 1.0,
+          "f1": 0.9778,
+          "support": 22
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            22,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            21,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            22,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            22,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            21,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            22
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 3.2882,
+        "p95": 5.5048,
+        "max": 8.3065
+      },
+      "mismatches": [
+        {
+          "text": "may toi dem sua 3 ngay r chua thay alo",
+          "expected": "TRACKING",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "sửa ic nguồn điện thoại bị chập hết tầm mấy trăm nghìn ạ",
+          "expected": "QUOTATION",
+          "predicted": "DIAGNOSIS"
+        }
+      ]
+    }
   },
-  "ruleBaselineOnSameHoldout": {
-    "accuracy": 1.0
+  "evalHoldoutBenchmark": {
+    "ModelA_RuleBased": {
+      "model": "ModelA_RuleBased",
+      "sampleCount": 90,
+      "accuracy": 0.8889,
+      "macroF1": 0.8936,
+      "weightedF1": 0.8936,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 0.6667,
+          "f1": 0.8,
+          "support": 15
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 0.7333,
+          "f1": 0.8462,
+          "support": 15
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 0.9333,
+          "f1": 0.9655,
+          "support": 15
+        },
+        "UNKNOWN": {
+          "precision": 0.6,
+          "recall": 1.0,
+          "f1": 0.75,
+          "support": 15
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            10,
+            0,
+            0,
+            0,
+            0,
+            5
+          ],
+          [
+            0,
+            15,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            11,
+            0,
+            0,
+            4
+          ],
+          [
+            0,
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            14,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            15
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 1.9354,
+        "p95": 3.1106,
+        "max": 3.3164
+      },
+      "mismatches": [
+        {
+          "text": "Laptop Asus quạt kêu rất to và nóng",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Bàn phím laptop gõ bị nhảy chữ",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Thứ bảy này 9h sáng còn chỗ không",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Ngày mai lúc 2h chiều còn nhận máy không",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Loa Sony SRS bị mất kết nối giữa chừng dù điện thoại để ngay cạnh",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Laptop HP mở gập lên nghe tiếng cọt kẹt và hở góc nhựa bản lề",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Micro đàm thoại thu tiếng bị méo và vọng lại rất khó nghe",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Khoảng 17h chiều nay bên mình còn nhận khách kiểm tra máy không",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Ngày kia buổi sáng tiệm còn chỗ trống nào nhận bảo dưỡng laptop không",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Đơn gửi sửa máy chơi game tuần này đã về đủ linh kiện để ráp chưa shop",
+          "expected": "TRACKING",
+          "predicted": "UNKNOWN"
+        }
+      ]
+    },
+    "ModelB_MLClassifier": {
+      "model": "ModelB_MLClassifier",
+      "sampleCount": 90,
+      "accuracy": 0.9889,
+      "macroF1": 0.9889,
+      "weightedF1": 0.9889,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "APPOINTMENT": {
+          "precision": 0.9375,
+          "recall": 1.0,
+          "f1": 0.9677,
+          "support": 15
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "UNKNOWN": {
+          "precision": 1.0,
+          "recall": 0.9333,
+          "f1": 0.9655,
+          "support": 15
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            15,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            15,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+            0,
+            14
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 3.0932,
+        "p95": 2.8569,
+        "max": 140.7493
+      },
+      "mismatches": [
+        {
+          "text": "Cửa hàng có nhận sửa máy giặt lồng ngang hay điều hòa treo tường không",
+          "expected": "UNKNOWN",
+          "predicted": "APPOINTMENT"
+        }
+      ]
+    },
+    "ModelC_Hybrid": {
+      "model": "ModelC_Hybrid",
+      "sampleCount": 90,
+      "accuracy": 1.0,
+      "macroF1": 1.0,
+      "weightedF1": 1.0,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "UNKNOWN": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            15,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            15,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            15,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            15,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            15,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            15
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 3.0834,
+        "p95": 6.3762,
+        "max": 8.6413
+      },
+      "mismatches": []
+    }
   },
-  "crossValidation5Fold": {
-    "folds": [
-      0.9688,
-      0.871,
-      0.9677,
-      0.9032,
-      1.0
-    ],
-    "mean": 0.9421,
-    "std": 0.0475
-  },
-  "model": "TfidfVectorizer(char_wb 2-4) + LogisticRegression(C=10, balanced)"
+  "evalCasesBenchmark": {
+    "ModelA_RuleBased": {
+      "model": "ModelA_RuleBased",
+      "sampleCount": 30,
+      "accuracy": 0.9333,
+      "macroF1": 0.9178,
+      "weightedF1": 0.9376,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 0.9167,
+          "f1": 0.9565,
+          "support": 12
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 4
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 0.6667,
+          "f1": 0.8,
+          "support": 3
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 6
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 2
+        },
+        "UNKNOWN": {
+          "precision": 0.6,
+          "recall": 1.0,
+          "f1": 0.75,
+          "support": 3
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            11,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            0,
+            6,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 2.2905,
+        "p95": 4.2798,
+        "max": 4.7564
+      },
+      "mismatches": [
+        {
+          "text": "Bàn phím laptop bị liệt mấy phím, gõ không ăn",
+          "expected": "DIAGNOSIS",
+          "predicted": "UNKNOWN"
+        },
+        {
+          "text": "Ngày mai lúc mấy giờ cửa hàng còn nhận máy",
+          "expected": "APPOINTMENT",
+          "predicted": "UNKNOWN"
+        }
+      ]
+    },
+    "ModelB_MLClassifier": {
+      "model": "ModelB_MLClassifier",
+      "sampleCount": 30,
+      "accuracy": 0.9667,
+      "macroF1": 0.9689,
+      "weightedF1": 0.9683,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 0.9167,
+          "f1": 0.9565,
+          "support": 12
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 4
+        },
+        "APPOINTMENT": {
+          "precision": 0.75,
+          "recall": 1.0,
+          "f1": 0.8571,
+          "support": 3
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 6
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 2
+        },
+        "UNKNOWN": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 3
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            11,
+            0,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            6,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 1.6069,
+        "p95": 2.3373,
+        "max": 4.1146
+      },
+      "mismatches": [
+        {
+          "text": "Pin chai rồi, cho tôi báo giá và đặt lịch mai 3h chiều",
+          "expected": "DIAGNOSIS",
+          "predicted": "APPOINTMENT"
+        }
+      ]
+    },
+    "ModelC_Hybrid": {
+      "model": "ModelC_Hybrid",
+      "sampleCount": 30,
+      "accuracy": 1.0,
+      "macroF1": 1.0,
+      "weightedF1": 1.0,
+      "perClass": {
+        "DIAGNOSIS": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 12
+        },
+        "QUOTATION": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 4
+        },
+        "APPOINTMENT": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 3
+        },
+        "WARRANTY": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 6
+        },
+        "TRACKING": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 2
+        },
+        "UNKNOWN": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 3
+        }
+      },
+      "confusionMatrix": {
+        "labels": [
+          "DIAGNOSIS",
+          "QUOTATION",
+          "APPOINTMENT",
+          "WARRANTY",
+          "TRACKING",
+          "UNKNOWN"
+        ],
+        "matrix": [
+          [
+            12,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            6,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            3
+          ]
+        ]
+      },
+      "latencyMs": {
+        "mean": 2.3165,
+        "p95": 4.2952,
+        "max": 5.898
+      },
+      "mismatches": []
+    }
+  }
 }

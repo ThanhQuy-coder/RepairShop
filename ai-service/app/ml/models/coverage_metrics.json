@@ -1,0 +1,785 @@
+{
+  "generatedAtUtc": "2026-11-14T11:19:08.626802+00:00",
+  "tool": "python-stdlib-trace+dis",
+  "pytestExitCode": 0,
+  "totalStatements": 4330,
+  "totalCovered": 3927,
+  "totalMissed": 403,
+  "overallLineCoveragePct": 90.69,
+  "targetPct": 85.0,
+  "meetsTarget": true,
+  "byPackage": {
+    "app": {
+      "statements": 17,
+      "covered": 17,
+      "coveragePct": 100.0
+    },
+    "app/agents": {
+      "statements": 1284,
+      "covered": 1182,
+      "coveragePct": 92.06
+    },
+    "app/api": {
+      "statements": 93,
+      "covered": 56,
+      "coveragePct": 60.22
+    },
+    "app/baseline": {
+      "statements": 203,
+      "covered": 198,
+      "coveragePct": 97.54
+    },
+    "app/core": {
+      "statements": 309,
+      "covered": 270,
+      "coveragePct": 87.38
+    },
+    "app/llm": {
+      "statements": 101,
+      "covered": 37,
+      "coveragePct": 36.63
+    },
+    "app/ml": {
+      "statements": 302,
+      "covered": 269,
+      "coveragePct": 89.07
+    },
+    "app/orchestration": {
+      "statements": 628,
+      "covered": 585,
+      "coveragePct": 93.15
+    },
+    "app/prompts": {
+      "statements": 99,
+      "covered": 99,
+      "coveragePct": 100.0
+    },
+    "app/retrieval": {
+      "statements": 411,
+      "covered": 397,
+      "coveragePct": 96.59
+    },
+    "app/schemas": {
+      "statements": 774,
+      "covered": 725,
+      "coveragePct": 93.67
+    },
+    "app/services": {
+      "statements": 109,
+      "covered": 92,
+      "coveragePct": 84.4
+    }
+  },
+  "files": [
+    {
+      "file": "app/agents/__init__.py",
+      "package": "app/agents",
+      "statements": 0,
+      "covered": 0,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/agents/appointment/agent.py",
+      "package": "app/agents",
+      "statements": 231,
+      "covered": 225,
+      "missed": 6,
+      "coveragePct": 97.4,
+      "uncoveredSampleLines": [
+        119,
+        120,
+        249,
+        292,
+        330,
+        331
+      ]
+    },
+    {
+      "file": "app/agents/appointment/datetime_parser.py",
+      "package": "app/agents",
+      "statements": 91,
+      "covered": 80,
+      "missed": 11,
+      "coveragePct": 87.91,
+      "uncoveredSampleLines": [
+        80,
+        85,
+        86,
+        90,
+        91,
+        114,
+        138,
+        141,
+        147,
+        148,
+        151
+      ]
+    },
+    {
+      "file": "app/agents/coordinator/__init__.py",
+      "package": "app/agents",
+      "statements": 0,
+      "covered": 0,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/agents/coordinator/agent.py",
+      "package": "app/agents",
+      "statements": 79,
+      "covered": 75,
+      "missed": 4,
+      "coveragePct": 94.94,
+      "uncoveredSampleLines": [
+        99,
+        100,
+        101,
+        102
+      ]
+    },
+    {
+      "file": "app/agents/diagnosis/__init__.py",
+      "package": "app/agents",
+      "statements": 0,
+      "covered": 0,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/agents/diagnosis/agent.py",
+      "package": "app/agents",
+      "statements": 242,
+      "covered": 228,
+      "missed": 14,
+      "coveragePct": 94.21,
+      "uncoveredSampleLines": [
+        68,
+        135,
+        145,
+        166,
+        185,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248,
+        249,
+        250,
+        252
+      ]
+    },
+    {
+      "file": "app/agents/diagnosis/symptom_rules.py",
+      "package": "app/agents",
+      "statements": 95,
+      "covered": 89,
+      "missed": 6,
+      "coveragePct": 93.68,
+      "uncoveredSampleLines": [
+        105,
+        112,
+        123,
+        129,
+        130,
+        132
+      ]
+    },
+    {
+      "file": "app/agents/quotation/agent.py",
+      "package": "app/agents",
+      "statements": 159,
+      "covered": 153,
+      "missed": 6,
+      "coveragePct": 96.23,
+      "uncoveredSampleLines": [
+        168,
+        169,
+        170,
+        171,
+        172,
+        173
+      ]
+    },
+    {
+      "file": "app/agents/tracking/__init__.py",
+      "package": "app/agents",
+      "statements": 2,
+      "covered": 2,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/agents/tracking/agent.py",
+      "package": "app/agents",
+      "statements": 137,
+      "covered": 121,
+      "missed": 16,
+      "coveragePct": 88.32,
+      "uncoveredSampleLines": [
+        172,
+        183,
+        184,
+        185,
+        186,
+        187,
+        188,
+        189,
+        190,
+        193,
+        194,
+        195,
+        196,
+        197,
+        198,
+        204
+      ]
+    },
+    {
+      "file": "app/agents/warranty/__init__.py",
+      "package": "app/agents",
+      "statements": 2,
+      "covered": 2,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/agents/warranty/agent.py",
+      "package": "app/agents",
+      "statements": 246,
+      "covered": 207,
+      "missed": 39,
+      "coveragePct": 84.15,
+      "uncoveredSampleLines": [
+        112,
+        113,
+        241,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        267,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        285
+      ]
+    },
+    {
+      "file": "app/api/advisory.py",
+      "package": "app/api",
+      "statements": 29,
+      "covered": 20,
+      "missed": 9,
+      "coveragePct": 68.97,
+      "uncoveredSampleLines": [
+        30,
+        32,
+        33,
+        34,
+        35,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "file": "app/api/agents.py",
+      "package": "app/api",
+      "statements": 32,
+      "covered": 18,
+      "missed": 14,
+      "coveragePct": 56.25,
+      "uncoveredSampleLines": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ]
+    },
+    {
+      "file": "app/api/baseline.py",
+      "package": "app/api",
+      "statements": 32,
+      "covered": 18,
+      "missed": 14,
+      "coveragePct": 56.25,
+      "uncoveredSampleLines": [
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    },
+    {
+      "file": "app/baseline/__init__.py",
+      "package": "app/baseline",
+      "statements": 1,
+      "covered": 1,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/baseline/single_agent.py",
+      "package": "app/baseline",
+      "statements": 202,
+      "covered": 197,
+      "missed": 5,
+      "coveragePct": 97.52,
+      "uncoveredSampleLines": [
+        104,
+        105,
+        106,
+        159,
+        288
+      ]
+    },
+    {
+      "file": "app/core/config.py",
+      "package": "app/core",
+      "statements": 32,
+      "covered": 32,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/core/health.py",
+      "package": "app/core",
+      "statements": 125,
+      "covered": 93,
+      "missed": 32,
+      "coveragePct": 74.4,
+      "uncoveredSampleLines": [
+        56,
+        57,
+        64,
+        65,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        99,
+        117,
+        119,
+        120,
+        122,
+        124,
+        125,
+        126,
+        128
+      ]
+    },
+    {
+      "file": "app/core/security.py",
+      "package": "app/core",
+      "statements": 10,
+      "covered": 10,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/core/text.py",
+      "package": "app/core",
+      "statements": 142,
+      "covered": 135,
+      "missed": 7,
+      "coveragePct": 95.07,
+      "uncoveredSampleLines": [
+        136,
+        153,
+        172,
+        250,
+        251,
+        252,
+        253
+      ]
+    },
+    {
+      "file": "app/llm/llm_client.py",
+      "package": "app/llm",
+      "statements": 101,
+      "covered": 37,
+      "missed": 64,
+      "coveragePct": 36.63,
+      "uncoveredSampleLines": [
+        46,
+        47,
+        69,
+        70,
+        71,
+        74,
+        75,
+        78,
+        79,
+        80,
+        81,
+        82,
+        84,
+        86,
+        87,
+        88,
+        90,
+        92,
+        93,
+        94
+      ]
+    },
+    {
+      "file": "app/main.py",
+      "package": "app",
+      "statements": 17,
+      "covered": 17,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/ml/__init__.py",
+      "package": "app/ml",
+      "statements": 0,
+      "covered": 0,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/ml/intent_classifier.py",
+      "package": "app/ml",
+      "statements": 302,
+      "covered": 269,
+      "missed": 33,
+      "coveragePct": 89.07,
+      "uncoveredSampleLines": [
+        96,
+        332,
+        333,
+        334,
+        335,
+        336,
+        337,
+        338,
+        496,
+        497,
+        502,
+        503,
+        504,
+        510,
+        514,
+        524,
+        525,
+        549,
+        550,
+        551
+      ]
+    },
+    {
+      "file": "app/orchestration/__init__.py",
+      "package": "app/orchestration",
+      "statements": 0,
+      "covered": 0,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/orchestration/graph.py",
+      "package": "app/orchestration",
+      "statements": 49,
+      "covered": 49,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/orchestration/pipeline.py",
+      "package": "app/orchestration",
+      "statements": 122,
+      "covered": 97,
+      "missed": 25,
+      "coveragePct": 79.51,
+      "uncoveredSampleLines": [
+        70,
+        115,
+        116,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        130,
+        131,
+        132,
+        133,
+        134,
+        151,
+        152,
+        153,
+        154
+      ]
+    },
+    {
+      "file": "app/orchestration/postprocess.py",
+      "package": "app/orchestration",
+      "statements": 376,
+      "covered": 362,
+      "missed": 14,
+      "coveragePct": 96.28,
+      "uncoveredSampleLines": [
+        127,
+        136,
+        145,
+        146,
+        147,
+        159,
+        183,
+        189,
+        256,
+        257,
+        259,
+        501,
+        502,
+        512
+      ]
+    },
+    {
+      "file": "app/orchestration/routing.py",
+      "package": "app/orchestration",
+      "statements": 81,
+      "covered": 77,
+      "missed": 4,
+      "coveragePct": 95.06,
+      "uncoveredSampleLines": [
+        66,
+        83,
+        85,
+        117
+      ]
+    },
+    {
+      "file": "app/prompts/advisory_prompt.py",
+      "package": "app/prompts",
+      "statements": 22,
+      "covered": 22,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/prompts/baseline_prompt.py",
+      "package": "app/prompts",
+      "statements": 44,
+      "covered": 44,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/prompts/diagnosis_prompt.py",
+      "package": "app/prompts",
+      "statements": 31,
+      "covered": 31,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/prompts/system_prompt.py",
+      "package": "app/prompts",
+      "statements": 2,
+      "covered": 2,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/retrieval/retrieval_service.py",
+      "package": "app/retrieval",
+      "statements": 217,
+      "covered": 212,
+      "missed": 5,
+      "coveragePct": 97.7,
+      "uncoveredSampleLines": [
+        87,
+        109,
+        111,
+        189,
+        217
+      ]
+    },
+    {
+      "file": "app/retrieval/symptom_lexicon.py",
+      "package": "app/retrieval",
+      "statements": 194,
+      "covered": 185,
+      "missed": 9,
+      "coveragePct": 95.36,
+      "uncoveredSampleLines": [
+        188,
+        189,
+        190,
+        191,
+        192,
+        193,
+        194,
+        195,
+        279
+      ]
+    },
+    {
+      "file": "app/schemas/agent_models.py",
+      "package": "app/schemas",
+      "statements": 444,
+      "covered": 412,
+      "missed": 32,
+      "coveragePct": 92.79,
+      "uncoveredSampleLines": [
+        104,
+        105,
+        131,
+        135,
+        137,
+        138,
+        141,
+        163,
+        166,
+        173,
+        175,
+        181,
+        183,
+        186,
+        224,
+        267,
+        268,
+        269,
+        270,
+        272
+      ]
+    },
+    {
+      "file": "app/schemas/llm_output_models.py",
+      "package": "app/schemas",
+      "statements": 85,
+      "covered": 79,
+      "missed": 6,
+      "coveragePct": 92.94,
+      "uncoveredSampleLines": [
+        88,
+        90,
+        97,
+        127,
+        129,
+        136
+      ]
+    },
+    {
+      "file": "app/schemas/request_models.py",
+      "package": "app/schemas",
+      "statements": 116,
+      "covered": 105,
+      "missed": 11,
+      "coveragePct": 90.52,
+      "uncoveredSampleLines": [
+        43,
+        45,
+        51,
+        70,
+        73,
+        74,
+        100,
+        104,
+        106,
+        107,
+        110
+      ]
+    },
+    {
+      "file": "app/schemas/response_models.py",
+      "package": "app/schemas",
+      "statements": 84,
+      "covered": 84,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/schemas/state_models.py",
+      "package": "app/schemas",
+      "statements": 45,
+      "covered": 45,
+      "missed": 0,
+      "coveragePct": 100.0,
+      "uncoveredSampleLines": []
+    },
+    {
+      "file": "app/services/advisory_service.py",
+      "package": "app/services",
+      "statements": 109,
+      "covered": 92,
+      "missed": 17,
+      "coveragePct": 84.4,
+      "uncoveredSampleLines": [
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        145,
+        148,
+        149,
+        150,
+        174,
+        195,
+        216,
+        217,
+        219,
+        236,
+        240
+      ]
+    }
+  ]
+}

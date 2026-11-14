@@ -2,30 +2,30 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from pydantic import BaseModel, Field, field_validator  # type: ignore
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class LLMSuggestedService(BaseModel):
     """serviceId LLM chọn — PHẢI được validate lại có nằm trong candidate list hay không (Task 6.8/6.9)."""
+
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
     service_id: str = Field(..., alias="serviceId")
     confidence: (
         str  # "HIGH" | "MEDIUM" | "LOW" — validate strict hơn ở advisory_service
     )
 
-    class Config:
-        populate_by_name = True
-
 
 class LLMSuggestedPart(BaseModel):
-    part_id: str = Field(..., alias="partId")
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
-    class Config:
-        populate_by_name = True
+    part_id: str = Field(..., alias="partId")
 
 
 class LLMAdvisoryOutput(BaseModel):
     """Cấu trúc JSON mà System Prompt (Task 6.8) yêu cầu LLM phải trả về."""
+
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
     out_of_scope: bool = Field(default=False, alias="outOfScope")
     suggested_services: List[LLMSuggestedService] = Field(
@@ -38,19 +38,15 @@ class LLMAdvisoryOutput(BaseModel):
     price_max: Optional[float] = Field(default=None, alias="priceMax")
     reason: str = ""
 
-    class Config:
-        populate_by_name = True
-
 
 # ───────────── Task 2.2 — output riêng cho Diagnosis Agent ─────────────
 
 
 class LLMPossibleCause(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
+
     name: str = Field(..., min_length=1, max_length=200)
     confidence: str = "MEDIUM"
-
-    class Config:
-        populate_by_name = True
 
 
 class LLMDiagnosisOutput(BaseModel):
@@ -58,6 +54,8 @@ class LLMDiagnosisOutput(BaseModel):
     Hợp đồng JSON của Diagnosis Agent. LLM CHỈ được chọn ID trong candidate đã gửi;
     tuyệt đối không sinh giá, không kết luận chắc chắn, không tạo ID mới.
     """
+
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
     out_of_scope: bool = Field(default=False, alias="outOfScope")
     possible_causes: List[LLMPossibleCause] = Field(
@@ -99,15 +97,14 @@ class LLMDiagnosisOutput(BaseModel):
             return [value]
         return value
 
-    class Config:
-        populate_by_name = True
-
 
 # ───────────── Task 4.2 — output cho Single-Agent baseline ─────────────
 
 
 class LLMBaselineOutput(BaseModel):
     """Một LLM call trả về toàn bộ quyết định (nguyên nhân + dịch vụ + part + slot)."""
+
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
     out_of_scope: bool = Field(default=False, alias="outOfScope")
     possible_causes: List[LLMPossibleCause] = Field(
@@ -138,7 +135,4 @@ class LLMBaselineOutput(BaseModel):
         if isinstance(value, dict):
             return [value]
         return value
-
-    class Config:
-        populate_by_name = True
 

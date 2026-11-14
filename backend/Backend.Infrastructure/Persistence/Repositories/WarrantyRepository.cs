@@ -33,6 +33,34 @@ public class WarrantyRepository : IWarrantyRepository
             .ToList();
     }
 
+    public async Task<PublicWarrantyLookupView?> GetByWarrantyCodeForPublicAsync(
+        string warrantyCode, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(warrantyCode))
+            return null;
+
+        var code = warrantyCode.Trim();
+        var row = await (
+            from w in _context.Warranties.AsNoTracking()
+            join t in _context.RepairTickets on w.RepairTicketId equals t.Id
+            join d in _context.Devices on t.DeviceId equals d.Id
+            join p in _context.WarrantyPackages on w.WarrantyPackageId equals p.Id into pkgGroup
+            from p in pkgGroup.DefaultIfEmpty()
+            where w.WarrantyCode == code
+            select new
+            {
+                Warranty = w,
+                TicketCode = t.TicketCode,
+                DeviceLabel = (d.Brand + " " + d.Model).Trim(),
+                PackageName = p != null ? p.Name : null
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return row is null
+            ? null
+            : new PublicWarrantyLookupView(row.Warranty, row.TicketCode, row.DeviceLabel, row.PackageName);
+    }
+
     public async Task<List<StaffWarrantyLookupView>> SearchForStaffAsync(
         string? phone, string? warrantyCode, CancellationToken cancellationToken = default)
     {

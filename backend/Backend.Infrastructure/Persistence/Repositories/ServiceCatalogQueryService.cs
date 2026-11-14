@@ -36,7 +36,7 @@ public class ServiceCatalogQueryService : IServiceCatalogQueryService
             .Select(s => new CatalogServiceItem(
                 s.Id.ToString(),
                 s.Name,
-                s.DeviceType ?? deviceType,
+                s.DeviceType ?? (deviceType ?? "general"),
                 s.BasePrice ?? 0,
                 s.Description))
             .ToList();
@@ -90,7 +90,8 @@ public class ServiceCatalogQueryService : IServiceCatalogQueryService
                     p.UnitPrice,
                     p.CompatibleDeviceType,
                     InStock: quantity > 0,
-                    QuantityOnHand: quantity);
+                    QuantityOnHand: quantity,
+                    Category: p.Category);
             })
             .ToList();
     }

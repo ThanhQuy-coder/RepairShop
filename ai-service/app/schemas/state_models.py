@@ -18,8 +18,11 @@ from app.schemas.agent_models import (
     AgentStatus,
     AppointmentResult,
     DiagnosisResult,
+    IdentifiedEntities,
     Intent,
     QuotationResult,
+    TrackingResult,
+    WarrantyResult,
 )
 
 __all__ = [
@@ -30,8 +33,11 @@ __all__ = [
     "AgentStatus",
     "AppointmentResult",
     "DiagnosisResult",
+    "IdentifiedEntities",
     "Intent",
     "QuotationResult",
+    "TrackingResult",
+    "WarrantyResult",
 ]
 
 
@@ -50,20 +56,30 @@ class AgentState(TypedDict, total=False):
     available_services: List[Dict[str, Any]]
     available_parts: List[Dict[str, Any]]
     available_slots: List[Dict[str, Any]]
+    warranty_policies: List[Dict[str, Any]]
+    warranty_lookups: List[Dict[str, Any]]
+    tracking_lookups: List[Dict[str, Any]]
+    diagnosis_symptoms: List[Dict[str, Any]]
     options: Dict[str, bool]
     customer_info: Dict[str, Optional[str]]
     reference_date: Optional[str]
+    ticket_code: Optional[str]
+    warranty_code: Optional[str]
 
     # ── Coordinator ──
     intent: str
     intent_confidence: float
+    secondary_intents: List[str]
     plan: List[str]
+    identified_entities: Optional[IdentifiedEntities]
 
     # ── Kết quả agent ──
     executed_agents: List[str]
     diagnosis_result: Optional[DiagnosisResult]
     quotation_result: Optional[QuotationResult]
     appointment_result: Optional[AppointmentResult]
+    warranty_result: Optional[WarrantyResult]
+    tracking_result: Optional[TrackingResult]
 
     # ── Vận hành ──
     errors: List[AgentError]
@@ -71,6 +87,8 @@ class AgentState(TypedDict, total=False):
     llm_calls: int
     fallback_used: bool
     out_of_scope: bool
+    need_clarification: bool
+    missing_information: List[str]
     final_status: str
     final_reason: str
     final_response: Optional[AgentResponse]

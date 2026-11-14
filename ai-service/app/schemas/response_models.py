@@ -5,13 +5,16 @@ from enum import Enum
 from typing import List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field # type: ignore
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class AdvisoryStatus(str, Enum):
     SUCCESS = "SUCCESS"
+    PARTIAL = "PARTIAL"
+    NEED_CLARIFICATION = "NEED_CLARIFICATION"
     NO_MATCH = "NO_MATCH"
     OUT_OF_SCOPE = "OUT_OF_SCOPE"
+    ERROR = "ERROR"
 
 
 class ConfidenceLevel(str, Enum):
@@ -23,24 +26,24 @@ class ConfidenceLevel(str, Enum):
 class SuggestedService(BaseModel):
     """CHỈ chứa serviceId/name lấy từ context.availableServices đã gửi lên — không được tự bịa (Task 6 Tuần 1)."""
 
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
     service_id: str = Field(..., alias="serviceId")
     service_name: str = Field(..., alias="serviceName")
     confidence: ConfidenceLevel
 
-    class Config:
-        populate_by_name = True
-
 
 class SuggestedPart(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
     part_id: str = Field(..., alias="partId")
     part_name: str = Field(..., alias="partName")
-
-    class Config:
-        populate_by_name = True
 
 
 class PriceRange(BaseModel):
     """Bắt buộc LUÔN là khoảng (min-max) — không được trả số cố định duy nhất (Task 6 Tuần 1)."""
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     min: float = Field(..., ge=0)
     max: float = Field(..., ge=0)
@@ -54,6 +57,8 @@ DEFAULT_DISCLAIMER = (
 
 
 class AdvisoryResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
     request_id: UUID = Field(..., alias="requestId")
     status: AdvisoryStatus
     suggested_services: List[SuggestedService] = Field(
@@ -68,9 +73,6 @@ class AdvisoryResponse(BaseModel):
     processed_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), alias="processedAt"
     )
-
-    class Config:
-        populate_by_name = True
 
     @classmethod
     def success(

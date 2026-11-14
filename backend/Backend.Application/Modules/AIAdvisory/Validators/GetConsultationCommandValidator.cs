@@ -5,14 +5,14 @@ namespace RepairShop.Application.Modules.AIAdvisory.Validators;
 
 public class GetConsultationCommandValidator : AbstractValidator<GetConsultationCommand>
 {
-    private static readonly string[] ValidDeviceTypes = ["Phone", "Laptop", "Electronics"];
+    private static readonly string[] ValidDeviceTypes = ["Phone", "Laptop", "Electronics", "Tablet", "Smartwatch"];
 
     public GetConsultationCommandValidator()
     {
         RuleFor(x => x.DeviceType)
             .NotEmpty()
             .Must(t => ValidDeviceTypes.Contains(t, StringComparer.OrdinalIgnoreCase))
-            .WithMessage("DeviceType phải là Phone, Laptop hoặc Electronics.");
+            .WithMessage("DeviceType phải là Phone, Laptop, Electronics, Tablet hoặc Smartwatch.");
 
         RuleFor(x => x.Brand).NotEmpty().MaximumLength(100);
         RuleFor(x => x.Model).NotEmpty().MaximumLength(100);
@@ -28,5 +28,8 @@ public class GetConsultationCommandValidator : AbstractValidator<GetConsultation
             .Matches(@"^[0-9+\s.\-]{9,20}$")
             .When(x => !string.IsNullOrWhiteSpace(x.Phone))
             .WithMessage("Số điện thoại không hợp lệ.");
+
+        RuleFor(x => x.TicketCode).MaximumLength(50);
+        RuleFor(x => x.WarrantyCode).MaximumLength(50);
     }
 }

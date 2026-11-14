@@ -49,7 +49,8 @@ public class DiagnosisSymptomSeeder : IDataSeeder
                 "Không lên nguồn", "Nguồn điện không ổn định", "Thiết bị hoạt động chập chờn",
                 "Không nhận tín hiệu", "Màn hình không hiển thị", "Nút điều khiển không hoạt động",
                 "Loa không phát âm thanh", "Cổng kết nối bị lỗi", "Quá nhiệt",
-                "Pin không hoạt động", "Lỗi bo mạch", "Hư hỏng do chất lỏng", "Lỗi phần mềm/firmware"
+                "Pin không hoạt động", "Lỗi bo mạch", "Hư hỏng do chất lỏng", "Lỗi phần mềm/firmware",
+                "Lỗi mạch nguồn/nguồn phụ", "Nhiễu âm thanh/tín hiệu"
             ],
             [DeviceType.Tablet] =
             [

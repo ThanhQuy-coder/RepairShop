@@ -1,5 +1,4 @@
-"""
-Quotation Agent (Task 3.1).
+"""Quotation Agent (TASK-09).
 
 Nguyên tắc cốt lõi: **mọi con số đến từ context Backend, không từ LLM**.
 Agent không gọi LLM (giữ ngân sách 1 call/request cho Diagnosis) và không bao giờ
@@ -49,13 +48,10 @@ def _parts(state: AgentState) -> Dict[str, MasPart]:
     }
 
 
-def _select_from_retrieval(state: AgentState) -> tuple[List[str], List[str]]:
-    """
-    Khi không có Diagnosis (intent QUOTATION thuần): chọn dịch vụ theo mô tả.
-
-    Chỉ chọn SERVICE, không chọn PART: nếu chưa chẩn đoán thì gợi ý linh kiện cụ thể là
-    suy đoán thiếu căn cứ. Part chỉ được báo giá khi Diagnosis đã đề xuất.
-    """
+def _select_from_retrieval(
+    state: AgentState,
+) -> tuple[List[str], List[str], List[str], bool]:
+    """Khi không có Diagnosis (intent QUOTATION thuần): chọn dịch vụ sát nhất từ retrieval."""
     device = DeviceInfo.model_validate(state["device"])
     context = AdvisoryContext(
         availableServices=[
@@ -69,18 +65,22 @@ def _select_from_retrieval(state: AgentState) -> tuple[List[str], List[str]]:
     issue = state.get("issue_description") or state.get("user_message") or ""
     retrieval = retrieve_candidates(device, issue, context)
 
-    # Chỉ lấy nhóm dịch vụ có điểm cao nhất — tránh báo giá lan man các dịch vụ chỉ trùng
-    # một từ chung ("thay").
+    oos_notes = [
+        f"{part.name} hiện hết hàng nên chưa được đưa vào báo giá."
+        for part in retrieval.out_of_stock_parts[:MAX_PARTS]
+    ]
+
     best_score = max(retrieval.service_scores.values(), default=0)
     if best_score <= 0:
-        # Không có dịch vụ nào thực sự liên quan => không báo giá lan man.
-        return [], []
+        return [], [], oos_notes, retrieval.is_vague_issue
+
+    threshold = max(1, int(best_score * 0.75))
     service_ids = [
         service.service_id
         for service in retrieval.candidate_services
-        if retrieval.service_scores.get(service.service_id, 0) == best_score
+        if retrieval.service_scores.get(service.service_id, 0) >= threshold
     ][:MAX_SERVICES]
-    return service_ids, []
+    return service_ids, [], oos_notes, retrieval.is_vague_issue
 
 
 class QuotationAgent:
@@ -91,18 +91,20 @@ class QuotationAgent:
         parts = _parts(state)
         diagnosis = state.get("diagnosis_result")
 
+        assumptions: List[str] = []
+        is_vague = False
+
         if diagnosis and (diagnosis.suggested_services or diagnosis.suggested_parts):
             service_ids = [item.service_id for item in diagnosis.suggested_services][:MAX_SERVICES]
             part_ids = [item.part_id for item in diagnosis.suggested_parts][:MAX_PARTS]
         else:
-            service_ids, part_ids = _select_from_retrieval(state)
+            service_ids, part_ids, oos_notes, is_vague = _select_from_retrieval(state)
+            assumptions.extend(oos_notes)
 
-        # Chống trùng: LLM có thể gợi ý cùng một dịch vụ/linh kiện 2 lần → chỉ tính 1 lần.
         service_ids = list(dict.fromkeys(service_ids))
         part_ids = list(dict.fromkeys(part_ids))
 
         items: List[QuotationItem] = []
-        assumptions: List[str] = []
 
         for service_id in service_ids:
             service = services.get(service_id)
@@ -126,7 +128,7 @@ class QuotationAgent:
             if part is None:
                 logger.warning("Quotation bỏ partId lạ '%s'.", part_id)
                 continue
-            if not part.in_stock:
+            if not part.in_stock or (part.quantity_on_hand is not None and part.quantity_on_hand <= 0):
                 assumptions.append(
                     f"{part.name} hiện hết hàng nên chưa được đưa vào báo giá."
                 )
@@ -143,6 +145,7 @@ class QuotationAgent:
                 )
             )
 
+        assumptions = list(dict.fromkeys(assumptions))
         estimated_total = round(sum(item.line_total for item in items), 2)
 
         if any(item.item_type == "SERVICE" for item in items) and any(
@@ -153,10 +156,22 @@ class QuotationAgent:
                 "nhân viên sẽ chốt khi kiểm tra máy."
             )
 
+        need_clarification = bool(state.get("need_clarification"))
+        missing_info = list(state.get("missing_information") or [])
+
         if items:
             explanation = (
                 f"Báo giá tham khảo gồm {len(items)} hạng mục theo bảng giá hiện hành. "
                 "Đây không phải báo giá chính thức."
+            )
+        elif is_vague and diagnosis is None:
+            need_clarification = True
+            missing_item = "dịch vụ hoặc triệu chứng cần báo giá (ví dụ: thay pin, ép kính)"
+            if missing_item not in missing_info:
+                missing_info.append(missing_item)
+            explanation = (
+                "Chưa rõ dịch vụ bạn cần báo giá. "
+                "Vui lòng nêu rõ hạng mục hoặc tình trạng thiết bị để nhận báo giá tham khảo."
             )
         else:
             explanation = (
@@ -188,6 +203,8 @@ class QuotationAgent:
 
         return {
             "quotation_result": result,
+            "need_clarification": need_clarification,
+            "missing_information": missing_info,
             "executed_agents": executed,
             "timings": timings,
         }

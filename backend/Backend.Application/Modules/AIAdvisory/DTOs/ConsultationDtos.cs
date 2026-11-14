@@ -14,11 +14,20 @@ public record ConsultationRequest(
     bool AllowAppointment = true,
     string? FullName = null,
     string? Phone = null,
-    string ActorType = "GUEST");
+    string ActorType = "GUEST",
+    bool AllowWarranty = true,
+    bool AllowTracking = true,
+    string? TicketCode = null,
+    string? WarrantyCode = null,
+    Guid? UserId = null);
 
 public record ConsultationPossibleCause(string Name, string Confidence);
 
-public record ConsultationServiceItem(string ServiceId, string ServiceName, string Confidence);
+public record ConsultationServiceItem(
+    string ServiceId,
+    string ServiceName,
+    string Confidence,
+    double? MatchingScore = null);
 
 public record ConsultationPartItem(string PartId, string PartName, string Confidence);
 
@@ -67,6 +76,49 @@ public record ConsultationAppointment(
     bool RequiresUserConfirmation,
     string Explanation);
 
+public record ConsultationWarrantyPolicy(
+    string PackageId,
+    string Name,
+    int DurationMonths,
+    string Terms,
+    string? Description = null);
+
+public record ConsultationWarrantyRecord(
+    string WarrantyCode,
+    string TicketCode,
+    string DeviceLabel,
+    string Status,
+    string StartDate,
+    string EndDate,
+    bool IsExpired,
+    string? PackageName = null,
+    string? Terms = null);
+
+public record ConsultationWarranty(
+    List<ConsultationWarrantyPolicy> Policies,
+    List<ConsultationWarrantyRecord> Warranties,
+    List<string> MissingInformation,
+    bool RequiresVerification,
+    string Explanation);
+
+public record ConsultationTrackingHistoryItem(
+    string Status,
+    string StatusLabel,
+    string ChangedAt);
+
+public record ConsultationTrackingTicket(
+    string TicketCode,
+    string DeviceLabel,
+    string Status,
+    string StatusLabel,
+    List<ConsultationTrackingHistoryItem> StatusHistory,
+    string? EstimatedCompletion = null);
+
+public record ConsultationTracking(
+    List<ConsultationTrackingTicket> Tickets,
+    List<string> MissingInformation,
+    string Explanation);
+
 /// <summary>
 /// Response đã hậu kiểm. AI chỉ tư vấn: không có appointmentId/status xác nhận.
 /// </summary>
@@ -80,7 +132,10 @@ public record ConsultationResponse(
     ConsultationAppointment? Appointment,
     string Message,
     string Disclaimer,
-    string? AiRequestId = null)
+    string? AiRequestId = null,
+    ConsultationWarranty? Warranty = null,
+    ConsultationTracking? Tracking = null,
+    List<string>? MissingInformation = null)
 {
     public const string DefaultDisclaimer =
         "Đây là thông tin tư vấn tham khảo. Kỹ thuật viên sẽ kiểm tra và xác nhận phương án sửa chữa thực tế.";

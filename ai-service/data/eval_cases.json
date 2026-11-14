@@ -217,6 +217,60 @@
       "expectedIntent": "APPOINTMENT",
       "expectedServiceIds": [],
       "notes": "Hỏi giờ nhận máy"
+    },
+    {
+      "id": "C25",
+      "message": "Kiểm tra phiếu bảo hành WR-20261114-0001 của tôi giúp với",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Tra cứu phiếu bảo hành theo mã WR"
+    },
+    {
+      "id": "C26",
+      "message": "Thay pin điện thoại được bảo hành bao nhiêu tháng vậy",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Hỏi thời hạn bảo hành pin"
+    },
+    {
+      "id": "C27",
+      "message": "Chính sách bảo hành linh kiện bên cửa hàng quy định sao",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Hỏi điều khoản gói bảo hành"
+    },
+    {
+      "id": "C28",
+      "message": "Linh kiện mới thay tháng trước bị hư lại có được bảo hành không",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Pro 11" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Hỏi trường hợp tái phát lỗi cũ"
+    },
+    {
+      "id": "C29",
+      "message": "Kiem tra giup goi bao hanh pin may thang",
+      "device": { "deviceType": "smartwatch", "brand": "Garmin", "model": "Venu 2" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Câu bảo hành không dấu"
+    },
+    {
+      "id": "C30",
+      "message": "Các gói bảo hành mở rộng bên mình hiện có những mức nào",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": [],
+      "notes": "Liệt kê gói bảo hành"
     }
   ]
 }

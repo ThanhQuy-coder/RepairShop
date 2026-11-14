@@ -1,43 +1,42 @@
 {
-  "version": 1,
-  "description": "Hold-out MỚI (Task 4.3) — viết sau khi đã đóng băng rule/model, KHÔNG dùng để tinh chỉnh. Dùng đo công bằng MAS vs Single-Agent baseline.",
+  "description": "Tap holdout doc lap (90 mau: 15 mau/nhan) dung cho danh gia khach quan Intent Classifier & Hybrid Pipeline — TUYET DOI khong gop vao intent_dataset.csv.",
   "cases": [
     {
       "id": "H01",
       "message": "Điện thoại Samsung bị sọc màn hình sau khi rơi",
-      "device": { "deviceType": "phone", "brand": "Samsung", "model": "S23" },
-      "issueDescription": "Sọc màn hình sau khi rơi",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy S23" },
+      "issueDescription": "Sọc màn hình",
       "expectedIntent": "DIAGNOSIS",
       "expectedServiceIds": ["svc-man-hinh"]
     },
     {
       "id": "H02",
       "message": "Laptop Asus quạt kêu rất to và nóng",
-      "device": { "deviceType": "laptop", "brand": "Asus", "model": "Vivobook" },
-      "issueDescription": "Quạt kêu to, máy nóng",
+      "device": { "deviceType": "laptop", "brand": "Asus", "model": "VivoBook 15" },
+      "issueDescription": "Quạt kêu to và nóng",
       "expectedIntent": "DIAGNOSIS",
-      "expectedServiceIds": ["svc-tan-nhiet"]
+      "expectedServiceIds": ["svc-ve-sinh"]
     },
     {
       "id": "H03",
       "message": "Máy bị chai pin, sạc đầy rất lâu",
-      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
-      "issueDescription": "Chai pin, sạc lâu đầy",
+      "device": { "deviceType": "phone", "brand": "iPhone", "model": "12" },
+      "issueDescription": "Chai pin, sạc chậm",
       "expectedIntent": "DIAGNOSIS",
       "expectedServiceIds": ["svc-pin"]
     },
     {
       "id": "H04",
       "message": "Bàn phím laptop gõ bị nhảy chữ",
-      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
-      "issueDescription": "Bàn phím gõ nhảy chữ",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "XPS 13" },
+      "issueDescription": "Bàn phím nhảy chữ",
       "expectedIntent": "DIAGNOSIS",
       "expectedServiceIds": ["svc-ban-phim"]
     },
     {
       "id": "H05",
       "message": "Điện thoại không lên nguồn dù đã sạc",
-      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "Redmi Note 12" },
       "issueDescription": "Không lên nguồn",
       "expectedIntent": "DIAGNOSIS",
       "expectedServiceIds": []
@@ -61,7 +60,7 @@
     {
       "id": "H08",
       "message": "Chi phí thay màn hình điện thoại bao nhiêu tiền",
-      "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
       "issueDescription": "",
       "expectedIntent": "QUOTATION",
       "expectedServiceIds": ["svc-man-hinh"]
@@ -69,15 +68,15 @@
     {
       "id": "H09",
       "message": "Giá dịch vụ vệ sinh tản nhiệt laptop thế nào",
-      "device": { "deviceType": "laptop", "brand": "Asus", "model": "Vivobook" },
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
       "issueDescription": "",
       "expectedIntent": "QUOTATION",
-      "expectedServiceIds": ["svc-tan-nhiet"]
+      "expectedServiceIds": ["svc-ve-sinh"]
     },
     {
       "id": "H10",
       "message": "Báo giá thay bàn phím laptop giúp tôi",
-      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "device": { "deviceType": "laptop", "brand": "HP", "model": "Pavilion 15" },
       "issueDescription": "",
       "expectedIntent": "QUOTATION",
       "expectedServiceIds": ["svc-ban-phim"]
@@ -134,6 +133,590 @@
       "id": "H17",
       "message": "Bạn có biết lập trình Python không",
       "device": { "deviceType": "phone", "brand": "iPhone", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H18",
+      "message": "iPad Gen 9 tự động bật tắt màn hình liên tục dù không bấm nút",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Gen 9" },
+      "issueDescription": "Tự bật tắt màn hình",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H19",
+      "message": "Garmin Forerunner 255 sạc cả tiếng vẫn báo 5 phần trăm",
+      "device": { "deviceType": "smartwatch", "brand": "Garmin", "model": "Forerunner 255" },
+      "issueDescription": "Sạc chậm không lên pin",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H20",
+      "message": "Loa Sony SRS bị mất kết nối giữa chừng dù điện thoại để ngay cạnh",
+      "device": { "deviceType": "electronics", "brand": "Sony", "model": "SRS" },
+      "issueDescription": "Mất kết nối bluetooth",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H21",
+      "message": "Mặt kính iPhone 11 bị rạn chân chim sau cú va chạm mạnh",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "Vỡ rạn mặt kính",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H22",
+      "message": "Laptop HP mở gập lên nghe tiếng cọt kẹt và hở góc nhựa bản lề",
+      "device": { "deviceType": "laptop", "brand": "HP", "model": "Pavilion 15" },
+      "issueDescription": "Lỗi bản lề",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H23",
+      "message": "man hinh dien thoai bi am xanh nhe va chap chon cam ung",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "Ám xanh, chập chờn cảm ứng",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H24",
+      "message": "Micro đàm thoại thu tiếng bị méo và vọng lại rất khó nghe",
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "13" },
+      "issueDescription": "Micro bị méo tiếng",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H25",
+      "message": "Máy tính bảng bị dính mưa rào giờ mất hoàn toàn đèn nền màn hình",
+      "device": { "deviceType": "tablet", "brand": "Samsung", "model": "Galaxy Tab S8" },
+      "issueDescription": "Vô nước mất đèn nền",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H26",
+      "message": "pin dong ho apple watch bi phu lam nhấc man hinh len",
+      "device": { "deviceType": "smartwatch", "brand": "Apple", "model": "Watch Series 8" },
+      "issueDescription": "Pin phồng bung màn",
+      "expectedIntent": "DIAGNOSIS",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H27",
+      "message": "Môn Vật lý lớp 12 công thức tính chu kỳ dao động điều hòa là gì",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H28",
+      "message": "Tiền thay mới màn hình iPad Air 5 chính hãng tổng cộng hết bao nhiêu",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Air 5" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H29",
+      "message": "Chi phí phục hồi phần nguồn loa Marshall Stanmore tầm khoảng mấy trăm nghìn",
+      "device": { "deviceType": "electronics", "brand": "Marshall", "model": "Stanmore II" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H30",
+      "message": "Gói sửa chữa cổng sạc nhanh Samsung Galaxy A54 tính giá sao vậy shop",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H31",
+      "message": "bao gia thay pin apple watch series 7 giup em vs",
+      "device": { "deviceType": "smartwatch", "brand": "Apple", "model": "Watch Series 7" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H32",
+      "message": "Lắp thêm SSD 1TB cho laptop Dell Vostro tốn tổng chi phí bao nhiêu",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Vostro 3520" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H33",
+      "message": "Tiền công và linh kiện thay loa trong iPhone 11 khoảng chừng nào",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H34",
+      "message": "Sửa trôi cần analog máy Nintendo Switch mất hết bao nhiêu tiền",
+      "device": { "deviceType": "electronics", "brand": "Nintendo", "model": "Switch OLED" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H35",
+      "message": "Cho mình hỏi mức giá dự kiến để thay bản lề laptop Lenovo IdeaPad",
+      "device": { "deviceType": "laptop", "brand": "Lenovo", "model": "IdeaPad 5" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H36",
+      "message": "chi phi sua cum camera sau xiaomi 13 mat bnh tien ad",
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H37",
+      "message": "Báo giá tổng thể cho phần kiểm tra bo mạch tivi LG giúp tôi",
+      "device": { "deviceType": "electronics", "brand": "LG", "model": "OLED C2" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H38",
+      "message": "Thay mới viên pin đồng hồ Garmin Venu 2 hết mấy trăm nghìn ạ",
+      "device": { "deviceType": "smartwatch", "brand": "Garmin", "model": "Venu 2" },
+      "issueDescription": "",
+      "expectedIntent": "QUOTATION",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H39",
+      "message": "Thứ năm tuần sau buổi chiều 16h30 mình đặt một lịch sửa iPad được không",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Pro 11" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H40",
+      "message": "Đăng ký giúp anh một cuộc hẹn lúc 9h30 sáng thứ tư tại tiệm",
+      "device": { "deviceType": "laptop", "brand": "Asus", "model": "ZenBook 14" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H41",
+      "message": "chieu mai 4h30 minh dem may dell qua kiem tra con cho k ban",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H42",
+      "message": "Sáng chủ nhật cửa hàng có mở cửa để tôi đặt hẹn thay pin không",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H43",
+      "message": "Xếp giúp chị khung giờ vắng nhất ngày 22/11 để chị ghé kiểm tra smartwatch",
+      "device": { "deviceType": "smartwatch", "brand": "Apple", "model": "Watch Series 8" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H44",
+      "message": "Hẹn trước cho tôi suất 15h ngày kia để mang tai nghe Sony qua",
+      "device": { "deviceType": "electronics", "brand": "Sony", "model": "WH-1000XM5" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H45",
+      "message": "Tôi cần đặt lịch ghé cửa hàng lúc 11h trưa nay xem máy giúp với",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H46",
+      "message": "book lich hen cho so 0987654321 vao sang thu hai 8h30 nha",
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H47",
+      "message": "Khoảng 17h chiều nay bên mình còn nhận khách kiểm tra máy không",
+      "device": { "deviceType": "laptop", "brand": "HP", "model": "Envy 13" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H48",
+      "message": "Giữ giúp mình slot đầu giờ chiều mai để thay màn hình điện thoại",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H49",
+      "message": "Ngày kia buổi sáng tiệm còn chỗ trống nào nhận bảo dưỡng laptop không",
+      "device": { "deviceType": "laptop", "brand": "Lenovo", "model": "ThinkPad X1" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H50",
+      "message": "Đặt trước lịch hẹn ngày thứ sáu buổi chiều giúp tôi nhé",
+      "device": { "deviceType": "tablet", "brand": "Samsung", "model": "Galaxy Tab S8" },
+      "issueDescription": "",
+      "expectedIntent": "APPOINTMENT",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H51",
+      "message": "Kiểm tra giúp xem phiếu bảo hành WR-20261105-0019 hết hạn chưa ạ",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H52",
+      "message": "Thời hạn bảo hành sau khi thay mới cụm chân sạc điện thoại là mấy tháng",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H53",
+      "message": "Cho tôi xem toàn bộ điều khoản của gói bảo hành 12 tháng bên tiệm",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "XPS 13" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H54",
+      "message": "Nếu màn hình mới thay tự nhiên xuất hiện điểm chết thì bảo hành miễn phí chứ",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H55",
+      "message": "chinh sach bao hanh pin apple watch ben shop keo dai bao lau vay",
+      "device": { "deviceType": "smartwatch", "brand": "Apple", "model": "Watch Series 8" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H56",
+      "message": "Làm thế nào để tra cứu thông tin các phiếu bảo hành cũ gắn với tài khoản của tôi",
+      "device": { "deviceType": "laptop", "brand": "Apple", "model": "MacBook Air M2" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H57",
+      "message": "Gói bảo hành cơ bản 1 tháng có hỗ trợ lỗi phát sinh trên mainboard không",
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H58",
+      "message": "Tra giup ma bao hanh WR-20260922-0006 xem dang active hay voided r",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Pro 11" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H59",
+      "message": "Tôi có cần giữ giấy biên nhận cũ hay chỉ đọc mã WR là được bảo hành",
+      "device": { "deviceType": "laptop", "brand": "Asus", "model": "ROG Strix" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H60",
+      "message": "Cửa hàng có nhận bảo hành cho các thiết bị điện tử như loa Marshall không",
+      "device": { "deviceType": "electronics", "brand": "Marshall", "model": "Acton III" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H61",
+      "message": "Trường hợp vô tình làm thấm nước sau khi sửa thì còn được bảo hành không",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H62",
+      "message": "Quy định bảo hành gói linh kiện 3 tháng áp dụng cho những linh kiện gì",
+      "device": { "deviceType": "laptop", "brand": "HP", "model": "ProBook" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H63",
+      "message": "kiem tra han bao hanh phieu WR-20261018-0033 giup minh nhe",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy S23" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H64",
+      "message": "Sửa xong trong thời gian bảo hành mà lỗi cũ tái phát thì shop xử lý miễn phí đúng không",
+      "device": { "deviceType": "tablet", "brand": "Samsung", "model": "Galaxy Tab S8" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H65",
+      "message": "Cho mình xin danh sách các gói bảo hành dịch vụ mà trung tâm đang cung cấp",
+      "device": { "deviceType": "smartwatch", "brand": "Garmin", "model": "Fenix 7" },
+      "issueDescription": "",
+      "expectedIntent": "WARRANTY",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H66",
+      "message": "Xem hộ tình trạng phiếu RT-20261113-0025 hiện đã sửa hoàn tất chưa",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H67",
+      "message": "Đơn hàng sửa bàn phím laptop mã RS-942 đang nằm ở khâu nào rồi ạ",
+      "device": { "deviceType": "laptop", "brand": "Dell", "model": "Inspiron 15" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H68",
+      "message": "ktra ho anh ma don TK-518 xem chieu nay co ra nhan may dc ko",
+      "device": { "deviceType": "tablet", "brand": "Apple", "model": "iPad Pro 11" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H69",
+      "message": "Hệ thống đang báo đơn của tôi ở trạng thái kiểm tra sau sửa là sao vậy",
+      "device": { "deviceType": "phone", "brand": "Samsung", "model": "Galaxy A54" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H70",
+      "message": "Kỹ thuật viên đã tiếp nhận sửa chiếc Garmin mã RS-626 của mình chưa",
+      "device": { "deviceType": "smartwatch", "brand": "Garmin", "model": "Venu 2" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H71",
+      "message": "phieu sua chua RT-20261114-0018 dang o trang thai nao vay ad",
+      "device": { "deviceType": "laptop", "brand": "Lenovo", "model": "ThinkPad" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H72",
+      "message": "Xem lịch sử chuyển trạng thái từ lúc giao máy đến giờ của mã RS-508",
+      "device": { "deviceType": "electronics", "brand": "Marshall", "model": "Emberton" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H73",
+      "message": "Đơn gửi sửa máy chơi game tuần này đã về đủ linh kiện để ráp chưa shop",
+      "device": { "deviceType": "electronics", "brand": "Nintendo", "model": "Switch" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H74",
+      "message": "Mình đã duyệt phương án báo giá trên web, kiểm tra xem đơn RS-390 chạy tiếp chưa",
+      "device": { "deviceType": "phone", "brand": "Xiaomi", "model": "13" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H75",
+      "message": "check tien do sua chua giup em cac ticket thuoc tai khoan nay",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 11" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H76",
+      "message": "Bao giờ chiếc MacBook Air mã RT-20261112-0016 của tôi hoàn thiện xong",
+      "device": { "deviceType": "laptop", "brand": "Apple", "model": "MacBook Air" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H77",
+      "message": "Tra cứu trạng thái hiện thời của phiếu sửa chữa mã RS-813 hộ mình",
+      "device": { "deviceType": "tablet", "brand": "Samsung", "model": "Galaxy Tab S8" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H78",
+      "message": "Tôi cần xem tiến độ đơn gửi bảo dưỡng tại quầy hôm thứ ba rồi",
+      "device": { "deviceType": "laptop", "brand": "HP", "model": "Pavilion" },
+      "issueDescription": "",
+      "expectedIntent": "TRACKING",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H79",
+      "message": "Ngày mai tuyến xe buýt số 08 chạy đến mấy giờ tối vậy bạn",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H80",
+      "message": "Công thức pha trà đào cam sả mát lạnh cho quán cà phê nhỏ",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H81",
+      "message": "Trong hóa học công thức cấu tạo của axit sunfuric là gì",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H82",
+      "message": "Chiều nay đi dạo công viên nào ở quận 1 có nhiều cây xanh",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H83",
+      "message": "Quần áo mùa đông nên mua chất liệu len hay nỉ để giữ ấm tốt hơn",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H84",
+      "message": "Chủ nhật này giải Ngoại Hạng Anh có những trận cầu đinh nào",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H85",
+      "message": "Xin chào trợ lý, hôm nay bạn thấy tâm trạng thế nào",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H86",
+      "message": "Cách trồng cây cà chua bi ra nhiều quả trên sân thượng nắng gắt",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H87",
+      "message": "Mức phạt nồng độ cồn mới nhất đối với người đi ô tô là bao nhiêu",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H88",
+      "message": "Giúp mình phân biệt thì hiện tại hoàn thành và quá khứ đơn",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H89",
+      "message": "Cửa hàng có nhận sửa máy giặt lồng ngang hay điều hòa treo tường không",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
+      "issueDescription": "",
+      "expectedIntent": "UNKNOWN",
+      "expectedServiceIds": []
+    },
+    {
+      "id": "H90",
+      "message": "qwertyuiop zxcvbnm",
+      "device": { "deviceType": "phone", "brand": "Apple", "model": "iPhone 13" },
       "issueDescription": "",
       "expectedIntent": "UNKNOWN",
       "expectedServiceIds": []

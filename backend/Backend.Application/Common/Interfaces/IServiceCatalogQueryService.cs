@@ -17,7 +17,8 @@ public record CatalogPartItem(
     decimal UnitPrice,
     string? CompatibleDeviceType = null,
     bool InStock = true,
-    int QuantityOnHand = 0);
+    int QuantityOnHand = 0,
+    string? Category = null);
 
 /// <summary>
 /// Trừu tượng hoá việc lấy dữ liệu Service/Part hiện có — Infrastructure dùng interface này

@@ -1,4 +1,5 @@
 using RepairShop.Application.Modules.Tickets.Queries;
+using RepairShop.Application.Modules.Warranty.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,14 @@ public class PublicTrackingController : ControllerBase
     public async Task<IActionResult> Track(string ticketCode)
     {
         var result = await _mediator.Send(new TrackTicketByCodeQuery(ticketCode));
+        return Ok(result);
+    }
+
+    [HttpGet("~/api/public/warranties/{warrantyCode}/tracking")]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("PublicTrackingPolicy")]
+    public async Task<IActionResult> TrackWarranty(string warrantyCode, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new TrackWarrantyByCodeQuery(warrantyCode), cancellationToken);
         return Ok(result);
     }
 }

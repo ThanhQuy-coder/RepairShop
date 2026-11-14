@@ -1,157 +1,661 @@
-text,label
-"Điện thoại của tôi bị tụt pin rất nhanh",DIAGNOSIS
-"iPhone 13 sạc không vào, cắm sạc không báo gì",DIAGNOSIS
-"Màn hình laptop bị sọc dọc, nhìn rất khó chịu",DIAGNOSIS
-"Máy bị vỡ màn hình sau khi rơi xuống đất",DIAGNOSIS
-"Bàn phím laptop gõ không ăn, có phím bị liệt",DIAGNOSIS
-"Máy nóng ran khi sạc, sờ vào thấy bỏng tay",DIAGNOSIS
-"Loa ngoài bị rè khi mở nhạc to",DIAGNOSIS
-"Camera sau chụp bị mờ, không lấy nét được",DIAGNOSIS
-"Máy tự tắt nguồn dù pin còn 40%",DIAGNOSIS
-"Điện thoại bị vô nước, giờ không lên nguồn",DIAGNOSIS
-"Máy chạy chậm, mở ứng dụng nào cũng giật",DIAGNOSIS
-"Cảm ứng màn hình chập chờn, lúc ăn lúc không",DIAGNOSIS
-"Tai nghe trong máy không nghe được, chỉ nghe loa ngoài",DIAGNOSIS
-"Máy báo lỗi error code 404 khi mở ứng dụng",DIAGNOSIS
-"Màn hình điện thoại bị đốm mực đen lan rộng",DIAGNOSIS
-"Laptop quạt kêu to bất thường và rất nóng",DIAGNOSIS
-"Chân sạc bị lỏng, phải giữ dây mới sạc được",DIAGNOSIS
-"Máy bị treo logo, khởi động mãi không lên",DIAGNOSIS
-"Ống kính camera bị trầy, ảnh chụp bị mờ",DIAGNOSIS
-"Pin điện thoại bị phồng, mặt lưng bị hở",DIAGNOSIS
-"Máy rơi xuống đất, giờ màn hình bị nứt góc",DIAGNOSIS
-"Điện thoại không nhận sim, mất sóng hoàn toàn",DIAGNOSIS
-"Wifi trên laptop tự ngắt liên tục",DIAGNOSIS
-"Nút nguồn bị liệt, không bấm được",DIAGNOSIS
-"Máy nghe gọi nhỏ, bên kia không nghe rõ",DIAGNOSIS
-"Bản lề laptop bị gãy, màn hình lung lay",DIAGNOSIS
-"Vân tay không nhận, đăng ký lại cũng không được",DIAGNOSIS
-"Máy sạc pin rất chậm, cả đêm chỉ được 30%",DIAGNOSIS
-"Màn hình laptop bị ám vàng ở góc dưới",DIAGNOSIS
-"Điện thoại bị đơ khi chụp ảnh",DIAGNOSIS
-"Máy ảnh bị đen khi quay video ban đêm",DIAGNOSIS
-"Loa thoại bị rè, gọi điện nghe rất khó",DIAGNOSIS
-"Máy không kết nối được bluetooth với tai nghe",DIAGNOSIS
-"Chuông điện thoại không kêu dù đã bật âm lượng",DIAGNOSIS
-"Máy bị mất rung khi có thông báo",DIAGNOSIS
-"Laptop không lên màn hình, đèn nguồn vẫn sáng",DIAGNOSIS
-"Điện thoại sạc pin bị giật, chạm vào vỏ thấy tê",DIAGNOSIS
-"Máy bị nước vào loa, giờ nghe rất nhỏ",DIAGNOSIS
-"Màn hình bị sọc xanh sau khi cập nhật phần mềm",DIAGNOSIS
-"Máy đọc mã QR code bị mờ, không quét được",DIAGNOSIS
-"Bàn phím không gõ được nút thanh toán trên màn hình",DIAGNOSIS
-"Báo giá giúp tôi dịch vụ thay màn hình laptop là bao nhiêu",QUOTATION
-"Chi phí thay pin laptop Dell khoảng bao nhiêu tiền",QUOTATION
-"Thay màn hình điện thoại hết bao nhiêu tiền vậy",QUOTATION
-"Cho tôi hỏi giá dịch vụ sửa chữa là bao nhiêu",QUOTATION
-"Bảng giá dịch vụ bên mình có không, cho tôi xin",QUOTATION
-"Tôi muốn biết chi phí thay loa là bao nhiêu",QUOTATION
-"Thay camera sau giá bao nhiêu vậy bạn",QUOTATION
-"Sửa màn hình với thay pin cái nào rẻ hơn, giá bao nhiêu",QUOTATION
-"Dự toán giúp tôi chi phí sửa laptop là bao nhiêu",QUOTATION
-"Tổng tiền thay pin và màn hình là bao nhiêu",QUOTATION
-"Tư vấn giúp giá tham khảo dịch vụ vệ sinh máy",QUOTATION
-"Gói thay màn hình giá sao bạn, báo giá giúp mình",QUOTATION
-"Báo giá thay bàn phím laptop giúp tôi với",QUOTATION
-"Chi phí kiểm tra máy có mất phí không, cho tôi biết",QUOTATION
-"Giá thay pin chính hãng là bao nhiêu",QUOTATION
-"Thay cảm ứng màn hình giá bao nhiêu tiền",QUOTATION
-"Cho xin bảng giá sửa chữa điện thoại với",QUOTATION
-"Chi phí thay màn hình iPhone 13 ước tính bao nhiêu",QUOTATION
-"Giá dịch vụ thay pin laptop Dell là bao nhiêu",QUOTATION
-"Sửa chữa màn hình hết bao nhiêu tiền vậy",QUOTATION
-"Thay linh kiện camera giá bao nhiêu, báo giá giúp",QUOTATION
-"Báo giá giúp mình gói thay pin dung lượng cao nhé",QUOTATION
-"Phí vệ sinh tản nhiệt laptop là bao nhiêu",QUOTATION
-"Tôi cần biết giá thay màn hình trước khi quyết định",QUOTATION
-"Giá thay pin với thay màn hình chênh nhau bao nhiêu",QUOTATION
-"Tính tiền giúp tôi nếu thay cả màn và pin",QUOTATION
-"Cho hỏi chi phí thay bàn phím máy Dell bao nhiêu",QUOTATION
-"Giá thay loa thoại bao nhiêu tiền bạn",QUOTATION
-"Khoảng bao nhiêu tiền để sửa chân sạc vậy",QUOTATION
-"Báo giá tổng thể giúp tôi trước khi tôi quyết định",QUOTATION
-"Tôi muốn đặt lịch sửa máy vào ngày mai",APPOINTMENT
-"Mai 3h chiều còn chỗ không bạn",APPOINTMENT
-"Đặt hẹn giúp tôi lúc 9h sáng thứ bảy",APPOINTMENT
-"Cuối tuần này còn khung giờ nào trống không",APPOINTMENT
-"Tôi muốn mang máy đến kiểm tra vào sáng mai",APPOINTMENT
-"Còn slot nào chiều nay không bạn",APPOINTMENT
-"Đặt lịch hẹn kiểm tra máy cho tôi với",APPOINTMENT
-"Ngày mai lúc mấy giờ cửa hàng còn nhận máy",APPOINTMENT
-"Tôi muốn hẹn lịch vào 14h ngày 12/11",APPOINTMENT
-"Sáng chủ nhật có còn chỗ không",APPOINTMENT
-"Book giúp tôi một lịch sửa laptop",APPOINTMENT
-"Chiều mai còn chỗ cho tôi đặt không",APPOINTMENT
-"Tôi cần đặt lịch gấp trong hôm nay",APPOINTMENT
-"Còn khung giờ nào trống vào ngày kia không",APPOINTMENT
-"Đặt lịch hẹn kiểm tra máy giúp tôi nhé",APPOINTMENT
-"Thứ hai tuần sau tôi muốn mang máy qua",APPOINTMENT
-"Mấy giờ thì cửa hàng còn nhận khách",APPOINTMENT
-"Tôi muốn hẹn lúc 10h sáng ngày mai",APPOINTMENT
-"Còn chỗ nào trống buổi chiều nay không",APPOINTMENT
-"Đặt lịch thay màn hình vào 15h giúp mình",APPOINTMENT
-"Mai cửa hàng mở cửa lúc mấy giờ",APPOINTMENT
-"Tôi muốn đến kiểm tra máy vào ngày mai được không",APPOINTMENT
-"Còn giờ nào trống trong sáng nay không bạn",APPOINTMENT
-"Hẹn giúp tôi lịch vào chiều thứ sáu",APPOINTMENT
-"Ngày mai 2h chiều còn nhận máy không",APPOINTMENT
-"Tôi muốn đặt lịch kiểm tra máy Dell",APPOINTMENT
-"Slot nào còn trống vào ngày mai vậy",APPOINTMENT
-"Đặt hẹn lúc 8h sáng thứ hai giúp tôi",APPOINTMENT
-"Còn khung giờ trống nào ngày mai không bạn",APPOINTMENT
-"Chiều nay tôi qua kiểm tra máy, còn chỗ không",APPOINTMENT
-"Tra cứu giúp tôi mã đơn RS-123",TRACKING
-"Mã phiếu của tôi là RS-456, kiểm tra giúp tiến độ",TRACKING
-"Tình trạng sửa máy của tôi tới đâu rồi",TRACKING
-"Đơn hàng của tôi sửa xong chưa",TRACKING
-"Cho tôi hỏi tiến độ sửa máy với",TRACKING
-"Phiếu sửa của tôi bao giờ xong vậy",TRACKING
-"Tôi muốn tra cứu mã phiếu sửa chữa",TRACKING
-"Kiểm tra đơn giúp tôi với mã RS-789",TRACKING
-"Máy của tôi sửa đến đâu rồi bạn",TRACKING
-"Tra cứu trạng thái phiếu sửa chữa giúp tôi",TRACKING
-"Đơn sửa của tôi đang ở bước nào",TRACKING
-"Mã tra cứu của tôi không dùng được",TRACKING
-"Tôi muốn theo dõi tiến độ sửa điện thoại",TRACKING
-"Bao giờ thì máy tôi sửa xong",TRACKING
-"Kiểm tra giúp đơn RS-321 đã xong chưa",TRACKING
-"Tình trạng ticket của tôi thế nào",TRACKING
-"Tôi đánh mất mã đơn, tra cứu giúp tôi",TRACKING
-"Phiếu sửa RS-555 đến đâu rồi",TRACKING
-"Tra cứu mã số phiếu sửa chữa giúp tôi",TRACKING
-"Đơn của tôi có đang sửa không",TRACKING
-"Cho tôi xin tiến độ của phiếu sửa",TRACKING
-"Máy của tôi đã sửa xong chưa ạ",TRACKING
-"Tra cứu đơn hàng sửa chữa giúp tôi",TRACKING
-"Mã phiếu RS-222 hiện trạng thái gì",TRACKING
-"Tôi muốn kiểm tra đơn sửa chữa",TRACKING
-"Xin chào",UNKNOWN
-"Bạn là ai",UNKNOWN
-"Kể cho tôi một câu chuyện cười",UNKNOWN
-"Trời hôm nay có mưa không",UNKNOWN
-"Viết giúp tôi một bài thơ về mùa thu",UNKNOWN
-"Bạn thích ăn gì",UNKNOWN
-"Tư vấn giúp tôi chuyện tình cảm",UNKNOWN
-"1 + 1 bằng mấy",UNKNOWN
-"Dịch giúp tôi câu này sang tiếng Anh",UNKNOWN
-"Bạn có khỏe không",UNKNOWN
-"Kể tên các loài động vật có vú",UNKNOWN
-"Làm sao để nấu phở ngon",UNKNOWN
-"Bạn nghĩ gì về phim mới",UNKNOWN
-"Hướng dẫn tôi học lập trình Python",UNKNOWN
-"Bạn có thể hát cho tôi nghe không",UNKNOWN
-"Cho tôi mượn sách được không",UNKNOWN
-"Bạn ơi",UNKNOWN
-"Hello",UNKNOWN
-"Cảm ơn bạn",UNKNOWN
-"Tạm biệt",UNKNOWN
-"Bạn có biết bóng đá không",UNKNOWN
-"Giúp tôi viết email xin việc",UNKNOWN
-"Những hành tinh nào có sự sống",UNKNOWN
-"Bạn thấy tôi nên mua xe gì",UNKNOWN
-"Chúc mừng năm mới",UNKNOWN
-"Bạn có thể chơi cờ không",UNKNOWN
-"Giải thích giúp tôi về blockchain",UNKNOWN
-"Tôi đang buồn",UNKNOWN
-"Cho tôi một lời khuyên",UNKNOWN
-"Bạn rảnh không",UNKNOWN
+text,label,source
+"Điện thoại của tôi bị tụt pin rất nhanh",DIAGNOSIS,manual_curated
+"iPhone 13 sạc không vào, cắm sạc không báo gì",DIAGNOSIS,manual_curated
+"Màn hình laptop bị sọc dọc, nhìn rất khó chịu",DIAGNOSIS,manual_curated
+"Máy bị vỡ màn hình sau khi rơi xuống đất",DIAGNOSIS,manual_curated
+"Bàn phím laptop gõ không ăn, có phím bị liệt",DIAGNOSIS,manual_curated
+"Máy nóng ran khi sạc, sờ vào thấy bỏng tay",DIAGNOSIS,manual_curated
+"Loa ngoài bị rè khi mở nhạc to",DIAGNOSIS,manual_curated
+"Camera sau chụp bị mờ, không lấy nét được",DIAGNOSIS,manual_curated
+"Máy tự tắt nguồn dù pin còn 40%",DIAGNOSIS,manual_curated
+"Điện thoại bị vô nước, giờ không lên nguồn",DIAGNOSIS,manual_curated
+"Máy chạy chậm, mở ứng dụng nào cũng giật",DIAGNOSIS,manual_curated
+"Màn hình iPhone bị loạn điểm chạm, bấm một nơi nhảy sang nơi khác",DIAGNOSIS,natural_variant_reviewed
+"Tai nghe trong máy không nghe được, chỉ nghe loa ngoài",DIAGNOSIS,manual_curated
+"Máy báo lỗi error code 404 khi mở ứng dụng",DIAGNOSIS,manual_curated
+"Màn hình điện thoại bị đốm mực đen lan rộng",DIAGNOSIS,manual_curated
+"Laptop quạt kêu to bất thường và rất nóng",DIAGNOSIS,manual_curated
+"Chân sạc bị lỏng, phải giữ dây mới sạc được",DIAGNOSIS,manual_curated
+"Máy bị treo logo, khởi động mãi không lên",DIAGNOSIS,manual_curated
+"Ống kính camera bị trầy, ảnh chụp bị mờ",DIAGNOSIS,manual_curated
+"Pin điện thoại bị phồng, mặt lưng bị hở",DIAGNOSIS,manual_curated
+"Máy rơi xuống đất, giờ màn hình bị nứt góc",DIAGNOSIS,manual_curated
+"Điện thoại không nhận sim, mất sóng hoàn toàn",DIAGNOSIS,manual_curated
+"Wifi trên laptop tự ngắt liên tục",DIAGNOSIS,manual_curated
+"Nút nguồn bị liệt, không bấm được",DIAGNOSIS,manual_curated
+"Máy nghe gọi nhỏ, bên kia không nghe rõ",DIAGNOSIS,manual_curated
+"Bản lề laptop bị gãy, màn hình lung lay",DIAGNOSIS,manual_curated
+"Vân tay không nhận, đăng ký lại cũng không được",DIAGNOSIS,manual_curated
+"Máy sạc pin rất chậm, cả đêm chỉ được 30%",DIAGNOSIS,manual_curated
+"Màn hình laptop bị ám vàng ở góc dưới",DIAGNOSIS,manual_curated
+"Điện thoại bị đơ khi chụp ảnh",DIAGNOSIS,manual_curated
+"Máy ảnh bị đen khi quay video ban đêm",DIAGNOSIS,manual_curated
+"Loa thoại bị rè, gọi điện nghe rất khó",DIAGNOSIS,manual_curated
+"Máy không kết nối được bluetooth với tai nghe",DIAGNOSIS,manual_curated
+"Chuông điện thoại không kêu dù đã bật âm lượng",DIAGNOSIS,manual_curated
+"Máy bị mất rung khi có thông báo",DIAGNOSIS,manual_curated
+"Laptop không lên màn hình, đèn nguồn vẫn sáng",DIAGNOSIS,manual_curated
+"Điện thoại sạc pin bị giật, chạm vào vỏ thấy tê",DIAGNOSIS,manual_curated
+"Máy bị nước vào loa, giờ nghe rất nhỏ",DIAGNOSIS,manual_curated
+"Màn hình bị sọc xanh sau khi cập nhật phần mềm",DIAGNOSIS,manual_curated
+"Máy đọc mã QR code bị mờ, không quét được",DIAGNOSIS,manual_curated
+"Màn hình cảm ứng đơ ngay chỗ xác nhận thanh toán",DIAGNOSIS,manual_curated
+"iPad sạc qua đêm vẫn đứng yên ở 12%",DIAGNOSIS,natural_variant_reviewed
+"Samsung Tab S8 cảm ứng bị nhảy loạn xạ không theo tay",DIAGNOSIS,natural_variant_reviewed
+"Apple Watch bị bung keo màn hình sau khi đi bơi",DIAGNOSIS,natural_variant_reviewed
+"Đồng hồ Garmin đo nhịp tim không lên đèn cảm biến",DIAGNOSIS,natural_variant_reviewed
+"Loa Marshall bật nguồn lên được vài giây rồi tự ngắt",DIAGNOSIS,natural_variant_reviewed
+"Tai nghe Sony bên trái tịt hẳn tiếng dù pin báo đầy",DIAGNOSIS,natural_variant_reviewed
+"Nintendo Switch cắm dock không xuất được hình lên tivi",DIAGNOSIS,natural_variant_reviewed
+"Máy chơi game cầm tay trôi analog bên trái liên tục",DIAGNOSIS,natural_variant_reviewed
+"Laptop MacBook Air gập màn hình lại thì tự sập nguồn",DIAGNOSIS,natural_variant_reviewed
+"Bút Apple Pencil kết nối được với iPad nhưng viết không ra nét",DIAGNOSIS,natural_variant_reviewed
+"Cổng Type C laptop Asus chập chờn không nhận USB",DIAGNOSIS,natural_variant_reviewed
+"Trackpad MacBook bị cứng đơ, nhấn không có độ nảy",DIAGNOSIS,natural_variant_reviewed
+"Mặt kính lưng iPhone 14 Pro Max bị nứt chằng chịt",DIAGNOSIS,natural_variant_reviewed
+"Face ID báo lỗi không khả dụng sau khi máy bị rớt",DIAGNOSIS,natural_variant_reviewed
+"Micro laptop thu âm rất bé, họp online đồng nghiệp không nghe thấy",DIAGNOSIS,natural_variant_reviewed
+"Màn hình điện thoại bị lưu ảnh bóng mờ nặng",DIAGNOSIS,natural_variant_reviewed
+"Sạc laptop báo plugged in not charging suốt từ sáng",DIAGNOSIS,natural_variant_reviewed
+"Máy tính xách tay bật lên kêu bíp ba tiếng rồi màn hình đen thui",DIAGNOSIS,natural_variant_reviewed
+"Pin đồng hồ thông minh tụt từ 100 xuống 0 chỉ trong hai tiếng",DIAGNOSIS,natural_variant_reviewed
+"Điện thoại tự khởi động lại liên tục mỗi khi mở wifi",DIAGNOSIS,natural_variant_reviewed
+"Tivi LG có tiếng phát ra nhưng màn hình tối đen hoàn toàn",DIAGNOSIS,natural_variant_reviewed
+"Loa bluetooth sạc nóng củ nhưng đèn báo không sáng",DIAGNOSIS,natural_variant_reviewed
+"Camera iPhone rung lắc phát tiếng kêu cạch cạch khi zoom",DIAGNOSIS,natural_variant_reviewed
+"Khay sim bị kẹt cứng bên trong không lấy ra được",DIAGNOSIS,natural_variant_reviewed
+"Laptop Lenovo bị chập bàn phím tự nhảy ký tự chữ e mãi",DIAGNOSIS,natural_variant_reviewed
+"Đèn nền màn hình iPad chớp tắt nhấp nháy khó nhìn",DIAGNOSIS,natural_variant_reviewed
+"Quạt tản nhiệt laptop Asus không quay khiến máy lag nặng",DIAGNOSIS,natural_variant_reviewed
+"Cục nguồn laptop phát tia lửa nhỏ lúc vừa cắm vào ổ điện",DIAGNOSIS,natural_variant_reviewed
+"Cảm biến tiệm cận hỏng khiến áp tai nghe gọi màn vẫn sáng",DIAGNOSIS,natural_variant_reviewed
+"Đồng hồ thông minh vặn núm xoay không ăn lệnh cuộn",DIAGNOSIS,natural_variant_reviewed
+"Chân tai nghe 3.5mm nghe bên to bên nhỏ phải xoay jack",DIAGNOSIS,natural_variant_reviewed
+"Laptop bị dính nước cà phê lên cụm phím điều hướng",DIAGNOSIS,natural_variant_reviewed
+"Ốp lưng đẩy kênh lên vì viên pin bên trong phồng to",DIAGNOSIS,natural_variant_reviewed
+"Độ sáng màn hình tự giảm tối om dù đã kéo thanh trượt hết mức",DIAGNOSIS,natural_variant_reviewed
+"Máy bị đứng màn hình xanh BSOD liên tục khi chạy phần mềm nặng",DIAGNOSIS,natural_variant_reviewed
+"Wifi điện thoại bị ẩn mờ công tắc không bật gạt lên được",DIAGNOSIS,natural_variant_reviewed
+"Mic thu âm khi quay video có tiếng xè xè rất to",DIAGNOSIS,natural_variant_reviewed
+"dt iphone bi vo man hinh cam ung liet nua duoi",DIAGNOSIS,typo_no_accent_reviewed
+"may tinh xach tay bat ko len nguon du da cam sac ca tieng",DIAGNOSIS,typo_no_accent_reviewed
+"pin iphone 11 tut nhanh lam sut nguon dot ngot",DIAGNOSIS,typo_no_accent_reviewed
+"loa ngoai samsung bi re nghe nhac bi ngat quang",DIAGNOSIS,typo_no_accent_reviewed
+"ban phim laptop dell bi chap nut enter bam k an",DIAGNOSIS,typo_no_accent_reviewed
+"ipad k nhan sac cam day vao k bao gi het",DIAGNOSIS,typo_no_accent_reviewed
+"cam sau bi rung mo khong lay net duoc",DIAGNOSIS,typo_no_accent_reviewed
+"may bi roi nuoc gio man hinh chop nhay lien tuc",DIAGNOSIS,typo_no_accent_reviewed
+"khong len nguong sau khi cam sac qua dem",DIAGNOSIS,typo_no_accent_reviewed
+"sac khog vao pin tut am am du ko dung",DIAGNOSIS,typo_no_accent_reviewed
+"man hinh bi dom muc tim o goc tren ben phai",DIAGNOSIS,typo_no_accent_reviewed
+"smartwatch bi liet cam ung vuot ko di",DIAGNOSIS,typo_no_accent_reviewed
+"laptop keu ro ro nhu may cay khi mo trinh duyet",DIAGNOSIS,typo_no_accent_reviewed
+"dt xiaomi mat song sim k goi dien dc",DIAGNOSIS,typo_no_accent_reviewed
+"nut tang giam am luong bi ket cung k bam dc",DIAGNOSIS,typo_no_accent_reviewed
+"loa marshall bi re bass khi mo max volume",DIAGNOSIS,typo_no_accent_reviewed
+"tai nghe sony sac hop ko vao dien den do ko sang",DIAGNOSIS,typo_no_accent_reviewed
+"ban le macbook bi keu coc coc luc dong mo",DIAGNOSIS,typo_no_accent_reviewed
+"man hinh iPad air bi ho sang vien xung quanh",DIAGNOSIS,typo_no_accent_reviewed
+"may chup hinh bi dom den o giua ong kinh",DIAGNOSIS,typo_no_accent_reviewed
+"dien thoai nong may giam hieu nang giat lag kinh khung",DIAGNOSIS,typo_no_accent_reviewed
+"chan sac iphone bi long cam nghieng moi an dien",DIAGNOSIS,typo_no_accent_reviewed
+"Cắm USB không nhận",DIAGNOSIS,natural_variant_reviewed
+"Pin chai nặng",DIAGNOSIS,natural_variant_reviewed
+"Loa mất tiếng",DIAGNOSIS,natural_variant_reviewed
+"Liệt cảm ứng",DIAGNOSIS,natural_variant_reviewed
+"Laptop sập nguồn đột ngột lúc đang render video, kèm theo báo giá sửa luôn giúp mình",DIAGNOSIS,multi_intent_reviewed
+"Màn hình Samsung bị vỡ kính và chảy mực nặng, tôi muốn kiểm tra lỗi với đặt lịch sửa sớm",DIAGNOSIS,multi_intent_reviewed
+"iPhone dính mưa tối qua giờ bật không thấy lên gì, cho hỏi bệnh này nặng không và sửa hết tầm nào",DIAGNOSIS,multi_intent_reviewed
+"Bàn phím laptop kẹt phím cách và không ăn phím Shift, kiểm tra giúp tôi để mai tôi ghé",DIAGNOSIS,multi_intent_reviewed
+"Camera sau mất nét hoàn toàn lúc quét mã hàng, shop xem bị lỗi cụm cam hay phần mềm",DIAGNOSIS,multi_intent_reviewed
+"Quạt laptop HP kêu rè rè rồi máy tự tắt, bệnh này có cần vệ sinh hay thay quạt mới không",DIAGNOSIS,multi_intent_reviewed
+"Chi phí thay pin laptop Dell khoảng bao nhiêu tiền",QUOTATION,manual_curated
+"Thay màn hình điện thoại hết bao nhiêu tiền vậy",QUOTATION,manual_curated
+"Cho tôi hỏi giá dịch vụ sửa chữa là bao nhiêu",QUOTATION,manual_curated
+"Bảng giá dịch vụ bên mình có không, cho tôi xin",QUOTATION,manual_curated
+"Tôi muốn biết chi phí thay loa là bao nhiêu",QUOTATION,manual_curated
+"Thay camera sau giá bao nhiêu vậy bạn",QUOTATION,manual_curated
+"Sửa màn hình với thay pin cái nào rẻ hơn, giá bao nhiêu",QUOTATION,manual_curated
+"Dự toán giúp tôi chi phí sửa laptop là bao nhiêu",QUOTATION,manual_curated
+"Tổng tiền thay pin và màn hình là bao nhiêu",QUOTATION,manual_curated
+"Tư vấn giúp giá tham khảo dịch vụ vệ sinh máy",QUOTATION,manual_curated
+"Gói thay màn hình giá sao bạn, báo giá giúp mình",QUOTATION,manual_curated
+"Chi phí thay mới bộ phím cơ bản cho laptop Asus khoảng bao nhiêu tiền",QUOTATION,natural_variant_reviewed
+"Chi phí kiểm tra máy có mất phí không, cho tôi biết",QUOTATION,manual_curated
+"Giá thay pin chính hãng là bao nhiêu",QUOTATION,manual_curated
+"Thay cảm ứng màn hình giá bao nhiêu tiền",QUOTATION,manual_curated
+"Cho xin bảng giá sửa chữa điện thoại với",QUOTATION,manual_curated
+"Chi phí thay màn hình iPhone 13 ước tính bao nhiêu",QUOTATION,manual_curated
+"Giá dịch vụ thay pin laptop Dell là bao nhiêu",QUOTATION,manual_curated
+"Sửa chữa màn hình hết bao nhiêu tiền vậy",QUOTATION,manual_curated
+"Thay linh kiện camera giá bao nhiêu, báo giá giúp",QUOTATION,manual_curated
+"Báo giá giúp mình gói thay pin dung lượng cao nhé",QUOTATION,manual_curated
+"Phí vệ sinh tản nhiệt laptop là bao nhiêu",QUOTATION,manual_curated
+"Tôi cần biết giá thay màn hình trước khi quyết định",QUOTATION,manual_curated
+"Giá thay pin với thay màn hình chênh nhau bao nhiêu",QUOTATION,manual_curated
+"Tính tiền giúp tôi nếu thay cả màn và pin",QUOTATION,manual_curated
+"Cho hỏi chi phí thay bàn phím máy Dell bao nhiêu",QUOTATION,manual_curated
+"Giá thay loa thoại bao nhiêu tiền bạn",QUOTATION,manual_curated
+"Khoảng bao nhiêu tiền để sửa chân sạc vậy",QUOTATION,manual_curated
+"Báo giá tổng thể giúp tôi trước khi tôi quyết định",QUOTATION,manual_curated
+"Ép kính mặt trước iPhone 11 thì tốn hết tầm mấy trăm nghìn",QUOTATION,natural_variant_reviewed
+"Thay màn OLED zin cho iPhone 13 Pro hết bao nhiêu xèng shop ơi",QUOTATION,natural_variant_reviewed
+"Tiền công vệ sinh tra keo tản nhiệt laptop gaming khoảng bao nhiêu",QUOTATION,natural_variant_reviewed
+"Thay mặt kính iPad Gen 9 cộng thêm thay pin có được tính combo rẻ hơn không",QUOTATION,natural_variant_reviewed
+"Báo giá sửa gãy bản lề laptop HP giúp mình với",QUOTATION,natural_variant_reviewed
+"Thay cụm chân sạc Samsung Galaxy A54 trọn gói bao nhiêu tiền",QUOTATION,natural_variant_reviewed
+"Chi phí khắc phục lỗi không lên nguồn trên mainboard iPhone tầm bao nhiêu",QUOTATION,natural_variant_reviewed
+"Sửa nút nguồn Apple Watch Series 8 tốn bao nhiêu tiền ạ",QUOTATION,natural_variant_reviewed
+"Báo giá thay pin đồng hồ Garmin Forerunner cho mình tham khảo trước",QUOTATION,natural_variant_reviewed
+"Thay analog trôi cho Nintendo Switch mất phí bao nhiêu bạn",QUOTATION,natural_variant_reviewed
+"Sửa loa bluetooth Marshall mất nguồn chi phí dự kiến tầm nào",QUOTATION,natural_variant_reviewed
+"Nâng cấp SSD 512GB cho laptop văn phòng hết tổng cộng mấy triệu",QUOTATION,natural_variant_reviewed
+"Lắp thêm thanh RAM 8GB DDR4 bên cửa hàng giá hiện tại sao ạ",QUOTATION,natural_variant_reviewed
+"Dán lại keo nắp lưng và thay gioăng chống nước đồng hồ mất phí không",QUOTATION,natural_variant_reviewed
+"Thay kính bảo vệ cụm camera sau hết tầm bao nhiêu",QUOTATION,natural_variant_reviewed
+"Báo giá lẻ viên pin iPhone 13 và công thay riêng từng mục cho tôi xem",QUOTATION,natural_variant_reviewed
+"Nếu mang máy tới kiểm tra rồi không sửa thì phí kiểm tra thu bao nhiêu",QUOTATION,natural_variant_reviewed
+"Thay mới loa trong Samsung Galaxy A54 mất khoảng bao nhiêu",QUOTATION,natural_variant_reviewed
+"Phí sấy khô xử lý bo mạch điện thoại vô nước là bao nhiêu vậy",QUOTATION,natural_variant_reviewed
+"Cho hỏi chi phí thay pin Pisen chính hãng cho iPhone 11",QUOTATION,natural_variant_reviewed
+"Ước tính hộ em tổng thiệt hại khi thay màn laptop 15.6 inch Full HD",QUOTATION,natural_variant_reviewed
+"Sửa cổng Type C cho MacBook hết khoảng mấy trăm nghìn ạ",QUOTATION,natural_variant_reviewed
+"Thay pin máy tính bảng Xiaomi Pad có tốn kém không, khoảng bao nhiêu",QUOTATION,natural_variant_reviewed
+"Thay mic đàm thoại cho điện thoại hết tầm bao nhiêu tiền",QUOTATION,natural_variant_reviewed
+"Chi phí sửa bo mạch tivi mất hình có cao không shop",QUOTATION,natural_variant_reviewed
+"Thay quạt tản nhiệt mới cho laptop Asus mất mấy trăm nghìn",QUOTATION,natural_variant_reviewed
+"Linh kiện màn hình Samsung linh kiện loại 1 với hàng hãng chênh giá sao",QUOTATION,natural_variant_reviewed
+"Cho mình tham khảo mức giá cài đặt lại phần mềm và vệ sinh máy",QUOTATION,natural_variant_reviewed
+"Giá thay vỏ mặt lưng kính sau iPhone 14 tầm bao nhiêu",QUOTATION,natural_variant_reviewed
+"Báo giá gói sửa chân sạc nhanh USB-C cho tablet Samsung giúp tôi",QUOTATION,natural_variant_reviewed
+"Thay cục sạc laptop Lenovo chính hãng bao nhiêu tiền một bộ",QUOTATION,natural_variant_reviewed
+"Sửa lỗi Face ID giá dao động từ bao nhiêu đến bao nhiêu vậy shop",QUOTATION,natural_variant_reviewed
+"Báo giá thay cáp nguồn bên hông máy điện thoại",QUOTATION,natural_variant_reviewed
+"Giá dịch vụ thay loa ngoài cho iPad Pro hết bao nhiêu ạ",QUOTATION,natural_variant_reviewed
+"Cần dự toán ngân sách thay cả màn và vỏ cho laptop Dell",QUOTATION,natural_variant_reviewed
+"thay pin iphone 13 gia bnh vay shop",QUOTATION,typo_no_accent_reviewed
+"ep kinh man hinh samsung het bn tien",QUOTATION,typo_no_accent_reviewed
+"cho e xin gia thay ban phim laptop dell",QUOTATION,typo_no_accent_reviewed
+"ve sinh laptop tra keo tan nhiet mat bnh xeng",QUOTATION,typo_no_accent_reviewed
+"sua chan sac iphone 11 gia sao ad",QUOTATION,typo_no_accent_reviewed
+"thay man hinh ipad pro ton khoang may trieu",QUOTATION,typo_no_accent_reviewed
+"gia thay pin apple watch sr7 la bnh",QUOTATION,typo_no_accent_reviewed
+"nang cap ram 16gb cho laptop asus bao nhieu tien",QUOTATION,typo_no_accent_reviewed
+"thay camera sau ip13 gia bnh v",QUOTATION,typo_no_accent_reviewed
+"bao gia giup minh dich vu thay loa trong ss a54",QUOTATION,typo_no_accent_reviewed
+"chi phi sua main laptop k len hinh tam bn",QUOTATION,typo_no_accent_reviewed
+"thay pin tai nghe sony wf mat bn tien vay",QUOTATION,typo_no_accent_reviewed
+"check gia thay man hinh cam ung may tinh bang",QUOTATION,typo_no_accent_reviewed
+"sua ban le laptop bi gay mat bnh tien ad",QUOTATION,typo_no_accent_reviewed
+"bao gia tron goi thay pin va ep kinh ip11",QUOTATION,typo_no_accent_reviewed
+"phi ktra may tinh co mat tien ko shop",QUOTATION,typo_no_accent_reviewed
+"gia linh kien man hinh laptop hp 14 inch bnh",QUOTATION,typo_no_accent_reviewed
+"thay o cung ssd 256gb cho dell het bn",QUOTATION,typo_no_accent_reviewed
+"bao gia thay quat gio laptop lenovo legon",QUOTATION,typo_no_accent_reviewed
+"sua loa marshall bi re ton khoang bn",QUOTATION,typo_no_accent_reviewed
+"thay man hinh nintendo switch oled mat bnh",QUOTATION,typo_no_accent_reviewed
+"cho hoi gia thay mat lung kinh sau iphone",QUOTATION,typo_no_accent_reviewed
+"Giá thay pin?",QUOTATION,natural_variant_reviewed
+"Bảng giá vệ sinh máy",QUOTATION,natural_variant_reviewed
+"Thay màn hết bao nhiêu?",QUOTATION,natural_variant_reviewed
+"Phí ép kính?",QUOTATION,natural_variant_reviewed
+"Chi phí sửa chân sạc tầm bao nhiêu để mình sắp xếp đặt lịch chiều nay",QUOTATION,multi_intent_reviewed
+"Báo giá thay màn hình iPad rồi đặt cho anh một slot sáng mai luôn nhé",QUOTATION,multi_intent_reviewed
+"Tổng tiền thay bàn phím laptop Dell mất bao nhiêu và hôm nay làm có kịp không",QUOTATION,multi_intent_reviewed
+"Cho mình xin bảng giá thay pin đồng hồ Garmin để cân nhắc hẹn lịch ghé tiệm",QUOTATION,multi_intent_reviewed
+"Giá sửa camera sau và vệ sinh máy tổng cộng mấy trăm nghìn hả shop",QUOTATION,multi_intent_reviewed
+"Báo giá linh kiện ổ cứng SSD kèm công lắp giúp tôi trước khi ghé kiểm tra",QUOTATION,multi_intent_reviewed
+"Giá thay pin iPhone 11 có bao gồm công tháo ráp chưa vậy bạn",QUOTATION,natural_variant_reviewed
+"Chi phí sửa chữa phần cứng điện thoại bên mình tính như thế nào",QUOTATION,natural_variant_reviewed
+"Hỏi giá thay màn hình laptop Gaming 144Hz bên tiệm ạ",QUOTATION,natural_variant_reviewed
+"Tôi muốn biết tổng tiền ước tính cho dịch vụ thay loa ngoài và mic",QUOTATION,natural_variant_reviewed
+"Báo giá giúp tôi chi phí phục hồi máy tính bị vào nước nhẹ",QUOTATION,natural_variant_reviewed
+"Thay dây sạc liền cho máy tính bảng cũ giá tầm bao nhiêu",QUOTATION,natural_variant_reviewed
+"Cho mình biết đơn giá linh kiện màn hình Samsung chính hãng nhé",QUOTATION,natural_variant_reviewed
+"Thay vỏ kim loại laptop Dell trầy móp chi phí ra sao",QUOTATION,natural_variant_reviewed
+"Báo giá tổng hợp cả tiền công lẫn phụ tùng thay thế pin laptop",QUOTATION,natural_variant_reviewed
+"Đơn giá thay mặt kính ngoài cho tablet Samsung Tab khoảng bao nhiêu",QUOTATION,natural_variant_reviewed
+"Thay kính cường lực camera sau Xiaomi giá có cao không bạn",QUOTATION,natural_variant_reviewed
+"Sửa IC nguồn điện thoại bị chập hết tầm mấy trăm nghìn ạ",QUOTATION,natural_variant_reviewed
+"Chi phí khắc phục lỗi không lên tiếng cho loa Marshall Emberton là bao nhiêu",QUOTATION,natural_variant_reviewed
+"Báo giá làm lại gioăng chống nước cho Apple Watch giúp mình nhé",QUOTATION,natural_variant_reviewed
+"Tôi muốn đặt lịch sửa máy vào ngày mai",APPOINTMENT,manual_curated
+"Mai 3h chiều còn chỗ không bạn",APPOINTMENT,manual_curated
+"Đặt hẹn giúp tôi lúc 9h sáng thứ bảy",APPOINTMENT,manual_curated
+"Cuối tuần này còn khung giờ nào trống không",APPOINTMENT,manual_curated
+"Tôi muốn mang máy đến kiểm tra vào sáng mai",APPOINTMENT,manual_curated
+"Còn slot nào chiều nay không bạn",APPOINTMENT,manual_curated
+"Đặt lịch hẹn kiểm tra máy cho tôi với",APPOINTMENT,manual_curated
+"Cửa hàng có lịch trống nào cho buổi sáng thứ tư không ạ",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn hẹn lịch vào 14h ngày 12/11",APPOINTMENT,manual_curated
+"Sáng chủ nhật có còn chỗ không",APPOINTMENT,manual_curated
+"Book giúp tôi một lịch sửa laptop",APPOINTMENT,manual_curated
+"Chiều mai còn chỗ cho tôi đặt không",APPOINTMENT,manual_curated
+"Tôi cần đặt lịch gấp trong hôm nay",APPOINTMENT,manual_curated
+"Còn khung giờ nào trống vào ngày kia không",APPOINTMENT,manual_curated
+"Đặt lịch hẹn kiểm tra máy giúp tôi nhé",APPOINTMENT,manual_curated
+"Thứ hai tuần sau tôi muốn mang máy qua",APPOINTMENT,manual_curated
+"Mấy giờ thì cửa hàng còn nhận khách",APPOINTMENT,manual_curated
+"Tôi muốn hẹn lúc 10h sáng ngày mai",APPOINTMENT,manual_curated
+"Còn chỗ nào trống buổi chiều nay không",APPOINTMENT,manual_curated
+"Đặt lịch thay màn hình vào 15h giúp mình",APPOINTMENT,manual_curated
+"Mai cửa hàng mở cửa lúc mấy giờ",APPOINTMENT,manual_curated
+"Tôi muốn đến kiểm tra máy vào ngày mai được không",APPOINTMENT,manual_curated
+"Còn giờ nào trống trong sáng nay không bạn",APPOINTMENT,manual_curated
+"Hẹn giúp tôi lịch vào chiều thứ sáu",APPOINTMENT,manual_curated
+"Khung giờ 14h ngày kia còn suất trống để gửi máy sửa không ạ",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn đặt lịch kiểm tra máy Dell",APPOINTMENT,manual_curated
+"Slot nào còn trống vào ngày mai vậy",APPOINTMENT,manual_curated
+"Đặt hẹn lúc 8h sáng thứ hai giúp tôi",APPOINTMENT,manual_curated
+"Còn khung giờ trống nào ngày mai không bạn",APPOINTMENT,manual_curated
+"Chiều nay tôi qua kiểm tra máy, còn chỗ không",APPOINTMENT,manual_curated
+"Cho anh đặt lịch mang con iPhone 13 tới vệ sinh lúc 10h30 sáng mai nhé",APPOINTMENT,natural_variant_reviewed
+"Khoảng 4 giờ rưỡi chiều thứ tư bên shop còn nhận sửa điện thoại không",APPOINTMENT,natural_variant_reviewed
+"Giữ giúp mình một slot 16h chiều nay để đem laptop tới nâng RAM",APPOINTMENT,natural_variant_reviewed
+"Cuối ngày 17h30 mình tan làm mới ghé qua tiệm được, khung giờ đó trống không",APPOINTMENT,natural_variant_reviewed
+"Lịch làm việc cuối tuần bên mình nhận khách từ mấy giờ đến mấy giờ vậy",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn book trước khung giờ vắng khách ngày kia để không phải ngồi chờ lâu",APPOINTMENT,natural_variant_reviewed
+"Chiều thứ năm lúc 13h30 còn suất nào tiếp nhận thay pin iPad không em",APPOINTMENT,natural_variant_reviewed
+"Ngày mốt sáng 8h30 tôi gửi chiếc Garmin qua bảo dưỡng, đặt trước được không",APPOINTMENT,natural_variant_reviewed
+"Bên cửa hàng sáng thứ ba có nhận hẹn kiểm tra tại quầy không ạ",APPOINTMENT,natural_variant_reviewed
+"Tôi định trưa nay 12h tranh thủ giờ nghỉ qua thay pin, kỹ thuật có làm xuyên trưa không",APPOINTMENT,natural_variant_reviewed
+"Đặt cho chị một lịch hẹn cố định vào 9h15 sáng thứ sáu tuần này nhé",APPOINTMENT,natural_variant_reviewed
+"Lịch trống ngày 20/11 còn những khung nào vậy bạn ơi",APPOINTMENT,natural_variant_reviewed
+"Đăng ký hẹn đem loa Marshall tới tiệm kiểm tra vào sáng chủ nhật giúp tôi",APPOINTMENT,natural_variant_reviewed
+"Chiều thứ hai tuần tới tầm 15h cho mình một suất sửa laptop Asus",APPOINTMENT,natural_variant_reviewed
+"Tối nay 18h tôi mang máy chơi game Nintendo Switch ghé shop có nhận nữa không",APPOINTMENT,natural_variant_reviewed
+"Mình muốn xếp lịch hẹn lấy liền cho kịp giờ đi công tác ngày mai",APPOINTMENT,natural_variant_reviewed
+"Có khung giờ nào sau 17h hàng ngày để tôi đặt lịch thay màn hình không",APPOINTMENT,natural_variant_reviewed
+"Giúp tôi tạo bản nháp lịch hẹn sáng mai cho số điện thoại 0909123456",APPOINTMENT,natural_variant_reviewed
+"Cho mình đặt trước slot vắng nhất trong ngày mai để kỹ thuật kiểm tra kỹ",APPOINTMENT,natural_variant_reviewed
+"Ngày 18/11 buổi sáng còn dư mấy chỗ đặt lịch vậy bạn",APPOINTMENT,natural_variant_reviewed
+"Thứ tư này tiệm có nghỉ lễ không, mình định hẹn mang điện thoại qua buổi chiều",APPOINTMENT,natural_variant_reviewed
+"Sáng nay lúc 10h mình ghé thẳng tiệm được không hay phải đặt khung giờ trước",APPOINTMENT,natural_variant_reviewed
+"Xếp giúp tôi lịch mang Samsung Galaxy A54 tới kiểm tra vào chiều mai",APPOINTMENT,natural_variant_reviewed
+"Chủ nhật tuần này slot buổi chiều còn giờ nào nhận thêm khách không ạ",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn chuyển lịch sang khung 14h ngày mai vì sáng mai tôi bận họp",APPOINTMENT,natural_variant_reviewed
+"Bên bạn mở cửa tiếp nhận sửa chữa từ sáng sớm mấy giờ vậy",APPOINTMENT,natural_variant_reviewed
+"Đặt hộ mình cuộc hẹn vào 11h trưa thứ bảy để kiểm tra bàn phím MacBook",APPOINTMENT,natural_variant_reviewed
+"Ngày mai có suất nào buổi sáng cho tôi đăng ký kiểm tra Apple Watch với",APPOINTMENT,natural_variant_reviewed
+"Tầm đầu giờ chiều hôm nay 13h bên mình còn slot trống cho khách đặt trước không",APPOINTMENT,natural_variant_reviewed
+"Hẹn lịch kiểm tra laptop HP vào ngày 25/11 lúc 9h sáng nhé",APPOINTMENT,natural_variant_reviewed
+"dat lich sua dien thoai chieu mai 3h giup minh",APPOINTMENT,typo_no_accent_reviewed
+"sang nay 9h con slot trong ko ad oi",APPOINTMENT,typo_no_accent_reviewed
+"book cho a 1 lich ve sinh laptop vao t7 tuan nay",APPOINTMENT,typo_no_accent_reviewed
+"chieu nay 4h minh ghe tiem ktra may dc k",APPOINTMENT,typo_no_accent_reviewed
+"cuoi tuan ben minh con cho dat lich k ban",APPOINTMENT,typo_no_accent_reviewed
+"hen luc 10h sang thu hai tuan sau nhe shop",APPOINTMENT,typo_no_accent_reviewed
+"ngay mai may gio cua hang con nhan khach vay",APPOINTMENT,typo_no_accent_reviewed
+"cho e dat hen ktra may vao khung 15h hom nay",APPOINTMENT,typo_no_accent_reviewed
+"thu 6 nay buoi sang con suat nao k b",APPOINTMENT,typo_no_accent_reviewed
+"dat lich thay pin ip11 ngay kia dc ko",APPOINTMENT,typo_no_accent_reviewed
+"sang mai 8h30 con nhan dat cho ko ad",APPOINTMENT,typo_no_accent_reviewed
+"chieu thu ba 2h30 minh mang ipad qua nhe",APPOINTMENT,typo_no_accent_reviewed
+"con khung gio nao trong ngay mai k cho xin vs",APPOINTMENT,typo_no_accent_reviewed
+"muon hen gap ky thuat vien kiem tra may vao trua nay",APPOINTMENT,typo_no_accent_reviewed
+"toi nay may gio shop dong cua nghi nhan may",APPOINTMENT,typo_no_accent_reviewed
+"hen slot 16h30 thu nam giup toi nhe",APPOINTMENT,typo_no_accent_reviewed
+"cho dat lich kiem tra may gap sang mai",APPOINTMENT,typo_no_accent_reviewed
+"ngay chu nhat 10h sang con cho trong k shop",APPOINTMENT,typo_no_accent_reviewed
+"dat cho tui 1 slot sua macbook chieu thu 4",APPOINTMENT,typo_no_accent_reviewed
+"tiem nhan may den may gio chieu nay de minh chay qua",APPOINTMENT,typo_no_accent_reviewed
+"Đặt lịch sáng mai",APPOINTMENT,natural_variant_reviewed
+"Chiều nay còn slot không",APPOINTMENT,natural_variant_reviewed
+"Đặt hẹn 15h hôm nay",APPOINTMENT,natural_variant_reviewed
+"Book lịch kiểm tra máy",APPOINTMENT,natural_variant_reviewed
+"Còn chỗ ngày mai?",APPOINTMENT,natural_variant_reviewed
+"Chiều thứ 7 còn trống slot nào không shop để anh đặt lịch trước kèm hỏi báo giá",APPOINTMENT,multi_intent_reviewed
+"Tôi muốn đặt hẹn vào 9h sáng thứ hai tới và xin biết trước khung giờ trống",APPOINTMENT,multi_intent_reviewed
+"Ngày mai khoảng 14h cửa hàng còn lịch cho thay pin lấy liền không bạn",APPOINTMENT,multi_intent_reviewed
+"Gửi cho mình các khung giờ trống ngày mai để mình chọn book lịch sửa điện thoại",APPOINTMENT,natural_variant_reviewed
+"Mình tên Minh sđt 0912345678 muốn hẹn 10h sáng mai qua kiểm tra iPad",APPOINTMENT,natural_variant_reviewed
+"Cho mình đặt trước một chỗ sửa màn hình laptop vào sáng thứ sáu",APPOINTMENT,natural_variant_reviewed
+"Hôm nay lúc 15h30 còn kịp tiếp nhận máy không ạ",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn đăng ký lịch hẹn trực tuyến cho ngày mai buổi chiều",APPOINTMENT,natural_variant_reviewed
+"Sáng mai 9h tới kiểm tra máy trực tiếp thì giờ đó còn trống không",APPOINTMENT,natural_variant_reviewed
+"Đặt giúp tôi lịch kiểm tra và tư vấn phần cứng vào cuối tuần này",APPOINTMENT,natural_variant_reviewed
+"Cửa hàng có làm việc chiều chủ nhật để tôi đặt hẹn qua sửa không",APPOINTMENT,natural_variant_reviewed
+"Chiều thứ hai tuần sau lúc 16h còn chỗ nhận máy bảo dưỡng không",APPOINTMENT,natural_variant_reviewed
+"Lên giúp mình cái lịch hẹn mang tai nghe Sony qua kiểm tra vào ngày mai",APPOINTMENT,natural_variant_reviewed
+"Xin lịch các khung giờ còn trống trong tuần này để mình thu xếp ghé",APPOINTMENT,natural_variant_reviewed
+"Book lịch cho chị qua thay loa điện thoại Samsung lúc 14h ngày kia",APPOINTMENT,natural_variant_reviewed
+"Chiều thứ năm lúc 15h còn khung giờ nào trống để qua thay pin không",APPOINTMENT,natural_variant_reviewed
+"Sáng thứ ba lúc 8h30 mình đặt một suất kiểm tra iPad tại quầy nhé",APPOINTMENT,natural_variant_reviewed
+"Đặt lịch cho số điện thoại 0938111222 ghé sửa laptop vào ngày 28/11",APPOINTMENT,natural_variant_reviewed
+"Buổi tối từ 18h đến 19h cửa hàng còn mở cửa nhận hẹn khách nữa không",APPOINTMENT,natural_variant_reviewed
+"Nhờ giữ hộ slot buổi trưa mai khoảng 12h30 để anh tranh thủ chạy qua",APPOINTMENT,natural_variant_reviewed
+"Đặt hẹn kiểm tra đồng hồ Garmin vào cuối tuần buổi sáng giúp tôi",APPOINTMENT,natural_variant_reviewed
+"Tiệm còn lịch trống đầu giờ chiều nay cho khách đem máy tính bảng tới không",APPOINTMENT,natural_variant_reviewed
+"Xin các khung giờ còn nhận khách vào thứ tư tuần tới để mình book trước",APPOINTMENT,natural_variant_reviewed
+"Hẹn lịch thay bàn phím Dell sáng thứ sáu tầm 9h45 có tiện cho shop không",APPOINTMENT,natural_variant_reviewed
+"Cho mình đặt suất 10h15 ngày mai qua kiểm tra tai nghe Sony bị rè",APPOINTMENT,natural_variant_reviewed
+"Tôi muốn kiểm tra phiếu bảo hành WR-20261114-0001 xem còn hạn không",WARRANTY,manual_curated
+"Dịch vụ thay pin bên cửa hàng được bảo hành bao nhiêu tháng vậy",WARRANTY,manual_curated
+"Phiếu bảo hành WR-1234 của tôi còn hiệu lực đến ngày nào",WARRANTY,manual_curated
+"Cho tôi xem các gói bảo hành hiện có của cửa hàng với",WARRANTY,manual_curated
+"Thay màn hình iPhone 13 có gói bảo hành 12 tháng không shop",WARRANTY,manual_curated
+"Máy mới thay pin tháng trước nay bị tụt pin lại, tôi có được bảo hành miễn phí không",WARRANTY,manual_curated
+"Điều kiện được hưởng bảo hành linh kiện sau sửa chữa là gì vậy",WARRANTY,manual_curated
+"Kiểm tra giúp tôi danh sách bảo hành các đơn cũ của tài khoản tôi",WARRANTY,manual_curated
+"Gói bảo hành cơ bản 1 tháng áp dụng cho những lỗi nào thế bạn",WARRANTY,manual_curated
+"Nếu máy bị vào nước sau khi sửa thì phiếu bảo hành còn hiệu lực nữa không",WARRANTY,manual_curated
+"Chính sách bảo hành pin 6 tháng quy định mức chai pin bao nhiêu thì được đổi",WARRANTY,manual_curated
+"Tem bảo hành bị rách một góc nhỏ thì bên tiệm có hỗ trợ bảo hành không",WARRANTY,manual_curated
+"Tôi vừa mất tờ giấy bảo hành, giờ đọc mã WR-8899 có tra được không",WARRANTY,manual_curated
+"Gói bảo hành linh kiện 3 tháng khác gì với gói 12 tháng vậy shop",WARRANTY,manual_curated
+"Tra cứu hạn bảo hành cho mã WR-20261005-0012 giúp tôi với",WARRANTY,manual_curated
+"Sau khi sửa chân sạc bên mình được bảo hành trong thời gian bao lâu",WARRANTY,manual_curated
+"Trường hợp nào thì cửa hàng từ chối bảo hành hoặc hủy phiếu bảo hành",WARRANTY,manual_curated
+"Gửi bảo hành lại cho chiếc laptop vừa thay bàn phím tuần trước có mất phí không",WARRANTY,manual_curated
+"Phiếu bảo hành điện tử của tôi hiện trạng thái Active hay Voided rồi",WARRANTY,manual_curated
+"Mua thêm gói mở rộng bảo hành linh kiện lên 12 tháng có áp dụng cho tablet không",WARRANTY,manual_curated
+"Màn hình mới thay bị sọc lại trong thời hạn bảo hành thì xử lý thế nào",WARRANTY,manual_curated
+"Kiểm tra thời hạn bảo hành của các máy tôi đã sửa ở tài khoản này",WARRANTY,manual_curated
+"Bảo hành phần cứng sau sửa chữa có tính phí kiểm tra lại không bạn",WARRANTY,manual_curated
+"Mình muốn biết điều khoản bảo hành gói 6 tháng cho pin điện thoại",WARRANTY,manual_curated
+"Vệ sinh bảo dưỡng laptop có kèm phiếu bảo hành không hay chỉ sửa linh kiện mới có",WARRANTY,manual_curated
+"Mã bảo hành WR-20260918-0007 của tôi hết hạn từ bao giờ thế",WARRANTY,manual_curated
+"Tôi đánh rơi nứt góc kính mới thay tuần rồi, có nằm trong phạm vi bảo hành không",WARRANTY,manual_curated
+"Bên mình áp dụng chế độ bảo hành mấy tháng cho cụm camera thay mới",WARRANTY,manual_curated
+"Tôi có cần mang hóa đơn giấy khi đi bảo hành theo mã bảo hành không",WARRANTY,manual_curated
+"Giải thích giúp tôi chính sách bảo hành mặc định khi sửa điện thoại tại shop",WARRANTY,manual_curated
+"Thay loa ngoài Samsung có được cấp gói bảo hành linh kiện 3 tháng không ạ",WARRANTY,natural_variant_reviewed
+"Đọc hộ em điều khoản của gói bảo hành cơ bản với ạ",WARRANTY,natural_variant_reviewed
+"Mình muốn check hạn sử dụng phiếu bảo hành WR-20261101-0021",WARRANTY,natural_variant_reviewed
+"Bảo hành pin có bao gồm trường hợp sạc nhanh làm phồng pin không",WARRANTY,natural_variant_reviewed
+"Mới sửa màn hình ở đây hai tuần mà cảm ứng lại chập chờn, bảo hành thế nào đây em",WARRANTY,natural_variant_reviewed
+"Thời gian xử lý một ca bảo hành linh kiện mất tầm mấy ngày hả bạn",WARRANTY,natural_variant_reviewed
+"Trong thời gian bảo hành nếu phát sinh lỗi cũ có được thay mới linh kiện khác không",WARRANTY,natural_variant_reviewed
+"Tài khoản khách hàng của tôi đang có những phiếu bảo hành nào còn hiệu lực",WARRANTY,natural_variant_reviewed
+"Gói bảo hành 12 tháng áp dụng cho hạng mục sửa chữa nào tại cửa hàng",WARRANTY,natural_variant_reviewed
+"Tôi muốn hỏi quyền lợi bảo hành khi thay bàn phím laptop Dell bên mình",WARRANTY,natural_variant_reviewed
+"Phiếu WR-20260801-0003 đã quá hạn bảo hành chưa vậy cửa hàng",WARRANTY,natural_variant_reviewed
+"Linh kiện thay mới có được bảo hành đổi 1 đổi 1 nếu lỗi nhà sản xuất không",WARRANTY,natural_variant_reviewed
+"Mình sửa lỗi trên mainboard thì chính sách bảo hành quy định ra sao",WARRANTY,natural_variant_reviewed
+"Cho hỏi cửa hàng có mấy mức gói bảo hành tất cả vậy ạ",WARRANTY,natural_variant_reviewed
+"Bảo hành smartwatch sau khi thay pin có bao gồm kháng nước nữa không",WARRANTY,natural_variant_reviewed
+"Nếu tự ý tháo máy ở nhà trước khi đem lại shop thì bảo hành bị hủy phải không",WARRANTY,natural_variant_reviewed
+"Nhờ hệ thống liệt kê giúp các gói bảo hành hiện hành tại trung tâm",WARRANTY,natural_variant_reviewed
+"Đơn cũ mình sửa xong tháng trước có kèm bảo hành 3 tháng giờ check lại ở đâu",WARRANTY,natural_variant_reviewed
+"Phiếu bảo hành của mình đang báo đã bị hủy Voided là vì nguyên nhân gì",WARRANTY,natural_variant_reviewed
+"Chế độ bảo hành đối với khách sửa iPad và Apple Watch giống hay khác nhau",WARRANTY,natural_variant_reviewed
+"Sửa lại cùng một lỗi trong tuần đầu có được ưu tiên bảo hành lấy liền không",WARRANTY,natural_variant_reviewed
+"Tư vấn giúp mình nên chọn gói bảo hành pin 6 tháng hay gói 12 tháng",WARRANTY,natural_variant_reviewed
+"Điều kiện bắt buộc để giữ nguyên hiệu lực bảo hành màn hình là gì",WARRANTY,natural_variant_reviewed
+"Hạn bảo hành tính từ ngày nhận máy hay ngày tiếp nhận đơn vậy shop",WARRANTY,natural_variant_reviewed
+"Tôi đã đăng nhập tài khoản rồi, kiểm tra giúp xem phiếu bảo hành của tôi còn hạn không",WARRANTY,natural_variant_reviewed
+"Mã WR-20260715-0010 còn được bảo hành đến hết tháng mấy năm sau",WARRANTY,natural_variant_reviewed
+"Thay quạt tản nhiệt laptop bên tiệm bảo hành tối đa bao nhiêu tháng",WARRANTY,natural_variant_reviewed
+"Sửa chữa điện tử loa bluetooth, máy game có được xuất phiếu bảo hành không",WARRANTY,natural_variant_reviewed
+"Nếu hết thời hạn bảo hành ít ngày thì cửa hàng có hỗ trợ giảm phí sửa lại không",WARRANTY,natural_variant_reviewed
+"Xin thông tin tóm tắt các gói bảo hành cơ bản và mở rộng của shop",WARRANTY,natural_variant_reviewed
+"check bao hanh giup minh ma WR-20261110-0005",WARRANTY,typo_no_accent_reviewed
+"thay pin ip13 ben shop bao hanh may thang v",WARRANTY,typo_no_accent_reviewed
+"phieu bh cua toi con han ko vay ad",WARRANTY,typo_no_accent_reviewed
+"chinh sach bao hanh man hinh ben minh ntn",WARRANTY,typo_no_accent_reviewed
+"cho xin thong tin cac goi bao hanh hien co",WARRANTY,typo_no_accent_reviewed
+"kiem tra han bao hanh giup minh voi ma WR-5566",WARRANTY,typo_no_accent_reviewed
+"moi thay cam ung tuan truoc nay bi do co dc bh k",WARRANTY,typo_no_accent_reviewed
+"goi bh 6 thang dieu khoan la gi vay shop",WARRANTY,typo_no_accent_reviewed
+"may bi roi vo co dc bao hanh lai man hinh k",WARRANTY,typo_no_accent_reviewed
+"bao hanh linh kien 12 thang ap dung cho may gi",WARRANTY,typo_no_accent_reviewed
+"tra cuu ma bao hanh WR-20260501-0009 con active k",WARRANTY,typo_no_accent_reviewed
+"lam sao de biet may minh con trong thoi gian bh",WARRANTY,typo_no_accent_reviewed
+"sua chan sac co duoc cap phieu bh k bn",WARRANTY,typo_no_accent_reviewed
+"goi bao hanh co ban 1 thang ho tro loi nao",WARRANTY,typo_no_accent_reviewed
+"phieu WR-1122 het han bao hanh chua shop oi",WARRANTY,typo_no_accent_reviewed
+"dt vao nuoc sau khi sua thi bh con hieu luc k",WARRANTY,typo_no_accent_reviewed
+"bh 1 doi 1 ap dung trong bao lau vay ban",WARRANTY,typo_no_accent_reviewed
+"check ds bao hanh tai khoan khach hang cua toi",WARRANTY,typo_no_accent_reviewed
+"mat tem bh tren oc co bi tu choi sua lai k",WARRANTY,typo_no_accent_reviewed
+"dieu kien doi tra bao hanh pin bi phong la gi",WARRANTY,typo_no_accent_reviewed
+"Chính sách bảo hành?",WARRANTY,natural_variant_reviewed
+"Bảo hành mấy tháng?",WARRANTY,natural_variant_reviewed
+"Check mã WR-20261102-0004",WARRANTY,natural_variant_reviewed
+"Tra hạn bảo hành",WARRANTY,natural_variant_reviewed
+"Các gói bảo hành",WARRANTY,natural_variant_reviewed
+"Bảo hành lỗi cũ không?",WARRANTY,natural_variant_reviewed
+"Kiểm tra giúp mã WR-20261114-0008 xem còn bảo hành không và cho xin điều khoản gói đi kèm",WARRANTY,multi_intent_reviewed
+"Cửa hàng bảo hành bao nhiêu tháng cho dịch vụ thay màn hình vậy, nếu lỗi lại thì đặt lịch đem tới sao",WARRANTY,multi_intent_reviewed
+"Cho mình hỏi hạn bảo hành của đơn sửa cũ và lý do bị voided nếu rơi vỡ",WARRANTY,multi_intent_reviewed
+"Check bảo hành mã WR-20260901-0015 rồi nhắc giúp mình gói bảo hành đó kéo dài mấy tháng",WARRANTY,multi_intent_reviewed
+"Mình muốn tra xem gói bảo hành pin 6 tháng quy định thế nào trước khi đem máy đi bảo hành",WARRANTY,multi_intent_reviewed
+"Sau khi sửa mainboard xong thì cửa hàng bảo hành bao lâu và có cần giữ phiếu WR không",WARRANTY,multi_intent_reviewed
+"Tôi là khách hàng đã đăng nhập, hãy liệt kê giúp mọi phiếu bảo hành của tôi",WARRANTY,natural_variant_reviewed
+"Khi nhận máy sửa xong thì kích hoạt phiếu bảo hành từ thời điểm nào",WARRANTY,natural_variant_reviewed
+"Phiếu bảo hành có tự động gia hạn thêm nếu phải sửa bảo hành nhiều lần không",WARRANTY,natural_variant_reviewed
+"Bên tiệm bảo hành linh kiện thay thế dựa trên số điện thoại hay mã WR vậy",WARRANTY,natural_variant_reviewed
+"Mình sửa laptop tại cửa hàng cách đây hai tháng, nay hỏi lại quy định bảo hành bàn phím",WARRANTY,natural_variant_reviewed
+"Bảo hành thay pin cho đồng hồ Garmin được mấy tháng vậy cửa hàng",WARRANTY,natural_variant_reviewed
+"Liệt kê giúp tôi thời hạn và mô tả chi tiết của bốn gói bảo hành đang áp dụng",WARRANTY,natural_variant_reviewed
+"Nếu linh kiện bảo hành hết hàng sẵn thì cửa hàng giải quyết cho khách ra sao",WARRANTY,natural_variant_reviewed
+"Tôi muốn biết phạm vi áp dụng của gói bảo hành 3 tháng cho điện thoại",WARRANTY,natural_variant_reviewed
+"Kiểm tra giúp xem máy Apple Watch thay kính chỗ mình được bảo hành bao lâu",WARRANTY,natural_variant_reviewed
+"Chính sách miễn phí bảo hành áp dụng cho lỗi kỹ thuật do quá trình lắp ráp đúng không",WARRANTY,natural_variant_reviewed
+"Tôi cần xem thông tin mã bảo hành WR-20261108-0002 của chiếc iPad Pro",WARRANTY,natural_variant_reviewed
+"Thay nguồn loa bluetooth thì trung tâm bảo hành mấy tháng vậy em",WARRANTY,natural_variant_reviewed
+"Cửa hàng có gói bảo hành riêng cho pin dung lượng cao không",WARRANTY,natural_variant_reviewed
+"Mình muốn xem thử lỗi trầy xước nhẹ sau sửa chữa có nằm trong cam kết bảo hành không",WARRANTY,natural_variant_reviewed
+"Tư vấn cho tôi chính sách bảo hành sau khi thay cảm ứng màn hình",WARRANTY,natural_variant_reviewed
+"Khách lẻ vãng lai muốn tra mã bảo hành WR công khai có cần đăng nhập tài khoản không",WARRANTY,natural_variant_reviewed
+"Tôi muốn biết thời hạn bảo hành cho màn hình Samsung thay tại đây",WARRANTY,natural_variant_reviewed
+"Mã phiếu của tôi là RS-456, kiểm tra giúp tiến độ",TRACKING,manual_curated
+"Tình trạng sửa máy của tôi tới đâu rồi",TRACKING,manual_curated
+"Đơn hàng của tôi sửa xong chưa",TRACKING,manual_curated
+"Cho tôi hỏi tiến độ sửa máy với",TRACKING,manual_curated
+"Phiếu sửa của tôi bao giờ xong vậy",TRACKING,manual_curated
+"Tôi muốn tra cứu mã phiếu sửa chữa",TRACKING,manual_curated
+"Kiểm tra đơn giúp tôi với mã RS-789",TRACKING,manual_curated
+"Máy của tôi sửa đến đâu rồi bạn",TRACKING,manual_curated
+"Tra cứu trạng thái phiếu sửa chữa giúp tôi",TRACKING,manual_curated
+"Đơn sửa của tôi đang ở bước nào",TRACKING,manual_curated
+"Mã tra cứu của tôi không dùng được",TRACKING,manual_curated
+"Tôi muốn theo dõi tiến độ sửa điện thoại",TRACKING,manual_curated
+"Bao giờ thì máy tôi sửa xong",TRACKING,manual_curated
+"Kiểm tra giúp đơn RS-321 đã xong chưa",TRACKING,manual_curated
+"Tình trạng ticket của tôi thế nào",TRACKING,manual_curated
+"Tôi đánh mất mã đơn, tra cứu giúp tôi",TRACKING,manual_curated
+"Phiếu sửa RS-555 đến đâu rồi",TRACKING,manual_curated
+"Tra cứu mã số phiếu sửa chữa giúp tôi",TRACKING,manual_curated
+"Đơn của tôi có đang sửa không",TRACKING,manual_curated
+"Cho tôi xin tiến độ của phiếu sửa",TRACKING,manual_curated
+"Máy của tôi đã sửa xong chưa ạ",TRACKING,manual_curated
+"Tra cứu đơn hàng sửa chữa giúp tôi",TRACKING,manual_curated
+"Mã phiếu RS-222 hiện trạng thái gì",TRACKING,manual_curated
+"Tôi muốn kiểm tra đơn sửa chữa",TRACKING,manual_curated
+"Tra giup minh ma phieu RT-20261114-0001 xem ky thuat kiem tra xong chua",TRACKING,natural_variant_reviewed
+"Phiếu sửa RT-20261113-0009 của chiếc laptop Dell đang chờ linh kiện hay đang ráp rồi",TRACKING,natural_variant_reviewed
+"Tôi vừa bấm duyệt báo giá sáng nay, kiểm tra xem đơn RT-20261114-0002 đã chuyển sang sửa chưa",TRACKING,natural_variant_reviewed
+"Đơn TK-8842 của em kỹ thuật đã test xong hết các bước để bàn giao chưa ạ",TRACKING,natural_variant_reviewed
+"Xem giúp tôi lịch sử các mốc trạng thái của đơn RT-20261112-0005",TRACKING,natural_variant_reviewed
+"Máy gửi sửa từ thứ tư giờ đã tới khâu kiểm thử cuối chưa vậy bạn",TRACKING,natural_variant_reviewed
+"Kiểm tra danh sách các phiếu sửa chữa hiện tại trong tài khoản của tôi",TRACKING,natural_variant_reviewed
+"Đơn sửa chữa RT-20261110-0011 có đang bị tạm hoãn OnHold không vậy",TRACKING,natural_variant_reviewed
+"Shop ơi xem hộ máy iPhone của anh mã RS-909 đã sẵn sàng để ghé lấy chưa",TRACKING,natural_variant_reviewed
+"Trạng thái WaitingParts trên phiếu của tôi nghĩa là còn chờ bao lâu nữa",TRACKING,natural_variant_reviewed
+"Tôi quên mất mã ticket rồi nhưng đã đăng nhập, xem tiến độ sửa giúp tôi",TRACKING,natural_variant_reviewed
+"Kỹ thuật viên đã chẩn đoán xong lỗi cho đơn RS-604 chưa cửa hàng",TRACKING,natural_variant_reviewed
+"Phiếu sửa RT-20261114-0006 báo ReadyForPickup là tôi qua lấy máy được rồi đúng không",TRACKING,natural_variant_reviewed
+"Theo dõi tiến độ đơn sửa màn hình iPad mã RT-20261111-0003 giúp mình",TRACKING,natural_variant_reviewed
+"Đơn của mình có phát sinh chờ khách duyệt giá nữa không, check giúp mã RS-338",TRACKING,natural_variant_reviewed
+"Cập nhật tình trạng sửa chiếc đồng hồ Garmin mã TK-410 giúp tôi",TRACKING,natural_variant_reviewed
+"Tôi nộp máy lúc 9h sáng, giờ đã sang công đoạn sửa chữa chính chưa",TRACKING,natural_variant_reviewed
+"Check xem máy tính bảng của tôi đã giao trả Completed trên hệ thống chưa",TRACKING,natural_variant_reviewed
+"Đơn RT-20261109-0014 hiện tại đang dừng ở bước nào trong quy trình",TRACKING,natural_variant_reviewed
+"Nhờ tra cứu công khai trạng thái mới nhất của phiếu RS-741 giúp em",TRACKING,natural_variant_reviewed
+"Mấy hôm rồi chưa thấy gọi lấy máy, kiểm tra giúp tôi mã đơn RS-118",TRACKING,natural_variant_reviewed
+"Lịch sử thay đổi trạng thái đơn sửa mã RT-20261108-0007 gồm những mốc nào",TRACKING,natural_variant_reviewed
+"Tôi muốn biết hôm nay có kịp nhận lại máy theo mã phiếu RS-808 không",TRACKING,natural_variant_reviewed
+"Đơn sửa loa Marshall mã RS-402 đang ở bước nào rồi shop ơi",TRACKING,natural_variant_reviewed
+"Phiếu sửa RT-20261114-0010 mới tiếp nhận CheckedIn hay đã giao kỹ thuật Assigned rồi",TRACKING,natural_variant_reviewed
+"Kiểm tra giúp đơn sửa chữa gần đây nhất của tôi hiện xong bước nào",TRACKING,natural_variant_reviewed
+"tra cuu don hang ma RS-654 giup toi voi",TRACKING,typo_no_accent_reviewed
+"phieu sua RT-20261114-0004 xong chua shop oi",TRACKING,typo_no_accent_reviewed
+"ktra tien do may minh gui sua hom qua dc k",TRACKING,typo_no_accent_reviewed
+"may cua a ma RS-912 toi dau roi e",TRACKING,typo_no_accent_reviewed
+"check don sua chua giup minh ma TK-305",TRACKING,typo_no_accent_reviewed
+"tinh trang don hang sua laptop dang o buoc nao",TRACKING,typo_no_accent_reviewed
+"bao gio thi lay dc may vay ad ma don RS-209",TRACKING,typo_no_accent_reviewed
+"tra giup xem phieu RT-20261113-0002 sua den dau r",TRACKING,typo_no_accent_reviewed
+"don cua tui dang cho linh kien ha ban",TRACKING,typo_no_accent_reviewed
+"kiem tra ticket sua chua ma RS-710 xem ok chua",TRACKING,typo_no_accent_reviewed
+"cho xin lich su trang thai cua don RS-444",TRACKING,typo_no_accent_reviewed
+"minh bi mat ma don ktra bang tai khoan dc k",TRACKING,typo_no_accent_reviewed
+"xem ho tien do don sua tai nghe sony ma TK-992",TRACKING,typo_no_accent_reviewed
+"phieu RS-830 da bao xong de ra lay chua ad",TRACKING,typo_no_accent_reviewed
+"don RT-20261111-0008 dang diagnosing hay inrepair r",TRACKING,typo_no_accent_reviewed
+"check giup anh tinh trang phieu sua dt hom thu 5",TRACKING,typo_no_accent_reviewed
+"ktra ma phieu RT-20261114-0003 gium em nhe",TRACKING,typo_no_accent_reviewed
+"tien do sua may tinh bang ipad toi dau r ban",TRACKING,typo_no_accent_reviewed
+"may toi dem sua 3 ngay r chua thay alo",TRACKING,typo_no_accent_reviewed
+"don RS-150 dang bi delay cho gi vay shop",TRACKING,typo_no_accent_reviewed
+"Tra đơn RS-105",TRACKING,natural_variant_reviewed
+"Check mã RT-20261114-0005",TRACKING,natural_variant_reviewed
+"Tiến độ máy tôi",TRACKING,natural_variant_reviewed
+"Đơn xong chưa?",TRACKING,natural_variant_reviewed
+"Ticket RS-619",TRACKING,natural_variant_reviewed
+"Tra giúp mã phiếu RS-515 xem máy sửa xong chưa và hiển thị lịch sử trạng thái nhé",TRACKING,multi_intent_reviewed
+"Kiểm tra hộ đơn RT-20261112-0004 tới khâu nào rồi để chiều nay tôi sắp xếp ghé lấy",TRACKING,multi_intent_reviewed
+"Đơn RS-707 đang kẹt ở bước chờ báo giá hay đang thay linh kiện rồi bạn",TRACKING,multi_intent_reviewed
+"Check giúp tôi mã RS-284 có hoàn thành kịp hôm nay không",TRACKING,multi_intent_reviewed
+"Tra cứu giúp tình trạng xử lý của phiếu TK-612 tại cửa hàng",TRACKING,natural_variant_reviewed
+"Chiếc MacBook mã RS-998 đã qua bước kiểm tra sau sửa chưa ạ",TRACKING,natural_variant_reviewed
+"Hệ thống cập nhật trạng thái đơn RT-20261110-0001 đến bước nào rồi",TRACKING,natural_variant_reviewed
+"Hôm nay kỹ thuật đã bắt đầu sửa cho mã phiếu RS-472 chưa bạn",TRACKING,natural_variant_reviewed
+"Anh muốn hỏi xem đơn gửi sửa cuối tuần trước giờ qua lấy được chưa",TRACKING,natural_variant_reviewed
+"Đọc giúp tôi trạng thái tiếng Việt hiện tại của mã đơn RS-369",TRACKING,natural_variant_reviewed
+"Mình tra cứu trạng thái phiếu sửa ở đây có thấy ngày giờ từng bước không",TRACKING,natural_variant_reviewed
+"Nhờ xem tiến độ sửa chữa của chiếc điện thoại tôi đang gửi tại shop",TRACKING,natural_variant_reviewed
+"Phiếu sửa mã RS-845 bên mình đã bàn giao lại cho khách chưa",TRACKING,natural_variant_reviewed
+"Tình hình xử lý đơn RT-20261113-0012 hiện tại ra sao rồi",TRACKING,natural_variant_reviewed
+"Xem giúp em máy gửi sửa mã TK-208 đang nằm ở công đoạn nào",TRACKING,natural_variant_reviewed
+"Cho mình kiểm tra tiến trình sửa của tất cả đơn hàng đang mở",TRACKING,natural_variant_reviewed
+"Đơn sửa mã RS-521 đã hoàn tất khâu test chưa vậy cửa hàng",TRACKING,natural_variant_reviewed
+"Hỏi thăm tiến độ đơn sửa Nintendo Switch mã RS-680 của mình",TRACKING,natural_variant_reviewed
+"Kiểm tra nhanh trạng thái hiện giờ của phiếu RT-20261114-0007",TRACKING,natural_variant_reviewed
+"Tôi cần theo dõi xem máy mình có còn đang chờ linh kiện không",TRACKING,natural_variant_reviewed
+"Phiếu sửa mã RS-293 đã xong để nhận máy về chưa ạ",TRACKING,natural_variant_reviewed
+"Giúp tôi kiểm tra tình trạng tiếp nhận và xử lý của mã TK-775",TRACKING,natural_variant_reviewed
+"Lịch sử xử lý phiếu RS-601 đang ghi nhận bước mới nhất là gì",TRACKING,natural_variant_reviewed
+"Anh gửi máy sửa từ đầu tuần, check giúp đơn đã xong chưa",TRACKING,natural_variant_reviewed
+"Shop kiểm tra trạng thái hoàn thành của mã phiếu RT-20261112-0009 hộ tôi",TRACKING,natural_variant_reviewed
+"Đơn sửa chữa mã RS-412 có cần đợi linh kiện nhập thêm hay làm xong luôn hôm nay",TRACKING,natural_variant_reviewed
+"Kiểm tra tình trạng phiếu RT-20261114-0020 xem đã giao lại cho quầy thu ngân chưa",TRACKING,natural_variant_reviewed
+"Nhờ tra cứu lịch sử trạng thái chi tiết của mã ticket RS-577 giúp mình",TRACKING,natural_variant_reviewed
+"Chiếc đồng hồ Apple Watch mã TK-904 hiện kỹ thuật đang test tới bước nào rồi",TRACKING,natural_variant_reviewed
+"Đơn hàng sửa iPad của tôi gửi từ thứ hai vừa rồi bây giờ cập nhật trạng thái gì",TRACKING,natural_variant_reviewed
+"Check giúp xem mã đơn RS-189 có báo phát sinh chi phí gì chờ tôi duyệt không",TRACKING,natural_variant_reviewed
+"Tra nhanh tiến độ xử lý mã phiếu RT-20261111-0030 của anh Hùng hộ shop ơi",TRACKING,natural_variant_reviewed
+"Phiếu sửa máy chơi game Nintendo mã RS-864 chuyển sang trạng thái sẵn sàng lấy chưa",TRACKING,natural_variant_reviewed
+"Hệ thống cho mình xem lại tất cả các phiếu sửa đã hoàn tất trong tài khoản với",TRACKING,natural_variant_reviewed
+"Đơn sửa điện thoại Xiaomi mã TK-155 có đang tạm hoãn vì lý do gì không bạn",TRACKING,natural_variant_reviewed
+"Bạn là ai",UNKNOWN,manual_curated
+"Trời hôm nay có mưa không",UNKNOWN,manual_curated
+"Bạn thích ăn gì",UNKNOWN,manual_curated
+"Tư vấn giúp tôi chuyện tình cảm",UNKNOWN,manual_curated
+"1 + 1 bằng mấy",UNKNOWN,manual_curated
+"Dịch giúp tôi câu này sang tiếng Anh",UNKNOWN,manual_curated
+"Bạn có khỏe không",UNKNOWN,manual_curated
+"Kể tên các loài động vật có vú",UNKNOWN,manual_curated
+"Kho thịt kho tàu thế nào cho mềm ngon",UNKNOWN,out_of_scope_reviewed
+"Bạn nghĩ gì về phim mới",UNKNOWN,manual_curated
+"Viết một bài phân tích về tác phẩm Truyện Kiều",UNKNOWN,out_of_scope_reviewed
+"Bạn có thể hát cho tôi nghe không",UNKNOWN,manual_curated
+"Cho tôi mượn sách được không",UNKNOWN,manual_curated
+"Bạn ơi",UNKNOWN,manual_curated
+"Hello",UNKNOWN,manual_curated
+"Cảm ơn bạn",UNKNOWN,manual_curated
+"Tạm biệt",UNKNOWN,manual_curated
+"Bạn có biết bóng đá không",UNKNOWN,manual_curated
+"Giúp tôi viết email xin việc",UNKNOWN,manual_curated
+"Những hành tinh nào có sự sống",UNKNOWN,manual_curated
+"Bạn thấy tôi nên mua xe gì",UNKNOWN,manual_curated
+"Chúc mừng năm mới",UNKNOWN,manual_curated
+"Bạn có thể chơi cờ không",UNKNOWN,manual_curated
+"Giải thích giúp tôi về blockchain",UNKNOWN,manual_curated
+"Tôi đang buồn",UNKNOWN,manual_curated
+"Cho tôi một lời khuyên",UNKNOWN,manual_curated
+"Bạn rảnh không",UNKNOWN,manual_curated
+"Dự báo thời tiết Hà Nội cuối tuần này nắng hay lạnh",UNKNOWN,out_of_scope_reviewed
+"Giá vàng SJC hôm nay tăng hay giảm rồi bạn",UNKNOWN,out_of_scope_reviewed
+"Tối nay ăn món gì ngon bổ rẻ cho hai người",UNKNOWN,out_of_scope_reviewed
+"Giới thiệu vài địa điểm du lịch Đà Lạt yên tĩnh giúp mình",UNKNOWN,out_of_scope_reviewed
+"Tỷ số trận bóng đá đêm qua giữa Arsenal và Chelsea bao nhiêu",UNKNOWN,out_of_scope_reviewed
+"Giải giúp tôi phương trình bậc hai x bình phương trừ 5x cộng 6 bằng 0",UNKNOWN,out_of_scope_reviewed
+"Làm sao để đăng ký thẻ tín dụng ngân hàng nhanh nhất",UNKNOWN,out_of_scope_reviewed
+"Cách pha cà phê muối chuẩn vị Huế cần nguyên liệu gì",UNKNOWN,out_of_scope_reviewed
+"Đề thi tuyển sinh đại học năm ngoái môn Toán khó không",UNKNOWN,out_of_scope_reviewed
+"Bạn biết công thức làm bánh mì hoa cúc bằng nồi chiên không dầu không",UNKNOWN,out_of_scope_reviewed
+"Cho mình xin tên mấy bộ phim hài Hàn Quốc đáng xem",UNKNOWN,out_of_scope_reviewed
+"Thủ đô của đất nước Thụy Sĩ tên là gì thế",UNKNOWN,out_of_scope_reviewed
+"Hướng dẫn tôi cách chăm sóc cây sen đá không bị úng lá",UNKNOWN,out_of_scope_reviewed
+"Từ Sài Gòn đi Vũng Tàu bằng xe khách mất mấy tiếng đồng hồ",UNKNOWN,out_of_scope_reviewed
+"Nên mua cổ phiếu ngành ngân hàng hay bất động sản dài hạn",UNKNOWN,out_of_scope_reviewed
+"Tặng hoa gì cho mẹ nhân ngày 20 tháng 10 thật ý nghĩa",UNKNOWN,out_of_scope_reviewed
+"Cách học từ vựng tiếng Nhật N3 nhanh nhớ nhất là gì",UNKNOWN,out_of_scope_reviewed
+"Lãi suất tiết kiệm kỳ hạn 12 tháng hiện nay khoảng bao nhiêu phần trăm",UNKNOWN,out_of_scope_reviewed
+"Mấy giờ rồi bạn ơi",UNKNOWN,out_of_scope_reviewed
+"Kể tên bảy kỳ quan thiên nhiên thế giới giúp mình",UNKNOWN,out_of_scope_reviewed
+"Tìm giúp mình lời bài hát Diễm Xưa của Trịnh Công Sơn",UNKNOWN,out_of_scope_reviewed
+"Bạn có thể viết đoạn SQL join ba bảng trong PostgreSQL không",UNKNOWN,out_of_scope_reviewed
+"Mèo nhà mình bỏ ăn hai ngày nay có sao không nhỉ",UNKNOWN,out_of_scope_reviewed
+"Bài tập gym nào giúp tăng cơ vai hiệu quả cho người mới",UNKNOWN,out_of_scope_reviewed
+"Luật giao thông phạt bao nhiêu tiền nếu vượt đèn đỏ xe máy",UNKNOWN,out_of_scope_reviewed
+"Làm thế nào để ngủ ngon giấc hơn vào ban đêm",UNKNOWN,out_of_scope_reviewed
+"Tóm tắt giúp tôi tiểu thuyết Số Đỏ của Vũ Trọng Phụng",UNKNOWN,out_of_scope_reviewed
+"Uống trà sữa buổi tối có bị mất ngủ không bạn",UNKNOWN,out_of_scope_reviewed
+"Shop có bán quần áo thể thao nam không vậy",UNKNOWN,out_of_scope_reviewed
+"Cửa hàng có giao trà đá hay đồ ăn vặt không thế",UNKNOWN,out_of_scope_reviewed
+"Mùa nào trong năm đi du lịch Phú Quốc đẹp nhất",UNKNOWN,out_of_scope_reviewed
+"Giúp em làm bài tập tiếng Anh về câu điều kiện loại hai",UNKNOWN,out_of_scope_reviewed
+"Tại sao bầu trời ban ngày lại có màu xanh da trời",UNKNOWN,out_of_scope_reviewed
+"Cách làm sạch vết ố vàng trên áo sơ mi trắng hiệu quả",UNKNOWN,out_of_scope_reviewed
+"Bạn thích nghe nhạc rap hay nhạc ballad nhẹ nhàng",UNKNOWN,out_of_scope_reviewed
+"Con đường nào đi ra sân bay Tân Sơn Nhất đỡ kẹt xe nhất",UNKNOWN,out_of_scope_reviewed
+"Trong lịch sử Việt Nam chiến thắng Bạch Đằng diễn ra năm nào",UNKNOWN,out_of_scope_reviewed
+"Chứng chỉ IELTS cần tối thiểu bao nhiêu điểm để du học Úc",UNKNOWN,out_of_scope_reviewed
+"Nên nuôi chó Poodle hay mèo Anh lông ngắn trong căn hộ chung cư",UNKNOWN,out_of_scope_reviewed
+"Chỉ mình mẹo chọn dưa hấu ngọt nhiều nước ngoài chợ",UNKNOWN,out_of_scope_reviewed
+"Mức thuế thu nhập cá nhân được tính bậc lũy tiến ra sao",UNKNOWN,out_of_scope_reviewed
+"Giúp tôi nghĩ tên đặt cho quán cà phê phong cách cổ điển",UNKNOWN,out_of_scope_reviewed
+"Hôm nay là ngày âm lịch mùng mấy rồi bạn",UNKNOWN,out_of_scope_reviewed
+"Làm sao để tự tin hơn khi thuyết trình trước đám đông",UNKNOWN,out_of_scope_reviewed
+"Việt Nam có tổng cộng bao nhiêu tỉnh thành sau khi sáp nhập",UNKNOWN,out_of_scope_reviewed
+"alo shop oi",UNKNOWN,out_of_scope_reviewed
+"hi ad",UNKNOWN,out_of_scope_reviewed
+"chao buoi sang nha",UNKNOWN,out_of_scope_reviewed
+"good morning",UNKNOWN,out_of_scope_reviewed
+"ok cam on nhe",UNKNOWN,out_of_scope_reviewed
+"asdfghjkl",UNKNOWN,out_of_scope_reviewed
+"123456789",UNKNOWN,out_of_scope_reviewed
+"hahahaha",UNKNOWN,out_of_scope_reviewed
+"thoi tiet hcm hom nay sao nhi",UNKNOWN,out_of_scope_reviewed
+"cho hoi ngoai le ti duoc ko",UNKNOWN,out_of_scope_reviewed
+"hom nay an gi ngon bay gio ta",UNKNOWN,out_of_scope_reviewed
+"ke cho tui nghe mot cau do vui di",UNKNOWN,out_of_scope_reviewed
+"ban co biet danh dan guitar k",UNKNOWN,out_of_scope_reviewed
+"gia bitcoin hom nay len bao nhieu r",UNKNOWN,out_of_scope_reviewed
+"mua ve may bay gia re o trang nao uy tin",UNKNOWN,out_of_scope_reviewed
+"cach nau bun bo hue ngon tai nha",UNKNOWN,out_of_scope_reviewed
+"tieng trung chao hoi noi nhu the nao",UNKNOWN,out_of_scope_reviewed
+"chuc shop cuoi tuan vui ve nha",UNKNOWN,out_of_scope_reviewed
+"minh chi ghe thu chat cho vui thoi",UNKNOWN,out_of_scope_reviewed
+"ban an com trua chua vay",UNKNOWN,out_of_scope_reviewed
+"huhu chan doi qua khong muon di lam",UNKNOWN,out_of_scope_reviewed
+"doc thu mot bai tho luc bat ve que huong",UNKNOWN,out_of_scope_reviewed
+"truyen tranh dao hai tac ra chap moi chua",UNKNOWN,out_of_scope_reviewed
+"so xo mien bac hom nay ve con gi",UNKNOWN,out_of_scope_reviewed
+"toi muon hoi dia chi quan an ngon gan day",UNKNOWN,out_of_scope_reviewed
+"lam the nao de trong rau sach tren ban cong",UNKNOWN,out_of_scope_reviewed
+"tinh cho tui khoang cach tu ha noi den hue",UNKNOWN,out_of_scope_reviewed
+"giup tui viet loi chuc sinh nhat tang ban than",UNKNOWN,out_of_scope_reviewed
+"co nen mua xe may dien vao mua mua khong",UNKNOWN,out_of_scope_reviewed
+"phim hanh dong nao dang chieu rap tuan nay",UNKNOWN,out_of_scope_reviewed
+"tui muon hoc ve tranh mau nuoc co ban",UNKNOWN,out_of_scope_reviewed
+"giai thich hien tuong nguyet thuc toan phan giup em",UNKNOWN,out_of_scope_reviewed
+"cach uop thit nuong bun cha dam da chuan vi",UNKNOWN,out_of_scope_reviewed
+"cho minh xin mot cau châm ngon song tich cuc",UNKNOWN,out_of_scope_reviewed
+"toi muon mua tu lanh va may giat moi ben ban co ban khong",UNKNOWN,out_of_scope_reviewed
+"ben minh co nhan sua ong nuoc gia dinh khong",UNKNOWN,out_of_scope_reviewed
+"minh can tho sua xe may luu dong co quen ai ko",UNKNOWN,out_of_scope_reviewed
+"mua tu sach go cong nghiep o cho nao sai gon thi re",UNKNOWN,out_of_scope_reviewed

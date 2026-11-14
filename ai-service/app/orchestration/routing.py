@@ -1,4 +1,4 @@
-"""Routing thuần hàm cho LangGraph (Task 2.1) — dễ test, không side effect."""
+"""Routing thuần hàm cho MAS (Task 2.1, mở rộng TASK-10/11/13) — dễ test, không side effect."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from typing import Dict, Iterable, List, Optional
 from app.schemas.agent_models import AgentName, Intent
 
 _ORDER: tuple[AgentName, ...] = (
+    AgentName.WARRANTY,
+    AgentName.TRACKING,
     AgentName.DIAGNOSIS,
     AgentName.QUOTATION,
     AgentName.APPOINTMENT,
@@ -16,6 +18,8 @@ _NODE_BY_AGENT: Dict[str, str] = {
     AgentName.DIAGNOSIS.value: "diagnosis",
     AgentName.QUOTATION.value: "quotation",
     AgentName.APPOINTMENT.value: "appointment",
+    AgentName.WARRANTY.value: "warranty",
+    AgentName.TRACKING.value: "tracking",
 }
 
 AGGREGATE_NODE = "aggregate"
@@ -26,15 +30,19 @@ def build_plan(
     allow_diagnosis: bool,
     allow_quotation: bool,
     allow_appointment: bool,
+    allow_warranty: bool = False,
+    allow_tracking: bool = False,
 ) -> List[str]:
     """
     Lập kế hoạch chạy agent từ intent + quyền Backend cấp.
 
-    Bảng quyết định (HUONG_DAN_TRIEN_KHAI_MAS_4_NGAY.md mục 4.5):
+    Bảng quyết định:
     - DIAGNOSIS: [D] (+Q nếu allowQuotation) (+A nếu allowAppointment)
     - QUOTATION: [Q] nếu được phép, ngược lại fallback agent được phép đầu tiên
     - APPOINTMENT: [A] nếu được phép, ngược lại fallback
-    - UNKNOWN / TRACKING: [] (không gọi agent) => aggregate trả lời làm rõ
+    - WARRANTY: [WARRANTY] nếu được phép, ngược lại []
+    - TRACKING: [TRACKING] nếu được phép, ngược lại []
+    - UNKNOWN: [] => aggregate trả lời làm rõ
     """
     if intent is Intent.DIAGNOSIS:
         plan: List[str] = []
@@ -56,6 +64,12 @@ def build_plan(
         if allow_appointment:
             return [AgentName.APPOINTMENT.value]
         return _first_allowed(allow_diagnosis, allow_quotation, allow_appointment)
+
+    if intent is Intent.WARRANTY:
+        return [AgentName.WARRANTY.value] if allow_warranty else []
+
+    if intent is Intent.TRACKING:
+        return [AgentName.TRACKING.value] if allow_tracking else []
 
     return []
 
@@ -104,4 +118,12 @@ def route_after_quotation(state: dict) -> str:
 
 
 def route_after_appointment(state: dict) -> str:
-    return AGGREGATE_NODE
+    return _route_next(state)
+
+
+def route_after_warranty(state: dict) -> str:
+    return _route_next(state)
+
+
+def route_after_tracking(state: dict) -> str:
+    return _route_next(state)

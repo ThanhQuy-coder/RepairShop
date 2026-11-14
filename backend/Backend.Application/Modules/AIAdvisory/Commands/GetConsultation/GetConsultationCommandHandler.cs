@@ -44,7 +44,12 @@ public class GetConsultationCommandHandler
                     request.AllowAppointment,
                     request.FullName,
                     phone,
-                    actorType),
+                    actorType,
+                    request.AllowWarranty,
+                    request.AllowTracking,
+                    request.TicketCode,
+                    request.WarrantyCode,
+                    _currentUser?.UserId),
                 cancellationToken);
         }
         catch (Exception ex)

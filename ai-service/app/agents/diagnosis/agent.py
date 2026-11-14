@@ -1,8 +1,8 @@
-"""
-Diagnosis Agent (Task 2.2).
+"""Diagnosis Agent (TASK-08).
 
-Pipeline: chuẩn hoá mô tả -> retrieval (context Backend) -> LLM (nếu bật) -> map ID
-trong candidate -> DiagnosisResult. Khi LLM tắt/lỗi: dùng luật triệu chứng + retrieval.
+Pipeline: chuẩn hoá mô tả -> trích xuất thực thể (brand, model, triệu chứng chuẩn)
+-> retrieval (Service Matching + 3-Layer Part Compatibility) -> LLM (nếu bật) hoặc Rule fallback
+-> gắn matchingScore và xác định trạng thái NEED_CLARIFICATION / NO_MATCH khi cần.
 
 Ràng buộc:
 - Chỉ chọn ID nằm trong `candidateServices` / `candidateParts` (loại ID lạ).
@@ -18,18 +18,20 @@ from typing import Dict, List, Optional
 
 from app.agents.diagnosis.symptom_rules import build_explanation, infer_causes
 from app.core.config import settings
-from app.core.text import normalize_text
+from app.core.text import extract_brand_and_model, normalize_colloquial_vietnamese
 from app.llm.llm_client import LLMClient, LLMResponseError, LLMTimeoutError, llm_client
 from app.prompts.diagnosis_prompt import (
     DIAGNOSIS_SYSTEM_PROMPT,
     build_diagnosis_user_prompt,
 )
 from app.retrieval.retrieval_service import RetrievalResult, retrieve_candidates
+from app.retrieval.symptom_lexicon import map_text_to_canonical_symptoms
 from app.schemas.agent_models import (
     AgentError,
     AgentName,
     Confidence,
     DiagnosisResult,
+    IdentifiedEntities,
     PossibleCause,
     SuggestedPartOut,
     SuggestedServiceOut,
@@ -72,13 +74,21 @@ def _rule_based_result(
     causes = infer_causes(issue_description)
     confidence = _service_confidence(causes)
 
+    matched_services = [
+        s for s in retrieval.candidate_services if retrieval.service_scores.get(s.service_id, 0) > 0
+    ]
+    matched_parts = [
+        p for p in retrieval.candidate_parts if retrieval.part_scores.get(p.part_id, 0) > 0
+    ]
+
     services = [
         SuggestedServiceOut(
             serviceId=service.service_id,
             serviceName=service.name,
             confidence=confidence if index == 0 else Confidence.MEDIUM,
+            matchingScore=retrieval.service_normalized_scores.get(service.service_id),
         )
-        for index, service in enumerate(retrieval.candidate_services[:MAX_SERVICES])
+        for index, service in enumerate(matched_services[:MAX_SERVICES])
     ]
     parts = [
         SuggestedPartOut(
@@ -86,7 +96,7 @@ def _rule_based_result(
             partName=part.name,
             confidence=Confidence.MEDIUM,
         )
-        for part in retrieval.candidate_parts[:MAX_PARTS]
+        for part in matched_parts[:MAX_PARTS]
     ]
 
     return DiagnosisResult(
@@ -99,15 +109,31 @@ def _rule_based_result(
 
 
 def _map_llm_output(
-    output: LLMDiagnosisOutput, retrieval: RetrievalResult
+    output: LLMDiagnosisOutput,
+    retrieval: RetrievalResult,
+    context: AdvisoryContext,
+    device: DeviceInfo,
 ) -> DiagnosisResult:
-    service_by_id = {service.service_id: service for service in retrieval.candidate_services}
-    part_by_id = {part.part_id: part for part in retrieval.candidate_parts}
+    service_by_id = {
+        service.service_id: service
+        for service in context.available_services
+        if service.device_type.lower() in (device.device_type.value, "general")
+    }
+    part_by_id = {
+        part.part_id: part
+        for part in context.available_parts
+        if (part.compatible_device_type or "").lower() in ("", "general", device.device_type.value)
+        and part.in_stock
+        and (part.quantity_on_hand is None or part.quantity_on_hand > 0)
+    }
 
     causes = [
-        PossibleCause(name=cause.name, confidence=Confidence(cause.confidence.strip().upper())
-                      if cause.confidence.strip().upper() in {c.value for c in Confidence}
-                      else Confidence.MEDIUM)
+        PossibleCause(
+            name=cause.name,
+            confidence=Confidence(cause.confidence.strip().upper())
+            if cause.confidence.strip().upper() in {c.value for c in Confidence}
+            else Confidence.MEDIUM,
+        )
         for cause in output.possible_causes[:3]
     ]
     confidence = _service_confidence(causes)
@@ -127,8 +153,9 @@ def _map_llm_output(
         services.append(
             SuggestedServiceOut(
                 serviceId=candidate.service_id,
-                serviceName=candidate.name,  # tên lấy từ dữ liệu thật
+                serviceName=candidate.name,
                 confidence=confidence,
+                matchingScore=retrieval.service_normalized_scores.get(candidate.service_id),
             )
         )
 
@@ -146,12 +173,14 @@ def _map_llm_output(
             continue
         parts.append(
             SuggestedPartOut(
-                partId=candidate.part_id, partName=candidate.name, confidence=Confidence.MEDIUM
+                partId=candidate.part_id,
+                partName=candidate.name,
+                confidence=Confidence.MEDIUM,
             )
         )
 
     missing = [item[:120] for item in output.missing_information[:5]]
-    explanation = (output.explanation or "").strip()[:600]
+    explanation = (output.explanation or "").strip()[:300]
     if not explanation:
         explanation = build_explanation("", causes)
 
@@ -174,30 +203,68 @@ class DiagnosisAgent:
         started = time.perf_counter()
 
         device = DeviceInfo.model_validate(state["device"])
-        issue_description = normalize_text(
-            state.get("issue_description") or state.get("user_message") or ""
+        raw_issue = (state.get("issue_description") or state.get("user_message") or "").strip()
+        issue_description = normalize_colloquial_vietnamese(raw_issue)
+        context = _build_context(state)
+        retrieval = retrieve_candidates(device, issue_description, context)
+
+        brand, model = extract_brand_and_model(
+            raw_issue, hint_brand=device.brand, hint_model=device.model
         )
-        retrieval = retrieve_candidates(device, issue_description, _build_context(state))
+        canonical_symptoms = map_text_to_canonical_symptoms(raw_issue, device.device_type.value)
+        identified = IdentifiedEntities(
+            deviceType=device.device_type.value,
+            brand=brand,
+            model=model,
+            symptoms=canonical_symptoms,
+        )
 
         errors: List[AgentError] = list(state.get("errors") or [])
         llm_calls = int(state.get("llm_calls") or 0)
         fallback_used = bool(state.get("fallback_used"))
         out_of_scope = False
+        need_clarification = bool(state.get("need_clarification"))
+        missing_info: List[str] = list(state.get("missing_information") or [])
 
-        if not retrieval.candidate_services and not retrieval.candidate_parts:
+        if not context.available_services and not context.available_parts:
+            missing_item = "mô tả tình trạng cụ thể hơn hoặc danh mục dịch vụ"
+            missing_info.append(missing_item)
             result = DiagnosisResult(
                 possibleCauses=[],
                 suggestedServices=[],
                 suggestedParts=[],
-                missingInformation=["mô tả tình trạng cụ thể hơn hoặc danh mục dịch vụ"],
+                missingInformation=[missing_item],
                 explanation=(
-                    "Chưa đủ dữ liệu để đối chiếu dịch vụ phù hợp. "
+                    "Chưa có dữ liệu dịch vụ phù hợp để đối chiếu. "
                     "Vui lòng mô tả rõ hơn hoặc mang máy đến kiểm tra trực tiếp."
+                ),
+            )
+        elif retrieval.is_vague_issue and not retrieval.matched_any_service:
+            need_clarification = True
+            missing_item = "triệu chứng cụ thể của thiết bị (ví dụ: tụt pin, sọc màn hình, không sạc được)"
+            missing_info.append(missing_item)
+            result = DiagnosisResult(
+                possibleCauses=[],
+                suggestedServices=[],
+                suggestedParts=[],
+                missingInformation=[missing_item],
+                explanation=(
+                    "Mô tả hiện tại còn chung chung nên chưa thể khoanh vùng lỗi. "
+                    "Bạn vui lòng cho biết dấu hiệu cụ thể để nhận gợi ý sát hơn."
                 ),
             )
         elif (settings.llm_mode or "ollama").lower() == "offline":
             result = _rule_based_result(issue_description, retrieval)
             fallback_used = True
+            if not result.suggested_services and not result.suggested_parts:
+                result = result.model_copy(
+                    update={
+                        "explanation": (
+                            "Chưa tìm thấy dịch vụ phù hợp với triệu chứng mô tả trong danh mục hiện có. "
+                            "Vui lòng mang máy tới cửa hàng để kỹ thuật viên kiểm tra trực tiếp."
+                        )
+                    }
+                )
         else:
             prompt = build_diagnosis_user_prompt(device, issue_description, retrieval)
             try:
@@ -207,7 +274,6 @@ class DiagnosisAgent:
                 llm_calls += 1
                 output = LLMDiagnosisOutput.model_validate(raw_output)
             except LLMTimeoutError:
-                # Timeout phải nổi lên endpoint để trả 408 AI_TIMEOUT (Backend fallback).
                 raise
             except (LLMResponseError, ValueError) as exc:
                 logger.warning("Diagnosis LLM lỗi (%s) — dùng fallback rule.", exc)
@@ -231,10 +297,8 @@ class DiagnosisAgent:
                         explanation="Yêu cầu nằm ngoài phạm vi tư vấn sửa chữa thiết bị.",
                     )
                 else:
-                    result = _map_llm_output(output, retrieval)
+                    result = _map_llm_output(output, retrieval, context, device)
                     if not result.suggested_services and not result.suggested_parts:
-                        # LLM không chọn được ID hợp lệ nào: dùng luật trên context thật
-                        # thay vì trả rỗng (không bịa dữ liệu, chỉ xếp hạng candidate).
                         rule_result = _rule_based_result(issue_description, retrieval)
                         result = DiagnosisResult(
                             possibleCauses=result.possible_causes or rule_result.possible_causes,
@@ -264,6 +328,9 @@ class DiagnosisAgent:
 
         return {
             "diagnosis_result": result,
+            "identified_entities": identified,
+            "need_clarification": need_clarification,
+            "missing_information": list(dict.fromkeys(missing_info)),
             "errors": errors,
             "executed_agents": executed,
             "timings": timings,

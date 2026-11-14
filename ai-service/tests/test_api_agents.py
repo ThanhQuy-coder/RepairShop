@@ -101,11 +101,21 @@ def test_blank_message_is_rejected():
 
 
 def test_invalid_device_type_is_rejected():
-    payload = build_agent_payload("Pin tụt nhanh", device={"deviceType": "tablet", "brand": "A", "model": "B"})
+    payload = build_agent_payload("Pin tụt nhanh", device={"deviceType": "refrigerator", "brand": "A", "model": "B"})
 
     response = client.post("/v1/agents/execute", json=payload, headers=_headers())
 
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize("device_type", ["phone", "laptop", "electronics", "tablet", "smartwatch", "Tablet"])
+def test_all_five_device_types_are_accepted(device_type, monkeypatch):
+    monkeypatch.setattr(settings, "llm_mode", "offline")
+    payload = build_agent_payload("Pin tụt nhanh", device={"deviceType": device_type, "brand": "Apple", "model": "Pro"})
+
+    response = client.post("/v1/agents/execute", json=payload, headers=_headers())
+
+    assert response.status_code == 200
 
 
 @pytest.mark.parametrize("field", ["actorType", "requestId", "device"])

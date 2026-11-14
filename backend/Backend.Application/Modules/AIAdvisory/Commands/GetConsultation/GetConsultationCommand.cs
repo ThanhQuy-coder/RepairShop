@@ -16,4 +16,8 @@ public record GetConsultationCommand(
     bool AllowQuotation = true,
     bool AllowAppointment = true,
     string? FullName = null,
-    string? Phone = null) : IRequest<ConsultationResponse>;
+    string? Phone = null,
+    bool AllowWarranty = true,
+    bool AllowTracking = true,
+    string? TicketCode = null,
+    string? WarrantyCode = null) : IRequest<ConsultationResponse>;

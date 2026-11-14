@@ -41,8 +41,7 @@ class Settings(pydantic_settings.BaseSettings):
             )
         return value
 
-    class Config:
-        env_file = ".env"
+    model_config = pydantic_settings.SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()
