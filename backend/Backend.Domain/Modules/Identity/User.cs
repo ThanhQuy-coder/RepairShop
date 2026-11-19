@@ -52,6 +52,15 @@ public class User : BaseEntity
         MarkUpdated();
     }
 
+    public void ChangeRole(int roleId)
+    {
+        if (roleId <= 0)
+            throw new DomainException("Vai trò không hợp lệ.");
+
+        RoleId = roleId;
+        MarkUpdated();
+    }
+
     public void Deactivate()
     {
         IsActive = false;

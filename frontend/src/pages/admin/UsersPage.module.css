@@ -304,3 +304,133 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   ENHANCEMENTS: Search, Quick Role Modal & Action Buttons
+   ========================================================= */
+
+.searchInputWrap {
+  flex: 1 1 240px;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.roleModalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roleUserSummary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md, 10px);
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  flex-wrap: wrap;
+}
+
+.roleUserMeta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.roleUserMeta strong {
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
+}
+
+.roleUserMeta span {
+  font-size: 12.5px;
+  color: var(--color-text-muted, #64748b);
+  overflow-wrap: anywhere;
+}
+
+.roleOptionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.roleOptionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: var(--radius-md, 10px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.roleOptionCard:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  background: var(--color-bg-subtle, #f8fafc);
+}
+
+.roleOptionCardSelected {
+  border-color: var(--color-primary, #185a4e);
+  background: var(--color-primary-subtle, #eef6f4);
+  box-shadow: 0 0 0 2px rgba(24, 90, 78, 0.12);
+}
+
+.roleOptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.roleOptionHeader strong {
+  font-size: 14px;
+  color: var(--color-text, #1e293b);
+}
+
+.roleRadioDot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border, #cbd5e1);
+  background: #ffffff;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.roleOptionCardSelected .roleRadioDot {
+  border-color: var(--color-primary, #185a4e);
+}
+
+.roleOptionCardSelected .roleRadioDot::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--color-primary, #185a4e);
+}
+
+.roleOptionDesc {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-text-secondary, #475569);
+  line-height: 1.4;
+}

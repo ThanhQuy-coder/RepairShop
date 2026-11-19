@@ -1,0 +1,250 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryCard {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #eef6f4 0%, #f8fafc 100%);
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  border-radius: var(--radius-md, 10px);
+}
+
+.summaryLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.shieldIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm, 6px);
+  background: #ffffff;
+  border: 1px solid var(--color-primary-border, #9ec5bc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.summaryInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.deviceTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+  line-height: 1.3;
+}
+
+.metaBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.codeChip {
+  font-family: monospace;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs, 4px);
+  background: #ffffff;
+  border: 1px solid var(--color-border, #e2e8f0);
+  color: var(--color-text-secondary, #475569);
+}
+
+.expiryText {
+  font-size: 12px;
+  color: var(--color-primary, #185a4e);
+  font-weight: 600;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+}
+
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.symptomChip {
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: var(--color-bg-subtle, #f8fafc);
+  color: var(--color-text-secondary, #475569);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.symptomChip:hover {
+  border-color: var(--color-primary-border, #9ec5bc);
+  color: var(--color-primary, #185a4e);
+  background: #ffffff;
+}
+
+.symptomChipActive {
+  background: var(--color-primary-subtle, #eef6f4);
+  border-color: var(--color-primary, #185a4e);
+  color: var(--color-primary, #185a4e);
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--color-text, #1e293b);
+  background: #ffffff;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea:focus {
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.14);
+}
+
+.scheduleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--color-bg-subtle, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 10px);
+}
+
+.dateInput {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 240px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-sm, 6px);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--color-text, #1e293b);
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dateInput:focus {
+  border-color: var(--color-primary, #185a4e);
+  box-shadow: 0 0 0 3px rgba(24, 90, 78, 0.14);
+}
+
+.slotGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 8px;
+}
+
+.slotCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.slotCard:hover:not(:disabled) {
+  border-color: var(--color-primary-border, #9ec5bc);
+  background: #f9fcfb;
+}
+
+.slotCardSelected {
+  border-color: var(--color-primary, #185a4e);
+  background: var(--color-primary-subtle, #eef6f4);
+  box-shadow: 0 0 0 2px rgba(24, 90, 78, 0.15);
+}
+
+.slotCard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
+.slotTime {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text, #1e293b);
+}
+
+.slotCardSelected .slotTime {
+  color: var(--color-primary, #185a4e);
+}
+
+.slotCapacity {
+  font-size: 11.5px;
+  color: var(--color-text-muted, #64748b);
+}
+
+.slotCardSelected .slotCapacity {
+  color: var(--color-primary, #185a4e);
+  font-weight: 600;
+}
+
+.emptySlots {
+  margin: 0;
+  padding: 12px;
+  border-radius: var(--radius-sm, 6px);
+  background: #ffffff;
+  border: 1px dashed var(--color-border, #cbd5e1);
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .summaryCard {
+    flex-direction: column;
+  }
+
+  .dateInput {
+    max-width: 100%;
+  }
+
+  .slotGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

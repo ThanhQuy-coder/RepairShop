@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import apiClient, { refreshAccessToken } from './apiClient';
 import type { LoginRequest, RegisterRequest, AuthResponse } from '../types/auth.types';
 
 export const authService = {
@@ -8,8 +8,7 @@ export const authService = {
   register: (payload: RegisterRequest) =>
     apiClient.post<AuthResponse>('/auth/register', payload).then((res) => res.data),
 
-  refresh: () =>
-    apiClient.post<AuthResponse>('/auth/refresh-token').then((res) => res.data),
+  refresh: () => refreshAccessToken(),
 
   logout: () => apiClient.post('/auth/logout'),
 };

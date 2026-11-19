@@ -14,7 +14,7 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
         RuleFor(x => x.FullName).NotEmpty().MaximumLength(100);
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(150);
         RuleFor(x => x.Password).NotEmpty().MinimumLength(6);
-        RuleFor(x => x.Role).Must(role => role is Roles.Receptionist or Roles.Technician or Roles.Customer)
+        RuleFor(x => x.Role).Must(role => role is Roles.Admin or Roles.Receptionist or Roles.Technician or Roles.Customer)
             .WithMessage("Vai trò không hợp lệ.");
     }
 }
@@ -70,5 +70,42 @@ public class SetUserStatusCommandHandler : IRequestHandler<SetUserStatusCommand,
         else user.Deactivate();
         await _userRepository.SaveChangesAsync();
         return new UserListItemResponse(user.Id, user.FullName, user.Email, user.Role.Name, user.IsActive);
+    }
+}
+
+public class SetUserRoleCommandValidator : AbstractValidator<SetUserRoleCommand>
+{
+    public SetUserRoleCommandValidator()
+    {
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Id người dùng không hợp lệ.");
+        RuleFor(x => x.Role)
+            .Must(role => role is Roles.Admin or Roles.Receptionist or Roles.Technician or Roles.Customer)
+            .WithMessage("Vai trò không hợp lệ.");
+    }
+}
+
+public class SetUserRoleCommandHandler : IRequestHandler<SetUserRoleCommand, UserListItemResponse>
+{
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
+
+    public SetUserRoleCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository)
+    {
+        _userRepository = userRepository;
+        _roleRepository = roleRepository;
+    }
+
+    public async Task<UserListItemResponse> Handle(SetUserRoleCommand request, CancellationToken cancellationToken)
+    {
+        var user = await _userRepository.GetByIdAsync(request.Id)
+            ?? throw new NotFoundException("Người dùng", request.Id);
+
+        var role = await _roleRepository.GetByNameAsync(request.Role)
+            ?? throw new NotFoundException("Vai trò", request.Role);
+
+        user.ChangeRole(role.Id);
+        await _userRepository.SaveChangesAsync();
+
+        return new UserListItemResponse(user.Id, user.FullName, user.Email, role.Name, user.IsActive);
     }
 }

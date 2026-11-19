@@ -17,8 +17,10 @@ export const reviewService = {
     return res.data;
   },
 
-  getAdminReviews: async () => {
-    const res = await apiClient.get<PagedResponse<ReviewListItem>>('/reviews/admin');
+  getAdminReviews: async (page = 1, pageSize = 200) => {
+    const res = await apiClient.get<PagedResponse<ReviewListItem>>('/reviews/admin', {
+      params: { page, pageSize },
+    });
     return res.data;
   },
 

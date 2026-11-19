@@ -20,7 +20,7 @@ import CustomerPicker from '../../components/customer/CustomerPicker';
 import TicketStatusBadge from '../../components/ticket/TicketStatusBadge';
 import styles from './TicketListPage.module.css';
 
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 8;
 
 const STATUS_OPTIONS = Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => ({
   value,

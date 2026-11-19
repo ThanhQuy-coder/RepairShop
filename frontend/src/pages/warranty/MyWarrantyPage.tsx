@@ -211,6 +211,7 @@ export default function MyWarrantyPage() {
       <WarrantyClaimModal
         isOpen={!!claimingTicket}
         ticketId={claimingTicket?.ticketId ?? ''}
+        warrantyItem={claimingTicket}
         onClose={() => setClaimingTicket(null)}
         onDone={() => {
           setClaimingTicket(null);

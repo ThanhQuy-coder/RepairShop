@@ -15,6 +15,8 @@ export const userService = {
   }) => apiClient.post<UserListItem>('/users', payload).then((res) => res.data),
   setStatus: (id: string, isActive: boolean) =>
     apiClient.patch<UserListItem>(`/users/${id}/status`, { isActive }).then((res) => res.data),
+  setRole: (id: string, role: UserRole) =>
+    apiClient.patch<UserListItem>(`/users/${id}/role`, { role }).then((res) => res.data),
   getMyProfile: () => apiClient.get<UserProfileResponse>('users/me').then((res) => res.data),
   updateMyProfile: (payload: { fullName: string; phone: string }) =>
     apiClient.patch<UserProfileResponse>('users/me', payload).then((res) => res.data),

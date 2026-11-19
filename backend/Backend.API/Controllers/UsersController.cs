@@ -47,6 +47,16 @@ public class UsersController : ControllerBase
 
     public record SetUserStatusBody(bool IsActive);
 
+    [HttpPatch("{id:guid}/role")]
+    [Authorize(Policy = AuthorizationPolicies.AdminOnly)]
+    public async Task<IActionResult> SetRole(Guid id, [FromBody] SetUserRoleBody body)
+    {
+        var result = await _mediator.Send(new SetUserRoleCommand(id, body.Role));
+        return Ok(result);
+    }
+
+    public record SetUserRoleBody(string Role);
+
     [HttpGet("me")]
     [Authorize]
     public async Task<IActionResult> GetCurrentUser()

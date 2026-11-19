@@ -86,29 +86,7 @@ export default function LoginPage() {
 
     if (!validate()) return;
 
-    setIsLoading(true);
     await performLogin({ email, password });
-    try {
-      const result = await authService.login({ email, password });
-      const role = result.role as UserRole;
-
-      login(result.accessToken, role, result.email, result.userId);
-
-      const redirectPath = sessionStorage.getItem('post-login-redirect');
-      sessionStorage.removeItem('post-login-redirect');
-
-      if (redirectPath && (role === 'Customer' || role === 'Receptionist')) {
-        navigate(redirectPath, { replace: true });
-        return;
-      }
-
-      navigate(ROLE_REDIRECT[role] ?? '/dashboard', { replace: true });
-    } catch (err) {
-      const apiError = extractApiError(err);
-      setApiErrorMessage(apiError.message); // "Email hoặc mật khẩu không chính xác." (Backend Task 6)
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
@@ -120,7 +98,7 @@ export default function LoginPage() {
           <div className={styles.demoButtons}>
             {DEMO_ACCOUNTS.map((account) => (
               <Button
-                key={account.role}
+                key={`${account.id}-${account.role}`}
                 type="button"
                 className={styles.demoButton}
                 isLoading={isLoading}

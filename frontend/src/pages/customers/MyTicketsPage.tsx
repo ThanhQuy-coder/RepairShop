@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ticketService } from '../../services/ticketService';
 import { extractApiError } from '../../utils/apiError';
 import type { TicketListItem } from '../../types/ticket.types';
-import { Loading, ErrorMessage, EmptyState, Badge, Button } from '../../components/common';
+import { Loading, ErrorMessage, EmptyState, Badge, Button, Pagination } from '../../components/common';
 import {
   TICKET_STATUS_LABELS,
   TICKET_STATUS_BADGE_VARIANT,
@@ -11,6 +11,8 @@ import {
   STATUS_ICON,
 } from '../../constants/ticketStatus';
 import styles from './MyTicketsPage.module.css';
+
+const PAGE_SIZE = 6;
 
 function getTicketProgress(status: string): { percent: number; stepText: string } {
   if (status === 'CLOSED_REJECTED') {
@@ -41,14 +43,19 @@ export default function MyTicketsPage() {
   const [filterGroup, setFilterGroup] = useState<'all' | 'active' | 'approval' | 'ready' | 'done'>(
     'all'
   );
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     ticketService
-      .list({ pageSize: 50 })
+      .list({ pageSize: 200 })
       .then((res) => setTickets(res.items))
       .catch((err) => setErrorMessage(extractApiError(err).message))
       .finally(() => setIsLoading(false));
   }, []);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, filterGroup]);
 
   const stats = useMemo(() => {
     const waitingApproval = tickets.filter((t) => t.status === 'WAITING_APPROVAL').length;
@@ -78,6 +85,17 @@ export default function MyTicketsPage() {
       return true;
     });
   }, [tickets, searchQuery, filterGroup]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredTickets.length / PAGE_SIZE));
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const pagedTickets = useMemo(
+    () => filteredTickets.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filteredTickets, page]
+  );
 
   if (isLoading) return <Loading />;
   if (errorMessage) return <ErrorMessage message={errorMessage} />;
@@ -177,8 +195,9 @@ export default function MyTicketsPage() {
           {filteredTickets.length === 0 ? (
             <EmptyState message="Không có phiếu sửa chữa nào khớp với bộ lọc hiện tại." />
           ) : (
-            <div className={styles.list}>
-              {filteredTickets.map((t) => {
+            <>
+              <div className={styles.list}>
+                {pagedTickets.map((t) => {
                 const progress = getTicketProgress(t.status);
                 return (
                   <div
@@ -243,9 +262,16 @@ export default function MyTicketsPage() {
                       </span>
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+              <Pagination
+                page={page}
+                pageSize={PAGE_SIZE}
+                total={filteredTickets.length}
+                onPageChange={setPage}
+              />
+            </>
           )}
         </>
       )}

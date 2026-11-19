@@ -11,3 +11,5 @@ public record CreateUserCommand(
     string Password) : IRequest<UserListItemResponse>;
 
 public record SetUserStatusCommand(Guid Id, bool IsActive) : IRequest<UserListItemResponse>;
+
+public record SetUserRoleCommand(Guid Id, string Role) : IRequest<UserListItemResponse>;
